@@ -1,10 +1,22 @@
+// Imports: Dependencies
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
+import { AppLoading } from "expo";
+
+// Imports: Assets
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import { Ionicons } from "@expo/vector-icons";
-import { AppLoading } from "expo";
 
+// Imports: Screens
+import Signup from "./screens/Signup";
+
+// Imports: Redux Persist Persister
+import { store, persistor } from "./redux/store/store";
+
+// React Native: App
 export default function App() {
   const [loaded, setLoaded] = useState(false);
 
@@ -23,9 +35,15 @@ export default function App() {
   }, []);
 
   return loaded ? (
-    <View style={styles.container}>
-      <Text>Brum Client</Text>
-    </View>
+    // Redux: Global Store
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Signup />
+        {/* <View style={styles.container}>
+          <Text>Brum Client</Text>
+        </View> */}
+      </PersistGate>
+    </Provider>
   ) : (
     <AppLoading />
   );
