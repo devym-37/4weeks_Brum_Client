@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19003,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerPort": 19004,
+  "packagerPort": 19005,
+  "packagerPid": 71549,
+  "expoServerNgrokUrl": "https://6d-vsm.anonymous.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.6d-vsm.anonymous.brum-client.exp.direct",
+  "ngrokPid": 71559
 }
