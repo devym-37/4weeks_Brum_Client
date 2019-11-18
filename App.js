@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 // Imports: Screens
 import Signup from "./screens/Signup";
+import MapView from "./screens/HomeScreen";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
@@ -52,6 +53,9 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
+
+          <MapView />
+
           {isLoggedIn ? (
             <View>
               <Text>I'm in</Text>
@@ -59,6 +63,7 @@ export default function App() {
           ) : (
             <Signup />
           )}
+
         </PersistGate>
       </ThemeProvider>
     </Provider>
