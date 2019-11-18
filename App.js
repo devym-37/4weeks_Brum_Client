@@ -11,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 // Imports: Screens
 import Signup from "./screens/Signup";
-import MapView from "./screens/Home";
+import MapView from "./screens/HomeScreen";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
