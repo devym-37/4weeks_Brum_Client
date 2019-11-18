@@ -1,11 +1,9 @@
 {
-
-  "devToolsPort": 19003,
   "expoServerPort": 19001,
+  "expoServerNgrokUrl": "https://78-mje.anonymous.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.78-mje.anonymous.brum-client.exp.direct",
+  "ngrokPid": 94566,
+  "devToolsPort": 19003,
   "packagerPort": 19004,
-  "packagerPid": 87389,
-  "expoServerNgrokUrl": "https://6d-vsm.anonymous.brum-client.exp.direct",
-  "packagerNgrokUrl": "https://packager.6d-vsm.anonymous.brum-client.exp.direct"
-  "ngrokPid": 87401
-  "ngrokPid": 82086
+  "packagerPid": 94556
 }

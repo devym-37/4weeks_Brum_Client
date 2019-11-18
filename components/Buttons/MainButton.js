@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import constants from "../../constants";
 import PropTypes from "prop-types";
-
+import { ActivityIndicator } from "react-native";
 const Touchable = styled.TouchableOpacity``;
 const Container = styled.View`
   background-color: ${props => props.theme.mainColor};
@@ -18,17 +18,18 @@ const Text = styled.Text`
   font-weight: 600;
 `;
 
-const MainButton = ({ text, onPress }) => (
-  <Touchable onPress={onPress}>
+const MainButton = ({ text, onPress, loading = false }) => (
+  <Touchable disabled={loading} onPress={onPress}>
     <Container>
-      <Text>{text}</Text>
+      {loading ? <ActivityIndicator color={"white"} /> : <Text>{text}</Text>}
     </Container>
   </Touchable>
 );
 
 MainButton.propTypes = {
   text: PropTypes.string.isRequired,
-  onPress: PropTypes.func.isRequired
+  onPress: PropTypes.func.isRequired,
+  loading: PropTypes.bool
 };
 
 export default MainButton;
