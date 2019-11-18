@@ -10,8 +10,8 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import { Ionicons } from "@expo/vector-icons";
 
-// Imports: Screens
-import Signup from "./screens/Signup";
+// Imports: Navigations
+import AuthNavigation from "./navigation/AuthNavigation";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
@@ -19,6 +19,8 @@ import { store, persistor } from "./redux/store/store";
 // Imports: Styled Component Custom Colors Theme Provider
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
+import Test from "./screens/Test";
+
 // React Native: App
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -53,11 +55,18 @@ export default function App() {
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
           {isLoggedIn ? (
-            <View>
-              <Text>I'm in</Text>
-            </View>
+            <Test />
           ) : (
-            <Signup />
+            // <View
+            //   style={{
+            //     flex: 1,
+            //     justifyContent: "center",
+            //     alignItems: "center"
+            //   }}
+            // >
+            //   <Text>I'm in</Text>
+            // </View>
+            <AuthNavigation />
           )}
         </PersistGate>
       </ThemeProvider>
