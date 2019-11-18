@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon } from "native-base";
 
+const { StatusBarManger } = NativeModules;
 export default class Home extends Component {
   // constructor(props) {
   //   super(props);
@@ -14,6 +15,13 @@ export default class Home extends Component {
   render() {
     return (
       <Container style={styles.container}>
+        <StatusBar
+          barStyle="dark-content"
+          translucent={false}
+          backgroundColor="black"
+          hidden={false}
+          networkActivityIndicatorVisible={true}
+        />
         <Header style={{ backgroundColor: "white" }} androidStatusBarColor="white">
           <Left>
             <Button transparent>
@@ -39,7 +47,7 @@ export default class Home extends Component {
               // 한양대 default map
               latitude: 37.557615,
               longitude: 127.046963,
-              latitudeDelta: 0.006,
+              latitudeDelta: 0.007,
               longitudeDelta: 0.001
             }}
           />
@@ -51,6 +59,7 @@ export default class Home extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "white"
   },
   mapStyle: {
