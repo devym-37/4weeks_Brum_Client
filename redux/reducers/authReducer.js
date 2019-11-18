@@ -1,6 +1,6 @@
 // Initial State
 const initialState = {
-  loggedIn: false
+  loggedIn: null
 };
 
 // Reducers (Modifies The State And Returns A New State)
