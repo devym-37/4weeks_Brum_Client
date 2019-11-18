@@ -1,5 +1,6 @@
 // Imports: Dependencies
 import React, { useState, useEffect } from "react";
+import { View, Text } from "react-native";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { AppLoading } from "expo";
@@ -21,6 +22,7 @@ import styles from "./styles";
 // React Native: App
 export default function App() {
   const [loaded, setLoaded] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   const preLoad = async () => {
     try {
@@ -30,6 +32,11 @@ export default function App() {
         ...Ionicons.font
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
+
+      const loggedIn = await store.getState().authReducer.loggedIn;
+
+      loggedIn ? setIsLoggedIn(true) : setIsLoggedIn(false);
+
       setLoaded(true);
     } catch (e) {
       console.log(`preLoad error: `, e);
@@ -40,12 +47,18 @@ export default function App() {
     preLoad();
   }, []);
 
-  return loaded ? (
+  return loaded && isLoggedIn !== null ? (
     // Redux: Global Store
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          <Signup />
+          {isLoggedIn ? (
+            <View>
+              <Text>I'm in</Text>
+            </View>
+          ) : (
+            <Signup />
+          )}
         </PersistGate>
       </ThemeProvider>
     </Provider>
