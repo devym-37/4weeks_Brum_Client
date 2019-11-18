@@ -11,7 +11,7 @@ import { Asset } from "expo-asset";
 import { Ionicons } from "@expo/vector-icons";
 
 // Imports: Navigations
-import AuthNavigation from "./navigation/AuthNavigation";
+import StartNavigation from "./navigation/StartNavigation";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
@@ -66,7 +66,7 @@ export default function App() {
             // >
             //   <Text>I'm in</Text>
             // </View>
-            <AuthNavigation />
+            <StartNavigation />
           )}
         </PersistGate>
       </ThemeProvider>
