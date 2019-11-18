@@ -10,14 +10,12 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import { Ionicons } from "@expo/vector-icons";
 
-
 // Imports: Navigations
 import StartNavigation from "./navigation/StartNavigation";
 
 // Imports: Screens
-import Signup from "./screens/Signup";
+import Signup from "./screens/Auth/Signup";
 import MapView from "./screens/HomeScreen";
-
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
@@ -60,16 +58,9 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-
           <MapView />
 
-          {isLoggedIn ? (
-            <Test />
-          ) : (
-      
-            <StartNavigation />
-          )}
-
+          {isLoggedIn ? <Test /> : <StartNavigation />}
         </PersistGate>
       </ThemeProvider>
     </Provider>
