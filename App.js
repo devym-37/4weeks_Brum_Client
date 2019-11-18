@@ -10,8 +10,14 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import { Ionicons } from "@expo/vector-icons";
 
+
 // Imports: Navigations
 import StartNavigation from "./navigation/StartNavigation";
+
+// Imports: Screens
+import Signup from "./screens/Signup";
+import MapView from "./screens/HomeScreen";
+
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
@@ -54,20 +60,16 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
+
+          <MapView />
+
           {isLoggedIn ? (
             <Test />
           ) : (
-            // <View
-            //   style={{
-            //     flex: 1,
-            //     justifyContent: "center",
-            //     alignItems: "center"
-            //   }}
-            // >
-            //   <Text>I'm in</Text>
-            // </View>
+      
             <StartNavigation />
           )}
+
         </PersistGate>
       </ThemeProvider>
     </Provider>
