@@ -10,7 +10,7 @@ import useInput from "../../hooks/useInput";
 import MainButton from "../../components/Buttons/MainButton";
 
 // Imports: API
-import { toastApi, serverApi } from "../../components/api";
+import { toastApi, serverApi } from "../../components/API";
 
 // Imports: Redux Actions
 import { otpSaver, otpMaker } from "../../redux/actions/otpActions";

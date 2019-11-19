@@ -8,7 +8,7 @@ import MainButton from "../../components/Buttons/MainButton";
 import AuthInput from "../../components/Inputs/AuthInput";
 import useInput from "../../hooks/useInput";
 // Imports: API
-import { toastApi, serverApi } from "../../components/api";
+import { toastApi, serverApi } from "../../components/API";
 
 // Imports: Redux Actions
 import { phoneSaver } from "../../redux/actions/otpActions";
