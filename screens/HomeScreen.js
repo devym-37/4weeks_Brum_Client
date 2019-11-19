@@ -23,15 +23,9 @@ const { StatusBarManger } = NativeModules;
         longitudeDelta: 0.001
       }
     };
-    this.handleToken= this.handleToken.bind(this)
+    
   }
-  async handleToken(){
-
-const getuser = await AsyncStorage.getItem('userToken')
-console.log(getuser)
-const requestuser = await loginApi.user(getuser)
-console.log("유저정보",requestuser.data.data)
-  }
+ 
   // getInitialState() {
   //   return {
   //     region: {
@@ -60,7 +54,6 @@ console.log("유저정보",requestuser.data.data)
           </Body>
           <Right style={{ flex: 1.2 }} />
           <Button transparent
-          onPress={this.handleToken}
           >
             <Ionicons name="md-notifications" size={24} color="black" />
           </Button>
