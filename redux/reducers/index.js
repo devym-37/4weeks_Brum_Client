@@ -5,12 +5,13 @@ import { combineReducers } from "redux";
 import authReducer from "./authReducer";
 import counterReducer from "./counterReducer";
 import otpReducer from "./otpReducer";
-
+import phoneReducer from "./phoneReducer";
 // Redux: Root Reducer
 const rootReducer = combineReducers({
   authReducer,
   counterReducer,
-  otpReducer
+  otpReducer,
+  phoneReducer
 });
 
 // Exports

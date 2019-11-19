@@ -1,9 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import constants from "../../constants";
-import PropTypes from "prop-types";
 import { ActivityIndicator } from "react-native";
+import PropTypes from "prop-types";
+
+import constants from "../../constants";
+
 const Touchable = styled.TouchableOpacity``;
+
 const Container = styled.View`
   background-color: ${props =>
     props.color === "main" ? props.theme.mainColor : props.color};
@@ -12,6 +15,7 @@ const Container = styled.View`
   margin: 0px 50px;
   border-radius: 4px;
 `;
+
 const Text = styled.Text`
   color: white;
   text-align: center;

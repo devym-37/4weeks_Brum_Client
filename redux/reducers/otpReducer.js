@@ -30,6 +30,16 @@ const otpReducer = (state = initialState, action) => {
         otp: randomNum.authNo(4)
       };
     }
+
+    case "SAVE_OTP": {
+      return {
+        // State
+        ...state,
+        // Redux Store
+        otp: action.otp
+      };
+    }
+
     // Default
     default: {
       return state;
