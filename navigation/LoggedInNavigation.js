@@ -8,19 +8,17 @@ import Confirm from "../screens/Auth/Confirm";
 import Login from "../screens/Auth/Login";
 import AuthHome from "../screens/Auth/AuthHome";
 import VerifyPhone from "../screens/Auth/VerifyPhone";
-import ResetPw from "../screens/Auth/ResetPw"
-const AuthNavigation = createStackNavigator(
+import HomeScreen from "../screens/HomeScreen"
+import StartNavigation from "./StartNavigation"
+const LoggedInNavigation = createStackNavigator(
   {
-    AuthHome,
-    VerifyPhone,
-    Signup,
-    Login,
-    Confirm,
-    ResetPw  },
+    HomeScreen,
+    StartNavigation
+  },
   {
-    initialRouteName: "AuthHome",
+    initialRouteName: "HomeScreen",
     headerMode: "none"
   }
 );
 
-export default createAppContainer(AuthNavigation);
+export default createAppContainer(LoggedInNavigation);
