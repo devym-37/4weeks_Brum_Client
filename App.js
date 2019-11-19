@@ -12,7 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 // Imports: Navigations
 import StartNavigation from "./navigation/StartNavigation";
-import LoggedInNavigation from "./navigation/LoggedInNavigation"
+import LoggedInNavigation from "./navigation/LoggedInNavigation";
+import HomeNavigation from "./navigation/HomeNavigation";
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
@@ -56,12 +57,13 @@ export default function App() {
     preLoad();
   }, []);
 
+  // {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}  // push 시 추가
   return loaded && isLoggedIn !== null ? (
     // Redux: Global Store
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}
+          <HomeNavigation />
         </PersistGate>
       </ThemeProvider>
     </Provider>
