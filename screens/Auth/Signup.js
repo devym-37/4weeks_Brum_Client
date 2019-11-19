@@ -12,7 +12,6 @@ import {
   StyleSheet,
   TouchableOpacity
 } from "react-native";
-import { CheckBox } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 // Imports: Custom components
 import AuthInput from "../../components/Inputs/AuthInput";
@@ -32,7 +31,7 @@ const validationSchema = Yup.object().shape({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "비밀번호가 일치하지 않습니다.")
     .required("확인을 위해 비밀번호를 한번더 입력해주세요"),
-  age: Yup.string().min(4, "출생연도는 4글자 입렵해주세요. 예) 0000년도"),
+  age: Yup.string().min(4, "출생연도는 4글자 입력해주세요. 예) 0000년도"),
 
   agreement_term: Yup.boolean().oneOf([true], "이용약관에 동의해주세요"),
   agreement_privacy: Yup.boolean().oneOf(
@@ -162,7 +161,7 @@ const Signup = props => {
                       style={{ marginLeft: -34 }}
                       name={passwordIcon}
                       size={22}
-                      color="grey"
+                      color="rgb(230, 230, 230)"
                     />
                   </TouchableOpacity>
                 </AuthInput>
@@ -183,7 +182,7 @@ const Signup = props => {
                       style={{ marginLeft: -34 }}
                       name={confirmPasswordIcon}
                       size={22}
-                      color="grey"
+                      color="rgb(230, 230, 230)"
                     />
                   </TouchableOpacity>
                 </AuthInput>
