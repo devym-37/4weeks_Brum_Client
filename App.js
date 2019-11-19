@@ -14,6 +14,9 @@ import { Ionicons } from "@expo/vector-icons";
 import StartNavigation from "./navigation/StartNavigation";
 
 // Imports: Screens
+
+import Signup from "./screens/Auth/Signup";
+
 import MapView from "./screens/HomeScreen";
 
 // Imports: Redux Persist Persister
@@ -57,7 +60,9 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
+
           {isLoggedIn ? <MapView /> : <StartNavigation />}
+
         </PersistGate>
       </ThemeProvider>
     </Provider>
