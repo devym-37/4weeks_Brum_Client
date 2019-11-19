@@ -5,7 +5,8 @@ import PropTypes from "prop-types";
 import { ActivityIndicator } from "react-native";
 const Touchable = styled.TouchableOpacity``;
 const Container = styled.View`
-  background-color: ${props => props.theme.mainColor};
+  background-color: ${props =>
+    props.color === "main" ? props.theme.mainColor : props.color};
   padding: 14px 10px;
   width: ${constants.width - 150};
   margin: 0px 50px;
@@ -18,9 +19,9 @@ const Text = styled.Text`
   font-weight: 600;
 `;
 
-const MainButton = ({ text, onPress, loading = false }) => (
+const MainButton = ({ color = "main", text, onPress, loading = false }) => (
   <Touchable disabled={loading} onPress={onPress}>
-    <Container>
+    <Container color={color}>
       {loading ? <ActivityIndicator color={"white"} /> : <Text>{text}</Text>}
     </Container>
   </Touchable>
@@ -29,7 +30,8 @@ const MainButton = ({ text, onPress, loading = false }) => (
 MainButton.propTypes = {
   text: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  color: PropTypes.string
 };
 
 export default MainButton;
