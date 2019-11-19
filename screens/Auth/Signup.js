@@ -52,7 +52,28 @@ const View = styled.View`
   flex: 1;
 `;
 
-const Text = styled.Text``;
+const LinkContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  margin: 10px 0 20px 0;
+`;
+
+const Touchable = styled.TouchableOpacity``;
+
+const Link = styled.View``;
+
+const LinkText = styled.Text`
+  color: ${props => props.theme.greyColor};
+  font-weight: 400;
+  text-decoration: underline;
+  text-decoration-color: ${props => props.theme.greyColor};
+`;
+const Text = styled.Text`
+  color: ${props => props.theme.greyColor};
+  font-weight: 400;
+`;
 
 const Signup = props => {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
@@ -91,112 +112,131 @@ const Signup = props => {
   };
 
   return (
-    // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Formik
-          initialValues={{
-            phone: `${props.phone}`,
-            password: "",
-            confirmPassword: "",
-            name: "",
-            age: ""
-          }}
-          onSubmit={values => {
-            handleSubmit(values);
-          }}
-          validationSchema={validationSchema}
-        >
-          {({
-            handleChange,
-            values,
-            handleSubmit,
-            errors,
-            isValid,
-            touched,
-            handleBlur,
-            isSubmitting,
-            setFieldValue
-          }) => (
-            <>
-              <AuthInput
-                placeholder={""}
-                keyboardType="numeric"
-                returnKeyType="send"
-                value={props.phone}
-                editable={false}
-              />
-              <ErrorMessage />
-              <AuthInput
-                placeholder={"비밀번호 (6자리 이상)"}
-                onChange={handleChange("password")}
-                secureTextEntry={passwordVisibility}
-                keyboardType="default"
-                returnKeyType="next"
-                onBlur={handleBlur("password")}
-                value={values.password}
-              >
-                <TouchableOpacity onPress={handlePasswordVisibility}>
-                  <Ionicons
-                    style={{ marginLeft: -34 }}
-                    name={passwordIcon}
-                    size={22}
-                    color="grey"
-                  />
-                </TouchableOpacity>
-              </AuthInput>
-              <ErrorMessage errorValue={touched.password && errors.password} />
-              <AuthInput
-                placeholder={"비밀번호 확인"}
-                onChange={handleChange("confirmPassword")}
-                secureTextEntry={confirmPasswordVisibility}
-                keyboardType="default"
-                returnKeyType="next"
-                value={values.confirmPassword}
-                onBlur={handleBlur("confirmPassword")}
-              >
-                <TouchableOpacity onPress={handleConfirmPasswordVisibility}>
-                  <Ionicons
-                    style={{ marginLeft: -34 }}
-                    name={confirmPasswordIcon}
-                    size={22}
-                    color="grey"
-                  />
-                </TouchableOpacity>
-              </AuthInput>
-              <ErrorMessage
-                errorValue={touched.confirmPassword && errors.confirmPassword}
-              />
-              <AuthInput
-                placeholder={"이름(성함)"}
-                keyboardType="default"
-                returnKeyType="next"
-                value={values.name}
-                onBlur={handleBlur("name")}
-                onChange={handleChange("name")}
-              />
-              <ErrorMessage errorValue={touched.name && errors.name} />
-              <AuthInput
-                placeholder={"출생년도(선택) 예)1991"}
-                keyboardType="numeric"
-                returnKeyType="next"
-                value={values.age}
-                onBlur={handleBlur("age")}
-                onChange={handleChange("age")}
-              />
-              <ErrorMessage />
-              <MainButton
-                onPress={() => handleSubmit}
-                disabled={!isValid || isSubmitting}
-                loading={isSubmitting}
-                text="동의하고 시작하기"
-              />
-            </>
-          )}
-        </Formik>
-      </View>
-      {/* </TouchableWithoutFeedback> */}
-    </SafeAreaView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
+        <View>
+          <Formik
+            initialValues={{
+              phone: `${props.phone}`,
+              password: "",
+              confirmPassword: "",
+              name: "",
+              age: ""
+            }}
+            onSubmit={values => {
+              handleSubmit(values);
+            }}
+            validationSchema={validationSchema}
+          >
+            {({
+              handleChange,
+              values,
+              handleSubmit,
+              errors,
+              isValid,
+              touched,
+              handleBlur,
+              isSubmitting,
+              setFieldValue
+            }) => (
+              <>
+                <AuthInput
+                  placeholder={""}
+                  keyboardType="numeric"
+                  returnKeyType="send"
+                  value={props.phone}
+                  editable={false}
+                />
+                <ErrorMessage />
+                <AuthInput
+                  placeholder={"비밀번호 (6자리 이상)"}
+                  onChange={handleChange("password")}
+                  secureTextEntry={passwordVisibility}
+                  keyboardType="default"
+                  returnKeyType="next"
+                  onBlur={handleBlur("password")}
+                  value={values.password}
+                >
+                  <TouchableOpacity onPress={handlePasswordVisibility}>
+                    <Ionicons
+                      style={{ marginLeft: -34 }}
+                      name={passwordIcon}
+                      size={22}
+                      color="grey"
+                    />
+                  </TouchableOpacity>
+                </AuthInput>
+                <ErrorMessage
+                  errorValue={touched.password && errors.password}
+                />
+                <AuthInput
+                  placeholder={"비밀번호 확인"}
+                  onChange={handleChange("confirmPassword")}
+                  secureTextEntry={confirmPasswordVisibility}
+                  keyboardType="default"
+                  returnKeyType="next"
+                  value={values.confirmPassword}
+                  onBlur={handleBlur("confirmPassword")}
+                >
+                  <TouchableOpacity onPress={handleConfirmPasswordVisibility}>
+                    <Ionicons
+                      style={{ marginLeft: -34 }}
+                      name={confirmPasswordIcon}
+                      size={22}
+                      color="grey"
+                    />
+                  </TouchableOpacity>
+                </AuthInput>
+                <ErrorMessage
+                  errorValue={touched.confirmPassword && errors.confirmPassword}
+                />
+                <AuthInput
+                  placeholder={"이름(성함)"}
+                  keyboardType="default"
+                  returnKeyType="next"
+                  value={values.name}
+                  onBlur={handleBlur("name")}
+                  onChange={handleChange("name")}
+                />
+                <ErrorMessage errorValue={touched.name && errors.name} />
+                <AuthInput
+                  placeholder={"출생년도(선택) 예)1991"}
+                  keyboardType="numeric"
+                  returnKeyType="next"
+                  value={values.age}
+                  onBlur={handleBlur("age")}
+                  onChange={handleChange("age")}
+                />
+                <ErrorMessage />
+                <LinkContainer>
+                  <Touchable onPress={() => props.navigation.navigate("Term")}>
+                    <Link>
+                      <LinkText>이용약관</LinkText>
+                    </Link>
+                  </Touchable>
+                  <Text> 및 </Text>
+                  <Touchable
+                    onPress={() => props.navigation.navigate("Privacy")}
+                  >
+                    <Link>
+                      <LinkText>개인정보</LinkText>
+                    </Link>
+                  </Touchable>
+                  <Text>취급방침</Text>
+                </LinkContainer>
+                <ErrorMessage />
+                <MainButton
+                  onPress={() => handleSubmit}
+                  disabled={!isValid || isSubmitting}
+                  loading={isSubmitting}
+                  text="동의하고 시작하기"
+                />
+              </>
+            )}
+          </Formik>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

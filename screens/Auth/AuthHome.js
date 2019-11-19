@@ -20,7 +20,7 @@ const Touchable = styled.TouchableOpacity``;
 const TourLink = styled.View``;
 
 const TourLinkText = styled.Text`
-  color: ${props => props.theme.lightGreyColor};
+  color: ${props => props.theme.greyColor};
   font-weight: 400;
 `;
 
