@@ -38,6 +38,7 @@ const AuthInput = ({
       autoCapitalize={autoCapitalize}
       onEndEditing={onEndEditing}
       returnKeyType={returnKeyType}
+      secureTextEntry={secureTextEntry}
       value={value}
       secureTextEntry={secureTextEntry}
       onBlur={onBlur}

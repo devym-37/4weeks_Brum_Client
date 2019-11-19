@@ -1,18 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules, Platform } from "react-native";
+import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules, Platform,AsyncStorage } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon } from "native-base";
+import { Container, Header, Title, Content, Button, Left, Right, Body, Icon } from "native-base";
 import { connect } from "react-redux";
 import { login } from "../redux/actions/authActions";
 
-const { StatusBarManger } = NativeModules;
-
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     region: {}
- class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +17,9 @@ const { StatusBarManger } = NativeModules;
         longitudeDelta: 0.001
       }
     };
+    
   }
+ 
   // getInitialState() {
   //   return {
   //     region: {
@@ -43,28 +39,33 @@ const { StatusBarManger } = NativeModules;
       <Container style={styles.container}>
         <Header style={styles.headerStyle} androidStatusBarColor="white">
           <Left style={{ flex: 2 }}>
-            <Button transparent>
-              <Ionicons name="md-list" size={24} color="black" />
+            <Button
+              transparent
+              onPress={() => {
+                this.props.navigation.navigate("ListScreen");
+              }}
+            >
+              <Ionicons name="md-list" size={25} color="black" />
             </Button>
           </Left>
           <Body>
-            <Title style={styles.titleStyle}>Header</Title>
+            <Title style={styles.titleStyle}>지도주소</Title>
           </Body>
-          <Right style={{ flex: 1.2 }} />
+          <Right style={{ flex: 1 }} />
           <Button transparent>
-            <Ionicons name="md-notifications" size={24} color="black" />
+            <Ionicons name="ios-notifications-outline" size={25} color="black" />
           </Button>
           <Button transparent>
-            <Ionicons name="md-refresh" size={24} color="black" />
+            <Ionicons name="md-refresh" size={25} color="black" />
           </Button>
-          <Button transparent
-          onPress={
-            () => 
-              {this.props.reduxLogin(false)
-              this.props.navigation.navigate("StartHome")}
-            }
+          <Button
+            transparent
+            onPress={() => {
+              this.props.reduxLogin(false);
+              this.props.navigation.navigate("StartHome");
+            }}
           >
-            <Ionicons name="md-log-out" size={24} color="black" />
+            <Ionicons name="md-log-out" size={25} color="black" />
           </Button>
         </Header>
         <Content>
@@ -109,9 +110,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   // Action
   return {
-    
     // Login
     reduxLogin: trueFalse => dispatch(login(trueFalse))
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
