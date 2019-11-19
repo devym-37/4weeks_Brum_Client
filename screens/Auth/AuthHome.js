@@ -35,7 +35,6 @@ export default ({ navigation }) => (
     <MainButton
       text={"가입하고 구경하기"}
       onPress={() => navigation.navigate("VerifyPhone")}
-      //   onPress={() => navigation.navigate("Signup")}
     />
     <GhostButton
       text={"로그인 하기"}
