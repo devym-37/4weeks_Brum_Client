@@ -59,8 +59,8 @@ const Signup = props => {
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(
     true
   );
-  const [passwordIcon, setPasswordIcon] = useState("ios-eye");
-  const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye");
+  const [passwordIcon, setPasswordIcon] = useState("ios-eye-off");
+  const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye-off");
 
   const handleSubmit = values => {
     if (values.name.length > 0 && values.password.length > 0) {
@@ -72,21 +72,21 @@ const Signup = props => {
 
   const handlePasswordVisibility = () => {
     if (passwordIcon === "ios-eye") {
-      setPasswordVisibility(false);
       setPasswordIcon("ios-eye-off");
-    } else {
       setPasswordVisibility(true);
+    } else {
       setPasswordIcon("ios-eye");
+      setPasswordVisibility(false);
     }
   };
 
   const handleConfirmPasswordVisibility = () => {
     if (confirmPasswordIcon === "ios-eye") {
-      setConfirmPasswordVisibility(false);
       setConfirmPasswordIcon("ios-eye-off");
-    } else {
       setConfirmPasswordVisibility(true);
+    } else {
       setConfirmPasswordIcon("ios-eye");
+      setConfirmPasswordVisibility(false);
     }
   };
 
@@ -124,7 +124,7 @@ const Signup = props => {
                 keyboardType="numeric"
                 returnKeyType="send"
                 value={props.phone}
-                // editable={false}
+                editable={false}
               />
               <ErrorMessage />
               <AuthInput
@@ -135,12 +135,16 @@ const Signup = props => {
                 returnKeyType="next"
                 onBlur={handleBlur("password")}
                 value={values.password}
-                rightIcon={
-                  <TouchableOpacity onPress={handlePasswordVisibility}>
-                    <Ionicons name={passwordIcon} size={28} color="grey" />
-                  </TouchableOpacity>
-                }
-              />
+              >
+                <TouchableOpacity onPress={handlePasswordVisibility}>
+                  <Ionicons
+                    style={{ marginLeft: -34 }}
+                    name={passwordIcon}
+                    size={22}
+                    color="grey"
+                  />
+                </TouchableOpacity>
+              </AuthInput>
               <ErrorMessage errorValue={touched.password && errors.password} />
               <AuthInput
                 placeholder={"비밀번호 확인"}
@@ -150,16 +154,16 @@ const Signup = props => {
                 returnKeyType="next"
                 value={values.confirmPassword}
                 onBlur={handleBlur("confirmPassword")}
-                rightIcon={
-                  <TouchableOpacity onPress={handleConfirmPasswordVisibility}>
-                    <Ionicons
-                      name={confirmPasswordIcon}
-                      size={28}
-                      color="grey"
-                    />
-                  </TouchableOpacity>
-                }
-              />
+              >
+                <TouchableOpacity onPress={handleConfirmPasswordVisibility}>
+                  <Ionicons
+                    style={{ marginLeft: -34 }}
+                    name={confirmPasswordIcon}
+                    size={22}
+                    color="grey"
+                  />
+                </TouchableOpacity>
+              </AuthInput>
               <ErrorMessage
                 errorValue={touched.confirmPassword && errors.confirmPassword}
               />

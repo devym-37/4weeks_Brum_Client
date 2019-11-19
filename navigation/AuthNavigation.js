@@ -8,7 +8,8 @@ import Confirm from "../screens/Auth/Confirm";
 import Login from "../screens/Auth/Login";
 import AuthHome from "../screens/Auth/AuthHome";
 import VerifyPhone from "../screens/Auth/VerifyPhone";
-import ResetPw from "../screens/Auth/ResetPw"
+import ResetPw from "../screens/Auth/ResetPw";
+import HomeScreen from "../screens/HomeScreen";
 const AuthNavigation = createStackNavigator(
   {
     AuthHome,
@@ -16,7 +17,9 @@ const AuthNavigation = createStackNavigator(
     Signup,
     Login,
     Confirm,
-    ResetPw  },
+    HomeScreen,
+    ResetPw
+  },
   {
     initialRouteName: "AuthHome",
     headerMode: "none"
