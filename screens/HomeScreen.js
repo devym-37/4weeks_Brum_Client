@@ -3,8 +3,16 @@ import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules, Platform 
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon } from "native-base";
+import { connect } from "react-redux";
+import { login } from "../redux/actions/authActions";
 
-export default class Home extends Component {
+const { StatusBarManger } = NativeModules;
+
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     region: {}
+ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,6 +57,15 @@ export default class Home extends Component {
           <Button transparent>
             <Ionicons name="md-refresh" size={24} color="black" />
           </Button>
+          <Button transparent
+          onPress={
+            () => 
+              {this.props.reduxLogin(false)
+              this.props.navigation.navigate("StartHome")}
+            }
+          >
+            <Ionicons name="md-log-out" size={24} color="black" />
+          </Button>
         </Header>
         <Content>
           <MapView
@@ -81,3 +98,20 @@ const styles = StyleSheet.create({
     color: "black"
   }
 });
+
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    loggedIn: state.authReducer.loggedIn
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    
+    // Login
+    reduxLogin: trueFalse => dispatch(login(trueFalse))
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

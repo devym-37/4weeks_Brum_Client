@@ -1,11 +1,1 @@
-{
-
-  "expoServerPort": 19001,
-  "expoServerNgrokUrl": "https://78-mje.anonymous.brum-client.exp.direct",
-  "packagerNgrokUrl": "https://packager.78-mje.anonymous.brum-client.exp.direct",
-  "ngrokPid": 94566,
-  "devToolsPort": 19003,
-  "packagerPort": 19004,
-  "packagerPid": 94556
-
-}
+{}
