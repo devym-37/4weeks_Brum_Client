@@ -65,7 +65,7 @@ const LogIn = props => {
       if (verifyId.data.isSuccess) {
         props.reduxPhone(value1);
         Alert.alert("가입되지 않은 휴대전화번호입니다");
-        props.navigation.navigate("Signup");
+        props.navigation.navigate("VerifyPhone");
 
         // 유저일 경우, 로그인 프로세스 진행
       } else {
@@ -89,22 +89,12 @@ const LogIn = props => {
   };
   return (
     <View>
-      {props.phone ? (
-        <AuthInput
-          {...Id}
-          placeholder={""}
-          keyboardType="numeric"
-          returnKeyType="send"
-          value={props.phone}
-        />
-      ) : (
-        <AuthInput
-          {...Id}
-          placeholder="휴대폰 번호(-없이 숫자만 입력)"
-          keyboardType="numeric"
-          returnKeyType="next"
-        />
-      )}
+      <AuthInput
+        {...Id}
+        placeholder="휴대폰 번호(-없이 숫자만 입력)"
+        keyboardType="numeric"
+        returnKeyType="next"
+      />
 
       <AuthInput
         {...Pw}
@@ -131,7 +121,7 @@ const LogIn = props => {
       />
       <GhostButton
         onPress={() => {
-          props.navigation.navigate("Signup");
+          props.navigation.navigate("VerifyPhone");
         }}
         text="회원가입"
       />

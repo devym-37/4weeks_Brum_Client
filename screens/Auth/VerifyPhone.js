@@ -25,7 +25,7 @@ const View = styled.View`
 const Text = styled.Text``;
 
 const VerifyPhone = props => {
-  const phoneNumberInput = useInput("");
+  const phoneNumberInput = useInput(`${props.phone ? props.phone : ""}`);
   const [loading, setLoading] = useState(false);
 
   const handleRequestSMS = async () => {
@@ -63,10 +63,11 @@ const VerifyPhone = props => {
       <View>
         <AuthInput
           {...phoneNumberInput}
-          placeholder="휴대폰 번호(-없이 숫자만 입력)"
+          placeholder={"휴대폰 번호(-없이 숫자만 입력)"}
           keyboardType="numeric"
           returnKeyType="send"
         />
+
         <MainButton
           loading={loading}
           onPress={handleRequestSMS}
