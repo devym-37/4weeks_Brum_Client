@@ -9,15 +9,23 @@ import {
   Keyboard,
   Alert,
   SafeAreaView,
+  AsyncStorage,
   StyleSheet,
   TouchableOpacity
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
 // Imports: Custom components
 import AuthInput from "../../components/Inputs/AuthInput";
 import useInput from "../../hooks/useInput";
 import MainButton from "../../components/Buttons/MainButton";
 import ErrorMessage from "../../components/ErrorMessage";
+
+// Imports: API
+import { serverApi } from "../../components/API";
+
+// Imports: Redux Actions
+import { login } from "../../redux/actions/authActions";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -82,11 +90,31 @@ const Signup = props => {
   const [passwordIcon, setPasswordIcon] = useState("ios-eye-off");
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye-off");
 
-  const handleSubmit = values => {
-    if (values.name.length > 0 && values.password.length > 0) {
-      setTimeout(() => {
-        props.navigation.navigate("HomeScreen");
-      }, 3000);
+  const handleSend = async values => {
+    // console.log(`values: `, values);
+    if (values.name.length === 0 || values.password.length === 0) {
+      Alert.alert("입력이 올바르지 않습니다");
+    }
+
+    try {
+      const signUp = await serverApi.resister(
+        values.phone,
+        values.password,
+        values.name
+      );
+
+      console.log(`signUp: `, signUp);
+
+      if (signUp.data.token !== false) {
+        await AsyncStorage.setItem("userToken", signUp.data.token);
+        props.reduxLogin(true);
+        setTimeout(() => {
+          props.navigation.navigate("HomeScreen");
+        }, 200);
+      }
+    } catch (e) {
+      Alert.alert("회원가입에 실패했습니다");
+      console.log(`Can't signup. error : ${e}`);
     }
   };
 
@@ -116,14 +144,14 @@ const Signup = props => {
         <View>
           <Formik
             initialValues={{
-              phone: `${props.phone}`,
+              phone: `${props.phone ? props.phone : ""}`,
               password: "",
               confirmPassword: "",
               name: "",
               age: ""
             }}
             onSubmit={values => {
-              handleSubmit(values);
+              handleSend(values);
             }}
             validationSchema={validationSchema}
           >
@@ -139,13 +167,25 @@ const Signup = props => {
               setFieldValue
             }) => (
               <>
-                <AuthInput
-                  placeholder={""}
-                  keyboardType="numeric"
-                  returnKeyType="send"
-                  value={props.phone}
-                  editable={false}
-                />
+                {props.phone ? (
+                  <AuthInput
+                    placeholder={"휴대폰 번호(-없이 숫자만 입력)"}
+                    keyboardType="numeric"
+                    returnKeyType="next"
+                    value={props.phone}
+                    editable={false}
+                  />
+                ) : (
+                  <AuthInput
+                    placeholder={"휴대폰 번호(-없이 숫자만 입력)"}
+                    onChange={handleChange("phone")}
+                    keyboardType="numeric"
+                    returnKeyType="next"
+                    value={values.phone}
+                    onBlur={handleBlur("phone")}
+                  />
+                )}
+
                 <ErrorMessage />
                 <AuthInput
                   placeholder={"비밀번호 (6자리 이상)"}
@@ -225,7 +265,7 @@ const Signup = props => {
                 </LinkContainer>
                 <ErrorMessage />
                 <MainButton
-                  onPress={() => handleSubmit}
+                  onPress={handleSubmit}
                   disabled={!isValid || isSubmitting}
                   loading={isSubmitting}
                   text="동의하고 시작하기"
@@ -243,6 +283,14 @@ const mapStateToProps = state => {
   // Redux Store --> Component
   return {
     phone: state.phoneReducer.phone
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    // Login
+    reduxLogin: trueFalse => dispatch(login(trueFalse))
   };
 };
 
@@ -265,4 +313,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps)(Signup);
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

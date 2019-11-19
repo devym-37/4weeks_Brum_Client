@@ -14,7 +14,6 @@ import MainButton from "../../components/Buttons/MainButton";
 import GhostButton from "../../components/Buttons/GhostButton";
 import { connect } from "react-redux";
 import { serverApi } from "../../components/API";
-import axios from "axios";
 
 // Imports: Redux Actions
 import { login } from "../../redux/actions/authActions";
@@ -29,7 +28,7 @@ const View = styled.View`
 const Text = styled.Text``;
 
 const LogIn = props => {
-  let Id = useInput("");
+  let Id = useInput(`${props.phone ? props.phone : ""}`);
   let Pw = useInput("");
   const [loading, setLoading] = useState(false);
 
@@ -90,12 +89,23 @@ const LogIn = props => {
   };
   return (
     <View>
-      <AuthInput
-        {...Id}
-        placeholder="휴대폰 번호(-없이 숫자만 입력)"
-        keyboardType="numeric"
-        returnKeyType="next"
-      />
+      {props.phone ? (
+        <AuthInput
+          {...Id}
+          placeholder={""}
+          keyboardType="numeric"
+          returnKeyType="send"
+          value={props.phone}
+        />
+      ) : (
+        <AuthInput
+          {...Id}
+          placeholder="휴대폰 번호(-없이 숫자만 입력)"
+          keyboardType="numeric"
+          returnKeyType="next"
+        />
+      )}
+
       <AuthInput
         {...Pw}
         secureTextEntry={passwordVisibility}
@@ -139,7 +149,8 @@ const LogIn = props => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    loggedIn: state.authReducer.loggedIn
+    loggedIn: state.authReducer.loggedIn,
+    phone: state.phoneReducer.phone
   };
 };
 

@@ -28,10 +28,13 @@ export const serverApi = {
       phone: id,
       password: ps
     }),
-  resister: (id, ps) =>
+  resister: (phone, password, name, sex = "male", agreementAd = false) =>
     sApi.post("resister", {
-      phone: id,
-      password: ps
+      phone,
+      password,
+      name,
+      sex,
+      agreementAd
     }),
   user: usertoken =>
     sApi.get("user/mypage", {
