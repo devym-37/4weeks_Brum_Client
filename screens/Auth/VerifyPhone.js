@@ -45,7 +45,9 @@ export default ({ navigation }) => {
           placeholder="휴대폰 번호(-없이 숫자만 입력)"
           keyboardType="numeric"
           returnKeyType="send"
-          onEndEditing={handleRequestSMS}
+          onEndEditing={
+          
+            handleRequestSMS}
         />
         <MainButton
           loading={loading}

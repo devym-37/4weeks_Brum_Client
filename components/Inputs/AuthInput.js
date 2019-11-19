@@ -22,6 +22,7 @@ const AuthInput = ({
   authCapitalize = "none",
   onChange,
   returnKeyType = "done",
+  secureTextEntry,
   onEndEditing = () => null
 }) => (
   <Container>
@@ -32,6 +33,7 @@ const AuthInput = ({
       placeholder={placeholder}
       onEndEditing={onEndEditing}
       returnKeyType={returnKeyType}
+      secureTextEntry={secureTextEntry}
       value={value}
     />
   </Container>

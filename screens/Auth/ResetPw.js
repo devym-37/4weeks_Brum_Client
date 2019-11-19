@@ -24,7 +24,13 @@ const  ResetPw = (props) => {
     const  value1  = pwInput1.value;
     const  value2  = pwInput2.value;
 
-    if(value1!==value2){
+    if (value1 === "" || value2 === "") {
+  
+        return Alert.alert("비밀번호를 입력해주세요");
+      } 
+
+    else if(value1!==value2){
+
         Alert.alert(
             '비밀번호 오류',
             '비밀번호를 정확하게 입력해 주세요',
@@ -37,6 +43,12 @@ const  ResetPw = (props) => {
           
     }
     else{
+       /*  try{
+
+        }
+        catch(error){
+
+        } */
         Alert.alert(
             '성공',
             '비밀번호가 성공적으로 변경되었습니다',

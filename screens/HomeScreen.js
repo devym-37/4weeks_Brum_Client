@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules, Platform } from "react-native";
+import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules, Platform,AsyncStorage } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon } from "native-base";
 import { connect } from "react-redux";
 import { login } from "../redux/actions/authActions";
-
+import {loginApi} from "../components/login"
 const { StatusBarManger } = NativeModules;
 
   // constructor(props) {
@@ -23,6 +23,14 @@ const { StatusBarManger } = NativeModules;
         longitudeDelta: 0.001
       }
     };
+    this.handleToken= this.handleToken.bind(this)
+  }
+  async handleToken(){
+
+const getuser = await AsyncStorage.getItem('userToken')
+console.log(getuser)
+const requestuser = await loginApi.user(getuser)
+console.log("유저정보",requestuser.data.data)
   }
   // getInitialState() {
   //   return {
@@ -51,7 +59,9 @@ const { StatusBarManger } = NativeModules;
             <Title style={styles.titleStyle}>Header</Title>
           </Body>
           <Right style={{ flex: 1.2 }} />
-          <Button transparent>
+          <Button transparent
+          onPress={this.handleToken}
+          >
             <Ionicons name="md-notifications" size={24} color="black" />
           </Button>
           <Button transparent>
