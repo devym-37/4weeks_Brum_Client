@@ -1,1 +1,9 @@
-{}
+{
+  "devToolsPort": 19002,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 12072,
+  "expoServerNgrokUrl": "https://uf-g4a.leeyoungmin.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.uf-g4a.leeyoungmin.brum-client.exp.direct",
+  "ngrokPid": 4652
+}
