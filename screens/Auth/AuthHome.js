@@ -20,13 +20,13 @@ const Touchable = styled.TouchableOpacity``;
 const TourLink = styled.View``;
 
 const TourLinkText = styled.Text`
-  color: ${props => props.theme.lightGreyColor};
+  color: ${props => props.theme.greyColor};
   font-weight: 400;
 `;
 
 export default ({ navigation }) => (
   <View>
-    <Touchable>
+    <Touchable onPress={() => navigation.navigate("HomeScreen")}>
       <TourLink>
         <TourLinkText>둘러보기</TourLinkText>
       </TourLink>

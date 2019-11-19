@@ -7,6 +7,13 @@ const Container = styled.View`
   margin-bottom: 10px;
 `;
 
+const InputContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+`;
+
 const TextInput = styled.TextInput`
   width: ${constants.width - 150};
   padding: 12px 10px;
@@ -16,6 +23,7 @@ const TextInput = styled.TextInput`
 `;
 
 const AuthInput = ({
+  children = null,
   placeholder,
   value,
   keyboardType = "default",
@@ -23,26 +31,28 @@ const AuthInput = ({
   onChange,
   returnKeyType = "done",
   secureTextEntry = false,
-  onEndEditing = () => null,
   editable = true,
   onBlur = () => null,
   ...rest
 }) => (
   <Container>
-    <TextInput
-      {...rest}
-      editable={editable}
-      onChangeText={onChange}
-      keyboardType={keyboardType}
-      placeholder={placeholder}
-      autoCapitalize={autoCapitalize}
-      onEndEditing={onEndEditing}
-      returnKeyType={returnKeyType}
-      secureTextEntry={secureTextEntry}
-      value={value}
-      secureTextEntry={secureTextEntry}
-      onBlur={onBlur}
-    />
+    <InputContainer>
+      <TextInput
+        {...rest}
+        editable={editable}
+        onChangeText={onChange}
+        keyboardType={keyboardType}
+        placeholder={placeholder}
+        autoCapitalize={autoCapitalize}
+        returnKeyType={returnKeyType}
+        secureTextEntry={secureTextEntry}
+        value={value}
+        secureTextEntry={secureTextEntry}
+        onBlur={onBlur}
+      />
+
+      {children}
+    </InputContainer>
   </Container>
 );
 

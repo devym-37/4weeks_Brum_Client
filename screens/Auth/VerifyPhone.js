@@ -40,10 +40,8 @@ const VerifyPhone = props => {
       setLoading(true);
 
       const verifyId = await serverApi.verifyPhoneNumber(value);
-
+      props.reduxPhone(value);
       if (verifyId.data.isSuccess) {
-        props.reduxPhone(value);
-
         const otp = props.otp;
 
         Alert.alert("인증번호가 문자로 전송됐습니다. (최대 20초 소요)");

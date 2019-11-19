@@ -23,14 +23,14 @@ const Confirm = props => {
   const otpInput = useInput("");
   const handleSubmit = async () => {
     const { value } = otpInput;
-    console.log(`유저 입력: `, value);
-    console.log(`props.otp: `, props.otp);
+    // console.log(`유저 입력: `, value);
+    // console.log(`props.otp: `, props.otp);
     if (value === "") {
       return Alert.alert("인증번호를 입력해주세요");
     } else if (value !== props.otp) {
       return Alert.alert("인증번호가 일치하지 않습니다");
     }
-    console.log("인증번호 일치");
+    // console.log("인증번호 일치");
     props.navigation.navigate("Signup");
   };
   return (
