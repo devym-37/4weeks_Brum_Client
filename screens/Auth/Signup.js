@@ -186,7 +186,7 @@ const Signup = props => {
                   />
                 )}
 
-                <ErrorMessage />
+                <ErrorMessage errorValue={touched.phone && errors.phone} />
                 <AuthInput
                   placeholder={"비밀번호 (6자리 이상)"}
                   onChange={handleChange("password")}
