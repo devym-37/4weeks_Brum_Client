@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules } from "react-native";
+import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon } from "native-base";
@@ -7,33 +7,50 @@ import { connect } from "react-redux";
 import { login } from "../redux/actions/authActions";
 
 const { StatusBarManger } = NativeModules;
- class Home extends Component {
+
   // constructor(props) {
   //   super(props);
   //   this.state = {
   //     region: {}
+ class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      region: {
+        latitude: 37.55737,
+        longitude: 127.047132,
+        latitudeDelta: 0.006,
+        longitudeDelta: 0.001
+      }
+    };
+  }
+  // getInitialState() {
+  //   return {
+  //     region: {
+  //       latitude: 37.55737,
+  //       longitude: 127.047132,
+  //       latitudeDelta: 0.006,
+  //       longitudeDelta: 0.001
+  //     }
   //   };
+  // }
+
+  // onRegionChange(region) {
+  //   this.setState({ region });
   // }
   render() {
     return (
       <Container style={styles.container}>
-        <StatusBar
-          barStyle="dark-content"
-          translucent={false}
-          backgroundColor="black"
-          hidden={false}
-          networkActivityIndicatorVisible={true}
-        />
-        <Header style={{ backgroundColor: "white" }} androidStatusBarColor="white">
-          <Left>
+        <Header style={styles.headerStyle} androidStatusBarColor="white">
+          <Left style={{ flex: 2 }}>
             <Button transparent>
               <Ionicons name="md-list" size={24} color="black" />
             </Button>
           </Left>
           <Body>
-            <Title style={styles.headerStyle}>Header</Title>
+            <Title style={styles.titleStyle}>Header</Title>
           </Body>
-          <Right />
+          <Right style={{ flex: 1.2 }} />
           <Button transparent>
             <Ionicons name="md-notifications" size={24} color="black" />
           </Button>
@@ -54,13 +71,8 @@ const { StatusBarManger } = NativeModules;
           <MapView
             style={styles.mapStyle}
             provider="google"
-            initialRegion={{
-              // 한양대 default map
-              latitude: 37.557615,
-              longitude: 127.046963,
-              latitudeDelta: 0.007,
-              longitudeDelta: 0.001
-            }}
+            region={this.state.region}
+            onRegionChange={this.onRegionChange}
           />
         </Content>
       </Container>
@@ -78,6 +90,11 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height
   },
   headerStyle: {
+    backgroundColor: "white",
+    justifyContent: "center",
+    marginTop: Platform.OS === "android" ? 20 : 0 // android top-tab statusbar overlap fix
+  },
+  titleStyle: {
     color: "black"
   }
 });

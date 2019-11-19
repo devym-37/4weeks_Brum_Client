@@ -14,6 +14,9 @@ import { Ionicons } from "@expo/vector-icons";
 import StartNavigation from "./navigation/StartNavigation";
 import LoggedInNavigation from "./navigation/LoggedInNavigation"
 // Imports: Screens
+
+import Signup from "./screens/Auth/Signup";
+
 import MapView from "./screens/HomeScreen";
 
 // Imports: Redux Persist Persister

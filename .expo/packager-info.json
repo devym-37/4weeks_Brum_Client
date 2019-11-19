@@ -1,9 +1,1 @@
-{
-  "packagerPort": 19001,
-  "packagerPid": 6360,
-  "expoServerNgrokUrl": "https://v8-7yd.anonymous.brum-client.exp.direct",
-  "packagerNgrokUrl": "https://packager.v8-7yd.anonymous.brum-client.exp.direct",
-  "ngrokPid": 7328,
-  "devToolsPort": 19002,
-  "expoServerPort": 19000
-}
+{}
