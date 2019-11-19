@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Dimensions, Platform } from "react-native";
+import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules, Platform,AsyncStorage } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
 import { Container, Header, Title, Content, Button, Left, Right, Body, Icon } from "native-base";
@@ -17,7 +17,9 @@ class Home extends Component {
         longitudeDelta: 0.001
       }
     };
+    
   }
+ 
   // getInitialState() {
   //   return {
   //     region: {
