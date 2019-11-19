@@ -1,9 +1,11 @@
 {
-  "packagerPort": 19001,
-  "packagerPid": 820,
-  "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://rz-uaf.leeyoungmin.brum-client.exp.direct",
-  "packagerNgrokUrl": "https://packager.rz-uaf.leeyoungmin.brum-client.exp.direct",
-  "ngrokPid": 19292
+
+  "expoServerPort": 19001,
+  "expoServerNgrokUrl": "https://78-mje.anonymous.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.78-mje.anonymous.brum-client.exp.direct",
+  "ngrokPid": 94566,
+  "devToolsPort": 19003,
+  "packagerPort": 19004,
+  "packagerPid": 94556
+
 }
