@@ -17,7 +17,7 @@ export default ({ navigation }) => {
   return (
     <View>
       <Text>Select Campus</Text>
-      <ButtonContainer onPress={() => navigation.navigate("Home")}>
+      <ButtonContainer onPress={() => navigation.navigate("BottomNavigation")}>
         <Button>
           <ButtonText>한양대</ButtonText>
         </Button>

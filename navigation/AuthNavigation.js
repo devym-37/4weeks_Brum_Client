@@ -25,7 +25,10 @@ const AuthNavigation = createStackNavigator(
   },
   {
     initialRouteName: "AuthModal",
-    headerMode: "none"
+    headerMode: "none",
+    defaultNavigationOptions: {
+      gesturesEnabled: false
+    }
   }
 );
 
