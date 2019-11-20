@@ -8,12 +8,12 @@ import SelectCampus from "../screens/Start/SelectCampus";
 
 // Imports: Navigation
 import AuthNavigation from "../navigation/AuthNavigation";
-
+import HomeNavigation from "../navigation/HomeNavigation";
 const StartNavigation = createStackNavigator(
   {
     StartHome,
     SelectCampus,
-    AuthNavigation
+    HomeNavigation
   },
   {
     initialRouteName: "StartHome",

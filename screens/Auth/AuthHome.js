@@ -4,10 +4,11 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import constants from "../../constants";
 import MainButton from "../../components/Buttons/MainButton";
 import GhostButton from "../../components/Buttons/GhostButton";
+// import AuthModal from "./AuthModal";
 const View = styled.View`
   justify-content: center;
   align-items: center;
-  flex: 6;
+  flex: 1;
 `;
 
 const Image = styled.Image`
@@ -25,20 +26,23 @@ const TourLinkText = styled.Text`
 `;
 
 export default ({ navigation }) => (
-  <View>
-    <Touchable onPress={() => navigation.navigate("HomeScreen")}>
-      <TourLink>
-        <TourLinkText>둘러보기</TourLinkText>
-      </TourLink>
-    </Touchable>
-    <Image resizeMode={"contain"} source={require("../../assets/logo.png")} />
-    <MainButton
-      text={"가입하고 구경하기"}
-      onPress={() => navigation.navigate("VerifyPhone")}
-    />
-    <GhostButton
-      text={"로그인 하기"}
-      onPress={() => navigation.navigate("Login")}
-    />
-  </View>
+  <>
+    <AuthModal />
+    <View>
+      <Touchable onPress={() => navigation.navigate("HomeScreen")}>
+        <TourLink>
+          <TourLinkText>둘러보기</TourLinkText>
+        </TourLink>
+      </Touchable>
+      <Image resizeMode={"contain"} source={require("../../assets/logo.png")} />
+      <MainButton
+        text={"가입하고 구경하기"}
+        onPress={() => navigation.navigate("VerifyPhone")}
+      />
+      <GhostButton
+        text={"로그인 하기"}
+        onPress={() => navigation.navigate("Login")}
+      />
+    </View>
+  </>
 );
