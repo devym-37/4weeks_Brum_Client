@@ -7,7 +7,7 @@ const Container = styled.TouchableOpacity``;
 
 export default withNavigation(({ navigation }) => (
   <>
-    <Container onPress={() => navigation.navigate("NotificationNavigation")}>
+    <Container onPress={() => navigation.navigate("FilterNavigation")}>
       <Ionicons
         name="ios-options"
         size={24}

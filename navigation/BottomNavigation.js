@@ -12,7 +12,7 @@ import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
 import { createStackNavigator } from "react-navigation-stack";
 
-import NotificationLink from "../components/NotificationLink";
+import NotificationLink from "../components/HeaderLink";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
