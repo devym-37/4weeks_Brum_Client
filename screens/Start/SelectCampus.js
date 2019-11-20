@@ -15,7 +15,7 @@ const ButtonText = styled.Text``;
 export default ({ navigation }) => (
   <View>
     <Text>Select Campus</Text>
-    <ButtonContainer onPress={() => navigation.navigate("AuthHome")}>
+    <ButtonContainer onPress={() => navigation.navigate("HomeScreen")}>
       <Button>
         <ButtonText>한양대</ButtonText>
       </Button>
