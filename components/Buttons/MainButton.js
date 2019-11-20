@@ -11,8 +11,13 @@ const Container = styled.View`
   background-color: ${props =>
     props.color === "main" ? props.theme.mainColor : props.color};
   padding: 14px 10px;
+<<<<<<< HEAD
   width: ${constants.width - 150};
   margin: 0px 50px 
+=======
+  width: ${props => constants.width - props.width};
+  margin: 0px 50px;
+>>>>>>> acd88873356f510a0f27ca7f38cf6765a387ae12
   border-radius: 4px;
 `;
 
@@ -23,9 +28,15 @@ const Text = styled.Text`
   font-weight: 600;
 `;
 
-const MainButton = ({ color = "main", text, onPress, loading = false }) => (
+const MainButton = ({
+  color = "main",
+  text,
+  width = 150,
+  onPress,
+  loading = false
+}) => (
   <Touchable disabled={loading} onPress={onPress}>
-    <Container color={color}>
+    <Container color={color} width={width}>
       {loading ? <ActivityIndicator color={"white"} /> : <Text>{text}</Text>}
     </Container>
   </Touchable>
@@ -35,6 +46,7 @@ MainButton.propTypes = {
   text: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   loading: PropTypes.bool,
+  width: PropTypes.number,
   color: PropTypes.string
 };
 
