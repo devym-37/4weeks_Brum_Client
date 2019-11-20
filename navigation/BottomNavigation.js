@@ -1,7 +1,7 @@
 import React from "react";
 import { Platform } from "react-native";
 import { Icon } from "native-base";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer } from "react-navigation";
@@ -10,9 +10,8 @@ import ChatScreen from "../screens/Tabs/ChatsScreen";
 import OrderScreen from "../screens/Tabs/OrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
-import NotificationScreen from "../screens/Tabs/NotificationScreen";
 
-const BottomNav = createBottomTabNavigator(
+const BottomNavigation = createBottomTabNavigator(
   {
     Home: {
       screen: ListScreen,
@@ -73,7 +72,5 @@ const BottomNav = createBottomTabNavigator(
     }
   }
 );
-
-const BottomNavigation = createAppContainer(BottomNav);
 
 export default BottomNavigation;

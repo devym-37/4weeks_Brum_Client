@@ -14,7 +14,7 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import StartNavigation from "./navigation/StartNavigation";
 import LoggedInNavigation from "./navigation/LoggedInNavigation";
 import HomeNavigation from "./navigation/HomeNavigation";
-import BottomNavigation from "./navigation/BottomNavigation";
+import MainNavigation from "./navigation/MainNavigation";
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
@@ -61,13 +61,13 @@ export default function App() {
 
   // {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}  // push 시 추가
   // <HomeNavigation />
-  //<BottomNavigation />
+  //<MainNavigation />
   return loaded && isLoggedIn !== null ? (
     // Redux: Global Store
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {isLoggedIn ? <BottomNavigation /> : <BottomNavigation />}
+          {isLoggedIn ? <MainNavigation /> : <StartNavigation />}
         </PersistGate>
       </ThemeProvider>
     </Provider>
