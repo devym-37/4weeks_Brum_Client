@@ -8,7 +8,7 @@ import { AppLoading } from "expo";
 // Imports: Assets
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 // Imports: Navigations
 import StartNavigation from "./navigation/StartNavigation";
@@ -40,7 +40,8 @@ export default function App() {
       await Font.loadAsync({
         Roboto: require("native-base/Fonts/Roboto.ttf"),
         Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-        ...Ionicons.font
+        ...Ionicons.font,
+        ...AntDesign.font
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
 
@@ -66,7 +67,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}
+          {isLoggedIn ? <BottomNavigation /> : <BottomNavigation />}
         </PersistGate>
       </ThemeProvider>
     </Provider>
