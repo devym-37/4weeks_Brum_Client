@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Dimensions, StatusBar, NativeModules, Platform,AsyncStorage } from "react-native";
+import { StyleSheet, Text, View, Dimensions, Platform, AsyncStorage } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
-import { Container, Header, Title, Content, Button, Left, Right, Body, Icon } from "native-base";
+import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, Footer, FooterTab } from "native-base";
 import { connect } from "react-redux";
 import { login } from "../redux/actions/authActions";
 
@@ -17,9 +17,8 @@ class Home extends Component {
         longitudeDelta: 0.001
       }
     };
-    
   }
- 
+
   // getInitialState() {
   //   return {
   //     region: {
@@ -69,11 +68,20 @@ class Home extends Component {
           </Button>
         </Header>
         <Content>
+          <View>
+            <Text>위치</Text>
+          </View>
           <MapView
             style={styles.mapStyle}
             provider="google"
             region={this.state.region}
             onRegionChange={this.onRegionChange}
+            showsUserLocation={true}
+            showsMyLocationButton={true}
+            followsUserLocation={true}
+            zoomEnabled={true}
+            scrollEnabled={true}
+            showsScale={true}
           />
         </Content>
       </Container>

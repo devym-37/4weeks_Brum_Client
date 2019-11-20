@@ -9,42 +9,6 @@ export default function ChatScreen() {
       <View style={styles.Container}>
         <Text>ChatScreen</Text>
       </View>
-      <Footer>
-        <FooterTab style={styles.footerStyle} androidStatusBarColor="white">
-          <Button
-            onPress={() => {
-              this.props.navigation.navigate("HomeScreen");
-            }}
-          >
-            <Ionicons name="ios-home" size={25} color="black" />
-            <Text>홈</Text>
-          </Button>
-          <Button
-            onPress={() => {
-              this.props.navigation.navigate("RequestScreen");
-            }}
-          >
-            <Ionicons name="md-clipboard" size={25} color="black" />
-            <Text>요청하기</Text>
-          </Button>
-          <Button
-            onPress={() => {
-              this.props.navigation.navigate("ChatScreen");
-            }}
-          >
-            <Ionicons name="md-chatboxes" size={25} color="black" />
-            <Text>채팅</Text>
-          </Button>
-          <Button
-            onPress={() => {
-              this.props.navigation.navigate("MyPageScreen");
-            }}
-          >
-            <Ionicons name="ios-settings" size={25} color="black" />
-            <Text>마이페이지</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
     </Container>
   );
 }
