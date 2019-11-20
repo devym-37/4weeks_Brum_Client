@@ -1,5 +1,5 @@
 import { createStackNavigator } from "react-navigation-stack";
-import Filter from "../screens/FilterScreen";
+import Filter from "../screens/HomeHeader/FilterScreen";
 
 export default createStackNavigator({
   Filter: {
