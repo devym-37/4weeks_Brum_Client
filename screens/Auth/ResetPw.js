@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import {
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  AsyncStorage
+} from "react-native";
 import AuthInput from "../../components/Inputs/AuthInput";
 import useInput from "../../hooks/useInput";
 import MainButton from "../../components/Buttons/MainButton";
-import GhostButton from  "../../components/Buttons/GhostButton"
+import GhostButton from "../../components/Buttons/GhostButton";
 import { connect } from "react-redux";
 import { login } from "../../redux/actions/authActions";
+import { serverApi } from "../../components/API";
+import { store, persistor } from "../../redux/store/store";
 
 const View = styled.View`
   justify-content: center;
@@ -16,89 +23,77 @@ const View = styled.View`
 
 const Text = styled.Text``;
 
-const  ResetPw = (props) => {
-    const pwInput1 = useInput("");
-    const pwInput2 = useInput("");
+const ResetPw = props => {
+  const pwInput1 = useInput("");
+  const pwInput2 = useInput("");
   const [loading, setLoading] = useState(false);
- const handlePw = ()=>{
-    const  value1  = pwInput1.value;
-    const  value2  = pwInput2.value;
+
+  const handlePw = async () => {
+    const value1 = pwInput1.value;
+    const value2 = pwInput2.value;
 
     if (value1 === "" || value2 === "") {
-  
-        return Alert.alert("비밀번호를 입력해주세요");
-      } 
+      return Alert.alert("비밀번호를 입력해주세요");
+    } else if (value1 !== value2) {
+      Alert.alert(
+        "비밀번호 오류",
+        "비밀번호를 정확하게 입력해 주세요",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
+    } else {
+      try {
+        const phone = await store.getState().phoneReducer.phone;
+        const usertoken = await AsyncStorage.getItem("userToken");
+        console.log("리셋이 완료되었나", phone);
 
-    else if(value1!==value2){
-
-        Alert.alert(
-            '비밀번호 오류',
-            '비밀번호를 정확하게 입력해 주세요',
-            [
-              
-              {text: 'OK', onPress: () => console.log('OK Pressed')},
-            ],
-            {cancelable: false},
-          );
-          
-    }
-    else{
-       /*  try{
-
+        if (phone) {
+          const result = await serverApi.password(phone, value1, usertoken);
         }
-        catch(error){
-
-        } */
         Alert.alert(
-            '성공',
-            '비밀번호가 성공적으로 변경되었습니다',
-            [
-              
-              {text: 'OK', onPress: () => console.log('OK Pressed')},
-            ],
-            {cancelable: false},
-          );
-          props.reduxLogin(false)
-          props.navigation.navigate("StartHome")
-    }
-    
- }
-  return (
-<View>
-        <AuthInput
-        {...pwInput1}
-          placeholder="비밀번호입력"
-          keyboardType="default"
-          returnKeyType="send"
+          "성공",
+          "비밀번호가 성공적으로 변경되었습니다",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
+        props.reduxLogin(false);
 
-        />
-        <AuthInput
+        props.navigation.navigate("Login");
+      } catch (error) {
+        console.log("resetpwerror", error);
+      }
+    }
+  };
+  return (
+    <View>
+      <AuthInput
+        {...pwInput1}
+        placeholder="비밀번호입력"
+        keyboardType="default"
+        returnKeyType="send"
+      />
+      <AuthInput
         {...pwInput2}
-          placeholder="비밀번호재입력"
-          keyboardType="default"
-          returnKeyType="send"
-        />
-        <MainButton
-          onPress={handlePw}
-          text="비밀번호 재설정"
-        />
-  </View>
-  )
-  
+        placeholder="비밀번호재입력"
+        keyboardType="default"
+        returnKeyType="send"
+      />
+      <MainButton onPress={handlePw} text="비밀번호 재설정" />
+    </View>
+  );
 };
 const mapStateToProps = state => {
-    // Redux Store --> Component
-    return {
-      loggedIn: state.authReducer.loggedIn
-    };
+  // Redux Store --> Component
+  return {
+    loggedIn: state.authReducer.loggedIn
   };
-  
-  const mapDispatchToProps = dispatch => {
-    // Action
-    return {
-      
-      // Login
-      reduxLogin: trueFalse => dispatch(login(trueFalse))
-    };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    // Login
+    reduxLogin: trueFalse => dispatch(login(trueFalse))
   };
-  export default connect(mapStateToProps, mapDispatchToProps)(ResetPw)
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ResetPw);

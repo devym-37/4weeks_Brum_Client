@@ -12,7 +12,7 @@ const Container = styled.View`
     props.color === "main" ? props.theme.mainColor : props.color};
   padding: 14px 10px;
   width: ${constants.width - 150};
-  margin: 0px 50px;
+  margin: 0px 50px 
   border-radius: 4px;
 `;
 

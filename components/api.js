@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setApiKey } from "expo-location";
 
 // dotenv.config();
 const APPKEY = "Ic5BJfNvJOAFgNLI";
@@ -43,5 +44,29 @@ export const serverApi = {
         "Access-Control-Allow-Headers": "x-access-token",
         "x-access-token": usertoken
       }
-    })
+    }),
+  uploadimage: (usertoken, imgfile) =>
+    sApi.post("user/image", {
+      imgfile,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": usertoken
+      }
+    }),
+  password: (phone, pw, usertoken) =>
+    sApi.put(
+      "password",
+      {
+        phone: phone,
+        password: pw
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": usertoken
+        }
+      }
+    )
 };

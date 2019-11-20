@@ -48,6 +48,7 @@ const LogIn = props => {
   const handleFetchApi = async (val1, val2) => {
     const value1 = val1.value;
     const value2 = val2.value;
+
     if (value1 === "" || value2 === "") {
       // console.log(val1, val2);
 
@@ -59,29 +60,30 @@ const LogIn = props => {
     try {
       setLoading(true);
       // 아이디(휴대전화번호)가 DB에 존재하는지 확인
-      const verifyId = await serverApi.verifyPhoneNumber(value1);
+      //const verifyId = await serverApi.verifyPhoneNumber(value1);
 
       // 유저가 아닐 경우, 유저가 입력한 휴대전화번호를 저장한 채 회원가입 페이지로 이동
-      if (verifyId.data.isSuccess) {
-        props.reduxPhone(value1);
-        Alert.alert("가입되지 않은 휴대전화번호입니다");
-        props.navigation.navigate("VerifyPhone");
+      //if (!verifyId.data.isSuccess) {
+      props.reduxPhone(value1); //
+      //  Alert.alert("가입되지 않은 휴대전화번호입니다");
+      //  props.navigation.navigate("VerifyPhone");
 
-        // 유저일 경우, 로그인 프로세스 진행
-      } else {
+      // 유저일 경우, 로그인 프로세스 진행
+      // } else {
+      const requestLogin = await serverApi.logIn(value1, value2);
+      console.log("아이디검증됨", requestLogin.data);
+
+      if (requestLogin.data.token !== false) {
+        // console.log(`requestLogin응답: `, requestLogin.data.token);
         Alert.alert("로그인되었습니다.");
-        const requestLogin = await serverApi.logIn(value1, value2);
-
-        if (requestLogin.data.token !== false) {
-          // console.log(`requestLogin응답: `, requestLogin.data.token);
-
-          await AsyncStorage.setItem("userToken", requestLogin.data.token);
-          props.reduxLogin(true);
-          props.navigation.navigate("HomeScreen");
-        }
+        await AsyncStorage.setItem("userToken", requestLogin.data.token);
+        props.reduxLogin(true);
+        props.navigation.navigate("HomeScreen");
+      } else {
+        Alert.alert("로그인에 실패했습니다");
+        //   }
       }
     } catch (error) {
-      Alert.alert("로그인에 실패했습니다");
       console.log("로그인실패", error);
     } finally {
       setLoading(false);
