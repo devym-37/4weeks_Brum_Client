@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import { Icon } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -10,11 +10,25 @@ import ChatScreen from "../screens/Tabs/ChatsScreen";
 import OrderScreen from "../screens/Tabs/OrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
+import { createStackNavigator } from "react-navigation-stack";
+
+import NotificationLink from "../components/HeaderLink";
+
+const stackFactory = (initialRoute, customConfig) =>
+  createStackNavigator({
+    initialRoute: {
+      screen: initialRoute,
+      navigationOptions: { ...customConfig }
+    }
+  });
 
 const BottomNavigation = createBottomTabNavigator(
   {
     Home: {
-      screen: ListScreen,
+      screen: stackFactory(ListScreen, {
+        title: "홈",
+        headerRight: <NotificationLink />
+      }),
       navigationOptions: {
         title: "홈",
         tabBarIcon: ({ focused, tintColor }) => (
@@ -23,7 +37,7 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Order: {
-      screen: OrderScreen,
+      screen: stackFactory(OrderScreen, { title: "내요청" }),
       navigationOptions: {
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
@@ -32,7 +46,7 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Chats: {
-      screen: ChatScreen,
+      screen: stackFactory(ChatScreen, { title: "채팅" }),
       navigationOptions: {
         title: "채팅",
         tabBarIcon: ({ focused, tintColor }) => (
@@ -41,7 +55,7 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Mypage: {
-      screen: MyPageScreen,
+      screen: stackFactory(MyPageScreen, { title: "마이페이지" }),
       navigationOptions: {
         title: "마이페이지",
         tabBarIcon: ({ focused, tintColor }) => (

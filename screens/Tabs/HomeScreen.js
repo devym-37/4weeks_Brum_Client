@@ -61,7 +61,7 @@ class Home extends Component {
       <>
         <AuthModal />
         <Container style={styles.container}>
-          <Header style={styles.headerStyle} androidStatusBarColor="white">
+          {/* <Header style={styles.headerStyle} androidStatusBarColor="white">
             <Left style={{ flex: 2 }}>
               <Button
                 transparent
@@ -95,7 +95,7 @@ class Home extends Component {
             >
               <Ionicons name="md-log-out" size={25} color="black" />
             </Button>
-          </Header>
+          </Header> */}
           <Content>
             <View>
               <Text>위치</Text>

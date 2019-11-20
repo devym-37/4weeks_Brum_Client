@@ -16,7 +16,7 @@ const PhotoTabs = createMaterialTopTabNavigator(
     TakePhoto: {
       screen: TakePhoto,
       navigationOptions: {
-        title: "사진 업로드"
+        title: "촬영 업로드"
       }
     }
   },
