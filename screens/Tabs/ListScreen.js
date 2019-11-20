@@ -1,8 +1,24 @@
 import React, { Component } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, FooterTab, Footer } from "native-base";
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Left,
+  Right,
+  Body,
+  Icon,
+  FooterTab,
+  Footer
+} from "native-base";
 import { StyleSheet, View, Text, Platform } from "react-native";
-import { createBottomTabNavigator, createAppContainer, TabNavigator } from "react-navigation";
+import {
+  createBottomTabNavigator,
+  createAppContainer,
+  TabNavigator
+} from "react-navigation";
 
 class ListScreen extends Component {
   render() {
@@ -18,7 +34,11 @@ class ListScreen extends Component {
             <Ionicons name="md-options" size={25} color="black" />
           </Button>
           <Button transparent>
-            <Ionicons name="ios-notifications-outline" size={25} color="black" />
+            <Ionicons
+              name="ios-notifications-outline"
+              size={25}
+              color="black"
+            />
           </Button>
           <Button transparent>
             <Ionicons name="md-refresh" size={25} color="black" />

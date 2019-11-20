@@ -25,9 +25,9 @@ import {
 } from "native-base";
 
 import { connect } from "react-redux";
-import { login } from "../redux/actions/authActions";
+import { login } from "../../redux/actions/authActions";
 
-import AuthModal from "../screens/Auth/AuthModal";
+import AuthModal from "../Auth/AuthModal";
 
 class Home extends Component {
   constructor(props) {
