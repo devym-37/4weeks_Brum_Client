@@ -22,14 +22,14 @@ export const toastApi = {
 };
 
 export const serverApi = {
-  verifyPhoneNumber: phone => sApi.post("resister/phone", { phone }),
+  verifyPhoneNumber: phone => sApi.post("register/phone", { phone }),
   logIn: (id, ps) =>
     sApi.post("login", {
       phone: id,
       password: ps
     }),
   resister: (phone, password, name, sex = "male", agreementAd = false) =>
-    sApi.post("resister", {
+    sApi.post("register", {
       phone,
       password,
       name,
