@@ -19,7 +19,7 @@ import BottomNavigation from "./navigation/BottomNavigation";
 
 import Signup from "./screens/Auth/Signup";
 
-import MapView from "./screens/HomeScreen";
+import MapView from "./screens/Tabs/HomeScreen";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
@@ -27,8 +27,8 @@ import { store, persistor } from "./redux/store/store";
 // Imports: Styled Component Custom Colors Theme Provider
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
-import Test from "./screens/Test";
-import HomeScreen from "./screens/HomeScreen";
+
+import HomeScreen from "./screens/Tabs/HomeScreen";
 
 // React Native: App
 export default function App() {
@@ -66,11 +66,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-
-          
-
           {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}
-
         </PersistGate>
       </ThemeProvider>
     </Provider>

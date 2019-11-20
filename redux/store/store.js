@@ -15,7 +15,7 @@ const persistConfig = {
   // Whitelist (Save Specific Reducers)
   whitelist: ["authReducer"],
   // Blacklist (Don't Save Specific Reducers)
-  blacklist: ["counterReducer", "otpReducer", "phoneReducer"]
+  blacklist: ["otpReducer", "phoneReducer"]
 };
 
 // Middleware: Redux Persist Persisted Reducer

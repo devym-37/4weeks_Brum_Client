@@ -6,10 +6,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer } from "react-navigation";
 
-import ChatScreen from "../screens/ChatScreen";
-import RequestScreen from "../screens/RequestScreen";
-import MyPageScreen from "../screens/MyPageScreen";
-import ListScreen from "../screens/ListScreen";
+import ChatScreen from "../screens/Tabs/ChatsScreen";
+import OrderScreen from "../screens/Tabs/OrderScreen";
+import MyPageScreen from "../screens/Tabs/MyPageScreen";
+import ListScreen from "../screens/Tabs/ListScreen";
 
 const BottomNav = createBottomTabNavigator(
   {
@@ -22,7 +22,7 @@ const BottomNav = createBottomTabNavigator(
       }
     },
     요청하기: {
-      screen: RequestScreen,
+      screen: OrderScreen,
       navigationOptions: {
         tabBarIcon: ({ focused, tintColor }) => (
           <Ionicons
