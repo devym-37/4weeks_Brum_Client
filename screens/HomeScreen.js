@@ -1,10 +1,14 @@
 import React, { Component } from "react";
+
 import { StyleSheet, Text, View, Dimensions, Platform, AsyncStorage } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
 import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, Footer, FooterTab } from "native-base";
+
 import { connect } from "react-redux";
 import { login } from "../redux/actions/authActions";
+
+import AuthModal from "../screens/Auth/AuthModal";
 
 class Home extends Component {
   constructor(props) {
@@ -35,17 +39,44 @@ class Home extends Component {
   // }
   render() {
     return (
-      <Container style={styles.container}>
-        <Header style={styles.headerStyle} androidStatusBarColor="white">
-          <Left style={{ flex: 2 }}>
+      <>
+        <AuthModal />
+        <Container style={styles.container}>
+          <Header style={styles.headerStyle} androidStatusBarColor="white">
+            <Left style={{ flex: 2 }}>
+              <Button
+                transparent
+                onPress={() => {
+                  this.props.navigation.navigate("ListScreen");
+                }}
+              >
+                <Ionicons name="md-list" size={25} color="black" />
+              </Button>
+            </Left>
+            <Body>
+              <Title style={styles.titleStyle}>지도주소</Title>
+            </Body>
+            <Right style={{ flex: 1 }} />
+            <Button transparent>
+              <Ionicons
+                name="ios-notifications-outline"
+                size={25}
+                color="black"
+              />
+            </Button>
+            <Button transparent>
+              <Ionicons name="md-refresh" size={25} color="black" />
+            </Button>
             <Button
               transparent
               onPress={() => {
-                this.props.navigation.navigate("ListScreen");
+                this.props.reduxLogin(false);
+                this.props.navigation.navigate("StartHome");
               }}
             >
-              <Ionicons name="md-list" size={25} color="black" />
+              <Ionicons name="md-log-out" size={25} color="black" />
             </Button>
+
           </Left>
           <Body>
             <Title style={styles.titleStyle}>지도주소</Title>
@@ -85,6 +116,7 @@ class Home extends Component {
           />
         </Content>
       </Container>
+
     );
   }
 }

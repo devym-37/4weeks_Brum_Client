@@ -10,7 +10,7 @@ import useInput from "../../hooks/useInput";
 import MainButton from "../../components/Buttons/MainButton";
 
 // Imports: API
-import { toastApi, serverApi } from "../../components/api";
+import { toastApi, serverApi } from "../../components/API";
 
 // Imports: Redux Actions
 import { otpSaver, otpMaker } from "../../redux/actions/otpActions";
@@ -25,7 +25,7 @@ const View = styled.View`
 const Text = styled.Text``;
 
 const VerifyPhone = props => {
-  const phoneNumberInput = useInput("");
+  const phoneNumberInput = useInput(`${props.phone ? props.phone : ""}`);
   const [loading, setLoading] = useState(false);
 
   const handleRequestSMS = async () => {
@@ -40,10 +40,8 @@ const VerifyPhone = props => {
       setLoading(true);
 
       const verifyId = await serverApi.verifyPhoneNumber(value);
-
+      props.reduxPhone(value);
       if (verifyId.data.isSuccess) {
-        props.reduxPhone(value);
-
         const otp = props.otp;
 
         Alert.alert("인증번호가 문자로 전송됐습니다. (최대 20초 소요)");
@@ -65,10 +63,11 @@ const VerifyPhone = props => {
       <View>
         <AuthInput
           {...phoneNumberInput}
-          placeholder="휴대폰 번호(-없이 숫자만 입력)"
+          placeholder={"휴대폰 번호(-없이 숫자만 입력)"}
           keyboardType="numeric"
           returnKeyType="send"
         />
+
         <MainButton
           loading={loading}
           onPress={handleRequestSMS}

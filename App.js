@@ -60,12 +60,17 @@ export default function App() {
 
   // {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}  // push 시 추가
   // <HomeNavigation />
+  //<BottomNavigation />
   return loaded && isLoggedIn !== null ? (
     // Redux: Global Store
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          <BottomNavigation />
+
+          
+
+          {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}
+
         </PersistGate>
       </ThemeProvider>
     </Provider>
