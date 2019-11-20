@@ -10,6 +10,7 @@ import ChatScreen from "../screens/Tabs/ChatsScreen";
 import OrderScreen from "../screens/Tabs/OrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
+import NotificationScreen from "../screens/Tabs/NotificationScreen";
 
 const BottomNav = createBottomTabNavigator(
   {
