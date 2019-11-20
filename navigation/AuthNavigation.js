@@ -9,16 +9,17 @@ import Confirm from "../screens/Auth/Confirm";
 import Login from "../screens/Auth/Login";
 import VerifyPhone from "../screens/Auth/VerifyPhone";
 import ResetPw from "../screens/Auth/ResetPw";
-import Term from "../screens/Auth/Term";
+import Term from "../screens/Auth/Terms";
 import Privacy from "../screens/Auth/Privacy";
+
+import TermsAndPrivacyNavigation from "../navigation/TermsAndPrivacyNavigation";
 
 const AuthNavigation = createStackNavigator(
   {
     AuthModal,
     VerifyPhone,
     Signup,
-    Term,
-    Privacy,
+    TermsAndPrivacyNavigation,
     Login,
     Confirm,
     ResetPw
