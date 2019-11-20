@@ -24,7 +24,7 @@ class ListScreen extends Component {
   render() {
     return (
       <Container>
-        {/* <Header style={styles.headerStyle} androidStatusBarColor="white">
+        <Header style={styles.headerStyle} androidStatusBarColor="white">
           <Left style={{ flex: 1 }} />
           <Body>
             <Title style={styles.titleStyle}>학교이름</Title>
@@ -34,12 +34,16 @@ class ListScreen extends Component {
             <Ionicons name="md-options" size={25} color="black" />
           </Button>
           <Button transparent>
-            <Ionicons name="ios-notifications-outline" size={25} color="black" />
+            <Ionicons
+              name="ios-notifications-outline"
+              size={25}
+              color="black"
+            />
           </Button>
           <Button transparent>
             <Ionicons name="md-refresh" size={25} color="black" />
           </Button>
-        </Header> */}
+        </Header>
         <Content>
           <View style={styles.Container}>
             <Text>List Screen</Text>
