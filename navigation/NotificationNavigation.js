@@ -1,5 +1,5 @@
 import { createStackNavigator } from "react-navigation-stack";
-import Notifications from "../screens/NotificationScreen";
+import Notifications from "../screens/HomeHeader/NotificationScreen";
 
 export default createStackNavigator({
   Notifications: {
