@@ -20,10 +20,14 @@ import {
   TabNavigator
 } from "react-navigation";
 
+import AuthModal from "../Auth/AuthModal";
+
 class ListScreen extends Component {
   render() {
     return (
-      <Container>
+      <>
+        <AuthModal />
+        {/* <Container> */}
         {/* <Header style={styles.headerStyle} androidStatusBarColor="white">
           <Left style={{ flex: 1 }} />
           <Body>
@@ -49,7 +53,8 @@ class ListScreen extends Component {
             <Text>List Screen</Text>
           </View>
         </Content>
-      </Container>
+        {/* </Container> */}
+      </>
     );
   }
 }
