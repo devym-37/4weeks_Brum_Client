@@ -50,12 +50,6 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: "black"
-  },
-  footerStyle: {
-    borderTopWidth: 0.5,
-    borderTopColor: "gray",
-    backgroundColor: "white",
-    justifyContent: "center"
   }
 });
 

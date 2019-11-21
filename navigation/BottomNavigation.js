@@ -10,11 +10,12 @@ import ChatScreen from "../screens/ChatScreen";
 import RequestScreen from "../screens/RequestScreen";
 import MyPageScreen from "../screens/MyPageScreen";
 import ListScreen from "../screens/ListScreen";
+import HomeScreen from "../screens/HomeScreen";
 
 const BottomNav = createBottomTabNavigator(
   {
     홈: {
-      screen: ListScreen,
+      screen: HomeScreen,
       navigationOptions: {
         tabBarIcon: ({ focused, tintColor }) => (
           <Icon name="ios-home" style={{ color: tintColor }} />
@@ -39,7 +40,7 @@ const BottomNav = createBottomTabNavigator(
         tabBarIcon: ({ focused, tintColor }) => (
           <Ionicons
             name="md-chatboxes"
-            size={35}
+            size={31}
             style={{ color: tintColor }}
           />
         )

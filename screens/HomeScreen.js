@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
 
 import {
   StyleSheet,
@@ -29,6 +31,8 @@ import { login } from "../redux/actions/authActions";
 
 import AuthModal from "../screens/Auth/AuthModal";
 
+import { CurrentLocationButton } from "../navigation/CurrentLocationBtn";
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -40,22 +44,40 @@ class Home extends Component {
         longitudeDelta: 0.001
       }
     };
+    this._getLocationAsync();
   }
 
-  // getInitialState() {
-  //   return {
-  //     region: {
-  //       latitude: 37.55737,
-  //       longitude: 127.047132,
-  //       latitudeDelta: 0.006,
-  //       longitudeDelta: 0.001
-  //     }
-  //   };
-  // }
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted")
+      console.log("Permission to access location was denied");
+    let location = await Location.getCurrentPositionAsync({
+      enabledHighAccuracy: true
+    });
+    let region = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: this.state.latitudeDelta,
+      longitudeDelta: this.state.longitudeDelta
+    };
+    this.setState({ region: region });
+  };
 
-  // onRegionChange(region) {
-  //   this.setState({ region });
-  // }
+  centerMap() {
+    const {
+      latitude,
+      longitude,
+      latitudeDelta,
+      longitudeDelta
+    } = this.state.region;
+    this.map.animateToRegion({
+      latitude,
+      longitude,
+      latitudeDelta,
+      longitudeDelta
+    });
+  }
+
   render() {
     return (
       <>
@@ -69,7 +91,12 @@ class Home extends Component {
                   this.props.navigation.navigate("ListScreen");
                 }}
               >
-                <Ionicons name="md-list" size={25} color="black" />
+                <Ionicons
+                  name="md-list"
+                  size={28}
+                  color="black"
+                  style={{ paddingLeft: 5 }}
+                />
               </Button>
             </Left>
             <Body>
@@ -79,12 +106,12 @@ class Home extends Component {
             <Button transparent>
               <Ionicons
                 name="ios-notifications-outline"
-                size={25}
+                size={28}
                 color="black"
               />
             </Button>
             <Button transparent>
-              <Ionicons name="md-refresh" size={25} color="black" />
+              <Ionicons name="md-refresh" size={28} color="black" />
             </Button>
             <Button
               transparent
@@ -93,18 +120,21 @@ class Home extends Component {
                 this.props.navigation.navigate("StartHome");
               }}
             >
-              <Ionicons name="md-log-out" size={25} color="black" />
+              <Ionicons name="md-log-out" size={28} color="black" />
             </Button>
           </Header>
+
           <Content>
-            <View>
-              <Text>위치</Text>
-            </View>
             <MapView
               style={styles.mapStyle}
+              ref={map => {
+                this.map = map;
+              }}
               provider="google"
               region={this.state.region}
               onRegionChange={this.onRegionChange}
+              showsCompass={true}
+              rotateEnabled={false}
               showsUserLocation={true}
               showsMyLocationButton={true}
               followsUserLocation={true}
@@ -113,6 +143,11 @@ class Home extends Component {
               showsScale={true}
             />
           </Content>
+          <CurrentLocationButton
+            cb={() => {
+              this.centerMap();
+            }}
+          />
         </Container>
       </>
     );

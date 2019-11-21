@@ -66,11 +66,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-
-          
-
-          {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}
-
+          <BottomNavigation />
         </PersistGate>
       </ThemeProvider>
     </Provider>
