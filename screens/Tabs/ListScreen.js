@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -9,14 +8,6 @@ import {
   RefreshControl
 } from "react-native";
 import { Content } from "native-base";
-=======
-import React, { Component } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, FooterTab, Footer } from "native-base";
-import { StyleSheet, View, Text, Platform } from "react-native";
-import { createBottomTabNavigator, createAppContainer, TabNavigator } from "react-navigation";
-
->>>>>>> e64bde6983aeb7a5e6d4be81b7756f9b566c3399
 import AuthModal from "../Auth/AuthModal";
 import { serverApi } from "../../components/API";
 
@@ -50,7 +41,6 @@ const ListScreen = () => {
   return (
     <>
       <AuthModal />
-
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
@@ -78,6 +68,12 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: "black"
+  },
+  footerStyle: {
+    borderTopWidth: 0.5,
+    borderTopColor: "gray",
+    backgroundColor: "white",
+    justifyContent: "center"
   }
 });
 
