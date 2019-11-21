@@ -3,7 +3,7 @@ import { setApiKey } from "expo-location";
 
 // dotenv.config();
 const APPKEY = "Ic5BJfNvJOAFgNLI";
-axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8";
+//axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8";
 
 const tApi = axios.create({
   baseURL: "https://api-sms.cloud.toast.com/"
@@ -46,7 +46,9 @@ export const serverApi = {
       }
     }),
   uploadimage: (usertoken, imgfile) =>
-    sApi.post("user/image", {
+    axios({
+      method: "post",
+      url: "http://13.209.17.154:3000/user/image",
       imgfile,
       headers: {
         "Content-Type": "multipart/form-data",

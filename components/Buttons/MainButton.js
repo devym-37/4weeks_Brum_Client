@@ -11,13 +11,8 @@ const Container = styled.View`
   background-color: ${props =>
     props.color === "main" ? props.theme.mainColor : props.color};
   padding: 14px 10px;
-<<<<<<< HEAD
-  width: ${constants.width - 150};
-  margin: 0px 50px 
-=======
   width: ${props => constants.width - props.width};
   margin: 0px 50px;
->>>>>>> acd88873356f510a0f27ca7f38cf6765a387ae12
   border-radius: 4px;
 `;
 
