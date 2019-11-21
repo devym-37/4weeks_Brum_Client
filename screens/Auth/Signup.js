@@ -97,7 +97,7 @@ const Signup = props => {
     }
 
     try {
-      const signUp = await serverApi.resister(
+      const signUp = await serverApi.register(
         values.phone,
         values.password,
         values.name
