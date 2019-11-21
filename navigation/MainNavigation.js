@@ -6,13 +6,15 @@ import BottomNavigation from "./BottomNavigation";
 import NotificationNavigation from "./NotificationNavigation";
 import FilterNavigation from "./FilterNavigation";
 import AuthNavigation from "./AuthNavigation";
+import HomeNavigation from "./HomeNavigation";
 
 const MainNavigation = createStackNavigator(
   {
     BottomNavigation,
     AuthNavigation,
     FilterNavigation,
-    NotificationNavigation
+    NotificationNavigation,
+    HomeNavigation
   },
   { headerMode: "none", mode: "modal" }
 );
