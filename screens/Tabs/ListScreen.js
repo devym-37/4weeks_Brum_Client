@@ -1,47 +1,56 @@
-import React, { Component } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, FooterTab, Footer } from "native-base";
-import { StyleSheet, View, Text, Platform } from "react-native";
-import { createBottomTabNavigator, createAppContainer, TabNavigator } from "react-navigation";
-
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Text,
+  Platform,
+  RefreshControl
+} from "react-native";
+import { Content } from "native-base";
 import AuthModal from "../Auth/AuthModal";
+import { serverApi } from "../../components/API";
 
-class ListScreen extends Component {
-  render() {
-    return (
-      <>
-        <AuthModal />
-        {/* <Container> */}
-        {/* <Header style={styles.headerStyle} androidStatusBarColor="white">
-          <Left style={{ flex: 1 }} />
-          <Body>
-            <Title style={styles.titleStyle}>학교이름</Title>
-          </Body>
-          <Right style={{ flex: 1 }} />
-          <Button transparent>
-            <Ionicons name="md-options" size={25} color="black" />
-          </Button>
-          <Button transparent>
-            <Ionicons
-              name="ios-notifications-outline"
-              size={25}
-              color="black"
-            />
-          </Button>
-          <Button transparent>
-            <Ionicons name="md-refresh" size={25} color="black" />
-          </Button>
-        </Header> */}
-        <Content>
-          <View style={styles.Container}>
-            <Text>List Screen</Text>
-          </View>
-        </Content>
-        {/* </Container> */}
-      </>
-    );
-  }
-}
+const ListScreen = () => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const refresh = async () => {
+    try {
+      setRefreshing(true);
+      let getAllOrders = await serverApi.getAllOrders();
+      // console.log(`refresh: `, getAllOrders);
+    } catch (e) {
+      console.log(`Can't refresh data. error message: ${e}`);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const preLoad = async () => {
+    try {
+      let getAllOrders = await serverApi.getAllOrders();
+      // console.log(`getAllOrders: `, getAllOrders);
+    } catch (e) {
+      console.log(`Can't fetch data from server. error message: ${e}`);
+    }
+  };
+
+  useEffect(() => {
+    preLoad();
+  }, []);
+  return (
+    <>
+      <AuthModal />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        }
+      >
+        <Text>List Screen</Text>
+      </ScrollView>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -59,6 +68,12 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: "black"
+  },
+  footerStyle: {
+    borderTopWidth: 0.5,
+    borderTopColor: "gray",
+    backgroundColor: "white",
+    justifyContent: "center"
   }
 });
 

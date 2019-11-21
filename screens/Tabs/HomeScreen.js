@@ -1,8 +1,27 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Dimensions, Platform, AsyncStorage } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Platform,
+  AsyncStorage
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MapView from "react-native-maps";
-import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, Footer, FooterTab } from "native-base";
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Left,
+  Right,
+  Body,
+  Icon,
+  Footer,
+  FooterTab
+} from "native-base";
 import { connect } from "react-redux";
 import { login } from "../../redux/actions/authActions";
 import AuthModal from "../Auth/AuthModal";
@@ -71,7 +90,12 @@ class Home extends Component {
       };
       this.setState({ region: currentRegion });
     });
-    const { latitude, longitude, latitudeDelta, longitudeDelta } = this.state.region;
+    const {
+      latitude,
+      longitude,
+      latitudeDelta,
+      longitudeDelta
+    } = this.state.region;
     this.map.animateToRegion({
       latitude,
       longitude,

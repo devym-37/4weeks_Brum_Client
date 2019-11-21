@@ -13,12 +13,16 @@ import ListScreen from "../screens/Tabs/ListScreen";
 import { createStackNavigator } from "react-navigation-stack";
 
 import NotificationLink from "../components/HeaderLink";
+import { stackStyles } from "./config";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
     initialRoute: {
       screen: initialRoute,
-      navigationOptions: { ...customConfig }
+      navigationOptions: {
+        ...customConfig,
+        headerStyle: { ...stackStyles }
+      }
     }
   });
 
@@ -67,7 +71,7 @@ const BottomNavigation = createBottomTabNavigator(
   {
     tabBarOptions: {
       style: {
-        backgroundColor: "white",
+        backgroundColor: "#FEFFFF",
         marginBottom: 3
       },
       iconStyle: {
@@ -78,8 +82,8 @@ const BottomNavigation = createBottomTabNavigator(
           }
         })
       },
-      activeTintColor: "#666",
-      inactiveTintColor: "#d1cece",
+      activeTintColor: "#24282C",
+      inactiveTintColor: "#A4A4A4",
       upperCaseLabel: true,
       showLabel: true,
       showIcon: true

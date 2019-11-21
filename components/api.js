@@ -28,7 +28,7 @@ export const serverApi = {
       phone: id,
       password: ps
     }),
-  resister: (phone, password, name, sex = "male", agreementAd = false) =>
+  register: (phone, password, name, sex = "male", agreementAd = false) =>
     sApi.post("register", {
       phone,
       password,
@@ -43,5 +43,6 @@ export const serverApi = {
         "Access-Control-Allow-Headers": "x-access-token",
         "x-access-token": usertoken
       }
-    })
+    }),
+  getAllOrders: () => sApi.get("order")
 };

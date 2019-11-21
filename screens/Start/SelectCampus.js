@@ -13,11 +13,12 @@ const Button = styled.View``;
 const ButtonText = styled.Text``;
 
 export default ({ navigation }) => {
-  console.log(`대학캠퍼스: `, navigation);
+  // console.log(`대학캠퍼스: `, navigation);
   return (
     <View>
       <Text>Select Campus</Text>
-      <ButtonContainer onPress={() => navigation.navigate("BottomNavigation")}>
+      {/* <ButtonContainer onPress={() => navigation.navigate("BottomNavigation")}> */}
+      <ButtonContainer onPress={() => navigation.navigate("Privacy")}>
         <Button>
           <ButtonText>한양대</ButtonText>
         </Button>
