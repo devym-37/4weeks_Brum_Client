@@ -19,11 +19,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center"
-  },
-  footerStyle: {
-    borderTopWidth: 0.5,
-    borderTopColor: "gray",
-    backgroundColor: "white",
-    justifyContent: "center"
   }
 });

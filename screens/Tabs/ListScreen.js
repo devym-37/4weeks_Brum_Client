@@ -1,24 +1,8 @@
 import React, { Component } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  FooterTab,
-  Footer
-} from "native-base";
+import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, FooterTab, Footer } from "native-base";
 import { StyleSheet, View, Text, Platform } from "react-native";
-import {
-  createBottomTabNavigator,
-  createAppContainer,
-  TabNavigator
-} from "react-navigation";
+import { createBottomTabNavigator, createAppContainer, TabNavigator } from "react-navigation";
 
 import AuthModal from "../Auth/AuthModal";
 
@@ -75,12 +59,6 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: "black"
-  },
-  footerStyle: {
-    borderTopWidth: 0.5,
-    borderTopColor: "gray",
-    backgroundColor: "white",
-    justifyContent: "center"
   }
 });
 
