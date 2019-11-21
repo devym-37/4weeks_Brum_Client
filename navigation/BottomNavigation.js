@@ -18,7 +18,10 @@ const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
     initialRoute: {
       screen: initialRoute,
-      navigationOptions: { ...customConfig }
+      navigationOptions: {
+        ...customConfig,
+        headerStyle: { backgroundColor: "#FEFFFF" }
+      }
     }
   });
 
