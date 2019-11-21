@@ -42,60 +42,11 @@ class Home extends Component {
     };
   }
 
-  // getInitialState() {
-  //   return {
-  //     region: {
-  //       latitude: 37.55737,
-  //       longitude: 127.047132,
-  //       latitudeDelta: 0.006,
-  //       longitudeDelta: 0.001
-  //     }
-  //   };
-  // }
-
-  // onRegionChange(region) {
-  //   this.setState({ region });
-  // }
   render() {
     return (
       <>
         <AuthModal />
         <Container style={styles.container}>
-          {/* <Header style={styles.headerStyle} androidStatusBarColor="white">
-            <Left style={{ flex: 2 }}>
-              <Button
-                transparent
-                onPress={() => {
-                  this.props.navigation.navigate("ListScreen");
-                }}
-              >
-                <Ionicons name="md-list" size={25} color="black" />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={styles.titleStyle}>지도주소</Title>
-            </Body>
-            <Right style={{ flex: 1 }} />
-            <Button transparent>
-              <Ionicons
-                name="ios-notifications-outline"
-                size={25}
-                color="black"
-              />
-            </Button>
-            <Button transparent>
-              <Ionicons name="md-refresh" size={25} color="black" />
-            </Button>
-            <Button
-              transparent
-              onPress={() => {
-                this.props.reduxLogin(false);
-                this.props.navigation.navigate("StartHome");
-              }}
-            >
-              <Ionicons name="md-log-out" size={25} color="black" />
-            </Button>
-          </Header> */}
           <Content>
             <View>
               <Text>위치</Text>
