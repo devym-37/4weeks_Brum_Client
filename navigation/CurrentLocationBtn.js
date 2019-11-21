@@ -28,10 +28,11 @@ const styles = StyleSheet.create({
   container: {
     zIndex: 1,
     position: "absolute",
-    width: 45,
-    height: 45,
+    width: 48,
+    height: 48,
     backgroundColor: "#fff",
     left: WIDTH - 60,
+    borderRadius: 50,
     shadowColor: "#000000",
     elevation: 7,
     shadowRadius: 5,
