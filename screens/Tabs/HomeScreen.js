@@ -27,9 +27,9 @@ import {
 } from "native-base";
 
 import { connect } from "react-redux";
-import { login } from "../redux/actions/authActions";
+import { login } from "../../redux/actions/authActions";
 
-import AuthModal from "../screens/Auth/AuthModal";
+import AuthModal from "../Auth/AuthModal";
 
 import { CurrentLocationButton } from "../navigation/CurrentLocationBtn";
 
@@ -83,7 +83,7 @@ class Home extends Component {
       <>
         <AuthModal />
         <Container style={styles.container}>
-          <Header style={styles.headerStyle} androidStatusBarColor="white">
+          {/* <Header style={styles.headerStyle} androidStatusBarColor="white">
             <Left style={{ flex: 2 }}>
               <Button
                 transparent
@@ -122,8 +122,7 @@ class Home extends Component {
             >
               <Ionicons name="md-log-out" size={28} color="black" />
             </Button>
-          </Header>
-
+          </Header> */}
           <Content>
             <MapView
               style={styles.mapStyle}

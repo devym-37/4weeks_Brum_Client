@@ -8,18 +8,18 @@ import { AppLoading } from "expo";
 // Imports: Assets
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 // Imports: Navigations
 import StartNavigation from "./navigation/StartNavigation";
 import LoggedInNavigation from "./navigation/LoggedInNavigation";
 import HomeNavigation from "./navigation/HomeNavigation";
-import BottomNavigation from "./navigation/BottomNavigation";
+import MainNavigation from "./navigation/MainNavigation";
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
 
-import MapView from "./screens/HomeScreen";
+import MapView from "./screens/Tabs/HomeScreen";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
@@ -27,8 +27,8 @@ import { store, persistor } from "./redux/store/store";
 // Imports: Styled Component Custom Colors Theme Provider
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
-import Test from "./screens/Test";
-import HomeScreen from "./screens/HomeScreen";
+
+import HomeScreen from "./screens/Tabs/HomeScreen";
 
 // React Native: App
 export default function App() {
@@ -40,7 +40,8 @@ export default function App() {
       await Font.loadAsync({
         Roboto: require("native-base/Fonts/Roboto.ttf"),
         Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-        ...Ionicons.font
+        ...Ionicons.font,
+        ...AntDesign.font
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
 
@@ -60,13 +61,13 @@ export default function App() {
 
   // {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}  // push 시 추가
   // <HomeNavigation />
-  //<BottomNavigation />
+  //<MainNavigation />
   return loaded && isLoggedIn !== null ? (
     // Redux: Global Store
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          <BottomNavigation />
+          {isLoggedIn ? <MainNavigation /> : <StartNavigation />}
         </PersistGate>
       </ThemeProvider>
     </Provider>

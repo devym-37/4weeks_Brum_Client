@@ -1,56 +1,65 @@
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import { Icon } from "native-base";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer } from "react-navigation";
 
-import ChatScreen from "../screens/ChatScreen";
-import RequestScreen from "../screens/RequestScreen";
-import MyPageScreen from "../screens/MyPageScreen";
-import ListScreen from "../screens/ListScreen";
-import HomeScreen from "../screens/HomeScreen";
+import ChatScreen from "../screens/Tabs/ChatsScreen";
+import OrderScreen from "../screens/Tabs/OrderScreen";
+import MyPageScreen from "../screens/Tabs/MyPageScreen";
+import ListScreen from "../screens/Tabs/ListScreen";
+import { createStackNavigator } from "react-navigation-stack";
 
-const BottomNav = createBottomTabNavigator(
+import NotificationLink from "../components/HeaderLink";
+
+const stackFactory = (initialRoute, customConfig) =>
+  createStackNavigator({
+    initialRoute: {
+      screen: initialRoute,
+      navigationOptions: { ...customConfig }
+    }
+  });
+
+const BottomNavigation = createBottomTabNavigator(
   {
-    홈: {
-      screen: HomeScreen,
+    Home: {
+      screen: stackFactory(ListScreen, {
+        title: "홈",
+        headerRight: <NotificationLink />
+      }),
       navigationOptions: {
+        title: "홈",
         tabBarIcon: ({ focused, tintColor }) => (
-          <Icon name="ios-home" style={{ color: tintColor }} />
+          <AntDesign name="home" size={24} style={{ color: tintColor }} />
         )
       }
     },
-    요청하기: {
-      screen: RequestScreen,
+    Order: {
+      screen: stackFactory(OrderScreen, { title: "내요청" }),
       navigationOptions: {
+        title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
-          <Ionicons
-            name="md-clipboard"
-            size={30}
-            style={{ color: tintColor }}
-          />
+          <AntDesign name="form" size={24} style={{ color: tintColor }} />
         )
       }
     },
-    채팅: {
-      screen: ChatScreen,
+    Chats: {
+      screen: stackFactory(ChatScreen, { title: "채팅" }),
       navigationOptions: {
+        title: "채팅",
         tabBarIcon: ({ focused, tintColor }) => (
-          <Ionicons
-            name="md-chatboxes"
-            size={31}
-            style={{ color: tintColor }}
-          />
+          <AntDesign name="message1" size={24} style={{ color: tintColor }} />
         )
       }
     },
-    마이페이지: {
-      screen: MyPageScreen,
+    Mypage: {
+      screen: stackFactory(MyPageScreen, { title: "마이페이지" }),
       navigationOptions: {
+        title: "마이페이지",
         tabBarIcon: ({ focused, tintColor }) => (
-          <Ionicons name="md-person" size={30} style={{ color: tintColor }} />
+          <AntDesign name="user" size={24} style={{ color: tintColor }} />
         )
       }
     }
@@ -69,7 +78,7 @@ const BottomNav = createBottomTabNavigator(
           }
         })
       },
-      activeTintColor: "#000",
+      activeTintColor: "#666",
       inactiveTintColor: "#d1cece",
       upperCaseLabel: true,
       showLabel: true,
@@ -77,7 +86,5 @@ const BottomNav = createBottomTabNavigator(
     }
   }
 );
-
-const BottomNavigation = createAppContainer(BottomNav);
 
 export default BottomNavigation;

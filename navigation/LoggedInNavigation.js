@@ -6,10 +6,9 @@ import { createStackNavigator } from "react-navigation-stack";
 import Signup from "../screens/Auth/Signup";
 import Confirm from "../screens/Auth/Confirm";
 import Login from "../screens/Auth/Login";
-import AuthHome from "../screens/Auth/AuthHome";
 import VerifyPhone from "../screens/Auth/VerifyPhone";
-import HomeScreen from "../screens/HomeScreen"
-import StartNavigation from "./StartNavigation"
+import HomeScreen from "../screens/Tabs/HomeScreen";
+import StartNavigation from "./StartNavigation";
 const LoggedInNavigation = createStackNavigator(
   {
     HomeScreen,
