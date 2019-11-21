@@ -7,6 +7,9 @@ import { connect } from "react-redux";
 import { login } from "../../redux/actions/authActions";
 import AuthModal from "../Auth/AuthModal";
 import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
+
+const LATITUDE_DELTA = 0.006;
+const LONGITUDE_DELTA = 0.001;
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -14,29 +17,96 @@ class Home extends Component {
       region: {
         latitude: 37.55737,
         longitude: 127.047132,
-        latitudeDelta: 0.006,
-        longitudeDelta: 0.001
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
       }
     };
+    // this._getLocationAsync();
   }
+
+  getLocation() {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
+
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
+      };
+      this.setState({ region: currentRegion });
+    });
+  }
+
+  // _getLocationAsync = async () => {
+  //   console.log("2222>>>", l);
+  //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  //   if (status !== "granted")
+  //     console.log("Permission to access location was denied");
+  //   let location = await Location.getCurrentPositionAsync({
+  //     enabledHighAccuracy: true
+  //   });
+  //   console.log("location", location);
+  //   let region = {
+  //     latitude: location.coords.latitude,
+  //     longitude: location.coords.longitude,
+  //     latitudeDelta: LATITUDE_DELTA,
+  //     longitudeDelta: LONGITUDE_DELTA
+  //   };
+  //   console.log("region", region);
+  //   this.setState({ region: region });
+  // };
+
+  centerMap() {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
+
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
+      };
+      this.setState({ region: currentRegion });
+    });
+    const { latitude, longitude, latitudeDelta, longitudeDelta } = this.state.region;
+    this.map.animateToRegion({
+      latitude,
+      longitude,
+      latitudeDelta,
+      longitudeDelta
+    });
+  }
+
   render() {
     return (
       <>
         <AuthModal />
         <Container style={styles.container}>
-          <CurrentLocationButton />
           <Content>
+            <CurrentLocationButton
+              cb={() => {
+                this.centerMap();
+              }}
+            />
             <MapView
               style={styles.mapStyle}
               provider="google"
-              region={this.state.region}
+              ref={map => {
+                this.map = map;
+              }}
+              initialRegion={this.state.region}
               onRegionChange={this.onRegionChange}
+              showsCompass={true}
               showsUserLocation={true}
-              showsMyLocationButton={true}
+              showsMyLocationButton={false}
               followsUserLocation={true}
               zoomEnabled={true}
               scrollEnabled={true}
               showsScale={true}
+              rotateEnabled={false}
             />
           </Content>
         </Container>
