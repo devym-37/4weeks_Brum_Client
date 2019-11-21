@@ -67,7 +67,7 @@ const BottomNavigation = createBottomTabNavigator(
   {
     tabBarOptions: {
       style: {
-        backgroundColor: "white",
+        backgroundColor: "#FEFFFF",
         marginBottom: 3
       },
       iconStyle: {
@@ -78,8 +78,8 @@ const BottomNavigation = createBottomTabNavigator(
           }
         })
       },
-      activeTintColor: "#666",
-      inactiveTintColor: "#d1cece",
+      activeTintColor: "#24282C",
+      inactiveTintColor: "#A4A4A4",
       upperCaseLabel: true,
       showLabel: true,
       showIcon: true
