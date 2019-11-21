@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import GhostButton from "../../components/Buttons/GhostButton";
+import GhostButton from "../../../components/Buttons/GhostButton";
 import { withNavigation } from "react-navigation";
 const Container = styled.View`
   flex: 1;
@@ -13,7 +13,7 @@ const Text = styled.Text`
   margin-bottom: 4px;
 `;
 
-OrderScreen = ({ navigation }) => {
+DefaultOrderScreen = ({ navigation }) => {
   console.log(`order nav: `, navigation);
   return (
     <Container>
@@ -21,11 +21,11 @@ OrderScreen = ({ navigation }) => {
       <Text>필요한 서비스의 요청서를 보내보세요.</Text>
       <GhostButton
         text="요청서 보내기"
-        width={100}
+        width={200}
         onPress={() => navigation.navigate("NewOrder")}
       />
     </Container>
   );
 };
 
-export default withNavigation(OrderScreen);
+export default withNavigation(DefaultOrderScreen);

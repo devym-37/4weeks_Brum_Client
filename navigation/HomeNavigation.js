@@ -6,7 +6,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import HomeScreen from "../screens/Tabs/HomeScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
 
-import RequestScreen from "../screens/Tabs/OrderScreen";
+import RequestScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import ChatScreen from "../screens/Tabs/ChatsScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import BottomNavigation from "./BottomNavigation";

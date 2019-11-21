@@ -6,7 +6,7 @@ export default createStackNavigator({
   NewOrder: {
     screen: NewOrder,
     navigationOptions: {
-      title: "새요청 글쓰기",
+      title: "새 요청 글쓰기",
       mode: "card",
       ...stackStyles
     }
