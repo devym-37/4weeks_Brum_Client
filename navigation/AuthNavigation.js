@@ -11,6 +11,7 @@ import VerifyPhone from "../screens/Auth/VerifyPhone";
 import ResetPw from "../screens/Auth/ResetPw";
 import Term from "../screens/Auth/Terms";
 import Privacy from "../screens/Auth/Privacy";
+import { stackStyles } from "./config";
 
 const AuthNavigation = createStackNavigator(
   {
@@ -35,6 +36,7 @@ const AuthNavigation = createStackNavigator(
     Term: {
       screen: Term,
       navigationOptions: {
+        ...stackStyles,
         title: "쌉가능 이용약관",
         headerBackTitleVisible: false,
         headerBackTitle: null
@@ -43,6 +45,7 @@ const AuthNavigation = createStackNavigator(
     Privacy: {
       screen: Privacy,
       navigationOptions: {
+        ...stackStyles,
         title: "쌉가능 개인정보취급방침",
         headerBackTitleVisible: false,
         headerBackTitle: null

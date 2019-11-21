@@ -13,6 +13,7 @@ import ListScreen from "../screens/Tabs/ListScreen";
 import { createStackNavigator } from "react-navigation-stack";
 
 import NotificationLink from "../components/HeaderLink";
+import { stackStyles } from "./config";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
@@ -20,7 +21,7 @@ const stackFactory = (initialRoute, customConfig) =>
       screen: initialRoute,
       navigationOptions: {
         ...customConfig,
-        headerStyle: { backgroundColor: "#FEFFFF" }
+        headerStyle: { ...stackStyles }
       }
     }
   });

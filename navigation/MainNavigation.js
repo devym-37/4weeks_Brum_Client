@@ -6,6 +6,7 @@ import BottomNavigation from "./BottomNavigation";
 import NotificationNavigation from "./NotificationNavigation";
 import FilterNavigation from "./FilterNavigation";
 import AuthNavigation from "./AuthNavigation";
+import { stackStyles } from "./config";
 
 const MainNavigation = createStackNavigator(
   {
@@ -15,7 +16,15 @@ const MainNavigation = createStackNavigator(
 
     NotificationNavigation
   },
-  { headerMode: "none", mode: "modal" }
+  {
+    navigationOptions: {
+      headerStyler: {
+        ...stackStyles
+      }
+    },
+    headerMode: "none",
+    mode: "modal"
+  }
 );
 
 export default createAppContainer(MainNavigation);
