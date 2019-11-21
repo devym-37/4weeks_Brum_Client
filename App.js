@@ -12,7 +12,6 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 // Imports: Navigations
 import StartNavigation from "./navigation/StartNavigation";
-import LoggedInNavigation from "./navigation/LoggedInNavigation";
 import HomeNavigation from "./navigation/HomeNavigation";
 import MainNavigation from "./navigation/MainNavigation";
 // Imports: Screens

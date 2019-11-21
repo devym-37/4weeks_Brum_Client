@@ -1,35 +1,31 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  FooterTab,
-  Footer
-} from "native-base";
+import styled from "styled-components";
+import GhostButton from "../../components/Buttons/GhostButton";
+import { withNavigation } from "react-navigation";
+const Container = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
 
-export default function RequestScreen() {
+const Text = styled.Text`
+  color: ${props => props.theme.greyColor};
+  margin-bottom: 4px;
+`;
+
+OrderScreen = ({ navigation }) => {
+  console.log(`order nav: `, navigation);
   return (
     <Container>
-      <View style={styles.Container}>
-        <Text>RequestScreen</Text>
-      </View>
+      <Text>현재 진행중인 요청이 없어요.</Text>
+      <Text>필요한 서비스의 요청서를 보내보세요.</Text>
+      <GhostButton
+        text="요청서 보내기"
+        width={100}
+        onPress={() => navigation.navigate("NewOrder")}
+      />
     </Container>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  Container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});
+export default withNavigation(OrderScreen);
