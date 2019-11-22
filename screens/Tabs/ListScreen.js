@@ -11,6 +11,7 @@ import {
 import { Content } from "native-base";
 import AuthModal from "../Auth/AuthModal";
 import { serverApi } from "../../components/API";
+import ListCard from "../ListCard";
 
 const ListScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -38,7 +39,7 @@ const ListScreen = () => {
         setIsopenLoginModal(true);
       }
       let getAllOrders = await serverApi.getAllOrders();
-      // console.log(`getAllOrders: `, getAllOrders);
+      console.log(`getAllOrders: `, getAllOrders);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     }
@@ -47,6 +48,7 @@ const ListScreen = () => {
   useEffect(() => {
     preLoad();
   }, []);
+  console.log("preLoad", preLoad());
   return (
     <>
       {isopenLoginModal && <AuthModal />}
