@@ -46,8 +46,10 @@ export default function App() {
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
 
+      //
+      await AsyncStorage.setItem("permiSsions", "true");
+      //빼기
       const permiSsions = await AsyncStorage.getItem("permiSsions");
-
       const loggedIn = await AsyncStorage.getItem("userToken");
 
       loggedIn ? setIsLoggedIn(true) : setIsLoggedIn(false);

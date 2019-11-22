@@ -87,6 +87,11 @@ const LogIn = props => {
       setLoading(false);
     }
   };
+
+  const handleSelectedPage = async () => {
+    console.log("handle");
+    return await AsyncStorage.setItem("page", "resetpw");
+  };
   return (
     <View>
       <AuthInput
@@ -128,7 +133,8 @@ const LogIn = props => {
 
       <GhostButton
         onPress={() => {
-          props.navigation.navigate("ResetPw");
+          props.navigation.navigate("VerifyPhone");
+          handleSelectedPage();
         }}
         text="비밀번호 재설정"
       />

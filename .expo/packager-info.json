@@ -2,8 +2,8 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://2k-mmy.jaesookjeong.brum-client.exp.direct",
   "packagerNgrokUrl": "https://packager.2k-mmy.jaesookjeong.brum-client.exp.direct",
-  "ngrokPid": 29338,
+  "ngrokPid": 30374,
   "devToolsPort": 19004,
-  "packagerPort": 19007,
-  "packagerPid": 29323
+  "packagerPort": 19005,
+  "packagerPid": 30359
 }

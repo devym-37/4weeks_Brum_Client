@@ -2,7 +2,12 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import {
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  AsyncStorage
+} from "react-native";
 
 // Imports: Custom components
 import AuthInput from "../../components/Inputs/AuthInput";
@@ -46,8 +51,12 @@ const VerifyPhone = props => {
 
         Alert.alert("인증번호가 문자로 전송됐습니다. (최대 20초 소요)");
         const requestSMS = await toastApi.postSMS(otp, value);
-
-        props.navigation.navigate("Confirm");
+        const selectedPage = await AsyncStorage.getItem("page");
+        if (selectedPage === "resetpw") {
+          props.navigation.navigate("ResetPw");
+        } else if (selectedPage === "SingUp") {
+          props.navigation.navigate("BottomNavigation");
+        }
       } else {
         Alert.alert("이미 가입된 번호입니다");
         props.navigation.navigate("Login");

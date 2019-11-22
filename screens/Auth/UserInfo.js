@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import {
@@ -25,39 +25,6 @@ import { UniList } from "../../components/unilist";
 //import { Camera } from "expo-camera";
 //import { serverApi } from '../../components/api';
 
-/* const UniList = {
-  한양대: [
-    "과를 선택해주세요",
-    "건축학부",
-    "건축공학부",
-    "건설환경공학과",
-    "도시공학과",
-    "자원환경공학과",
-    "융합전자공학부",
-    "전기.생체공학부",
-    "신소재공학부",
-    "화학공학과",
-    "생명공학과",
-    "유기나노공학과",
-    "에너지공학과",
-    "기계공학부",
-    "원자력공학과",
-    "산업공학과",
-    "미래자동차공학과",
-    "컴퓨터소프트웨어학부",
-    "정보시스템학과",
-    "의예과",
-    "의학과",
-    "국어국문학과",
-    "중어중문학과",
-    "영어영문학과",
-    "독어독문학과",
-    "사학과",
-    "철학과"
-  ],
-  서울대: ["과를 선택해주세요", "건축학부", "건축공학부", "건설환경공학과"]
-}; */
-
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -74,10 +41,15 @@ const Text = styled.Text`
 
 const Userinfo = props => {
   const [selected, setSelected] = useState("학교를 선택해주세요");
+
   const [selectedmajor, setSelectedmajor] = useState(undefined);
   const [Loading, setLoading] = useState(false);
   const [CameraPermission, setCameraPermission] = useState(false);
   const [Imageadded, setImageadded] = useState(undefined);
+
+  useEffect(async () => {
+    const selectedMajor = await AsyncStorage.getItem("campus");
+  }, []);
 
   const selectPicture = async () => {
     const { status } = await Permissions.askAsync(
@@ -144,8 +116,8 @@ const Userinfo = props => {
     try {
       let usertoken = await AsyncStorage.getItem("userToken");
 
-      console.log("토큰이다", usertoken);
-      console.log("사진업로드", Imageadded);
+      //console.log("토큰이다", usertoken);
+      //console.log("사진업로드", Imageadded);
 
       setLoading(true);
       let result = await serverApi.uploadimage(usertoken, Imageadded);
@@ -153,7 +125,7 @@ const Userinfo = props => {
 
       if (result.ok) {
         Alert.alert("제출이 성공적으로 완료되었습니다");
-        props.navigation.navigate("HomeScreen");
+        props.navigation.navigate("BottomNavigation");
       }
     } catch (e) {
       console.log("image uplead error", e);
@@ -174,7 +146,7 @@ const Userinfo = props => {
         />
       );
     }
-    return UniList[selected].map((major: string, i) => {
+    return UniList[selectedMajor].map((major: string, i) => {
       return <Picker.Item label={major} key={i} value={major} />;
     });
   };
@@ -184,23 +156,7 @@ const Userinfo = props => {
       <Container>
         <View>
           <Form>
-            <Text>대학교</Text>
-            <Item picker>
-              <Picker
-                mode="dropdown"
-                style={{ width: 300, height: 200, marginTop: 5 }}
-                selectedValue={selected}
-                onValueChange={onValueChange}
-              >
-                <Picker.Item
-                  label="학교를 선택해주세요"
-                  key="0"
-                  value="학교를 선택해주세요"
-                />
-                <Picker.Item label="한양대" key="1" value="한양대" />
-                <Picker.Item label="서울대" key="2" value="서울대" />
-              </Picker>
-            </Item>
+            <Text>{selectedMajor}</Text>
             <Text>전공</Text>
             <Item picker>
               <Picker
