@@ -109,7 +109,7 @@ const Signup = props => {
         await AsyncStorage.setItem("userToken", signUp.data.token);
         props.reduxLogin(true);
         setTimeout(() => {
-          props.navigation.navigate("HomeScreen");
+          props.navigation.navigate("BottomNavigation");
         }, 200);
       }
     } catch (e) {

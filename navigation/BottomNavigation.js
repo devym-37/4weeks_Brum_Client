@@ -10,6 +10,7 @@ import ChatScreen from "../screens/Tabs/Chats.js/DefaultChatsScreen";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
+import HomeScreen from "../screens/Tabs/HomeScreen";
 import { createStackNavigator } from "react-navigation-stack";
 
 import NotificationLink from "../components/HeaderLink";
@@ -30,8 +31,8 @@ const stackFactory = (initialRoute, customConfig) =>
 const BottomNavigation = createBottomTabNavigator(
   {
     Home: {
-      screen: stackFactory(ListScreen, {
-        title: "홈",
+      screen: stackFactory(HomeScreen, {
+        title: "한양대",
         headerRight: <NotificationLink />
       }),
       navigationOptions: {
