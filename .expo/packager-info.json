@@ -1,1 +1,9 @@
-{}
+{
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://3p-dbi.jaesookjeong.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.3p-dbi.jaesookjeong.brum-client.exp.direct",
+  "ngrokPid": 24112,
+  "devToolsPort": 19004,
+  "packagerPort": null,
+  "packagerPid": null
+}

@@ -14,21 +14,14 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import StartNavigation from "./navigation/StartNavigation";
 import LoggedInNavigation from "./navigation/LoggedInNavigation";
 import HomeNavigation from "./navigation/HomeNavigation";
-<<<<<<< HEAD
-import TestNavigation from "./navigation/TestNavigation";
-=======
+//import TestNavigation from "./navigation/TestNavigation";
 import MainNavigation from "./navigation/MainNavigation";
->>>>>>> acd88873356f510a0f27ca7f38cf6765a387ae12
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
 
-<<<<<<< HEAD
-import MapView from "./screens/HomeScreen";
+//import MapView from "./screens/HomeScreen";
 import UserInfo from "./screens/Auth/UserInfo";
-=======
-import MapView from "./screens/Tabs/HomeScreen";
->>>>>>> acd88873356f510a0f27ca7f38cf6765a387ae12
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
@@ -68,7 +61,7 @@ export default function App() {
     preLoad();
   }, []);
 
-  // {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}  // push 시 추가
+  // {isLoggedIn ? <MainNavigation /> : <StartNavigation />}  // push 시 추가
   // <HomeNavigation />
   //<MainNavigation />
   return loaded && isLoggedIn !== null ? (
@@ -76,7 +69,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {isLoggedIn ? <MainNavigation /> : <StartNavigation />}
+          <UserInfo />
         </PersistGate>
       </ThemeProvider>
     </Provider>

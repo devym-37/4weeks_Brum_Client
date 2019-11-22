@@ -22,7 +22,11 @@ const View = styled.View`
   flex: 1;
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: black;
+  font-size: 25px
+  font-weight: 400;
+`;
 
 const PermissionApp = props => {
   const [Loading, setLoading] = useState(false);
@@ -31,13 +35,13 @@ const PermissionApp = props => {
   const checkMultiPermissions = async () => {
     try {
       setLoading(true);
-      const { status } = await Permissions.getAsync(
+      const { status, expires, permissions } = await Permissions.askAsync(
         Permissions.NOTIFICATIONS,
         Permissions.CONTACTS,
         Permissions.LOCATION,
         Permissions.CAMERA
       );
-      console.log(status);
+      console.log("상태확인", status);
       if (status) {
         props.navigation.navigate("Login");
       } else {
@@ -50,7 +54,7 @@ const PermissionApp = props => {
       }
 
       if (status !== "granted") {
-        alert("Hey! You heve not enabled selected permissions");
+        alert("Hey! You have not enabled selected permissions");
       }
     } catch (e) {
       console.log(e);
@@ -64,17 +68,14 @@ const PermissionApp = props => {
     checkMultiPermissions();
   }); */
 
-  retrurn(
+  return (
     <View>
+      <Text>디바이스 접근권한</Text>
+
       <MainButton onPress={checkMultiPermissions} text="동의하고 시작하기" />
     </View>
   );
 };
 // 선택된 사진
-const [selected, setSelected] = useState();
-// 로딩
-const [loading, setLoading] = useState(false);
-//접근 권한 허용했는지
-const [hasAllow, setHasAllow] = useState(false);
 
 export default PermissionApp;

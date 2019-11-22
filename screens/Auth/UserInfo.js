@@ -21,10 +21,11 @@ import * as Permissions from "expo-permissions";
 import { setApiKey } from "expo-location";
 import { serverApi } from "../../components/API";
 import { Col, Row, Grid } from "react-native-easy-grid";
+import { UniList } from "../../components/unilist";
 //import { Camera } from "expo-camera";
 //import { serverApi } from '../../components/api';
 
-const UniList = {
+/* const UniList = {
   한양대: [
     "과를 선택해주세요",
     "건축학부",
@@ -55,7 +56,7 @@ const UniList = {
     "철학과"
   ],
   서울대: ["과를 선택해주세요", "건축학부", "건축공학부", "건설환경공학과"]
-};
+}; */
 
 const View = styled.View`
   justify-content: center;
@@ -68,7 +69,7 @@ const Text = styled.Text`
   text-align: center;
   font-size: 25px;
   font-weight: 600;
-  margin-top: 25;
+  margin-top: 8;
 `;
 
 const Userinfo = props => {
@@ -140,17 +141,19 @@ const Userinfo = props => {
   };
 
   const handleSubmit = async () => {
-    let usertoken = await AsyncStorage.getItem("userToken");
-    const formData = new FormData();
-    formData.append("file", Imageadded);
-
-    console.log("토큰이다", usertoken);
     try {
+      //let usertoken = await AsyncStorage.getItem("userToken");
+
+      let usertoken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicGhvbmUiOiIwMTAxMjM0MTIzNCIsImlhdCI6MTU3NDM4Njc1MSwiZXhwIjoxNTc5NTcwNzUxfQ.BUpqRtSDeYKvfVQ_gFvJrosImnr6ieYZgGz3fgGeVmg";
+      console.log("토큰이다", usertoken);
+      console.log("사진업로드", Imageadded);
+
       setLoading(true);
-      let result = await serverApi.uploadimage(usertoken, formData);
+      let result = await serverApi.uploadimage(usertoken, Imageadded);
       console.log("이미지업로드", result);
 
-      if (result.data.isSucess) {
+      if (result.ok) {
         Alert.alert("제출이 성공적으로 완료되었습니다");
         props.navigation.navigate("HomeScreen");
       }
@@ -158,6 +161,7 @@ const Userinfo = props => {
       console.log("image uplead error", e);
     } finally {
       setLoading(false);
+      console.log("it#sover");
     }
   };
 
@@ -186,7 +190,7 @@ const Userinfo = props => {
             <Item picker>
               <Picker
                 mode="dropdown"
-                style={{ width: 300, marginTop: 25 }}
+                style={{ width: 300, height: 200, marginTop: 5 }}
                 selectedValue={selected}
                 onValueChange={onValueChange}
               >
@@ -203,7 +207,7 @@ const Userinfo = props => {
             <Item picker>
               <Picker
                 mode="dropdown"
-                style={{ width: 300, marginTop: 25 }}
+                style={{ width: 300, height: 200, marginTop: 5 }}
                 selectedValue={selectedmajor}
                 onValueChange={onValueChangemajor}
               >
@@ -216,7 +220,7 @@ const Userinfo = props => {
               <Row style={{ alignContent: "center", margin: 50 }}>
                 <Image
                   source={{ uri: Imageadded }}
-                  style={{ width: 200, height: 200, marginBottom: 25 }}
+                  style={{ width: 200, height: 200, marginBottom: 15 }}
                 />
               </Row>
               <Row>
@@ -224,9 +228,7 @@ const Userinfo = props => {
               </Row>
             </Grid>
           ) : (
-            <Item>
-              <GhostButton text="사진 고르기" onPress={selectPicture} />
-            </Item>
+            <GhostButton text="사진 고르기" onPress={selectPicture} />
           )}
 
           <MainButton onPress={handleSubmit} text="제출하기" />
@@ -259,12 +261,12 @@ const styles = StyleSheet.create({
     marginTop: 50
   },
   logoContainer: {
-    marginBottom: 15,
+    marginBottom: 5,
     alignItems: "center"
   },
   buttonContainer: {
     margin: 25,
-    marginBottom: 25
+    marginBottom: 15
   },
   checkBoxContainer: {
     backgroundColor: "#fff",
