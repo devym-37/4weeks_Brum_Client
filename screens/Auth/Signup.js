@@ -103,7 +103,7 @@ const Signup = props => {
         values.name
       );
 
-      console.log(`signUp: `, signUp);
+      Alert.alert("회원가입 및 로그인이 완료되었습니다");
 
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);

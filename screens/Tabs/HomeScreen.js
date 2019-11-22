@@ -105,6 +105,7 @@ class Home extends Component {
     });
   }
   async componentDidMount() {
+    // await AsyncStorage.clear();
     const loggedIn = await AsyncStorage.getItem("userToken");
     // console.log(`ListScreen token: `, loggedIn);
     if (!loggedIn) {
