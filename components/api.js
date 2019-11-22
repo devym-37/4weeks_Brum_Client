@@ -1,8 +1,11 @@
 import axios from "axios";
-
+import { setApiKey } from "expo-location";
+import { Buffer } from "buffer";
+const FormData = require("form-data");
 // dotenv.config();
 const APPKEY = "Ic5BJfNvJOAFgNLI";
-axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8";
+
+axios.defaults.headers.post["Content-Type"] = undefined;
 
 const tApi = axios.create({
   baseURL: "https://api-sms.cloud.toast.com/"
@@ -28,7 +31,7 @@ export const serverApi = {
       phone: id,
       password: ps
     }),
-  register: (phone, password, name, sex = "male", agreementAd = false) =>
+  resister: (phone, password, name, sex = "male", agreementAd = false) =>
     sApi.post("register", {
       phone,
       password,
@@ -44,5 +47,39 @@ export const serverApi = {
         "x-access-token": usertoken
       }
     }),
-  getAllOrders: () => sApi.get("order")
+  uploadimage: async (usertoken, imgfile) => {
+    const formData = new FormData();
+
+    formData.append("file", {
+      name: "profil",
+      uri: imgfile,
+      type: "image/jpg"
+    });
+    console.log("사진file", imgfile);
+    console.log("사진", formData);
+    return await fetch("http://13.209.17.154:3000/user/image", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": usertoken
+      }
+    });
+  },
+  password: (phone, pw, usertoken) =>
+    sApi.put(
+      "password",
+      {
+        phone: phone,
+        password: pw
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": usertoken
+        }
+      }
+    )
 };
