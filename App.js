@@ -66,7 +66,7 @@ export default function App() {
   // {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}  // push 시 추가
   // <HomeNavigation />
   //<MainNavigation />
-  return loaded && isLoggedIn && isAllowed !== null ? (
+  return loaded && isLoggedIn !== null ? (
     // Redux: Global Store
     <Provider store={store}>
       <ThemeProvider theme={styles}>

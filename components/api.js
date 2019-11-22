@@ -38,12 +38,12 @@ export const serverApi = {
       sex,
       agreementAd
     }),
-  user: usertoken =>
+  user: userToken =>
     sApi.get("user/mypage", {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Headers": "x-access-token",
-        "x-access-token": usertoken
+        "x-access-token": userToken
       }
     }),
   uploadimage: async (usertoken, imgfile) => {

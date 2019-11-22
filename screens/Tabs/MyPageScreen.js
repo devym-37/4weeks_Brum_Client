@@ -1,34 +1,69 @@
-import React from "react";
-import { StyleSheet, View, Text, AsyncStorage } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Text, AsyncStorage, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  FooterTab,
-  Footer
-} from "native-base";
-import MainButton from "../../components/Buttons/MainButton";
+import { Container } from "native-base";
 
-export default function MyPageScreen() {
-  const handleLogout = async () => {
-    await AsyncStorage.setItem("userToken", "null");
+import Loader from "../../components/Loader";
+import GhostButton from "../../components/Buttons/GhostButton";
+import { serverApi } from "../../components/API";
+import {
+  withNavigation,
+  NavigationActions,
+  StackActions
+} from "react-navigation";
+
+const MyPageScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const preLoad = async () => {
+    try {
+      setLoading(true);
+      const userToken = await AsyncStorage.getItem("userToken");
+      if (userToken) {
+        const userProfile = await serverApi.user(userToken);
+        if (userProfile.data.data) {
+          // console.log(`userProfile: `, userProfile.data.data);
+          setProfile({ ...userProfile.data.data });
+        }
+      } else {
+        Alert.alert("로그인 해주세요");
+      }
+    } catch (e) {
+      console.log(
+        `Can't fetch data of user profile with serverApi. Error: ${e}`
+      );
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleLogout = async () => {
+    const logout = await AsyncStorage.clear();
+    Alert.alert("로그아웃 되었습니다");
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: "MainNavigation" })]
+    });
+    navigation.dispatch(resetAction);
+  };
+
+  useEffect(() => {
+    preLoad();
+  }, []);
+
   return (
     <Container>
-      <View style={styles.Container}>
-        <Text>MyPageScreen</Text>
-        <MainButton onPress={handleLogout} text="로그인" />
-      </View>
+      {loading ? (
+        <Loader />
+      ) : (
+        <View style={styles.Container}>
+          <Text>MyPageScreen</Text>
+          <GhostButton text={"임시 로그아웃 버튼"} onPress={handleLogout} />
+        </View>
+      )}
     </Container>
   );
-}
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -38,3 +73,5 @@ const styles = StyleSheet.create({
     alignItems: "center"
   }
 });
+
+export default withNavigation(MyPageScreen);

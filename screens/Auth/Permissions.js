@@ -15,7 +15,11 @@ import useInput from "../../hooks/useInput";
 import GhostButton from "../../components/Buttons/GhostButton";
 import { connect } from "react-redux";
 import { serverApi } from "../../components/API";
-
+import {
+  withNavigation,
+  NavigationActions,
+  StackActions
+} from "react-navigation";
 // Imports: Redux Actions
 import { permissions } from "../../redux/actions/authActions";
 
@@ -49,6 +53,11 @@ export default PermissionApp = props => {
         //props.reduxPermissions(true);
         await AsyncStorage.setItem("permiSsions", "true");
         //props.navigation.navigate("Login");
+        const resetAction = StackActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: "MainNavigation" })]
+        });
+        navigation.dispatch(resetAction);
       } else {
         alert("Hey! You have not enabled selected permissions");
         const { status, expires, permissions } = await Permissions.askAsync(
