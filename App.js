@@ -1,6 +1,6 @@
 // Imports: Dependencies
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, AsyncStorage } from "react-native";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { AppLoading } from "expo";
@@ -44,7 +44,7 @@ export default function App() {
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
 
-      const loggedIn = await store.getState().authReducer.loggedIn;
+      const loggedIn = await AsyncStorage.getItem("userToken");
 
       loggedIn ? setIsLoggedIn(true) : setIsLoggedIn(false);
 
