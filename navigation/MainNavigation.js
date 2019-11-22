@@ -6,6 +6,7 @@ import BottomNavigation from "./BottomNavigation";
 import NotificationNavigation from "./NotificationNavigation";
 import FilterNavigation from "./FilterNavigation";
 import AuthNavigation from "./AuthNavigation";
+import NewOrderNavigation from "./NewOrderNavigation";
 import { stackStyles } from "./config";
 
 const MainNavigation = createStackNavigator(
@@ -13,7 +14,7 @@ const MainNavigation = createStackNavigator(
     BottomNavigation,
     AuthNavigation,
     FilterNavigation,
-
+    NewOrderNavigation,
     NotificationNavigation
   },
   {

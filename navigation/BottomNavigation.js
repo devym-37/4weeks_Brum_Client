@@ -6,8 +6,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer } from "react-navigation";
 
-import ChatScreen from "../screens/Tabs/ChatsScreen";
-import OrderScreen from "../screens/Tabs/OrderScreen";
+import ChatScreen from "../screens/Tabs/Chats.js/DefaultChatsScreen";
+import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
 import { createStackNavigator } from "react-navigation-stack";
@@ -41,7 +41,7 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Order: {
-      screen: stackFactory(OrderScreen, { title: "내요청" }),
+      screen: stackFactory(OrderScreen, { title: "내 요청" }),
       navigationOptions: {
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
