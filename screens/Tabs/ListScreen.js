@@ -15,6 +15,7 @@ import ListCard from "../ListCard";
 
 const ListScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isopenLoginModal, setIsopenLoginModal] = useState(false);
 
@@ -23,6 +24,7 @@ const ListScreen = () => {
       setRefreshing(true);
       let getAllOrders = await serverApi.getAllOrders();
       // console.log(`refresh: `, getAllOrders);
+      console.log(orders);
     } catch (e) {
       console.log(`Can't refresh data. error message: ${e}`);
     } finally {
@@ -39,7 +41,8 @@ const ListScreen = () => {
         setIsopenLoginModal(true);
       }
       let getAllOrders = await serverApi.getAllOrders();
-      // console.log(`getAllOrders: `, getAllOrders);
+      setOrders([...getAllOrders.data.data.orders]);
+      // console.log(`getAllOrders: `, getAllOrders.data.data.orders);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     }
@@ -57,7 +60,11 @@ const ListScreen = () => {
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
       >
-        <Text>List Screen</Text>
+        <Content>
+          {orders.map(data => (
+            <ListCard data={data} />
+          ))}
+        </Content>
       </ScrollView>
     </>
   );
