@@ -40,15 +40,33 @@ const Text = styled.Text`
 `;
 
 const Userinfo = props => {
-  const [selected, setSelected] = useState("학교를 선택해주세요");
+  const [selected, setSelected] = useState("한양대"); //바꾸기
 
   const [selectedmajor, setSelectedmajor] = useState(undefined);
   const [Loading, setLoading] = useState(false);
   const [CameraPermission, setCameraPermission] = useState(false);
   const [Imageadded, setImageadded] = useState(undefined);
 
-  useEffect(async () => {
-    const selectedMajor = await AsyncStorage.getItem("campus");
+  useEffect(() => {
+    // Create an scoped async function in the hook
+    let isCancelled = false;
+
+    async function fetchData() {
+      try {
+        await AsyncStorage.setItem("campus", "한양대"); //연결 후 빼기
+
+        const selectedMajor = await AsyncStorage.getItem("campus");
+        console.log("캠퍼스선택", selectedMajor);
+        selectedMajor ? setSelected(selectedMajor) : setSelected("한양대");
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    fetchData();
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   const selectPicture = async () => {
@@ -113,7 +131,9 @@ const Userinfo = props => {
   };
 
   const handleSubmit = async () => {
-    try {
+    //api 필요함
+    props.navigation.navigate("SelectPhoto");
+    /* try {
       let usertoken = await AsyncStorage.getItem("userToken");
 
       //console.log("토큰이다", usertoken);
@@ -132,12 +152,12 @@ const Userinfo = props => {
     } finally {
       setLoading(false);
       console.log("it#sover");
-    }
+    } */
   };
 
   const majorList = props => {
-    console.log(UniList[selected]);
     if (selected === "학교를 선택해주세요") {
+      //수정해야함
       return (
         <Picker.Item
           label="학교를 선택해주세요"
@@ -146,48 +166,50 @@ const Userinfo = props => {
         />
       );
     }
-    return UniList[selectedMajor].map((major: string, i) => {
+    return UniList[selected].map((major, i) => {
       return <Picker.Item label={major} key={i} value={major} />;
     });
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Container>
-        <View>
-          <Form>
-            <Text>{selectedMajor}</Text>
-            <Text>전공</Text>
-            <Item picker>
-              <Picker
-                mode="dropdown"
-                style={{ width: 300, height: 200, marginTop: 5 }}
-                selectedValue={selectedmajor}
-                onValueChange={onValueChangemajor}
-              >
-                {majorList()}
-              </Picker>
-            </Item>
-          </Form>
-          {Imageadded ? (
-            <Grid>
-              <Row style={{ alignContent: "center", margin: 50 }}>
-                <Image
-                  source={{ uri: Imageadded }}
-                  style={{ width: 200, height: 200, marginBottom: 15 }}
-                />
-              </Row>
-              <Row>
-                <GhostButton text="다른사진 고르기" onPress={selectPicture} />
-              </Row>
-            </Grid>
-          ) : (
-            <GhostButton text="사진 고르기" onPress={selectPicture} />
-          )}
+      {selected && (
+        <Container>
+          <View>
+            <Form>
+              <Text>{selectedmajor}</Text>
+              <Text>전공</Text>
+              <Item picker>
+                <Picker
+                  mode="dropdown"
+                  style={{ width: 300, height: 200, marginTop: 5 }}
+                  selectedValue={selectedmajor}
+                  onValueChange={onValueChangemajor}
+                >
+                  {majorList()}
+                </Picker>
+              </Item>
+            </Form>
+            {Imageadded ? (
+              <Grid>
+                <Row style={{ alignContent: "center", margin: 50 }}>
+                  <Image
+                    source={{ uri: Imageadded }}
+                    style={{ width: 200, height: 200, marginBottom: 15 }}
+                  />
+                </Row>
+                <Row>
+                  <GhostButton text="다른사진 고르기" onPress={selectPicture} />
+                </Row>
+              </Grid>
+            ) : (
+              <GhostButton text="사진 고르기" onPress={selectPicture} />
+            )}
 
-          <MainButton onPress={handleSubmit} text="제출하기" />
-        </View>
-      </Container>
+            <MainButton onPress={handleSubmit} text="제출하기" />
+          </View>
+        </Container>
+      )}
     </SafeAreaView>
   );
 };

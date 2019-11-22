@@ -6,6 +6,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import StartHome from "../screens/Start/StartHome";
 import SelectCampus from "../screens/Start/SelectCampus";
 import Userinfo from "../screens/Auth/UserInfo";
+import SelectPhoto from "../screens/Photo/SelectPhoto";
 
 // Imports: Navigation
 import AuthNavigation from "../navigation/AuthNavigation";
@@ -15,6 +16,7 @@ const StartNavigation = createStackNavigator(
     StartHome,
     SelectCampus,
     Userinfo,
+    SelectPhoto,
     MainNavigation
   },
   {

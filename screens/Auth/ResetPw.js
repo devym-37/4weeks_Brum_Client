@@ -14,6 +14,26 @@ import { connect } from "react-redux";
 import { login } from "../../redux/actions/authActions";
 import { serverApi } from "../../components/API";
 import { store, persistor } from "../../redux/store/store";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string()
+    .label("Name")
+    .required("성함을 입력해주세요")
+    .min(2, "성함은 최소 2글자 이상 입력해주세요"),
+  password: Yup.string()
+    .label("Password")
+    .required("비밀번호를 입력해주세요")
+    .min(6, "비밀번호는 최소 6글자 이상 입력해주세요"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "비밀번호가 일치하지 않습니다.")
+    .required("확인을 위해 비밀번호를 한번더 입력해주세요"),
+  age: Yup.string().min(4, "출생연도는 4글자 입력해주세요. 예) 0000년도"),
+
+  createdOn: Yup.date().default(function() {
+    return new Date();
+  })
+});
 
 const View = styled.View`
   justify-content: center;

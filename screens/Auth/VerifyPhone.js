@@ -51,17 +51,16 @@ const VerifyPhone = props => {
 
         Alert.alert("인증번호가 문자로 전송됐습니다. (최대 20초 소요)");
         const requestSMS = await toastApi.postSMS(otp, value);
+        props.navigation.navigate("Signup");
       } else {
         const selectedPage = await AsyncStorage.getItem("page");
-
+        console.log("선택한 페이지", selectedPage);
         if (selectedPage === "resetpw") {
-          Alert.alert("이미 가입된 번호입니다");
           props.navigation.navigate("ResetPw");
-        } else if (selectedPage === "SingUp") {
-          props.navigation.navigate("BottomNavigation");
+        } else {
+          Alert.alert("이미 가입된 번호입니다");
+          props.navigation.navigate("Login");
         }
-
-        //props.navigation.navigate("Login");
       }
     } catch (e) {
       console.log(`Cant' fetch toast api. error message: ${e} `);
