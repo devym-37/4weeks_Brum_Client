@@ -40,7 +40,6 @@ const TourLinkText = styled.Text`
 `;
 const AuthModal = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(true);
-  // console.log(`로그인모달 navigation: `, navigation);
 
   const handleSignupBtn = () => {
     setModalVisible(false);

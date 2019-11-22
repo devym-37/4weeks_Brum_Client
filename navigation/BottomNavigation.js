@@ -6,27 +6,33 @@ import { AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer } from "react-navigation";
 
-import ChatScreen from "../screens/Tabs/ChatsScreen";
-import OrderScreen from "../screens/Tabs/OrderScreen";
+import ChatScreen from "../screens/Tabs/Chats.js/DefaultChatsScreen";
+import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
+import HomeScreen from "../screens/Tabs/HomeScreen";
 import { createStackNavigator } from "react-navigation-stack";
 
 import NotificationLink from "../components/HeaderLink";
+import { stackStyles } from "./config";
+import { AsyncStorage } from "react-native";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
     initialRoute: {
       screen: initialRoute,
-      navigationOptions: { ...customConfig }
+      navigationOptions: {
+        ...customConfig,
+        headerStyle: { ...stackStyles }
+      }
     }
   });
 
 const BottomNavigation = createBottomTabNavigator(
   {
     Home: {
-      screen: stackFactory(ListScreen, {
-        title: "홈",
+      screen: stackFactory(HomeScreen, {
+        title: "한양대",
         headerRight: <NotificationLink />
       }),
       navigationOptions: {
@@ -37,7 +43,7 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Order: {
-      screen: stackFactory(OrderScreen, { title: "내요청" }),
+      screen: stackFactory(OrderScreen, { title: "내 요청" }),
       navigationOptions: {
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
@@ -67,7 +73,7 @@ const BottomNavigation = createBottomTabNavigator(
   {
     tabBarOptions: {
       style: {
-        backgroundColor: "white",
+        backgroundColor: "#FEFFFF",
         marginBottom: 3
       },
       iconStyle: {
@@ -78,8 +84,8 @@ const BottomNavigation = createBottomTabNavigator(
           }
         })
       },
-      activeTintColor: "#666",
-      inactiveTintColor: "#d1cece",
+      activeTintColor: "#24282C",
+      inactiveTintColor: "#A4A4A4",
       upperCaseLabel: true,
       showLabel: true,
       showIcon: true

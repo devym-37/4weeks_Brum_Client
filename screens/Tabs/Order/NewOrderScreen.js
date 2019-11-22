@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { Formik } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
   TouchableWithoutFeedback,
@@ -16,27 +16,26 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 // Imports: Custom components
-import AuthInput from "../../components/Inputs/AuthInput";
-import useInput from "../../hooks/useInput";
-import MainButton from "../../components/Buttons/MainButton";
-import ErrorMessage from "../../components/ErrorMessage";
+import AuthInput from "../../../components/Inputs/AuthInput";
+import useInput from "../../../hooks/useInput";
+import MainButton from "../../../components/Buttons/MainButton";
+import ErrorMessage from "../../../components/ErrorMessage";
 
 // Imports: API
-import { serverApi } from "../../components/API";
+import { serverApi } from "../../../components/API";
 
 // Imports: Redux Actions
-import { login } from "../../redux/actions/authActions";
+import { login } from "../../../redux/actions/authActions";
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string()
-    .label("Name")
-    .required("성함을 입력해주세요")
-    .min(2, "성함은 최소 2글자 이상 입력해주세요"),
-  password: Yup.string()
-    .label("Password")
-    .required("비밀번호를 입력해주세요")
-    .min(6, "비밀번호는 최소 6글자 이상 입력해주세요"),
-  confirmPassword: Yup.string()
+  title: Yup.string()
+    .label("Title")
+    .required("제목을 입력해주세요")
+    .min(4, "제목은 최소 4글자 이상 입력해주세요"),
+
+  departure: Yup.string().label("Departure"),
+
+  arrivalTime: Yup.string()
     .oneOf([Yup.ref("password")], "비밀번호가 일치하지 않습니다.")
     .required("확인을 위해 비밀번호를 한번더 입력해주세요"),
   age: Yup.string().min(4, "출생연도는 4글자 입력해주세요. 예) 0000년도"),
@@ -83,13 +82,6 @@ const Text = styled.Text`
 `;
 
 const Signup = props => {
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(
-    true
-  );
-  const [passwordIcon, setPasswordIcon] = useState("ios-eye-off");
-  const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye-off");
-
   const handleSend = async values => {
     // console.log(`values: `, values);
     if (values.name.length === 0 || values.password.length === 0) {
@@ -103,38 +95,18 @@ const Signup = props => {
         values.name
       );
 
-      Alert.alert("회원가입 및 로그인이 완료되었습니다");
+      console.log(`signUp: `, signUp);
 
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);
         props.reduxLogin(true);
         setTimeout(() => {
-          props.navigation.navigate("BottomNavigation");
+          props.navigation.navigate("HomeScreen");
         }, 200);
       }
     } catch (e) {
       Alert.alert("회원가입에 실패했습니다");
       console.log(`Can't signup. error : ${e}`);
-    }
-  };
-
-  const handlePasswordVisibility = () => {
-    if (passwordIcon === "ios-eye") {
-      setPasswordIcon("ios-eye-off");
-      setPasswordVisibility(true);
-    } else {
-      setPasswordIcon("ios-eye");
-      setPasswordVisibility(false);
-    }
-  };
-
-  const handleConfirmPasswordVisibility = () => {
-    if (confirmPasswordIcon === "ios-eye") {
-      setConfirmPasswordIcon("ios-eye-off");
-      setConfirmPasswordVisibility(true);
-    } else {
-      setConfirmPasswordIcon("ios-eye");
-      setConfirmPasswordVisibility(false);
     }
   };
 
@@ -190,42 +162,22 @@ const Signup = props => {
                 <AuthInput
                   placeholder={"비밀번호 (6자리 이상)"}
                   onChange={handleChange("password")}
-                  secureTextEntry={passwordVisibility}
                   keyboardType="default"
                   returnKeyType="next"
                   onBlur={handleBlur("password")}
                   value={values.password}
-                >
-                  <TouchableOpacity onPress={handlePasswordVisibility}>
-                    <Ionicons
-                      style={{ marginLeft: -34 }}
-                      name={passwordIcon}
-                      size={22}
-                      color="rgb(230, 230, 230)"
-                    />
-                  </TouchableOpacity>
-                </AuthInput>
+                ></AuthInput>
                 <ErrorMessage
                   errorValue={touched.password && errors.password}
                 />
                 <AuthInput
                   placeholder={"비밀번호 확인"}
                   onChange={handleChange("confirmPassword")}
-                  secureTextEntry={confirmPasswordVisibility}
                   keyboardType="default"
                   returnKeyType="next"
                   value={values.confirmPassword}
                   onBlur={handleBlur("confirmPassword")}
-                >
-                  <TouchableOpacity onPress={handleConfirmPasswordVisibility}>
-                    <Ionicons
-                      style={{ marginLeft: -34 }}
-                      name={confirmPasswordIcon}
-                      size={22}
-                      color="rgb(230, 230, 230)"
-                    />
-                  </TouchableOpacity>
-                </AuthInput>
+                ></AuthInput>
                 <ErrorMessage
                   errorValue={touched.confirmPassword && errors.confirmPassword}
                 />
@@ -247,22 +199,7 @@ const Signup = props => {
                   onChange={handleChange("age")}
                 />
                 <ErrorMessage />
-                <LinkContainer>
-                  <Touchable onPress={() => props.navigation.navigate("Term")}>
-                    <Link>
-                      <LinkText>이용약관</LinkText>
-                    </Link>
-                  </Touchable>
-                  <Text> 및 </Text>
-                  <Touchable
-                    onPress={() => props.navigation.navigate("Privacy")}
-                  >
-                    <Link>
-                      <LinkText>개인정보</LinkText>
-                    </Link>
-                  </Touchable>
-                  <Text>취급방침</Text>
-                </LinkContainer>
+
                 <ErrorMessage />
                 <MainButton
                   onPress={handleSubmit}

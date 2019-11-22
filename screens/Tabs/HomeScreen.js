@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import {
   StyleSheet,
   Text,
@@ -23,94 +22,125 @@ import {
   Footer,
   FooterTab
 } from "native-base";
-
 import { connect } from "react-redux";
 import { login } from "../../redux/actions/authActions";
-
 import AuthModal from "../Auth/AuthModal";
+import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
 
+const LATITUDE_DELTA = 0.006;
+const LONGITUDE_DELTA = 0.001;
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isOpen: false,
       region: {
         latitude: 37.55737,
         longitude: 127.047132,
-        latitudeDelta: 0.006,
-        longitudeDelta: 0.001
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
       }
     };
+    // this._getLocationAsync();
   }
 
-  // getInitialState() {
-  //   return {
-  //     region: {
-  //       latitude: 37.55737,
-  //       longitude: 127.047132,
-  //       latitudeDelta: 0.006,
-  //       longitudeDelta: 0.001
-  //     }
-  //   };
-  // }
+  getLocation() {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
 
-  // onRegionChange(region) {
-  //   this.setState({ region });
-  // }
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
+      };
+      this.setState({ region: currentRegion });
+    });
+  }
+
+  // _getLocationAsync = async () => {
+  //   console.log("2222>>>", l);
+  //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  //   if (status !== "granted")
+  //     console.log("Permission to access location was denied");
+  //   let location = await Location.getCurrentPositionAsync({
+  //     enabledHighAccuracy: true
+  //   });
+  //   console.log("location", location);
+  //   let region = {
+  //     latitude: location.coords.latitude,
+  //     longitude: location.coords.longitude,
+  //     latitudeDelta: LATITUDE_DELTA,
+  //     longitudeDelta: LONGITUDE_DELTA
+  //   };
+  //   console.log("region", region);
+  //   this.setState({ region: region });
+  // };
+
+  centerMap() {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
+
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
+      };
+      this.setState({ region: currentRegion });
+    });
+    const {
+      latitude,
+      longitude,
+      latitudeDelta,
+      longitudeDelta
+    } = this.state.region;
+    this.map.animateToRegion({
+      latitude,
+      longitude,
+      latitudeDelta,
+      longitudeDelta
+    });
+  }
+  async componentDidMount() {
+    // await AsyncStorage.clear();
+    const loggedIn = await AsyncStorage.getItem("userToken");
+    // console.log(`ListScreen token: `, loggedIn);
+    if (!loggedIn) {
+      this.setState({ isOpen: true });
+    }
+  }
+
   render() {
+    const { isOpen } = this.state;
     return (
       <>
-        <AuthModal />
+        {isOpen && <AuthModal />}
         <Container style={styles.container}>
-          {/* <Header style={styles.headerStyle} androidStatusBarColor="white">
-            <Left style={{ flex: 2 }}>
-              <Button
-                transparent
-                onPress={() => {
-                  this.props.navigation.navigate("ListScreen");
-                }}
-              >
-                <Ionicons name="md-list" size={25} color="black" />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={styles.titleStyle}>지도주소</Title>
-            </Body>
-            <Right style={{ flex: 1 }} />
-            <Button transparent>
-              <Ionicons
-                name="ios-notifications-outline"
-                size={25}
-                color="black"
-              />
-            </Button>
-            <Button transparent>
-              <Ionicons name="md-refresh" size={25} color="black" />
-            </Button>
-            <Button
-              transparent
-              onPress={() => {
-                this.props.reduxLogin(false);
-                this.props.navigation.navigate("StartHome");
-              }}
-            >
-              <Ionicons name="md-log-out" size={25} color="black" />
-            </Button>
-          </Header> */}
           <Content>
-            <View>
-              <Text>위치</Text>
-            </View>
+            <CurrentLocationButton
+              cb={() => {
+                this.centerMap();
+              }}
+            />
             <MapView
               style={styles.mapStyle}
               provider="google"
-              region={this.state.region}
+              ref={map => {
+                this.map = map;
+              }}
+              initialRegion={this.state.region}
               onRegionChange={this.onRegionChange}
+              showsCompass={true}
               showsUserLocation={true}
-              showsMyLocationButton={true}
+              showsMyLocationButton={false}
               followsUserLocation={true}
               zoomEnabled={true}
               scrollEnabled={true}
               showsScale={true}
+              rotateEnabled={false}
             />
           </Content>
         </Container>
@@ -118,7 +148,6 @@ class Home extends Component {
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -137,14 +166,12 @@ const styles = StyleSheet.create({
     color: "black"
   }
 });
-
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
     loggedIn: state.authReducer.loggedIn
   };
 };
-
 const mapDispatchToProps = dispatch => {
   // Action
   return {
