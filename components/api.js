@@ -4,7 +4,6 @@ import { Buffer } from "buffer";
 const FormData = require("form-data");
 // dotenv.config();
 const APPKEY = "Ic5BJfNvJOAFgNLI";
-
 axios.defaults.headers.post["Content-Type"] = undefined;
 
 const tApi = axios.create({
@@ -48,8 +47,19 @@ export const serverApi = {
       }
     }),
   uploadimage: async (usertoken, imgfile) => {
-    const formData = new FormData();
+    //const base64 = `image/jpeg;base64;${imgfile}`;
+    const blob = await fetch(imgfile).then(res => res.blob());
+    console.log("blob", blob);
+    /*
+    let filename = imgfile.split("/").pop();
+    // Infer the type of the image
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`; */
 
+    const formData = new FormData();
+    console.log("사진폼", formData);
+    //formData.append("name", filename);
+    //formData.append("file", blob);
     formData.append("file", {
       name: "profil",
       uri: imgfile,
@@ -66,6 +76,16 @@ export const serverApi = {
         "x-access-token": usertoken
       }
     });
+    /* return await axios({
+      method: "POST",
+      url: "http://13.209.17.154:3000/user/image",
+      data: formData,
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": usertoken
+      }
+    }); */
   },
   password: (phone, pw, usertoken) =>
     sApi.put(

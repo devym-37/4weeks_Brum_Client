@@ -1,9 +1,9 @@
 {
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://mu-vgi.jaesookjeong.brum-client.exp.direct",
-  "packagerNgrokUrl": "https://packager.mu-vgi.jaesookjeong.brum-client.exp.direct",
-  "ngrokPid": 26802,
+  "expoServerNgrokUrl": "https://2k-mmy.jaesookjeong.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.2k-mmy.jaesookjeong.brum-client.exp.direct",
+  "ngrokPid": 28402,
   "devToolsPort": 19004,
-  "packagerPort": 19001,
-  "packagerPid": 26787
+  "packagerPort": 19005,
+  "packagerPid": 28389
 }

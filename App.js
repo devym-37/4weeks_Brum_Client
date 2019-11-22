@@ -21,17 +21,20 @@ import MapView from "./screens/Tabs/HomeScreen";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
+import { permissions } from "./redux/actions/permissionsActions";
 
 // Imports: Styled Component Custom Colors Theme Provider
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
 
 import ListCard from "./screens/ListCard";
+import PermissionApp from "./screens/Auth/Permissions";
 
 // React Native: App
 export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [isAllowed, setisAllowed] = useState(null);
 
   const preLoad = async () => {
     try {
@@ -43,9 +46,12 @@ export default function App() {
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
 
+      const permiSsions = await AsyncStorage.getItem("permiSsions");
+
       const loggedIn = await AsyncStorage.getItem("userToken");
 
       loggedIn ? setIsLoggedIn(true) : setIsLoggedIn(false);
+      permiSsions ? setisAllowed(true) : setisAllowed(false);
 
       setLoaded(true);
     } catch (e) {
@@ -60,12 +66,20 @@ export default function App() {
   // {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}  // push 시 추가
   // <HomeNavigation />
   //<MainNavigation />
-  return loaded && isLoggedIn !== null ? (
+  return loaded && isLoggedIn && isAllowed !== null ? (
     // Redux: Global Store
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {isLoggedIn ? <MainNavigation /> : <StartNavigation />}
+          {isAllowed ? (
+            isLoggedIn ? (
+              <MainNavigation />
+            ) : (
+              <StartNavigation />
+            )
+          ) : (
+            <PermissionApp />
+          )}
         </PersistGate>
       </ThemeProvider>
     </Provider>

@@ -1,18 +1,18 @@
 // Initial State
 const initialState = {
-  loggedIn: null
+  isAllowed: null
 };
 
 // Reducers (Modifies The State And Returns A New State)
-const authReducer = (state = initialState, action) => {
+const permissionsReducer = (state = initialState, action) => {
   switch (action.type) {
-    // Login
-    case "LOGIN": {
+    // Permissions
+    case "PERMISSIONS": {
       return {
         // State
         ...state,
         // Redux Store
-        loggedIn: action.trueFalse
+        isAllowed: action.trueFalse
       };
     }
     // Default
@@ -23,4 +23,4 @@ const authReducer = (state = initialState, action) => {
 };
 
 // Exports
-export default authReducer;
+export default permissionsReducer;
