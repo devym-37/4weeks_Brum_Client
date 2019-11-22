@@ -5,7 +5,8 @@ import {
   View,
   Text,
   Platform,
-  RefreshControl
+  RefreshControl,
+  AsyncStorage
 } from "react-native";
 import { Content } from "native-base";
 import AuthModal from "../Auth/AuthModal";
@@ -15,6 +16,8 @@ import ListCard from "../ListCard";
 const ListScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isopenLoginModal, setIsopenLoginModal] = useState(false);
 
   const refresh = async () => {
     try {
@@ -31,6 +34,12 @@ const ListScreen = () => {
 
   const preLoad = async () => {
     try {
+      setLoading(true);
+      const loggedIn = await AsyncStorage.getItem("userToken");
+      // console.log(`ListScreen token: `, loggedIn);
+      if (!loggedIn) {
+        setIsopenLoginModal(true);
+      }
       let getAllOrders = await serverApi.getAllOrders();
       setOrders([...getAllOrders.data.data.orders]);
       // console.log(`getAllOrders: `, getAllOrders.data.data.orders);
@@ -42,10 +51,10 @@ const ListScreen = () => {
   useEffect(() => {
     preLoad();
   }, []);
-
+  // console.log("preLoad", preLoad());
   return (
     <>
-      <AuthModal />
+      {isopenLoginModal && <AuthModal />}
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />

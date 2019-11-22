@@ -1,6 +1,6 @@
 // Imports: Dependencies
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, AsyncStorage } from "react-native";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { AppLoading } from "expo";
@@ -12,8 +12,6 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 // Imports: Navigations
 import StartNavigation from "./navigation/StartNavigation";
-import LoggedInNavigation from "./navigation/LoggedInNavigation";
-import HomeNavigation from "./navigation/HomeNavigation";
 import MainNavigation from "./navigation/MainNavigation";
 // Imports: Screens
 
@@ -28,7 +26,7 @@ import { store, persistor } from "./redux/store/store";
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
 
-import HomeScreen from "./screens/Tabs/HomeScreen";
+import ListCard from "./screens/ListCard";
 
 // React Native: App
 export default function App() {
@@ -45,7 +43,7 @@ export default function App() {
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
 
-      const loggedIn = await store.getState().authReducer.loggedIn;
+      const loggedIn = await AsyncStorage.getItem("userToken");
 
       loggedIn ? setIsLoggedIn(true) : setIsLoggedIn(false);
 

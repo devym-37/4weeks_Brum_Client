@@ -6,14 +6,16 @@ import { AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer } from "react-navigation";
 
-import ChatScreen from "../screens/Tabs/ChatsScreen";
-import OrderScreen from "../screens/Tabs/OrderScreen";
+import ChatScreen from "../screens/Tabs/Chats.js/DefaultChatsScreen";
+import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
+import HomeScreen from "../screens/Tabs/HomeScreen";
 import { createStackNavigator } from "react-navigation-stack";
 
 import NotificationLink from "../components/HeaderLink";
 import { stackStyles } from "./config";
+import { AsyncStorage } from "react-native";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
@@ -29,8 +31,8 @@ const stackFactory = (initialRoute, customConfig) =>
 const BottomNavigation = createBottomTabNavigator(
   {
     Home: {
-      screen: stackFactory(ListScreen, {
-        title: "홈",
+      screen: stackFactory(HomeScreen, {
+        title: "한양대",
         headerRight: <NotificationLink />
       }),
       navigationOptions: {
@@ -41,7 +43,7 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Order: {
-      screen: stackFactory(OrderScreen, { title: "내요청" }),
+      screen: stackFactory(OrderScreen, { title: "내 요청" }),
       navigationOptions: {
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
