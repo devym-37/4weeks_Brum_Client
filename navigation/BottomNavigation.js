@@ -14,6 +14,7 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import NotificationLink from "../components/HeaderLink";
 import { stackStyles } from "./config";
+import { AsyncStorage } from "react-native";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({

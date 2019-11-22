@@ -107,7 +107,7 @@ class Home extends Component {
   render() {
     return (
       <>
-        <AuthModal />
+        {/* <AuthModal /> */}
         <Container style={styles.container}>
           <Content>
             <CurrentLocationButton
