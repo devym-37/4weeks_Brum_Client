@@ -77,7 +77,7 @@ const LogIn = props => {
 
           await AsyncStorage.setItem("userToken", requestLogin.data.token);
           props.reduxLogin(true);
-          props.navigation.navigate("HomeScreen");
+          props.navigation.navigate("BottomNavigation");
         }
       }
     } catch (error) {
