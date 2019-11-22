@@ -18,8 +18,11 @@ const ButtonText = styled.Text``;
 export default ({ navigation }) => {
   const [campus, setCampus] = useState("");
 
-  const handleNextButton = () => {
-    campus && AsyncStorage.setItem("campus", campus);
+  const handleNextButton = async () => {
+    if (campus) {
+      const setStorage = await AsyncStorage.setItem("campus", campus);
+    }
+
     navigation.navigate("BottomNavigation");
   };
   return (
@@ -44,9 +47,9 @@ export default ({ navigation }) => {
           style={{ height: 360, width: 200 }}
           onValueChange={(itemValue, itemIndex) => setCampus(itemValue)}
         >
-          <Picker.Item label="한양대" value="HYU" />
-          <Picker.Item label="서울대" value="SNU" />
-          <Picker.Item label="연세대" value="YSU" />
+          <Picker.Item label="한양대" value="한양대" />
+          <Picker.Item label="서울대" value="서울대" />
+          <Picker.Item label="연세대" value="연세대" />
         </Picker>
 
         <MainButton text={"다음"} width={200} onPress={handleNextButton} />

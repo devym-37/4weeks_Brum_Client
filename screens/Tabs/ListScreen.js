@@ -34,12 +34,12 @@ const ListScreen = () => {
     try {
       setLoading(true);
       const loggedIn = await AsyncStorage.getItem("userToken");
-      console.log(`ListScreen token: `, loggedIn);
+      // console.log(`ListScreen token: `, loggedIn);
       if (!loggedIn) {
         setIsopenLoginModal(true);
       }
       let getAllOrders = await serverApi.getAllOrders();
-      console.log(`getAllOrders: `, getAllOrders);
+      // console.log(`getAllOrders: `, getAllOrders);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     }
@@ -48,7 +48,7 @@ const ListScreen = () => {
   useEffect(() => {
     preLoad();
   }, []);
-  console.log("preLoad", preLoad());
+  // console.log("preLoad", preLoad());
   return (
     <>
       {isopenLoginModal && <AuthModal />}
