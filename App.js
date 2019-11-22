@@ -28,7 +28,7 @@ import { store, persistor } from "./redux/store/store";
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
 
-import HomeScreen from "./screens/Tabs/HomeScreen";
+import ListCard from "./screens/ListCard";
 
 // React Native: App
 export default function App() {
@@ -67,7 +67,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {isLoggedIn ? <MainNavigation /> : <StartNavigation />}
+          {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}
         </PersistGate>
       </ThemeProvider>
     </Provider>
