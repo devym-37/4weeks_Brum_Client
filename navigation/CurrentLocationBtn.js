@@ -9,13 +9,13 @@ export const CurrentLocationButton = function(props) {
   //if props.cb is passed, use it. if not, console.log() when cb() is called.
   const cb = props.cb ? props.cb : () => console.log("callback function not passed to CurrentLocationButton");
   // if props.bottom is passed, use it. if not, set bottom to 110
-  const bottom = props.bottom ? props.bottom : 110;
+  const bottom = props.bottom ? props.bottom : 190;
   return (
     <View style={[styles.container, { top: HEIGHT - bottom }]}>
       <MaterialIcons
         name="my-location"
-        color="#000000"
-        size={28}
+        color="#24282C"
+        size={25}
         onPress={() => {
           cb();
         }}
@@ -26,10 +26,10 @@ export const CurrentLocationButton = function(props) {
 
 const styles = StyleSheet.create({
   container: {
-    zIndex: 1,
+    zIndex: 9,
     position: "absolute",
-    width: 48,
-    height: 48,
+    width: 44,
+    height: 44,
     backgroundColor: "#fff",
     left: WIDTH - 60,
     borderRadius: 50,
