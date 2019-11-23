@@ -1,9 +1,9 @@
 {
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://2k-mmy.anonymous.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.2k-mmy.anonymous.brum-client.exp.direct",
+  "ngrokPid": 85935,
   "devToolsPort": 19002,
-  "packagerPort": 19001,
-  "packagerPid": 3607
+  "packagerPort": 19003,
+  "packagerPid": 85916
 }

@@ -76,7 +76,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          <SelectPhoto />
+          {isLoggedIn ? <MainNavigation /> : <StartNavigation />}
         </PersistGate>
       </ThemeProvider>
     </Provider>
