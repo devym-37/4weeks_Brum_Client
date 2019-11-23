@@ -4,7 +4,7 @@ export default {
   },
   transferTime: time => {
     var nowTime = new Date();
-    console.log(`nowTime: `, nowTime);
+    // console.log(`nowTime: `, nowTime);
     var now = {
       year: nowTime.getFullYear(),
       month: nowTime.getMonth() + 1,
@@ -14,8 +14,8 @@ export default {
       sec: nowTime.getSeconds()
     };
 
-    console.log(`now: ${JSON.stringify(now)}`);
-    console.log(`전체 생성시간 : `, time);
+    // console.log(`now: ${JSON.stringify(now)}`);
+    // console.log(`전체 생성시간 : `, time);
     var createdAt = {
       year: Number(time.substring(0, 4)),
       month: Number(time.substring(5, 7)),
@@ -36,5 +36,21 @@ export default {
     else if (gap(`hour`)) return `${gap(`hour`)}시간 전`;
     else if (gap(`min`)) return `${gap(`min`)}분 전`;
     else if (gap(`sec`)) return `방금 전`;
+  },
+
+  transferOrderStatus: num => {
+    const status = [
+      "매칭대기",
+      "매칭완료",
+      "배송대기",
+      "배송시작",
+      "배송완료",
+      "정산완료"
+    ];
+
+    return status[num];
+  },
+  shortenText: (text, num) => {
+    return text.length > num ? text.substr(0, num + 1) + `・・・` : text;
   }
 };

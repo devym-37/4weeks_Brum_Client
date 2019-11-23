@@ -2,7 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import GhostButton from "../components/Buttons/GhostButton";
 import { withNavigation } from "react-navigation";
+import constants from "../constants";
+
 const Container = styled.View`
+  margin-top: -80px;
+  width: ${constants.width};
+  height: ${constants.height};
+  background-color: white;
   flex: 1;
   justify-content: center;
   align-items: center;

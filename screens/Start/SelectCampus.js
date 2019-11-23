@@ -16,14 +16,13 @@ const Button = styled.View``;
 const ButtonText = styled.Text``;
 
 export default ({ navigation }) => {
-  const [campus, setCampus] = useState("");
+  const [campus, setCampus] = useState("한양대");
 
   const handleNextButton = async () => {
     if (campus) {
       await AsyncStorage.setItem("campus", campus);
     }
-
-    navigation.navigate("BottomNavigation");
+    navigation.navigate("Home");
   };
   return (
     <>

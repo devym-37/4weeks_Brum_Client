@@ -56,17 +56,19 @@ DefaultOrderScreen = ({ navigation }) => {
 
   return (
     <ScrollView
+      style={{ backgroundColor: "#f1f3f5" }}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      <Container>
-        {orders.length === 0 ? (
-          <DefaultOrder />
-        ) : (
-          orders.map((order, i) => <OrderCard key={i} {...order} />)
-        )}
-      </Container>
+      {orders.filter(order => {
+        console.log(order);
+        return order.orderStatus < 5;
+      }).length === 0 ? (
+        <DefaultOrder />
+      ) : (
+        orders.map((order, i) => <OrderCard key={i} {...order} />)
+      )}
     </ScrollView>
   );
 };

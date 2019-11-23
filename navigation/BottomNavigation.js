@@ -11,6 +11,7 @@ import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
 import HomeScreen from "../screens/Tabs/HomeScreen";
+import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import { createStackNavigator } from "react-navigation-stack";
 
 import NotificationLink from "../components/HeaderLink";
@@ -24,6 +25,12 @@ const stackFactory = (initialRoute, customConfig) =>
       navigationOptions: {
         ...customConfig,
         headerStyle: { ...stackStyles }
+      }
+    },
+    ApplicantsList: {
+      screen: ApplicantsList,
+      navigationOptions: {
+        title: "내요청 상세보기"
       }
     }
   });
@@ -43,8 +50,12 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Order: {
-      screen: stackFactory(OrderScreen, { title: "내 요청" }),
+      screen: stackFactory(OrderScreen, {
+        title: "내 요청",
+        backgroundColor: "#f1f3f5"
+      }),
       navigationOptions: {
+        backgroundColor: "#f1f3f5",
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
           <AntDesign name="form" size={24} style={{ color: tintColor }} />
