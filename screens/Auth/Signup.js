@@ -111,10 +111,13 @@ const Signup = props => {
         setTimeout(() => {
           props.navigation.navigate("BottomNavigation");
         }, 200);
-      }
+      } ///err
     } catch (e) {
       Alert.alert("회원가입에 실패했습니다");
       console.log(`Can't signup. error : ${e}`);
+      setTimeout(() => {
+        props.navigation.navigate("Userinfo");
+      }, 200);
     }
   };
 
