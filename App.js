@@ -27,15 +27,12 @@ import { permissions } from "./redux/actions/permissionsActions";
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
 
-<<<<<<< HEAD
 import Home from "./screens/Tabs/HomeScreen";
-=======
 import ListCard from "./screens/ListCard";
 import PermissionApp from "./screens/Auth/Permissions";
 import Userinfo from "./screens/Auth/UserInfo";
 import SelectCampus from "./screens/Start/SelectCampus";
 import SelectPhoto from "./screens/Photo/SelectPhoto";
->>>>>>> a1d719355bb8408c20ca1d0a3fd8c794846917f5
 
 // React Native: App
 export default function App() {
