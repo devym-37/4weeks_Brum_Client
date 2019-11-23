@@ -25,6 +25,7 @@ import { connect } from "react-redux";
 import { login } from "../../redux/actions/authActions";
 import AuthModal from "../Auth/AuthModal";
 import MapScreen from "../../components/MapScreen";
+import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
 
 const LATITUDE_DELTA = 0.006;
 const LONGITUDE_DELTA = 0.001;
@@ -59,12 +60,33 @@ const Home = () => {
       };
     }
     let campusRegion = {
-      ...campusLatLng,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA
+      ...campusLatLng
     };
     setRegion(campusRegion);
     console.log("selectCampus", selectCampus);
+  };
+  const getLocation = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
+
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng
+      };
+      setRegion({ ...currentRegion });
+    });
+  };
+
+  const centerMap = () => {
+    const { latitude, longitude } = region;
+    console.log("region2222", region);
+    this.map.animateToRegion({
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA
+    });
   };
 
   const clearStorage = async () => {
@@ -76,7 +98,7 @@ const Home = () => {
     }
   };
   useEffect(() => {
-    getCampus(), clearStorage();
+    getCampus(), clearStorage(), getLocation();
   }, []);
 
   return (
@@ -84,7 +106,17 @@ const Home = () => {
       {isOpen && <AuthModal />}
       <Container style={styles.container}>
         <Content>
-          <MapScreen latitude={region.latitude} longitude={region.longitude} />
+          <CurrentLocationButton
+            cb={() => {
+              centerMap();
+            }}
+          />
+          {region.latitude !== null && (
+            <MapScreen
+              latitude={region.latitude}
+              longitude={region.longitude}
+            />
+          )}
         </Content>
       </Container>
     </>

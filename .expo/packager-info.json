@@ -1,9 +1,9 @@
 {
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://6a-hzs.anonymous.brum-client.exp.direct",
-  "packagerNgrokUrl": "https://packager.6a-hzs.anonymous.brum-client.exp.direct",
-  "ngrokPid": 94773,
+  "expoServerNgrokUrl": "https://6a-hzs.leeyoungmin.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.6a-hzs.leeyoungmin.brum-client.exp.direct",
+  "ngrokPid": 3884,
   "devToolsPort": 19002,
-  "packagerPort": 19003,
-  "packagerPid": 94761
+  "packagerPort": 19001,
+  "packagerPid": 25300
 }
