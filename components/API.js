@@ -26,6 +26,14 @@ export const toastApi = {
 
 export const serverApi = {
   verifyPhoneNumber: phone => sApi.post("register/phone", { phone }),
+  getUserOrders: userToken =>
+    sApi.get("user/order", {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   logIn: (id, ps) =>
     sApi.post("login", {
       phone: id,
