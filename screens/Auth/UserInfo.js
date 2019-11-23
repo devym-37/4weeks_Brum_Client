@@ -190,21 +190,6 @@ const Userinfo = props => {
                 </Picker>
               </Item>
             </Form>
-            {Imageadded ? (
-              <Grid>
-                <Row style={{ alignContent: "center", margin: 50 }}>
-                  <Image
-                    source={{ uri: Imageadded }}
-                    style={{ width: 200, height: 200, marginBottom: 15 }}
-                  />
-                </Row>
-                <Row>
-                  <GhostButton text="다른사진 고르기" onPress={selectPicture} />
-                </Row>
-              </Grid>
-            ) : (
-              <GhostButton text="사진 고르기" onPress={selectPicture} />
-            )}
 
             <MainButton onPress={handleSubmit} text="제출하기" />
           </View>
