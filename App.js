@@ -21,17 +21,27 @@ import MapView from "./screens/Tabs/HomeScreen";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
+import { permissions } from "./redux/actions/permissionsActions";
 
 // Imports: Styled Component Custom Colors Theme Provider
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
 
+<<<<<<< HEAD
 import Home from "./screens/Tabs/HomeScreen";
+=======
+import ListCard from "./screens/ListCard";
+import PermissionApp from "./screens/Auth/Permissions";
+import Userinfo from "./screens/Auth/UserInfo";
+import SelectCampus from "./screens/Start/SelectCampus";
+import SelectPhoto from "./screens/Photo/SelectPhoto";
+>>>>>>> a1d719355bb8408c20ca1d0a3fd8c794846917f5
 
 // React Native: App
 export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [isAllowed, setisAllowed] = useState(null);
 
   const preLoad = async () => {
     try {
@@ -43,9 +53,14 @@ export default function App() {
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
 
+      //
+      await AsyncStorage.setItem("permiSsions", "true");
+      //빼기
+      const permiSsions = await AsyncStorage.getItem("permiSsions");
       const loggedIn = await AsyncStorage.getItem("userToken");
 
       loggedIn ? setIsLoggedIn(true) : setIsLoggedIn(false);
+      permiSsions ? setisAllowed(true) : setisAllowed(false);
 
       setLoaded(true);
     } catch (e) {
@@ -73,3 +88,12 @@ export default function App() {
     <AppLoading />
   );
 }
+/* {isAllowed ? (
+  isLoggedIn ? (
+    <MainNavigation />
+  ) : (
+    <StartNavigation />
+  )
+) : (
+  <PermissionApp />
+)} */
