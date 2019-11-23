@@ -27,10 +27,9 @@ const OrderCard = ({
   orderStatus,
   createdAt
 }) => {
-  const priceWithComma =
-    price && utils.numberWithCommas(Number(price.substr(0, price.length - 1)));
+  const priceWithComma = price && utils.numberWithCommas(Number(price));
 
-  const timeStamp = utils.transferTime("2019-11-23 11:00:00");
+  const timeStamp = utils.transferTime(createdAt);
   return (
     <Card>
       <Title>{title}</Title>

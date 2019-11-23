@@ -61,7 +61,10 @@ DefaultOrderScreen = ({ navigation }) => {
       }
     >
       <Container>
-        {orders.length === 0 ? (
+        {orders.filter(order => {
+          console.log(order);
+          return order.orderStatus < 5;
+        }).length === 0 ? (
           <DefaultOrder />
         ) : (
           orders.map((order, i) => <OrderCard key={i} {...order} />)

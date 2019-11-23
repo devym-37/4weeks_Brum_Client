@@ -4,7 +4,7 @@ export default {
   },
   transferTime: time => {
     var nowTime = new Date();
-    console.log(`nowTime: `, nowTime);
+    // console.log(`nowTime: `, nowTime);
     var now = {
       year: nowTime.getFullYear(),
       month: nowTime.getMonth() + 1,
@@ -14,8 +14,8 @@ export default {
       sec: nowTime.getSeconds()
     };
 
-    console.log(`now: ${JSON.stringify(now)}`);
-    console.log(`전체 생성시간 : `, time);
+    // console.log(`now: ${JSON.stringify(now)}`);
+    // console.log(`전체 생성시간 : `, time);
     var createdAt = {
       year: Number(time.substring(0, 4)),
       month: Number(time.substring(5, 7)),
