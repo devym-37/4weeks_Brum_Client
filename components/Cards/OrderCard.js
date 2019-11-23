@@ -128,7 +128,7 @@ const OrderCard = ({
   const priceWithComma = price && utils.numberWithCommas(Number(price));
   const timeStamp = utils.transferTime(createdAt);
   const status = utils.transferOrderStatus(orderStatus);
-  const shortTitle = utils.shortenText(title, 21);
+  const shortTitle = utils.shortenText(title, 19);
   const shortArrivals = utils.shortenText(arrivals, 7);
   const shortDeparture = utils.shortenText(departures, 7);
   return (
