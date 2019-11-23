@@ -27,6 +27,7 @@ import { permissions } from "./redux/actions/permissionsActions";
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
 
+import Home from "./screens/Tabs/HomeScreen";
 import ListCard from "./screens/ListCard";
 import PermissionApp from "./screens/Auth/Permissions";
 import Userinfo from "./screens/Auth/UserInfo";
