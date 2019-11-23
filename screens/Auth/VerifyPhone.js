@@ -51,7 +51,7 @@ const VerifyPhone = props => {
 
         Alert.alert("인증번호가 문자로 전송됐습니다. (최대 20초 소요)");
         const requestSMS = await toastApi.postSMS(otp, value);
-        props.navigation.navigate("Signup");
+        props.navigation.navigate("Confirm");
       } else {
         const selectedPage = await AsyncStorage.getItem("page");
         console.log("선택한 페이지", selectedPage);

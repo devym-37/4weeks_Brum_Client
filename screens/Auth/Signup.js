@@ -91,7 +91,7 @@ const Signup = props => {
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye-off");
 
   const handleSend = async values => {
-    // console.log(`values: `, values);
+    console.log(`signup values: `, values);
     if (values.name.length === 0 || values.password.length === 0) {
       Alert.alert("입력이 올바르지 않습니다");
     }
@@ -100,10 +100,11 @@ const Signup = props => {
       const signUp = await serverApi.register(
         values.phone,
         values.password,
-        values.name
+        values.name,
+        values.age
       );
 
-      Alert.alert("회원가입 및 로그인이 완료되었습니다");
+      // Alert.alert("회원가입 및 로그인이 완료되었습니다");
 
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);

@@ -4,7 +4,8 @@ import { Buffer } from "buffer";
 const FormData = require("form-data");
 // dotenv.config();
 const APPKEY = "Ic5BJfNvJOAFgNLI";
-axios.defaults.headers.post["Content-Type"] = undefined;
+// axios.defaults.headers.post["Content-Type"] = undefined;
+axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const tApi = axios.create({
   baseURL: "https://api-sms.cloud.toast.com/"
@@ -25,16 +26,25 @@ export const toastApi = {
 
 export const serverApi = {
   verifyPhoneNumber: phone => sApi.post("register/phone", { phone }),
+  getUserOrders: userToken =>
+    sApi.get("user/order", {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   logIn: (id, ps) =>
     sApi.post("login", {
       phone: id,
       password: ps
     }),
-  resister: (phone, password, name, sex = "male", agreementAd = false) =>
+  register: (phone, password, name, age, sex = "male", agreementAd = false) =>
     sApi.post("register", {
       phone,
       password,
-      name,
+      nickname: name,
+      age,
       sex,
       agreementAd
     }),

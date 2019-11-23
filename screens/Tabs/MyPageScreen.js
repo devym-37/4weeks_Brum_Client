@@ -42,7 +42,7 @@ const MyPageScreen = ({ navigation }) => {
     Alert.alert("로그아웃 되었습니다");
     const resetAction = StackActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: "MainNavigation" })]
+      actions: [NavigationActions.navigate({ routeName: "BottomNavigation" })]
     });
     navigation.dispatch(resetAction);
   };
