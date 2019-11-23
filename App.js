@@ -32,6 +32,7 @@ import PermissionApp from "./screens/Auth/Permissions";
 import Userinfo from "./screens/Auth/UserInfo";
 import SelectCampus from "./screens/Start/SelectCampus";
 import SelectPhoto from "./screens/Photo/SelectPhoto";
+import OderDetailScreen from "./screens/Tabs/Order/OrderDetailScreen";
 
 // React Native: App
 export default function App() {
@@ -76,7 +77,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          <SelectPhoto />
+          <OderDetailScreen />
         </PersistGate>
       </ThemeProvider>
     </Provider>
