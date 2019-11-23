@@ -26,8 +26,7 @@ const ListCard = props => {
       <CardItem cardBody style={{ marginTop: 10 }}>
         <Image
           source={{
-            uri:
-              "https://tistory3.daumcdn.net/tistory/2864444/attach/628442af44f545c788ffdc5035464f98"
+            uri: "https://tistory3.daumcdn.net/tistory/2864444/attach/628442af44f545c788ffdc5035464f98"
           }}
           style={{ height: 120, width: 120, flex: 0.6 }}
         />
@@ -55,7 +54,7 @@ const ListCard = props => {
                   paddingTop: 7
                 }}
               >
-                {data.hostInfo.name}
+                {data.hostInfo.nickname}
               </Text>
             </Row>
 
@@ -73,12 +72,7 @@ const ListCard = props => {
               <Text note style={{ height: 25, width: 100 }}>
                 비용 : {data.price !== null ? data.price : "협의"}
               </Text>
-              <SimpleLineIcons
-                active
-                name="speech"
-                size={18}
-                style={{ paddingLeft: 55, paddingRight: 5 }}
-              />
+              <SimpleLineIcons active name="speech" size={18} style={{ paddingLeft: 55, paddingRight: 5 }} />
               <Text
                 note
                 style={{

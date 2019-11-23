@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,6 @@ import {
   AsyncStorage
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import MapView from "react-native-maps";
 import {
   Container,
   Header,
@@ -25,137 +24,109 @@ import {
 import { connect } from "react-redux";
 import { login } from "../../redux/actions/authActions";
 import AuthModal from "../Auth/AuthModal";
+import MapScreen from "../../components/MapScreen";
 import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
 
 const LATITUDE_DELTA = 0.006;
 const LONGITUDE_DELTA = 0.001;
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: false,
-      region: {
+
+const Home = () => {
+  const [campus, setCampus] = useState("");
+  const [region, setRegion] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getCampus = async () => {
+    let selectCampus = await AsyncStorage.getItem("campus");
+    setCampus(selectCampus);
+    if (selectCampus === "한양대") {
+      var campusLatLng = {
         latitude: 37.55737,
-        longitude: 127.047132,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-      }
+        longitude: 127.047132
+      };
+    } else if (selectCampus === "연세대") {
+      var campusLatLng = {
+        latitude: 37.564624,
+        longitude: 126.93755
+      };
+    } else if (selectCampus === "서울대") {
+      var campusLatLng = {
+        latitude: 37.459228,
+        longitude: 126.952052
+      };
+    } else if (selectCampus === "이화여대") {
+      var campusLatLng = {
+        latitude: 37.561865,
+        longitude: 126.946714
+      };
+    }
+    let campusRegion = {
+      ...campusLatLng
     };
-    // this._getLocationAsync();
-  }
-
-  getLocation() {
+    setRegion(campusRegion);
+    console.log("selectCampus", selectCampus);
+  };
+  const getLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
       let currentLat = parseFloat(position.coords.latitude);
       let currentLng = parseFloat(position.coords.longitude);
 
       let currentRegion = {
         latitude: currentLat,
-        longitude: currentLng,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
+        longitude: currentLng
       };
-      this.setState({ region: currentRegion });
+      setRegion({ ...currentRegion });
     });
-  }
+  };
 
-  // _getLocationAsync = async () => {
-  //   console.log("2222>>>", l);
-  //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
-  //   if (status !== "granted")
-  //     console.log("Permission to access location was denied");
-  //   let location = await Location.getCurrentPositionAsync({
-  //     enabledHighAccuracy: true
-  //   });
-  //   console.log("location", location);
-  //   let region = {
-  //     latitude: location.coords.latitude,
-  //     longitude: location.coords.longitude,
-  //     latitudeDelta: LATITUDE_DELTA,
-  //     longitudeDelta: LONGITUDE_DELTA
-  //   };
-  //   console.log("region", region);
-  //   this.setState({ region: region });
-  // };
-
-  centerMap() {
-    navigator.geolocation.getCurrentPosition(position => {
-      let currentLat = parseFloat(position.coords.latitude);
-      let currentLng = parseFloat(position.coords.longitude);
-
-      let currentRegion = {
-        latitude: currentLat,
-        longitude: currentLng,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-      };
-      this.setState({ region: currentRegion });
-    });
-    const {
-      latitude,
-      longitude,
-      latitudeDelta,
-      longitudeDelta
-    } = this.state.region;
+  const centerMap = () => {
+    const { latitude, longitude } = region;
+    console.log("region2222", region);
     this.map.animateToRegion({
-      latitude,
-      longitude,
-      latitudeDelta,
-      longitudeDelta
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA
     });
-  }
-  async componentDidMount() {
+  };
+
+  const clearStorage = async () => {
     // await AsyncStorage.clear();
     const loggedIn = await AsyncStorage.getItem("userToken");
     // console.log(`ListScreen token: `, loggedIn);
     if (!loggedIn) {
-      this.setState({ isOpen: true });
+      setIsOpen(!isOpen);
     }
-  }
+  };
+  useEffect(() => {
+    getCampus(), clearStorage(), getLocation();
+  }, []);
 
-  render() {
-    const { isOpen } = this.state;
-    return (
-      <>
-        {isOpen && <AuthModal />}
-        <Container style={styles.container}>
-          <Content>
-            <CurrentLocationButton
-              cb={() => {
-                this.centerMap();
-              }}
+  return (
+    <>
+      {isOpen && <AuthModal />}
+      <Container style={styles.container}>
+        <Content>
+          <CurrentLocationButton
+            cb={() => {
+              centerMap();
+            }}
+          />
+          {region.latitude !== null && (
+            <MapScreen
+              latitude={region.latitude}
+              longitude={region.longitude}
             />
-            <MapView
-              style={styles.mapStyle}
-              provider="google"
-              ref={map => {
-                this.map = map;
-              }}
-              initialRegion={this.state.region}
-              onRegionChange={this.onRegionChange}
-              showsCompass={true}
-              showsUserLocation={true}
-              showsMyLocationButton={false}
-              followsUserLocation={true}
-              zoomEnabled={true}
-              scrollEnabled={true}
-              showsScale={true}
-              rotateEnabled={false}
-            />
-          </Content>
-        </Container>
-      </>
-    );
-  }
-}
+          )}
+        </Content>
+      </Container>
+    </>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white"
-  },
-  mapStyle: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
   },
   headerStyle: {
     backgroundColor: "white",
