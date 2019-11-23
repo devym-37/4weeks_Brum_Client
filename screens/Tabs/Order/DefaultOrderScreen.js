@@ -5,6 +5,7 @@ import GhostButton from "../../../components/Buttons/GhostButton";
 import DefaultOrder from "../../../components/DefaultOrder";
 import { withNavigation } from "react-navigation";
 import { serverApi } from "../../../components/API";
+import OrderCard from "../../../components/Cards/OrderCard";
 const Container = styled.View`
   flex: 1;
   margin-top: 50%;
@@ -41,7 +42,7 @@ DefaultOrderScreen = ({ navigation }) => {
       const userToken = await AsyncStorage.getItem("userToken");
       let requestUserOrders = await serverApi.getUserOrders(userToken);
 
-      console.log(`유저 오더: `, requestUserOrders.data.data.orders);
+      // console.log(`유저 오더: `, requestUserOrders.data.data.orders);
 
       setOrders([...requestUserOrders.data.data.orders]);
     } catch (e) {
@@ -62,16 +63,9 @@ DefaultOrderScreen = ({ navigation }) => {
       <Container>
         {orders.length === 0 ? (
           <DefaultOrder />
-        ) : // <>
-        //   <Text>현재 진행중인 요청이 없어요.</Text>
-        //   <Text>필요한 서비스의 요청서를 보내보세요.</Text>
-        //   <GhostButton
-        //     text="요청서 보내기"
-        //     width={200}
-        //     onPress={() => navigation.navigate("NewOrder")}
-        //   />
-        // </>
-        null}
+        ) : (
+          orders.map((order, i) => <OrderCard key={i} {...order} />)
+        )}
       </Container>
     </ScrollView>
   );
