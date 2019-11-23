@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {useState, useEffect} from "react";
 import {
   StyleSheet,
   Text,
@@ -29,8 +29,52 @@ import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
 
 const LATITUDE_DELTA = 0.006;
 const LONGITUDE_DELTA = 0.001;
-class Home extends Component {
-  constructor(props) {
+
+const MapView = () => {
+    const [campus, setCampus] = useState("");
+
+    const getCampus = async() => {
+        let selectCampus = await AsyncStorage.getItem("campus");
+        setCampus(selectCampus);
+    }
+
+    return (
+        <>
+          {isOpen && <AuthModal />}
+          <Container style={styles.container}>
+            <Content>
+              <CurrentLocationButton
+                cb={() => {
+                  this.centerMap();
+                }}
+              />
+              <MapView
+                style={styles.mapStyle}
+                provider="google"
+                ref={map => {
+                  this.map = map;
+                }}
+                initialRegion={this.state.region}
+                onRegionChange={this.onRegionChange}
+                showsCompass={true}
+                showsUserLocation={true}
+                showsMyLocationButton={false}
+                followsUserLocation={true}
+                zoomEnabled={true}
+                scrollEnabled={true}
+                showsScale={true}
+                rotateEnabled={false}
+              />
+            </Content>
+          </Container>
+        </>
+      );
+};
+
+export default MapView;
+
+
+constructor(props) {
     super(props);
     this.state = {
       isOpen: false,
@@ -102,68 +146,5 @@ class Home extends Component {
   render() {
     const { isOpen } = this.state;
     console.log("campus", campus);
-    return (
-      <>
-        {isOpen && <AuthModal />}
-        <Container style={styles.container}>
-          <Content>
-            <CurrentLocationButton
-              cb={() => {
-                this.centerMap();
-              }}
-            />
-            <MapView
-              style={styles.mapStyle}
-              provider="google"
-              ref={map => {
-                this.map = map;
-              }}
-              initialRegion={this.state.region}
-              onRegionChange={this.onRegionChange}
-              showsCompass={true}
-              showsUserLocation={true}
-              showsMyLocationButton={false}
-              followsUserLocation={true}
-              zoomEnabled={true}
-              scrollEnabled={true}
-              showsScale={true}
-              rotateEnabled={false}
-            />
-          </Content>
-        </Container>
-      </>
-    );
+    
   }
-}
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white"
-  },
-  mapStyle: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
-  },
-  headerStyle: {
-    backgroundColor: "white",
-    justifyContent: "center",
-    marginTop: Platform.OS === "android" ? 20 : 0 // android top-tab statusbar overlap fix
-  },
-  titleStyle: {
-    color: "black"
-  }
-});
-const mapStateToProps = state => {
-  // Redux Store --> Component
-  return {
-    loggedIn: state.authReducer.loggedIn
-  };
-};
-const mapDispatchToProps = dispatch => {
-  // Action
-  return {
-    // Login
-    reduxLogin: trueFalse => dispatch(login(trueFalse))
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Home);

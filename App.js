@@ -26,7 +26,7 @@ import { store, persistor } from "./redux/store/store";
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
 
-import ListCard from "./screens/ListCard";
+import Home from "./screens/Tabs/HomeScreen";
 
 // React Native: App
 export default function App() {

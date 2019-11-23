@@ -2,8 +2,8 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://g6-qiv.leeyoungmin.brum-client.exp.direct",
   "packagerNgrokUrl": "https://packager.g6-qiv.leeyoungmin.brum-client.exp.direct",
-  "ngrokPid": 19504,
+  "ngrokPid": 13608,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 25716
+  "packagerPid": 19964
 }

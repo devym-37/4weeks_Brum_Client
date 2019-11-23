@@ -50,6 +50,7 @@ export default ({ navigation }) => {
           <Picker.Item label="한양대" value="한양대" />
           <Picker.Item label="서울대" value="서울대" />
           <Picker.Item label="연세대" value="연세대" />
+          <Picker.Item label="이화여대" value="이화여대" />
         </Picker>
 
         <MainButton text={"다음"} width={200} onPress={handleNextButton} />
