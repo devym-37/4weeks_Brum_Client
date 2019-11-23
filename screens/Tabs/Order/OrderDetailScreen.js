@@ -9,7 +9,8 @@ import {
   Block,
   StyleSheet,
   Dimensions,
-  FlatList
+  FlatList,
+  AsyncStorage
 } from "react-native";
 import {
   Content,
@@ -33,6 +34,8 @@ import { Ionicons } from "@expo/vector-icons";
 import BottomSheet from "reanimated-bottom-sheet";
 import MainButton from "../../../components/Buttons/MainButton";
 
+import { serverApi } from "../../../components/API";
+
 const OderDetailScreen = props => {
   const [region, setRegion] = useState();
   //const { isOpen } = this.state;
@@ -40,8 +43,53 @@ const OderDetailScreen = props => {
   const [imageurl, setImageurl] = useState(
     "https://i.kym-cdn.com/entries/icons/original/000/026/638/cat.jpg"
   );
-  const [msg, setMsg] = useState("네고가능합니다");
+  const [arrivals, setArrivals] = useState("식당");
+  const [departures, setDepartures] = useState("한양대 공학관");
+  const [details, setDetails] = useState("없음1");
+  const [campus, setCampus] = useState("한양대학교");
+  const [price, setPrice] = useState("200");
+  const [title, setTitle] = useState("심부름하실 분");
+  const [msg, setMsg] = useState("안녕하세요");
   //const [region, setRegion] = useState();
+
+  useEffect(() => {
+    // Create an scoped async function in the hook
+    let isCancelled = false;
+
+    async function fetchData() {
+      try {
+        setLoading(true);
+        //await AsyncStorage.getItem("userId"); //연결 후 빼기
+
+        //const usertoken = await AsyncStorage.getItem("userToken");
+
+        const usertoken =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicGhvbmUiOiIwMTAxMjM0MTIzNCIsImlhdCI6MTU3NDMwMTM3NywiZXhwIjoxNTc5NDg1Mzc3fQ.sSXGnTTGUKIyXkEywO4LgF2VXgYlT_ypf7lxjGlaAH8";
+        const userId = 1;
+
+        const oderDetail = await serverApi.oderdetail(1, usertoken);
+        console.log(oderDetail.data.data.order);
+        console.log("hk", oderDetail.data.isSuccess);
+        if (oderDetail.data.isSuccess) {
+          console.log("들어옴");
+          setDepartures(oderDetail.data.data.order.departures);
+          setDetails(oderDetail.data.data.order.details);
+          setCampus(oderDetail.data.data.order.hostInfo.campus);
+          setPrice(oderDetail.data.data.order.price);
+          setTitle(oderDetail.data.data.order.title);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
 
   renderContent = () => (
     /* render */
@@ -77,7 +125,7 @@ const OderDetailScreen = props => {
               textAlignVertical: "center"
             }}
           >
-            ₩ 5,000
+            {price}
           </Text>
         </Col>
         <Col style={{ padding: -10 }}>
@@ -130,7 +178,7 @@ const OderDetailScreen = props => {
               </Left>
               <Body>
                 <Text>정재숙</Text>
-                <Text note>한양대</Text>
+                <Text note>{campus}</Text>
               </Body>
               <Right>
                 <Text>
@@ -141,7 +189,7 @@ const OderDetailScreen = props => {
           </List>
 
           <Row style={{ marginTop: 10 }}>
-            <Text style={{ fontSize: 20, marginLeft: 10 }}>심부름하실 분</Text>
+            <Text style={{ fontSize: 20, marginLeft: 10 }}>{title}</Text>
           </Row>
           <Row>
             <Text note style={{ marginLeft: 10 }}>
@@ -151,7 +199,8 @@ const OderDetailScreen = props => {
           <Row style={{ margin: 10 }}>
             <Text note>
               <Ionicons name="md-disc" />
-              {"   "}도착지
+              {"   "}
+              {departures}
             </Text>
           </Row>
           <Row style={{ margin: 10 }}>
@@ -160,7 +209,7 @@ const OderDetailScreen = props => {
             </Text>
           </Row>
           <Row>
-            <Text style={{ margin: 10 }}></Text>
+            <Text style={{ margin: 10 }}>{details}</Text>
           </Row>
         </Content>
         {msg ? (

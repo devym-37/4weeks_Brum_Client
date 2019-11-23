@@ -57,7 +57,7 @@ export const serverApi = {
     let type = match ? `image/${match[1]}` : `image`; */
 
     const formData = new FormData();
-    console.log("사진폼", formData);
+    //console.log("사진폼", formData);
     //formData.append("name", filename);
     //formData.append("file", blob);
     formData.append("file", {
@@ -65,8 +65,8 @@ export const serverApi = {
       uri: imgfile,
       type: "image/jpg"
     });
-    console.log("사진file", imgfile);
-    console.log("사진", formData);
+    //console.log("사진file", imgfile);
+    //console.log("사진", formData);
     return await fetch("http://13.209.17.154:3000/user/image", {
       method: "POST",
       body: formData,
@@ -101,5 +101,13 @@ export const serverApi = {
           "x-access-token": usertoken
         }
       }
-    )
+    ),
+  oderdetail: (userid, usertoken) =>
+    sApi.get(`order/${userid}`, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": usertoken
+      }
+    })
 };
