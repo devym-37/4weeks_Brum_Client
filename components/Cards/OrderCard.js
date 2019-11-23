@@ -133,7 +133,6 @@ const OrderCard = ({
   const shortDeparture = utils.shortenText(departures, 7);
   return (
     <>
-      {/* <Divider /> */}
       <Touchable
         onPress={() => {
           navigation.navigate("ApplicantsList");

@@ -26,6 +26,7 @@ export const toastApi = {
 
 export const serverApi = {
   verifyPhoneNumber: phone => sApi.post("register/phone", { phone }),
+  getAllOrders: () => sApi.get("order"),
   getUserOrders: userToken =>
     sApi.get("user/order", {
       headers: {
