@@ -27,13 +27,15 @@ const OrderCard = ({
   orderStatus,
   createdAt
 }) => {
-  const PriceWithComma =
+  const priceWithComma =
     price && utils.numberWithCommas(Number(price.substr(0, price.length - 1)));
+
+  const timeStamp = utils.transferTime("2019-11-23 11:00:00");
   return (
     <Card>
       <Title>{title}</Title>
-      <Time>{createdAt}</Time>
-      <Price>{price ? `${PriceWithComma}원` : `협의가능`}</Price>
+      <Time>{timeStamp}</Time>
+      <Price>{price ? `${priceWithComma}원` : `협의가능`}</Price>
     </Card>
   );
 };
