@@ -197,7 +197,7 @@ const Signup = props => {
                   secureTextEntry={passwordVisibility}
                   keyboardType="default"
                   returnKeyType="next"
-                  onBlur={handleBlur("password")}
+                  // onBlur={handleBlur("password")}
                   value={values.password}
                 >
                   <TouchableOpacity onPress={handlePasswordVisibility}>
@@ -219,7 +219,7 @@ const Signup = props => {
                   keyboardType="default"
                   returnKeyType="next"
                   value={values.confirmPassword}
-                  onBlur={handleBlur("confirmPassword")}
+                  // onBlur={handleBlur("confirmPassword")}
                 >
                   <TouchableOpacity onPress={handleConfirmPasswordVisibility}>
                     <Ionicons

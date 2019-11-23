@@ -153,7 +153,7 @@ const OrderCard = ({
               <SpotContainer>
                 <Time>{timeStamp}</Time>
                 <Time>・</Time>
-                <Spot>{departures}</Spot>
+                <Spot>{shortDeparture}</Spot>
                 <AntDesign
                   name="arrowright"
                   size={13}
