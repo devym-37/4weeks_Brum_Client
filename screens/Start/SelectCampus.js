@@ -20,7 +20,7 @@ export default ({ navigation }) => {
 
   const handleNextButton = async () => {
     if (campus) {
-      return await AsyncStorage.setItem("campus", campus);
+      await AsyncStorage.setItem("campus", campus);
     }
 
     navigation.navigate("BottomNavigation");
