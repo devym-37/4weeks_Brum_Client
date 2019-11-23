@@ -1,253 +1,168 @@
 // Imports: Dependencies
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { Keyboard } from "react-native";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { Formik, Form, Field } from "formik";
+import { Formik } from "formik";
+import { CheckBox } from "react-native-elements";
 import * as Yup from "yup";
-import {
-  TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
-  SafeAreaView,
-  AsyncStorage,
-  StyleSheet,
-  TouchableOpacity
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
-// Imports: Custom components
-import AuthInput from "../../../components/Inputs/AuthInput";
-import useInput from "../../../hooks/useInput";
-import MainButton from "../../../components/Buttons/MainButton";
-import ErrorMessage from "../../../components/ErrorMessage";
-
-// Imports: API
-import { serverApi } from "../../../components/API";
-
-// Imports: Redux Actions
-import { login } from "../../../redux/actions/authActions";
+// import CheckBox from "../../../components/CheckBox";
+import FormInput from "../../../components/Inputs/FormInput";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string()
     .label("Title")
-    .required("제목을 입력해주세요")
-    .min(4, "제목은 최소 4글자 이상 입력해주세요"),
-
+    .required("글제목을 입력해주세요")
+    .min(4, "글제목은 최소 4글자 이상 최대 24글자 이하로 입력해주세요")
+    .max(24, "글제족은 최소 4글자 이상 최대 24글자 이내로 작성해주세요"),
+  category: Yup.string()
+    .label("Category")
+    .required("카테고리를 선택해주세요"),
   departure: Yup.string().label("Departure"),
-
-  arrivalTime: Yup.string()
-    .oneOf([Yup.ref("password")], "비밀번호가 일치하지 않습니다.")
-    .required("확인을 위해 비밀번호를 한번더 입력해주세요"),
-  age: Yup.string().min(4, "출생연도는 4글자 입력해주세요. 예) 0000년도"),
-
-  agreement_term: Yup.boolean().oneOf([true], "이용약관에 동의해주세요"),
-  agreement_privacy: Yup.boolean().oneOf(
-    [true],
-    "개인정보 수집 및 이용동의에 동의해주세요"
-  ),
-  agreement_ad: Yup.boolean().oneOf([true, false]),
-
-  createdOn: Yup.date().default(function() {
-    return new Date();
-  })
+  arrival: Yup.string()
+    .label("Arrival")
+    .required("도착지를 입력해주세요"),
+  desiredArrivaltime: Yup.string().label("DesiredArrivalTime"),
+  message: Yup.string()
+    .label("Message")
+    .max(250, "요청 상세내용은 250자 이내로 작성해주세요"),
+  price: Yup.number()
+    .integer()
+    .positive()
+    .label("Price"),
+  check: Yup.boolean().label("Check")
 });
-
-const View = styled.View`
-  justify-content: center;
-  align-items: center;
+const Container = styled.View`
   flex: 1;
-`;
-
-const LinkContainer = styled.View`
-  flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
-  margin: 10px 0 20px 0;
 `;
 
-const Touchable = styled.TouchableOpacity``;
+const FormContainer = styled.View``;
 
-const Link = styled.View``;
-
-const LinkText = styled.Text`
-  color: ${props => props.theme.greyColor};
-  font-weight: 400;
-  text-decoration: underline;
-  text-decoration-color: ${props => props.theme.greyColor};
-`;
-const Text = styled.Text`
-  color: ${props => props.theme.greyColor};
-  font-weight: 400;
-`;
-
-const Signup = props => {
-  const handleSend = async values => {
-    // console.log(`values: `, values);
-    if (values.name.length === 0 || values.password.length === 0) {
-      Alert.alert("입력이 올바르지 않습니다");
-    }
-
-    try {
-      const signUp = await serverApi.register(
-        values.phone,
-        values.password,
-        values.name
-      );
-
-      console.log(`signUp: `, signUp);
-
-      if (signUp.data.token !== false) {
-        await AsyncStorage.setItem("userToken", signUp.data.token);
-        props.reduxLogin(true);
-        setTimeout(() => {
-          props.navigation.navigate("HomeScreen");
-        }, 200);
-      }
-    } catch (e) {
-      Alert.alert("회원가입에 실패했습니다");
-      console.log(`Can't signup. error : ${e}`);
-    }
+// const CheckBox = styled.CheckBox``;
+const OrderFormScreen = () => {
+  const handleSend = values => {
+    console.log(`NewOrder values: `, values);
   };
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={styles.container}>
-        <View>
-          <Formik
-            initialValues={{
-              phone: `${props.phone ? props.phone : ""}`,
-              password: "",
-              confirmPassword: "",
-              name: "",
-              age: ""
-            }}
-            onSubmit={values => {
-              handleSend(values);
-            }}
-            validationSchema={validationSchema}
-          >
-            {({
-              handleChange,
-              values,
-              handleSubmit,
-              errors,
-              isValid,
-              touched,
-              handleBlur,
-              isSubmitting,
-              setFieldValue
-            }) => (
-              <>
-                {props.phone ? (
-                  <AuthInput
-                    placeholder={"휴대폰 번호(-없이 숫자만 입력)"}
-                    keyboardType="numeric"
-                    returnKeyType="next"
-                    value={props.phone}
-                    editable={false}
-                  />
-                ) : (
-                  <AuthInput
-                    placeholder={"휴대폰 번호(-없이 숫자만 입력)"}
-                    onChange={handleChange("phone")}
-                    keyboardType="numeric"
-                    returnKeyType="next"
-                    value={values.phone}
-                    onBlur={handleBlur("phone")}
-                  />
-                )}
-
-                <ErrorMessage errorValue={touched.phone && errors.phone} />
-                <AuthInput
-                  placeholder={"비밀번호 (6자리 이상)"}
-                  onChange={handleChange("password")}
-                  keyboardType="default"
-                  returnKeyType="next"
-                  onBlur={handleBlur("password")}
-                  value={values.password}
-                ></AuthInput>
-                <ErrorMessage
-                  errorValue={touched.password && errors.password}
-                />
-                <AuthInput
-                  placeholder={"비밀번호 확인"}
-                  onChange={handleChange("confirmPassword")}
-                  keyboardType="default"
-                  returnKeyType="next"
-                  value={values.confirmPassword}
-                  onBlur={handleBlur("confirmPassword")}
-                ></AuthInput>
-                <ErrorMessage
-                  errorValue={touched.confirmPassword && errors.confirmPassword}
-                />
-                <AuthInput
-                  placeholder={"이름(성함)"}
-                  keyboardType="default"
-                  returnKeyType="next"
-                  value={values.name}
-                  onBlur={handleBlur("name")}
-                  onChange={handleChange("name")}
-                />
-                <ErrorMessage errorValue={touched.name && errors.name} />
-                <AuthInput
-                  placeholder={"출생년도(선택) 예)1991"}
-                  keyboardType="numeric"
-                  returnKeyType="next"
-                  value={values.age}
-                  onBlur={handleBlur("age")}
-                  onChange={handleChange("age")}
-                />
-                <ErrorMessage />
-
-                <ErrorMessage />
-                <MainButton
-                  onPress={handleSubmit}
-                  disabled={!isValid || isSubmitting}
-                  loading={isSubmitting}
-                  text="동의하고 시작하기"
-                />
-              </>
-            )}
-          </Formik>
-        </View>
-      </SafeAreaView>
+      <>
+        <FormInput placeholder={"글 제목"} />
+        <FormInput placeholder={"카테고리 선택"} />
+        <FormInput placeholder={"출발지(선택사항)"} />
+        <FormInput placeholder={"도착지"} />
+        <FormInput placeholder={"희망도착시간"} />
+        <FormInput placeholder={"₩ 가격 입력(선택사항)"} />
+        <CheckBox
+          // containerStyle={styles.checkBoxContainer}
+          checkedIcon="check-box"
+          iconType="material"
+          uncheckedIcon="check-box-outline-blank"
+          title="가격제안받기"
+          checked={true}
+          // onPress={() => setFieldValue("check", !values.check)}
+        />
+        {/* <Formik
+          initialValues={{
+            title: "dfsd",
+            category: "dd",
+            departure: null,
+            arrival: "",
+            desiredArrivaltime: null,
+            message: null,
+            check: false,
+            price: null
+          }}
+          onSubmit={values => {
+            handleSend(values);
+          }}
+          validationSchema={validationSchema}
+        > */}
+        {/* {({
+            handleChange,
+            values,
+            handleSubmit,
+            errors,
+            isValid,
+            touched,
+            handleBlur,
+            isSubmitting,
+            setFieldValue
+          }) => ( */}
+        {/* <Fragment> */}
+        {/* <FormInput
+          placeholder={"글 제목"} */}
+        {/* // value={values.title}
+          // onChange={handleChange("title")}
+          // KeyboardType="default"
+          // returnKeyType="next" */}
+        {/* /> */}
+        {/* <CheckBox
+                // containerStyle={styles.checkBoxContainer}
+                checkedIcon="check-box"
+                iconType="material"
+                uncheckedIcon="check-box-outline-blank"
+                title="가격제안받기"
+                checked={values.check}
+                onPress={() => setFieldValue("check", !values.check)}
+              /> */}
+        {/* </Fragment> */}
+        {/* )} */}
+        {/* </Formik> */}
+      </>
     </TouchableWithoutFeedback>
   );
 };
 
-const mapStateToProps = state => {
-  // Redux Store --> Component
-  return {
-    phone: state.phoneReducer.phone
-  };
-};
+export default OrderFormScreen;
 
-const mapDispatchToProps = dispatch => {
-  // Action
-  return {
-    // Login
-    reduxLogin: trueFalse => dispatch(login(trueFalse))
-  };
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    marginTop: 50
-  },
-  logoContainer: {
-    marginBottom: 15,
-    alignItems: "center"
-  },
-  buttonContainer: {
-    margin: 25
-  },
-  checkBoxContainer: {
-    backgroundColor: "#fff",
-    borderColor: "#fff"
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+// {/* <Formik
+//         initialValues={{
+//           title: "dfsd",
+//           category: "dd",
+//           departure: null,
+//           arrival: "",
+//           desiredArrivaltime: null,
+//           message: null,
+//           check: false,
+//           price: null
+//         }}
+//         onSubmit={values => {
+//           handleSend(values);
+//         }}
+//         validationSchema={validationSchema}
+//       > */}
+//       {/* {({
+//           handleChange,
+//           values,
+//           handleSubmit,
+//           errors,
+//           isValid,
+//           touched,
+//           handleBlur,
+//           isSubmitting,
+//           setFieldValue
+//         }) => ( */}
+//       {/* <Fragment> */}
+//       <FormInput
+//         placeholder={"글 제목"}
+//         // value={values.title}
+//         // onChange={handleChange("title")}
+//         KeyboardType="default"
+//         returnKeyType="next"
+//       />
+//       {/* <CheckBox
+//               // containerStyle={styles.checkBoxContainer}
+//               checkedIcon="check-box"
+//               iconType="material"
+//               uncheckedIcon="check-box-outline-blank"
+//               title="가격제안받기"
+//               checked={values.check}
+//               onPress={() => setFieldValue("check", !values.check)}
+//             /> */}
+//       {/* </Fragment> */}
+//       {/* )} */}
+//       {/* </Formik> */}

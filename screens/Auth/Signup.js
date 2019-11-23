@@ -109,16 +109,17 @@ const Signup = props => {
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);
         props.reduxLogin(true);
+        Alert.alert("회원가입 및 로그인이 완료되었습니다");
         setTimeout(() => {
           props.navigation.navigate("BottomNavigation");
         }, 200);
+        // setTimeout(() => {
+        //   props.navigation.navigate("Userinfo");
+        // }, 200);
       } ///err
     } catch (e) {
       Alert.alert("회원가입에 실패했습니다");
       console.log(`Can't signup. error : ${e}`);
-      setTimeout(() => {
-        props.navigation.navigate("Userinfo");
-      }, 200);
     }
   };
 

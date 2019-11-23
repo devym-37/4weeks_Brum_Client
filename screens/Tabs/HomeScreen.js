@@ -24,7 +24,7 @@ import {
 import { connect } from "react-redux";
 import { login } from "../../redux/actions/authActions";
 import AuthModal from "../Auth/AuthModal";
-import MapScreen from "../../components/MapScreen";
+import MapView from "../../components/MapView";
 import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
 
 const LATITUDE_DELTA = 0.006;
@@ -112,10 +112,7 @@ const Home = () => {
             }}
           />
           {region.latitude !== null && (
-            <MapScreen
-              latitude={region.latitude}
-              longitude={region.longitude}
-            />
+            <MapView latitude={region.latitude} longitude={region.longitude} />
           )}
         </Content>
       </Container>

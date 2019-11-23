@@ -38,7 +38,7 @@ const stackFactory = (initialRoute, customConfig) =>
 const BottomNavigation = createBottomTabNavigator(
   {
     Home: {
-      screen: stackFactory(HomeScreen, {
+      screen: stackFactory(ListScreen, {
         title: "한양대",
         headerRight: <NotificationLink />
       }),

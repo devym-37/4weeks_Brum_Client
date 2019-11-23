@@ -7,6 +7,7 @@ import Signup from "../screens/Auth/Signup";
 import AuthModal from "../screens/Auth/AuthModal";
 import Confirm from "../screens/Auth/Confirm";
 import Login from "../screens/Auth/Login";
+import Userinfo from "../screens/Auth/UserInfo";
 import VerifyPhone from "../screens/Auth/VerifyPhone";
 import ResetPw from "../screens/Auth/ResetPw";
 import Term from "../screens/Auth/Terms";
@@ -51,7 +52,14 @@ const AuthNavigation = createStackNavigator(
         headerBackTitle: null
       }
     },
-    // TermsAndPrivacyNavigation,
+    Userinfo: {
+      screen: Userinfo,
+      navigationOptions: {
+        ...stackStyles,
+        title: "추가 프로필 입력(선택)",
+        headerBackTitle: null
+      }
+    },
     Login: {
       screen: Login,
       navigationOptions: {

@@ -2,8 +2,8 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://6a-hzs.anonymous.brum-client.exp.direct",
   "packagerNgrokUrl": "https://packager.6a-hzs.anonymous.brum-client.exp.direct",
-  "ngrokPid": 96200,
+  "ngrokPid": 1368,
   "devToolsPort": 19002,
   "packagerPort": 19005,
-  "packagerPid": 96190
+  "packagerPid": 1344
 }
