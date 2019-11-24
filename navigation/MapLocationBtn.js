@@ -6,15 +6,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
-export const CurrentLocationButton = function(props) {
+export const MapLocationButton = function(props) {
   //if props.cb is passed, use it. if not, console.log() when cb() is called.
   const cb = props.cb
     ? props.cb
-    : () =>
-        console.log("callback function not passed to CurrentLocationButton");
+    : () => console.log("callback function not passed to MapLocationButton");
   // if props.bottom is passed, use it. if not, set bottom to 110
-  const Bottom = props.bottom ? props.bottom : 190;
-  const iosBottom = props.bottom ? props.bottom : 240;
+  const Bottom = props.bottom ? props.bottom : 240;
+  const iosBottom = props.bottom ? props.bottom : 290;
   return (
     <View
       style={[
@@ -26,7 +25,7 @@ export const CurrentLocationButton = function(props) {
       ]}
     >
       <MaterialIcons
-        name="my-location"
+        name="location-on"
         color="#24282C"
         size={25}
         onPress={() => {

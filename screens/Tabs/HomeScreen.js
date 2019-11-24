@@ -26,45 +26,48 @@ import { login } from "../../redux/actions/authActions";
 import AuthModal from "../Auth/AuthModal";
 import MapView from "../../components/MapView";
 import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
+import { MapLocationButton } from "../../navigation/MapLocationBtn";
 
+const LATITUDE = 37.565687;
+const LONGITUDE = 126.978045;
 const LATITUDE_DELTA = 0.006;
 const LONGITUDE_DELTA = 0.001;
 
-const Home = () => {
-  const [campus, setCampus] = useState("");
+const Home = props => {
+  console.log("HomeScreen props", props);
+  // const [campus, setCampus] = useState("");
   const [region, setRegion] = useState({});
+  const [currentLocation, setCurrentLocation] = useState({});
+  const [defaultCampus, setDefaultCampus] = useState({});
   const [isOpen, setIsOpen] = useState(false);
 
-  const getCampus = async () => {
-    let selectCampus = await AsyncStorage.getItem("campus");
-    setCampus(selectCampus);
+  const getCampusLatLng = selectCampus => {
     if (selectCampus === "한양대") {
-      var campusLatLng = {
-        latitude: 37.55737,
-        longitude: 127.047132
-      };
+      return { latitude: 37.55737, longitude: 127.047132 };
     } else if (selectCampus === "연세대") {
-      var campusLatLng = {
-        latitude: 37.564624,
-        longitude: 126.93755
-      };
+      return { latitude: 37.564624, longitude: 126.93755 };
     } else if (selectCampus === "서울대") {
-      var campusLatLng = {
-        latitude: 37.459228,
-        longitude: 126.952052
-      };
+      return { latitude: 37.459228, longitude: 126.952052 };
     } else if (selectCampus === "이화여대") {
-      var campusLatLng = {
-        latitude: 37.561865,
-        longitude: 126.946714
-      };
+      return { latitude: 37.561865, longitude: 126.946714 };
     }
-    let campusRegion = {
-      ...campusLatLng
-    };
-    setRegion(campusRegion);
-    console.log("selectCampus", selectCampus);
   };
+
+  const getDefaultCampusMap = async () => {
+    const selectedCampus = await AsyncStorage.getItem("campus");
+    const campusRegion = getCampusLatLng(selectedCampus);
+
+    const _region = {
+      // class structure
+      latitude: campusRegion.latitude,
+      longitude: campusRegion.longitude,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA
+    };
+    setRegion(_region);
+    this.map.animateToRegion(_region);
+  };
+
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
       let currentLat = parseFloat(position.coords.latitude);
@@ -74,19 +77,22 @@ const Home = () => {
         latitude: currentLat,
         longitude: currentLng
       };
-      setRegion({ ...currentRegion });
+      setCurrentLocation({ ...currentRegion }); // 8
     });
   };
 
-  const centerMap = () => {
-    const { latitude, longitude } = region;
-    console.log("region2222", region);
-    this.map.animateToRegion({
+  const userCurrentLocation = () => {
+    const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
+
+    const _userRegion = {
+      // class structure
       latitude: latitude,
       longitude: longitude,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
-    });
+    };
+
+    this.map.animateToRegion(_userRegion);
   };
 
   const clearStorage = async () => {
@@ -94,11 +100,17 @@ const Home = () => {
     const loggedIn = await AsyncStorage.getItem("userToken");
     // console.log(`ListScreen token: `, loggedIn);
     if (!loggedIn) {
-      setIsOpen(!isOpen);
+      setIsOpen(!isOpen); // 7
     }
   };
+
   useEffect(() => {
-    getCampus(), clearStorage(), getLocation();
+    (async () => {
+      // await getCampus(), // 1
+      await clearStorage(), // 2
+        await getLocation(), // 3
+        await getDefaultCampusMap(); // 4
+    })();
   }, []);
 
   return (
@@ -106,14 +118,23 @@ const Home = () => {
       {isOpen && <AuthModal />}
       <Container style={styles.container}>
         <Content>
-          <CurrentLocationButton
+          <MapLocationButton
             cb={() => {
-              centerMap();
+              getDefaultCampusMap();
             }}
           />
+          <CurrentLocationButton
+            cb={() => {
+              userCurrentLocation();
+            }}
+          />
+<<<<<<< HEAD
           {region.latitude !== null && (
             <MapView latitude={region.latitude} longitude={region.longitude} />
           )}
+=======
+          <MapScreen latitude={region.latitude} longitude={region.longitude} />
+>>>>>>> 169d1d02f5cc3211a1ec7243d01bf8edd12a5422
         </Content>
       </Container>
     </>
