@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Dimensions, Platform, AsyncStorage } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Platform,
+  AsyncStorage
+} from "react-native";
 import MapView from "react-native-maps";
 
 import { Container } from "native-base";
@@ -28,7 +35,12 @@ const MapScreen = props => {
           ref={map => {
             this.map = map;
           }}
-          region={region}
+          initialRegion={{
+            latitude: latitude || 122,
+            longitude: longitude || 122,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+          }}
           onRegionChange={this.onRegionChange}
           showsCompass={true}
           showsUserLocation={true}

@@ -12,7 +12,7 @@ import { Content } from "native-base";
 import AuthModal from "../Auth/AuthModal";
 import { serverApi } from "../../components/API";
 import ListCard from "../ListCard";
-
+import OrderCard from "../../components/Cards/OrderCard";
 const ListScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState([]);
@@ -61,9 +61,12 @@ const ListScreen = () => {
         }
       >
         <Content>
-          {orders.map(data => (
-            <ListCard data={data} />
+          {orders.map((data, i) => (
+            <ListCard key={i} data={data} />
           ))}
+          {/* {orders.map((data, i) => (
+            <OrderCard key={i} {...data} />
+          ))} */}
         </Content>
       </ScrollView>
     </>

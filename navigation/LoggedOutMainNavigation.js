@@ -2,24 +2,21 @@
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 
-import BottomNavigation from "./BottomNavigation";
-import LoggedOutBottomNavigation from "./LoggedOutBottomNavigation";
 import NotificationNavigation from "./NotificationNavigation";
 import FilterNavigation from "./FilterNavigation";
 import AuthNavigation from "./AuthNavigation";
-import NewOrderNavigation from "./NewOrderNavigation";
-import PhotoNavigation from "./PhotoNavigation";
+import LoggedOutBottomNavigation from "./LoggedOutBottomNavigation";
+import StartNavigation from "./StartNavigation";
 import { stackStyles } from "./config";
-
-const MainNavigation = createStackNavigator(
+import MainNavigation from "./MainNavigation";
+const LoggedOutMainNavigation = createStackNavigator(
   {
-    BottomNavigation,
+    StartNavigation,
     LoggedOutBottomNavigation,
     AuthNavigation,
     FilterNavigation,
-    NewOrderNavigation,
-    PhotoNavigation,
-    NotificationNavigation
+    NotificationNavigation,
+    MainNavigation
   },
   {
     navigationOptions: {
@@ -32,4 +29,4 @@ const MainNavigation = createStackNavigator(
   }
 );
 
-export default createAppContainer(MainNavigation);
+export default createAppContainer(LoggedOutMainNavigation);

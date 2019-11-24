@@ -133,7 +133,6 @@ const OrderCard = ({
   const shortDeparture = utils.shortenText(departures, 7);
   return (
     <>
-      {/* <Divider /> */}
       <Touchable
         onPress={() => {
           navigation.navigate("ApplicantsList");
@@ -153,7 +152,7 @@ const OrderCard = ({
               <SpotContainer>
                 <Time>{timeStamp}</Time>
                 <Time>・</Time>
-                <Spot>{departures}</Spot>
+                <Spot>{shortDeparture}</Spot>
                 <AntDesign
                   name="arrowright"
                   size={13}

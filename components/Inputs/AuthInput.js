@@ -16,7 +16,7 @@ const InputContainer = styled.View`
 
 const TextInput = styled.TextInput`
   width: ${constants.width - 150};
-  padding: 12px 10px;
+  padding: 10px 10px;
   background-color: white;
   border: 1px solid ${props => props.theme.darkGreyColor};
   border-radius: 2px;
@@ -39,6 +39,7 @@ const AuthInput = ({
     <InputContainer>
       <TextInput
         {...rest}
+        placeholderTextColor="#d5dae0"
         editable={editable}
         onChangeText={onChange}
         keyboardType={keyboardType}

@@ -104,21 +104,22 @@ const Signup = props => {
         values.age
       );
 
-      // Alert.alert("회원가입 및 로그인이 완료되었습니다");
+      Alert.alert("회원가입 및 로그인이 완료되었습니다");
 
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);
         props.reduxLogin(true);
+        Alert.alert("회원가입 및 로그인이 완료되었습니다");
         setTimeout(() => {
           props.navigation.navigate("BottomNavigation");
         }, 200);
+        // setTimeout(() => {
+        //   props.navigation.navigate("Userinfo");
+        // }, 200);
       } ///err
     } catch (e) {
       Alert.alert("회원가입에 실패했습니다");
       console.log(`Can't signup. error : ${e}`);
-      setTimeout(() => {
-        props.navigation.navigate("Userinfo");
-      }, 200);
     }
   };
 
@@ -197,7 +198,7 @@ const Signup = props => {
                   secureTextEntry={passwordVisibility}
                   keyboardType="default"
                   returnKeyType="next"
-                  onBlur={handleBlur("password")}
+                  // onBlur={handleBlur("password")}
                   value={values.password}
                 >
                   <TouchableOpacity onPress={handlePasswordVisibility}>
@@ -219,7 +220,7 @@ const Signup = props => {
                   keyboardType="default"
                   returnKeyType="next"
                   value={values.confirmPassword}
-                  onBlur={handleBlur("confirmPassword")}
+                  // onBlur={handleBlur("confirmPassword")}
                 >
                   <TouchableOpacity onPress={handleConfirmPasswordVisibility}>
                     <Ionicons

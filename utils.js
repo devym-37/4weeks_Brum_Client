@@ -24,7 +24,7 @@ export default {
       min: Number(time.substring(14, 16)),
       sec: Number(time.substring(17, 19))
     };
-    console.log(`createdAt: ${JSON.stringify(createdAt)}`);
+    // console.log(`createdAt: ${JSON.stringify(createdAt)}`);
 
     var gap = x => {
       return now[x] - createdAt[x];

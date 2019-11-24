@@ -28,7 +28,7 @@ DefaultOrder = ({ navigation }) => {
       <GhostButton
         text="요청서 보내기"
         width={200}
-        onPress={() => navigation.navigate("NewOrder")}
+        onPress={() => navigation.navigate("NewOrderNavigation")}
       />
     </Container>
   );
