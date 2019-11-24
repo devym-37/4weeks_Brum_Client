@@ -28,6 +28,8 @@ import MapScreen from "../../components/MapScreen";
 import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
 import { MapLocationButton } from "../../navigation/MapLocationBtn";
 
+const LATITUDE = 37.565687;
+const LONGITUDE = 126.978045;
 const LATITUDE_DELTA = 0.006;
 const LONGITUDE_DELTA = 0.001;
 
@@ -39,9 +41,7 @@ const Home = props => {
   const [defaultCampus, setDefaultCampus] = useState({});
   const [isOpen, setIsOpen] = useState(false);
 
-  const getCampus = selectCampus => {
-    // let selectCampus = await AsyncStorage.getItem("campus");
-    // await setCampus(selectCampus); // 1
+  const getCampusLatLng = selectCampus => {
     if (selectCampus === "한양대") {
       return { latitude: 37.55737, longitude: 127.047132 };
     } else if (selectCampus === "연세대") {
@@ -51,17 +51,11 @@ const Home = props => {
     } else if (selectCampus === "이화여대") {
       return { latitude: 37.561865, longitude: 126.946714 };
     }
-
-    // let campusRegion = {
-    //   ...campusLatLng
-    // };
-    // await setRegion(campusRegion); // 2
-    // await setDefaultCampus(campusRegion); // 3
   };
 
   const getDefaultCampusMap = async () => {
     const selectedCampus = await AsyncStorage.getItem("campus");
-    const campusRegion = getCampus(selectedCampus);
+    const campusRegion = getCampusLatLng(selectedCampus);
 
     const _region = {
       // class structure
@@ -70,7 +64,7 @@ const Home = props => {
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
     };
-
+    setRegion(_region);
     this.map.animateToRegion(_region);
   };
 
@@ -87,15 +81,18 @@ const Home = props => {
     });
   };
 
-  const centerMap = () => {
-    const { latitude = 37, longitude = 126 } = currentLocation;
+  const userCurrentLocation = () => {
+    const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
 
-    this.map.animateToRegion({
+    const _userRegion = {
+      // class structure
       latitude: latitude,
       longitude: longitude,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
-    });
+    };
+
+    this.map.animateToRegion(_userRegion);
   };
 
   const clearStorage = async () => {
@@ -116,14 +113,6 @@ const Home = props => {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log("[HomeScreen] region", region);
-  }, [region]);
-
-  useEffect(() => {
-    console.log("[HomeScreen] defaultCampus", defaultCampus);
-  }, [defaultCampus]);
-
   return (
     <>
       {isOpen && <AuthModal />}
@@ -136,7 +125,7 @@ const Home = props => {
           />
           <CurrentLocationButton
             cb={() => {
-              centerMap();
+              userCurrentLocation();
             }}
           />
           <MapScreen latitude={region.latitude} longitude={region.longitude} />

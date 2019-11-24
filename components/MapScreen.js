@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Platform,
-  AsyncStorage
-} from "react-native";
+import { StyleSheet, Text, View, Dimensions, Platform, AsyncStorage } from "react-native";
 import MapView from "react-native-maps";
 
 import { Container } from "native-base";
@@ -17,7 +10,6 @@ const LATITUDE_DELTA = 0.006;
 const LONGITUDE_DELTA = 0.001;
 
 const MapScreen = props => {
-  console.log("[MapScreen] props", props);
   const { latitude = LATITUDE, longitude = LONGITUDE } = props;
 
   const region = {
