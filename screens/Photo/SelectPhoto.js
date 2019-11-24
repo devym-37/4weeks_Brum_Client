@@ -105,6 +105,8 @@ const SelectPhoto = props => {
             </Row>
             <Row>
               <GhostButton text="다른사진 고르기" onPress={selectPicture} />
+            </Row>
+            <Row>
               <MainButton onPress={handleSubmit} text="제출하기" />
             </Row>
           </Col>
