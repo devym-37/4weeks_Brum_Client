@@ -77,7 +77,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {isLoggedIn ? <MainNavigation /> : <StartNavigation />}
+          <OderDetailScreen />
         </PersistGate>
       </ThemeProvider>
     </Provider>
@@ -85,7 +85,12 @@ export default function App() {
     <AppLoading />
   );
 }
-/* {isAllowed ? (
+/*
+{isLoggedIn ? <MainNavigation /> : <StartNavigation />}
+
+
+
+{isAllowed ? (
   isLoggedIn ? (
     <MainNavigation />
   ) : (

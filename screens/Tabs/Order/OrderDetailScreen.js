@@ -28,29 +28,41 @@ import {
   Image,
   Button,
   Item,
-  Input
+  Input,
+  Spinner
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import BottomSheet from "reanimated-bottom-sheet";
 import MainButton from "../../../components/Buttons/MainButton";
+import utils from "../../../utils";
+import Mapscreen from "../../../components/MapScreen";
 
 import { serverApi } from "../../../components/API";
 
 const OderDetailScreen = props => {
-  const [region, setRegion] = useState();
+  //view 추가해야함
+  const [region, setRegion] = useState({
+    latitude: 37.55737,
+    longitude: 127.047132
+  });
   //const { isOpen } = this.state;
   const [Loading, setLoading] = useState();
   const [imageurl, setImageurl] = useState(
     "https://i.kym-cdn.com/entries/icons/original/000/026/638/cat.jpg"
   );
-  const [arrivals, setArrivals] = useState("식당");
+  const [arrivals, setArrivals] = useState("");
   const [departures, setDepartures] = useState("한양대 공학관");
   const [details, setDetails] = useState("없음1");
   const [campus, setCampus] = useState("한양대학교");
   const [price, setPrice] = useState("200");
   const [title, setTitle] = useState("심부름하실 분");
   const [msg, setMsg] = useState("안녕하세요");
-  //const [region, setRegion] = useState();
+  const [img, setImg] = useState(
+    "https://i.kym-cdn.com/entries/icons/original/000/026/638/cat.jpg"
+  );
+  const [nickname, setNickname] = useState("nobody");
+  const [desiredArrivalTime, setDesiredArrivalTime] = useState("");
+  const [createdat, setCreatedat] = useState("");
 
   useEffect(() => {
     // Create an scoped async function in the hook
@@ -68,15 +80,46 @@ const OderDetailScreen = props => {
         const userId = 1;
 
         const oderDetail = await serverApi.oderdetail(1, usertoken);
+        const {
+          departures,
+          arrivals,
+          details,
+          hostInfo,
+          price,
+          title,
+          createdAt,
+          desiredArrivalTime
+        } = oderDetail.data.data.order;
+
         console.log(oderDetail.data.data.order);
-        console.log("hk", oderDetail.data.isSuccess);
+        console.log("hk", departures);
         if (oderDetail.data.isSuccess) {
           console.log("들어옴");
-          setDepartures(oderDetail.data.data.order.departures);
-          setDetails(oderDetail.data.data.order.details);
-          setCampus(oderDetail.data.data.order.hostInfo.campus);
-          setPrice(oderDetail.data.data.order.price);
-          setTitle(oderDetail.data.data.order.title);
+
+          setDepartures(departures);
+          if (arrivals === null) {
+            setArrivals("");
+          } else {
+            setArrivals(arrivals);
+          }
+
+          setDetails(details);
+          setCampus(hostInfo.campus);
+          //numberwithcommas
+          const getprice = utils.numberWithCommas(price);
+          setPrice(getprice);
+          setTitle(title);
+          setImg(hostInfo.image);
+          setNickname(hostInfo.nickname);
+
+          //createdat
+          const time = utils.transferTime(createdAt);
+          setCreatedat(time);
+          if (desiredArrivalTime === null) {
+            setDesiredArrivalTime("");
+          } else {
+            setDesiredArrivalTime(desiredArrivalTime);
+          }
         }
       } catch (e) {
         console.error(e);
@@ -94,7 +137,7 @@ const OderDetailScreen = props => {
   renderContent = () => (
     /* render */
 
-    <View>
+    <View style={styles.panel}>
       <Item style={{ marginTop: 10 }}>
         <Input placeholder="₩가격 제안(선택사항)" />
         <Text>
@@ -105,14 +148,14 @@ const OderDetailScreen = props => {
       </Item>
 
       <Item style={{ marginTop: 10 }}>
-        <MainButton text="바로 지원하기" />
+        <Input placeholder="러너의 메세지(선택사항)" />
       </Item>
     </View>
   );
 
   renderHeader = () => (
     /* render */
-    <View>
+    <View style={styles.panel}>
       <Row style={{ alignSelf: "center" }}>
         <Ionicons name="md-arrow-dropup-circle" size={35} />
       </Row>
@@ -120,12 +163,12 @@ const OderDetailScreen = props => {
         <Col style={{ margin: 10 }}>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: 23,
 
               textAlignVertical: "center"
             }}
           >
-            {price}
+            ₩ {price}
           </Text>
         </Col>
         <Col style={{ padding: -10 }}>
@@ -137,100 +180,113 @@ const OderDetailScreen = props => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <Grid style={{ height: Dimensions.get("window").height }}>
-        <Row style={{ height: 10 }}>
-          {/* <MapView
-        style={styles.mapStyle}
-        provider="google"
-        ref={map => {
-          this.map = map;
-        }}
-        initialRegion={this.state.region}
-        onRegionChange={this.onRegionChange}
-        showsCompass={true}
-        showsUserLocation={true}
-        showsMyLocationButton={false}
-        followsUserLocation={true}
-        zoomEnabled={true}
-        scrollEnabled={true}
-        showsScale={true}
-        rotateEnabled={false}
-        /> */}
-        </Row>
-        <Content>
-          {/* {imageurl ? (
-            <Row>
-              <Image />
-            </Row>
-          ) : (
-            <></>
-          )} */}
-
-          <List>
-            <ListItem avatar>
-              <Left>
-                <Thumbnail
-                  source={{
-                    uri:
-                      "https://i.kym-cdn.com/entries/icons/original/000/026/638/cat.jpg"
-                  }}
+      {Loading ? (
+        <Spinner
+          style={{
+            alignSelf: "center",
+            height: Dimensions.get("window").height
+          }}
+        />
+      ) : (
+        <Grid>
+          <Row>
+            <Col>
+              <Content style={styles.test}>
+                <Mapscreen
+                  latitude={region.latitude}
+                  longitude={region.longitude}
                 />
-              </Left>
-              <Body>
-                <Text>정재숙</Text>
-                <Text note>{campus}</Text>
-              </Body>
-              <Right>
-                <Text>
-                  매너점수 <Ionicons name="md-happy"></Ionicons> 3.7/5.0
-                </Text>
-              </Right>
-            </ListItem>
-          </List>
+              </Content>
+            </Col>
+          </Row>
+          <Row>
+            <Content>
+              {/* {imageurl ? (
+        <Row>
+          <Image />
+        </Row>
+      ) : (
+        <></>
+      )} */}
 
-          <Row style={{ marginTop: 10 }}>
-            <Text style={{ fontSize: 20, marginLeft: 10 }}>{title}</Text>
+              <Row>
+                <Col>
+                  <List>
+                    <ListItem avatar>
+                      <Left>
+                        <Thumbnail
+                          source={{
+                            uri: img
+                          }}
+                        />
+                      </Left>
+                      <Body>
+                        <Text>{nickname}</Text>
+                        <Text note>{campus}</Text>
+                      </Body>
+                      <Right style={{ alignSelf: "center" }}>
+                        <Text style={{ fontSize: 16, marginBottom: 12 }}>
+                          매너점수 3.7/5.0
+                        </Text>
+                      </Right>
+                    </ListItem>
+                  </List>
+                </Col>
+              </Row>
+              <Row style={{ marginTop: 10 }}>
+                <Text style={{ fontSize: 20, marginLeft: 10 }}>{title}</Text>
+              </Row>
+              <Row>
+                <Text note style={{ margin: 3, marginLeft: 10 }}>
+                  {createdat}
+                </Text>
+              </Row>
+              <Row style={{ margin: 5, marginLeft: 10 }}>
+                <Text note>
+                  <Ionicons name="md-disc" />
+                  {"   "}
+                  출발지 : {arrivals}
+                </Text>
+              </Row>
+              <Row style={{ margin: 5, marginLeft: 10 }}>
+                <Text note>
+                  <Ionicons name="md-disc" />
+                  {"   "}
+                  도착지 : {departures}
+                </Text>
+              </Row>
+              <Row style={{ margin: 5, marginLeft: 10 }}>
+                <Text note>
+                  <Ionicons name="md-stopwatch" /> {"   "}
+                  {desiredArrivalTime}
+                </Text>
+              </Row>
+              <Row>
+                <Text style={{ margin: 10 }}>{details}</Text>
+              </Row>
+              <Row style={styles.test2}></Row>
+            </Content>
+            {msg ? (
+              <BottomSheet
+                style={{ backgroundColor: "#f7f5eee8" }}
+                snapPoints={[100, 210, 100]}
+                renderContent={renderContent}
+                renderHeader={renderHeader}
+              />
+            ) : (
+              <BottomSheet
+                style={{ backgroundColor: "#f7f5eee8" }}
+                snapPoints={[100, 100, 50]}
+                renderContent={renderContent}
+                renderHeader={renderHeader}
+              />
+            )}
           </Row>
-          <Row>
-            <Text note style={{ marginLeft: 10 }}>
-              1분 전
-            </Text>
-          </Row>
-          <Row style={{ margin: 10 }}>
-            <Text note>
-              <Ionicons name="md-disc" />
-              {"   "}
-              {departures}
-            </Text>
-          </Row>
-          <Row style={{ margin: 10 }}>
-            <Text note>
-              <Ionicons name="md-happy" /> {"   "}희망 도착시간
-            </Text>
-          </Row>
-          <Row>
-            <Text style={{ margin: 10 }}>{details}</Text>
-          </Row>
-        </Content>
-        {msg ? (
-          <BottomSheet
-            style={{ backgroundColor: "#f7f5eee8" }}
-            snapPoints={[100, 210, 100]}
-            renderContent={renderContent}
-            renderHeader={renderHeader}
-          />
-        ) : (
-          <BottomSheet
-            snapPoints={[100, 100, 50]}
-            renderContent={renderContent}
-            renderHeader={renderHeader}
-          />
-        )}
-      </Grid>
+        </Grid>
+      )}
     </ScrollView>
   );
 };
-//</ScrollView>List Avatar
 
 export default OderDetailScreen;
 
@@ -250,5 +306,15 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: "black"
+  },
+  panel: {
+    backgroundColor: "white"
+  },
+  test: {
+    backgroundColor: "#00000040",
+    height: Dimensions.get("window").height / 2
+  },
+  test2: {
+    height: 200
   }
 });
