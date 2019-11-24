@@ -48,7 +48,8 @@ export default function App() {
         ...AntDesign.font
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
-
+      await Asset.loadAsync([require("./assets/checkedBox.png")]);
+      await Asset.loadAsync([require("./assets/uncheckedBox.png")]);
       //
       await AsyncStorage.setItem("permiSsions", "true");
       //빼기

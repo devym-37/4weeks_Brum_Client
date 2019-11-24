@@ -3,11 +3,6 @@ import styled from "styled-components";
 import constants from "../../constants";
 import { withNavigation } from "react-navigation";
 
-// const Container = styled.View`
-//   justify-content: center;
-//   align-items: center;
-//   padding: 0 10px;
-// `;
 const Container = styled.View`
   /* margin-bottom: 10px; */
   justify-content: flex-start;
@@ -16,7 +11,7 @@ const Container = styled.View`
 
 const InputContainer = styled.View`
   flex-direction: row;
-  /* justify-content: center; */
+  justify-content: space-between;
   align-items: center;
   background-color: #fff;
 `;
@@ -28,20 +23,32 @@ const Divider = styled.View`
 `;
 
 const TextInput = styled.TextInput`
-  width: ${constants.width - 30};
+  width: ${props => constants.width - props.width};
   padding: 22px 0px;
   background-color: white;
   font-size: 17px;
+
   ::placeholder {
     color: #d5dae0;
   }
 `;
 
-const FormInput = ({ placeholder, children, isUnderline = true, ...rest }) => {
+const FormInput = ({
+  width = 30,
+  placeholder,
+  children,
+  isUnderline = true,
+  ...rest
+}) => {
   return (
     <>
       <InputContainer>
-        <TextInput placeholder={placeholder} {...rest}></TextInput>
+        <TextInput
+          width={width}
+          placeholderTextColor="#d5dae0"
+          placeholder={placeholder}
+          {...rest}
+        ></TextInput>
         {children}
       </InputContainer>
       {isUnderline && <Divider />}

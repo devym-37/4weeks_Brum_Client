@@ -13,21 +13,26 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import Checkbox from "react-native-modest-checkbox";
+
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Ionicons } from "@expo/vector-icons";
+import { ScrollView } from "react-native-gesture-handler";
 
 // Imports: Custom components
 import FormInput from "../../../components/Inputs/FormInput";
 import AuthInput from "../../../components/Inputs/AuthInput";
 import MainButton from "../../../components/Buttons/MainButton";
 import ErrorMessage from "../../../components/ErrorMessage";
-
+import Picker from "../../../components/Picker";
 // Imports: API
 import { serverApi } from "../../../components/API";
 
+import constants from "../../../constants";
+import checkedBox from "../../../assets/checkedBox.png";
+import uncheckedBox from "../../../assets/uncheckedBox.png";
 // Imports: Redux Actions
 import { login } from "../../../redux/actions/authActions";
-import { ScrollView } from "react-native-gesture-handler";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string()
@@ -51,7 +56,14 @@ const View = styled.View`
   align-items: center;
   flex: 1;
 `;
-
+const InputWrapper = styled.View`
+  margin: 0;
+  width: ${constants.width - 150};
+  height: 44px;
+  border: 1px solid;
+  z-index: 10;
+  position: absolute;
+`;
 const LinkContainer = styled.View`
   flex-direction: row;
   justify-content: center;
@@ -76,8 +88,15 @@ const Text = styled.Text`
 `;
 
 const NewOrderScreen = props => {
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [passwordIcon, setPasswordIcon] = useState("ios-eye-off");
+  const [category, setCategory] = useState("카테고리 선택");
+  const [departure, setDeparture] = useState("출발지(선택사항)");
+  const [arrival, setArrival] = useState("도착지");
+
+  const [checked, setChecked] = useState(false);
+  const [time, setTime] = useState(null);
+  const [timeText, setTimeText] = useState("희망 도착시간(선택)");
+
+  const [timeTextColor, setTimeTextColor] = useState("#d5dae0");
   const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
 
   const showDateTimePicker = () => {
@@ -89,8 +108,24 @@ const NewOrderScreen = props => {
   };
 
   const handleDatePicked = date => {
-    console.log("A date has been picked: ", date);
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    setTime(String(date));
+    if (hours > 12) {
+      setTimeText(`오후 ${hours - 12}시 ${minutes}분 도착희망`);
+    } else {
+      setTimeText(`오전 ${hours}시 ${minutes}분 도착희망`);
+    }
+
+    setTimeTextColor("#1D2025");
     hideDateTimePicker();
+  };
+
+  const handleCategoryFilter = () => {
+    props.navigation.navigate("CategoryFilter");
+  };
+  const handleAddressButton = () => {
+    props.navigation.navigate("SearchAddress");
   };
 
   const handleSend = async values => {
@@ -107,7 +142,7 @@ const NewOrderScreen = props => {
         values.age
       );
 
-      // Alert.alert("회원가입 및 로그인이 완료되었습니다");
+      Alert.alert("작성이 완료되었습니다");
 
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);
@@ -116,9 +151,6 @@ const NewOrderScreen = props => {
         setTimeout(() => {
           props.navigation.navigate("BottomNavigation");
         }, 200);
-        // setTimeout(() => {
-        //   props.navigation.navigate("Userinfo");
-        // }, 200);
       } ///err
     } catch (e) {
       Alert.alert("회원가입에 실패했습니다");
@@ -126,29 +158,8 @@ const NewOrderScreen = props => {
     }
   };
 
-  const handlePasswordVisibility = () => {
-    if (passwordIcon === "ios-eye") {
-      setPasswordIcon("ios-eye-off");
-      setPasswordVisibility(true);
-    } else {
-      setPasswordIcon("ios-eye");
-      setPasswordVisibility(false);
-    }
-  };
-
-  const handleConfirmPasswordVisibility = () => {
-    if (confirmPasswordIcon === "ios-eye") {
-      setConfirmPasswordIcon("ios-eye-off");
-      setConfirmPasswordVisibility(true);
-    } else {
-      setConfirmPasswordIcon("ios-eye");
-      setConfirmPasswordVisibility(false);
-    }
-  };
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      {/* <SafeAreaView style={styles.container}> */}
       <ScrollView>
         <View>
           <Formik
@@ -187,57 +198,37 @@ const NewOrderScreen = props => {
                   onBlur={handleBlur("title")}
                 />
                 <ErrorMessage errorValue={touched.title && errors.title} />
-                <FormInput
-                  placeholder={"카테고리 선택"}
-                  onChange={handleChange("category")}
-                  secureTextEntry={passwordVisibility}
-                  keyboardType="default"
-                  returnKeyType="next"
-                  onBlur={handleBlur("category")}
-                  value={values.category}
-                >
-                  <TouchableOpacity onPress={handlePasswordVisibility}>
-                    <Ionicons
-                      style={{ marginLeft: -34 }}
-                      name={passwordIcon}
-                      size={22}
-                      color="rgb(230, 230, 230)"
-                    />
-                  </TouchableOpacity>
-                </FormInput>
+                <Picker
+                  text={category}
+                  onPress={handleCategoryFilter}
+                  color="#1D2025"
+                />
+
                 <ErrorMessage
                   errorValue={touched.category && errors.category}
                 />
-
-                <FormInput
-                  placeholder={"출발지(선택)"}
-                  keyboardType="default"
-                  returnKeyType="next"
-                  value={values.departure}
-                  onBlur={handleBlur("departure")}
-                  onChange={handleChange("departure")}
+                <Picker
+                  text={departure}
+                  onPress={handleAddressButton}
+                  color="#1D2025"
                 />
                 <ErrorMessage />
-                <FormInput
-                  placeholder={"도착지"}
-                  keyboardType="default"
-                  returnKeyType="next"
-                  value={values.arrival}
-                  onBlur={handleBlur("arrival")}
-                  onChange={handleChange("arrival")}
+                <Picker
+                  text={arrival}
+                  onPress={handleAddressButton}
+                  color="#1D2025"
                 />
+
                 <ErrorMessage errorValue={touched.arrival && errors.arrival} />
-                <TouchableOpacity onPress={showDateTimePicker}>
-                  {/* <InputWrapper onPress={showDateTimePicker} /> */}
-                  <FormInput
-                    placeholder={"희망 도착시간(선택)"}
-                    keyboardType="default"
-                    returnKeyType="next"
-                    value={values.desiredArrivalTime}
-                    onBlur={handleBlur("desiredArrivalTime")}
-                    onChange={handleChange("desiredArrivalTime")}
-                  />
-                </TouchableOpacity>
+                {/* <TouchableOpacity onPress={showDateTimePicker}> */}
+                {/*  <InputWrapper onPress={showDateTimePicker} /> */}
+                <Picker
+                  text={timeText}
+                  onPress={showDateTimePicker}
+                  isRightArrow={false}
+                  color={timeTextColor}
+                />
+
                 <>
                   <DateTimePicker
                     mode="time"
@@ -248,13 +239,29 @@ const NewOrderScreen = props => {
                 </>
                 <ErrorMessage />
                 <FormInput
-                  placeholder={"배달금액(선택)"}
+                  width={140}
+                  placeholder={"₩ 배달금액(선택사항)"}
                   keyboardType="numeric"
                   returnKeyType="next"
                   value={values.price}
                   onBlur={handleBlur("price")}
                   onChange={handleChange("price")}
-                ></FormInput>
+                >
+                  <Checkbox
+                    label="가격제안 받기"
+                    checkboxStyle={{ height: 22, width: 22 }}
+                    labelStyle={{ color: "#1D2025", marginLeft: -4 }}
+                    checked={checked}
+                    containerStyle={{
+                      width: 110,
+                      marginLeft: -4
+                    }}
+                    checkedImage={checkedBox}
+                    uncheckedImage={uncheckedBox}
+                    onChange={() => setChecked(!checked)}
+                  />
+                </FormInput>
+
                 <FormInput
                   placeholder={
                     "요청에 대한 상세 내용을 작성해주세요. (불법적인 요청은 게시가 제한 될 수 있어요.)"
@@ -269,35 +276,12 @@ const NewOrderScreen = props => {
                   onChange={handleChange("message")}
                 ></FormInput>
 
-                {/* <LinkContainer>
-                  <Touchable onPress={() => props.navigation.navigate("Term")}>
-                    <Link>
-                      <LinkText>이용약관</LinkText>
-                    </Link>
-                  </Touchable>
-                  <Text> 및 </Text>
-                  <Touchable
-                    onPress={() => props.navigation.navigate("Privacy")}
-                  >
-                    <Link>
-                      <LinkText>개인정보</LinkText>
-                    </Link>
-                  </Touchable>
-                  <Text>취급방침</Text>
-                </LinkContainer> */}
                 <ErrorMessage />
-                {/* <MainButton
-                    onPress={handleSubmit}
-                    disabled={!isValid || isSubmitting}
-                    loading={isSubmitting}
-                    text="동의하고 시작하기"
-                  /> */}
               </>
             )}
           </Formik>
         </View>
       </ScrollView>
-      {/* </SafeAreaView> */}
     </TouchableWithoutFeedback>
   );
 };

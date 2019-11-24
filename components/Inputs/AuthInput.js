@@ -39,6 +39,7 @@ const AuthInput = ({
     <InputContainer>
       <TextInput
         {...rest}
+        placeholderTextColor="#d5dae0"
         editable={editable}
         onChangeText={onChange}
         keyboardType={keyboardType}
