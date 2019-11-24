@@ -4,10 +4,21 @@ import MapView from "react-native-maps";
 
 import { Container } from "native-base";
 
+const LATITUDE = 37.565687;
+const LONGITUDE = 126.978045;
 const LATITUDE_DELTA = 0.006;
 const LONGITUDE_DELTA = 0.001;
 
-const MapScreen = ({ latitude, longitude }) => {
+const MapScreen = props => {
+  const { latitude = LATITUDE, longitude = LONGITUDE } = props;
+
+  const region = {
+    latitude,
+    longitude,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA
+  };
+
   return (
     <>
       <Container>
@@ -17,12 +28,7 @@ const MapScreen = ({ latitude, longitude }) => {
           ref={map => {
             this.map = map;
           }}
-          initialRegion={{
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA
-          }}
+          region={region}
           onRegionChange={this.onRegionChange}
           showsCompass={true}
           showsUserLocation={true}
@@ -32,6 +38,7 @@ const MapScreen = ({ latitude, longitude }) => {
           scrollEnabled={true}
           showsScale={true}
           rotateEnabled={false}
+          loadingEnabled={true}
         />
       </Container>
     </>
