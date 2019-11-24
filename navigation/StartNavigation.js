@@ -10,12 +10,13 @@ import SelectPhoto from "../screens/Photo/SelectPhoto";
 // Imports: Navigation
 import AuthNavigation from "../navigation/AuthNavigation";
 import MainNavigation from "../navigation/MainNavigation";
+import LoggedOutBottomNavigation from "../navigation/LoggedOutBottomNavigation";
 const StartNavigation = createStackNavigator(
   {
     StartHome,
     SelectCampus,
     SelectPhoto,
-    MainNavigation
+    LoggedOutBottomNavigation
   },
   {
     initialRouteName: "StartHome",

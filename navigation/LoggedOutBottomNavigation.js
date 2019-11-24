@@ -59,7 +59,25 @@ const BottomNavigation = createBottomTabNavigator(
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
           <AntDesign name="form" size={24} style={{ color: tintColor }} />
-        )
+        ),
+        tabBarOnPress: ({ navigation }) => {
+          return Alert.alert(
+            null,
+            "가입 또는 로그인이 필요합니다. 회원가입 및 로그인을 하시겠어요?",
+            [
+              {
+                text: "회원가입",
+                onPress: () => navigation.navigate("VerifyPhone")
+              },
+              {
+                text: "취소",
+                style: "cancel"
+              },
+              { text: "로그인", onPress: () => navigation.navigate("Login") }
+            ],
+            { cancelable: false }
+          );
+        }
       }
     },
     Chats: {
@@ -68,7 +86,25 @@ const BottomNavigation = createBottomTabNavigator(
         title: "채팅",
         tabBarIcon: ({ focused, tintColor }) => (
           <AntDesign name="message1" size={24} style={{ color: tintColor }} />
-        )
+        ),
+        tabBarOnPress: ({ navigation }) => {
+          return Alert.alert(
+            null,
+            "가입 또는 로그인이 필요합니다. 회원가입 및 로그인을 하시겠어요?",
+            [
+              {
+                text: "회원가입",
+                onPress: () => navigation.navigate("VerifyPhone")
+              },
+              {
+                text: "취소",
+                style: "cancel"
+              },
+              { text: "로그인", onPress: () => navigation.navigate("Login") }
+            ],
+            { cancelable: false }
+          );
+        }
       }
     },
     Mypage: {
@@ -77,7 +113,25 @@ const BottomNavigation = createBottomTabNavigator(
         title: "마이페이지",
         tabBarIcon: ({ focused, tintColor }) => (
           <AntDesign name="user" size={24} style={{ color: tintColor }} />
-        )
+        ),
+        tabBarOnPress: ({ navigation }) => {
+          return Alert.alert(
+            null,
+            "가입 또는 로그인이 필요합니다. 회원가입 및 로그인을 하시겠어요?",
+            [
+              {
+                text: "회원가입",
+                onPress: () => navigation.navigate("VerifyPhone")
+              },
+              {
+                text: "취소",
+                style: "cancel"
+              },
+              { text: "로그인", onPress: () => navigation.navigate("Login") }
+            ],
+            { cancelable: false }
+          );
+        }
       }
     }
   },

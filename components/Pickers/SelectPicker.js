@@ -1,12 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import constants from "../constants";
+import constants from "../../constants";
 import { withNavigation } from "react-navigation";
 import { AntDesign } from "@expo/vector-icons";
-// const Container = styled.View`
-//   justify-content: flex-start;
-//   align-items: flex-start;
-// `;
+
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -21,14 +18,13 @@ const Container = styled.View`
 `;
 const Divider = styled.View`
   width: ${constants.width - 30};
-
   height: 1px;
   background-color: ${props => props.theme.lightGreyColor};
 `;
 
 const PickerContainer = styled.View`
   width: ${constants.width - 30};
-  padding: 22px 0;
+  padding: 17px 0;
   background-color: white;
   font-size: 17px;
 `;
@@ -37,13 +33,13 @@ const Text = styled.Text`
   font-size: 17px;
 `;
 
-const Picker = ({
+const SelectPicker = ({
   navigation,
   text,
   onPress,
   isUnderline = true,
-  isRightArrow = true,
-  color = "#d5dae0",
+  isSelected = false,
+  color = "#454545",
   ...rest
 }) => {
   return (
@@ -51,9 +47,9 @@ const Picker = ({
       <View>
         <PickerContainer {...rest}>
           <Container>
-            <Text color={color}>{text}</Text>
-            {isRightArrow && (
-              <AntDesign name="right" size={20} style={{ color: "#1D2025" }} />
+            <Text color={isSelected ? "#F13564" : color}>{text}</Text>
+            {isSelected && (
+              <AntDesign name="check" size={20} style={{ color: "#F13564" }} />
             )}
           </Container>
         </PickerContainer>
@@ -63,4 +59,4 @@ const Picker = ({
   );
 };
 
-export default withNavigation(Picker);
+export default withNavigation(SelectPicker);

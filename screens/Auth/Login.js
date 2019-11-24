@@ -78,7 +78,7 @@ const LogIn = props => {
           Alert.alert("로그인되었습니다.");
           await AsyncStorage.setItem("userToken", requestLogin.data.token);
           props.reduxLogin(true);
-          props.navigation.navigate("BottomNavigation");
+          props.navigation.navigate("MainNavigation");
         }
       }
     } catch (error) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
-import { Platform, View, TouchableOpacity } from "react-native";
+import { Platform, View, TouchableOpacity, Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import NewOrder from "../screens/Tabs/Order/NewOrderScreen";
 import CategoryFilter from "../screens/Tabs/Order/CategoryFilter";
@@ -44,7 +44,26 @@ const bottomTabFactory = (initialRoute, customConfig) =>
       Photo: {
         screen: View,
         navigationOptions: {
-          tabBarOnPress: () => console.log("포토탭 클릭"),
+          tabBarOnPress: ({ navigation }) =>
+            Alert.alert(
+              "사진 업로드",
+              null,
+              [
+                {
+                  text: "앨범에서 선택",
+                  onPress: () => navigation.navigate("SelectPhoto")
+                },
+                {
+                  text: "닫기",
+                  style: "cancel"
+                },
+                {
+                  text: "카메라 촬영",
+                  onPress: () => console.log("OK Pressed")
+                }
+              ],
+              { cancelable: false }
+            ),
           tabBarIcon: (focused, tintColor) => (
             <AntDesign name="camera" size={24} style={{ color: tintColor }} />
           )

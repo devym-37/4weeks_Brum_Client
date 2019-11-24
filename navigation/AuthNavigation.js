@@ -16,12 +16,12 @@ import { stackStyles } from "./config";
 
 const AuthNavigation = createStackNavigator(
   {
-    AuthModal: {
-      screen: AuthModal,
-      navigationOptions: {
-        headerShown: false
-      }
-    },
+    // AuthModal: {
+    //   screen: AuthModal,
+    //   navigationOptions: {
+    //     headerShown: false
+    //   }
+    // },
     VerifyPhone: {
       screen: VerifyPhone,
       navigationOptions: {
@@ -80,7 +80,7 @@ const AuthNavigation = createStackNavigator(
     }
   },
   {
-    initialRouteName: "AuthModal",
+    // initialRouteName: "AuthModal",
     mode: "modal",
     // headerMode: "float",
     defaultNavigationOptions: {

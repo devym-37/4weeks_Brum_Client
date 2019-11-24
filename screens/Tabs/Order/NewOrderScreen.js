@@ -24,7 +24,7 @@ import FormInput from "../../../components/Inputs/FormInput";
 import AuthInput from "../../../components/Inputs/AuthInput";
 import MainButton from "../../../components/Buttons/MainButton";
 import ErrorMessage from "../../../components/ErrorMessage";
-import Picker from "../../../components/Picker";
+import Picker from "../../../components/Pickers/RoutePicker";
 // Imports: API
 import { serverApi } from "../../../components/API";
 
@@ -33,7 +33,11 @@ import checkedBox from "../../../assets/checkedBox.png";
 import uncheckedBox from "../../../assets/uncheckedBox.png";
 // Imports: Redux Actions
 import { login } from "../../../redux/actions/authActions";
-
+import {
+  timeSaver,
+  titleSaver,
+  checkedSaver
+} from "../../../redux/actions/orderActions";
 const validationSchema = Yup.object().shape({
   title: Yup.string()
     .label("Title")
@@ -92,8 +96,8 @@ const NewOrderScreen = props => {
   const [departure, setDeparture] = useState("출발지(선택사항)");
   const [arrival, setArrival] = useState("도착지");
 
-  const [checked, setChecked] = useState(false);
-  const [time, setTime] = useState(null);
+  // const [checked, setChecked] = useState(false);
+  // const [time, setTime] = useState(null);
   const [timeText, setTimeText] = useState("희망 도착시간(선택)");
 
   const [timeTextColor, setTimeTextColor] = useState("#d5dae0");
@@ -110,7 +114,7 @@ const NewOrderScreen = props => {
   const handleDatePicked = date => {
     let hours = date.getHours();
     let minutes = date.getMinutes();
-    setTime(String(date));
+    // setTime(String(date));
     if (hours > 12) {
       setTimeText(`오후 ${hours - 12}시 ${minutes}분 도착희망`);
     } else {
@@ -118,6 +122,7 @@ const NewOrderScreen = props => {
     }
 
     setTimeTextColor("#1D2025");
+    props.reduxTime(String(date));
     hideDateTimePicker();
   };
 
@@ -199,7 +204,7 @@ const NewOrderScreen = props => {
                 />
                 <ErrorMessage errorValue={touched.title && errors.title} />
                 <Picker
-                  text={category}
+                  text={props.category ? props.category : "카테고리 선택"}
                   onPress={handleCategoryFilter}
                   color="#1D2025"
                 />
@@ -251,14 +256,17 @@ const NewOrderScreen = props => {
                     label="가격제안 받기"
                     checkboxStyle={{ height: 22, width: 22 }}
                     labelStyle={{ color: "#1D2025", marginLeft: -4 }}
-                    checked={checked}
+                    checked={props.isPrice}
                     containerStyle={{
                       width: 110,
                       marginLeft: -4
                     }}
                     checkedImage={checkedBox}
                     uncheckedImage={uncheckedBox}
-                    onChange={() => setChecked(!checked)}
+                    onChange={() => {
+                      setChecked(!checked);
+                      props.reduxChecked(!props.isPrice);
+                    }}
                   />
                 </FormInput>
 
@@ -289,7 +297,11 @@ const NewOrderScreen = props => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    phone: state.phoneReducer.phone
+    phone: state.phoneReducer.phone,
+    title: state.orderReducer.title,
+    time: state.orderReducer.desiredArrival,
+    isPrice: state.orderReducer.isPrice,
+    category: state.orderReducer.category
   };
 };
 
@@ -297,7 +309,10 @@ const mapDispatchToProps = dispatch => {
   // Action
   return {
     // Login
-    reduxLogin: trueFalse => dispatch(login(trueFalse))
+    reduxLogin: trueFalse => dispatch(login(trueFalse)),
+    reduxTitle: title => dispatch(titleSaver(title)),
+    reduxTime: time => dispatch(timeSaver(time)),
+    reduxChecked: checked => dispatch(checkedSaver(checked))
   };
 };
 

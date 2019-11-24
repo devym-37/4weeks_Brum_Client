@@ -1,9 +1,11 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, FooterTab, Footer } from "native-base";
+import { Container } from "native-base";
+import Picker from "../../components/Pickers/RoutePicker";
+import { withNavigation } from "react-navigation";
 
-export default function FilterScreen() {
+const FilterScreen = props => {
   return (
     <Container>
       <View style={styles.Container}>
@@ -11,7 +13,7 @@ export default function FilterScreen() {
       </View>
     </Container>
   );
-}
+};
 
 const styles = StyleSheet.create({
   Container: {
@@ -27,3 +29,5 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
+
+export default withNavigation(FilterScreen);
