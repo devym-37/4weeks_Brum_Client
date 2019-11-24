@@ -30,19 +30,43 @@ const PhotoTabs = createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       indicatorStyle: {
-        backgroundColor: styles.blackColor
+        backgroundColor: styles.blackColor,
+        marginBottom: 20
       },
       style: {
+        paddingBottom: 20,
         ...stackStyles
       },
       labelStyle: {
-        color: styles.blackColor
+        color: styles.blackColor,
+        fontWeight: "600"
       }
     }
   }
 );
 
-export default createStackNavigator({
-  PhotoTabs,
-  UploadPhoto
-});
+export default createStackNavigator(
+  {
+    Tabs: {
+      screen: PhotoTabs,
+      navigationOptions: {
+        title: "사진 선택",
+        headerBackTitle: null
+      }
+    },
+    UploadPhoto: {
+      screen: UploadPhoto,
+      navigationOptions: {
+        title: "사진 업로드"
+      }
+    }
+  },
+  {
+    defaultNavigationOptions: {
+      headerStyle: {
+        ...stackStyles
+      },
+      headerTintColor: styles.blackColor
+    }
+  }
+);

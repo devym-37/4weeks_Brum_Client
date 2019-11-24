@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   AsyncStorage,
   StyleSheet,
+  Image,
   TouchableOpacity
 } from "react-native";
 import styled from "styled-components";
@@ -89,6 +90,12 @@ const LinkText = styled.Text`
 const Text = styled.Text`
   color: ${props => props.theme.greyColor};
   font-weight: 400;
+`;
+
+const ImageContainer = styled.View`
+  width: ${constants.width - 30};
+  flex-direction: row;
+  align-items: flex-start;
 `;
 
 const NewOrderScreen = props => {
@@ -283,7 +290,17 @@ const NewOrderScreen = props => {
                   onBlur={handleBlur("message")}
                   onChange={handleChange("message")}
                 ></FormInput>
-
+                {props.images && (
+                  <ImageContainer>
+                    <Image
+                      source={{ uri: props.images[0].uri }}
+                      style={{
+                        width: constants.width / 4,
+                        height: constants.height / 8
+                      }}
+                    />
+                  </ImageContainer>
+                )}
                 <ErrorMessage />
               </>
             )}
@@ -301,7 +318,8 @@ const mapStateToProps = state => {
     title: state.orderReducer.title,
     time: state.orderReducer.desiredArrival,
     isPrice: state.orderReducer.isPrice,
-    category: state.orderReducer.category
+    category: state.orderReducer.category,
+    images: state.orderReducer.images
   };
 };
 

@@ -17,3 +17,8 @@ export const checkedSaver = cheked => ({
   type: "CREATE",
   isPrice: cheked
 });
+
+export const imagesSaver = images => ({
+  type: "CREATE",
+  images: images
+});

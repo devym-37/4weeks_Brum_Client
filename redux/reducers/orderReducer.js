@@ -23,7 +23,8 @@ const orderReducer = (state = initialState, action) => {
         price: action.price,
         details: action.details,
         title: action.title,
-        isPrice: action.isPrice
+        isPrice: action.isPrice,
+        images: [...action.images]
       };
     }
     // Default
