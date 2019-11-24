@@ -128,13 +128,9 @@ const Home = props => {
               userCurrentLocation();
             }}
           />
-<<<<<<< HEAD
           {region.latitude !== null && (
             <MapView latitude={region.latitude} longitude={region.longitude} />
           )}
-=======
-          <MapScreen latitude={region.latitude} longitude={region.longitude} />
->>>>>>> 169d1d02f5cc3211a1ec7243d01bf8edd12a5422
         </Content>
       </Container>
     </>

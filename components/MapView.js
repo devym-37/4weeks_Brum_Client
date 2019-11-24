@@ -35,16 +35,12 @@ const MapScreen = props => {
           ref={map => {
             this.map = map;
           }}
-<<<<<<< HEAD:components/MapView.js
           initialRegion={{
             latitude: latitude || 122,
             longitude: longitude || 122,
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA
           }}
-=======
-          region={region}
->>>>>>> 169d1d02f5cc3211a1ec7243d01bf8edd12a5422:components/MapScreen.js
           onRegionChange={this.onRegionChange}
           showsCompass={true}
           showsUserLocation={true}

@@ -88,7 +88,6 @@ const SelectPhoto = props => {
                 }}
                 source={{ uri: selected.uri }}
               />
-<<<<<<< HEAD
               <Button onPress={handleSelected}>
                 <Text>사진 선택</Text>
               </Button>
@@ -120,8 +119,7 @@ const SelectPhoto = props => {
           )}
         </View>
       )}
-=======
-            </Row>
+      {/* </Row>
             <Row>
               <GhostButton text="다른사진 고르기" onPress={selectPicture} />
             </Row>
@@ -139,8 +137,7 @@ const SelectPhoto = props => {
             </Row>
           </Col>
         )}
-      </Grid>
->>>>>>> 169d1d02f5cc3211a1ec7243d01bf8edd12a5422
+      </Grid> */}
     </View>
   );
 };
