@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ScrollView, RefreshControl, AsyncStorage } from "react-native";
-import GhostButton from "../../../components/Buttons/GhostButton";
-import DefaultOrder from "../../../components/DefaultOrder";
+
 import { withNavigation } from "react-navigation";
 import { serverApi } from "../../../components/API";
+
+import DefaultOrder from "../../../components/DefaultOrder";
 import OrderCard from "../../../components/Cards/OrderCard";
+import Loader from "../../../components/Loader";
+
 const Container = styled.View`
   flex: 1;
   margin-top: 50%;
@@ -41,12 +44,11 @@ DefaultOrderScreen = ({ navigation }) => {
       setLoading(true);
       const userToken = await AsyncStorage.getItem("userToken");
       let requestUserOrders = await serverApi.getUserOrders(userToken);
-
-      // console.log(`유저 오더: `, requestUserOrders.data.data.orders);
-
       setOrders([...requestUserOrders.data.data.orders]);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,10 +63,12 @@ DefaultOrderScreen = ({ navigation }) => {
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      {orders.filter(order => {
-        console.log(order);
-        return order.orderStatus < 5;
-      }).length === 0 ? (
+      {loading ? (
+        <Loader />
+      ) : orders.filter(order => {
+          console.log(order);
+          return order.orderStatus < 5;
+        }).length === 0 ? (
         <DefaultOrder />
       ) : (
         orders.map((order, i) => <OrderCard key={i} {...order} />)

@@ -104,7 +104,7 @@ const Signup = props => {
         values.age
       );
 
-      // Alert.alert("회원가입 및 로그인이 완료되었습니다");
+      Alert.alert("회원가입 및 로그인이 완료되었습니다");
 
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);
