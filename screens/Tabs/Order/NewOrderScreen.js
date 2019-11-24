@@ -1,9 +1,5 @@
 // Imports: Dependencies
 import React, { useState } from "react";
-import styled from "styled-components";
-import { connect } from "react-redux";
-import { Formik } from "formik";
-import * as Yup from "yup";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -13,6 +9,11 @@ import {
   StyleSheet,
   TouchableOpacity
 } from "react-native";
+import styled from "styled-components";
+import { connect } from "react-redux";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import DateTimePicker from "react-native-modal-datetime-picker";
 import { Ionicons } from "@expo/vector-icons";
 
 // Imports: Custom components
@@ -76,11 +77,21 @@ const Text = styled.Text`
 
 const NewOrderScreen = props => {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(
-    true
-  );
   const [passwordIcon, setPasswordIcon] = useState("ios-eye-off");
-  const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye-off");
+  const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
+
+  const showDateTimePicker = () => {
+    setIsDateTimePickerVisible(true);
+  };
+
+  const hideDateTimePicker = () => {
+    setIsDateTimePickerVisible(false);
+  };
+
+  const handleDatePicked = date => {
+    console.log("A date has been picked: ", date);
+    hideDateTimePicker();
+  };
 
   const handleSend = async values => {
     console.log(`signup values: `, values);
@@ -216,14 +227,25 @@ const NewOrderScreen = props => {
                   onChange={handleChange("arrival")}
                 />
                 <ErrorMessage errorValue={touched.arrival && errors.arrival} />
-                <FormInput
-                  placeholder={"희망 도착시간(선택)"}
-                  keyboardType="default"
-                  returnKeyType="next"
-                  value={values.desiredArrivalTime}
-                  onBlur={handleBlur("desiredArrivalTime")}
-                  onChange={handleChange("desiredArrivalTime")}
-                />
+                <TouchableOpacity onPress={showDateTimePicker}>
+                  {/* <InputWrapper onPress={showDateTimePicker} /> */}
+                  <FormInput
+                    placeholder={"희망 도착시간(선택)"}
+                    keyboardType="default"
+                    returnKeyType="next"
+                    value={values.desiredArrivalTime}
+                    onBlur={handleBlur("desiredArrivalTime")}
+                    onChange={handleChange("desiredArrivalTime")}
+                  />
+                </TouchableOpacity>
+                <>
+                  <DateTimePicker
+                    mode="time"
+                    isVisible={isDateTimePickerVisible}
+                    onConfirm={handleDatePicked}
+                    onCancel={hideDateTimePicker}
+                  />
+                </>
                 <ErrorMessage />
                 <FormInput
                   placeholder={"배달금액(선택)"}
