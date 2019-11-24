@@ -209,7 +209,8 @@ const NewOrderScreen = props => {
                   value={values.title}
                   onBlur={handleBlur("title")}
                 />
-                <ErrorMessage errorValue={touched.title && errors.title} />
+                <ErrorMessage />
+                {/* <ErrorMessage errorValue={touched.title && errors.title} /> */}
                 <Picker
                   text={props.category ? props.category : "카테고리 선택"}
                   onPress={handleCategoryFilter}
@@ -271,7 +272,6 @@ const NewOrderScreen = props => {
                     checkedImage={checkedBox}
                     uncheckedImage={uncheckedBox}
                     onChange={() => {
-                      setChecked(!checked);
                       props.reduxChecked(!props.isPrice);
                     }}
                   />
@@ -290,7 +290,7 @@ const NewOrderScreen = props => {
                   onBlur={handleBlur("message")}
                   onChange={handleChange("message")}
                 ></FormInput>
-                {props.images && (
+                {props.images && props.images.length > 0 && (
                   <ImageContainer>
                     <Image
                       source={{ uri: props.images[0].uri }}
