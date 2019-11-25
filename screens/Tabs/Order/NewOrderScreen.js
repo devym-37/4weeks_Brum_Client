@@ -64,8 +64,8 @@ const View = styled.View`
 const InputWrapper = styled.View`
   margin: 0;
   width: ${constants.width - 150};
-  height: 44px;
-  border: 1px solid;
+  height: 44;
+  border: 1 solid;
   z-index: 10;
   position: absolute;
 `;

@@ -18,7 +18,7 @@ import LoggedOutMainNavigation from "./navigation/LoggedOutMainNavigation";
 
 import Signup from "./screens/Auth/Signup";
 
-import MapView from "./screens/Tabs/HomeScreen";
+import MapView from "./screens/Tabs/Home/MapScreen";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";

@@ -22,7 +22,7 @@ const Container = styled.View`
 const Divider = styled.View`
   width: ${constants.width - 30};
 
-  height: 1px;
+  height: 1;
   background-color: ${props => props.theme.lightGreyColor};
 `;
 
@@ -31,11 +31,11 @@ const PickerContainer = styled.View`
   padding: 22px 0;
 
   background-color: white;
-  font-size: 17px;
+  font-size: 17;
 `;
 const Text = styled.Text`
   color: ${props => props.color};
-  font-size: 17px;
+  font-size: 17;
 `;
 
 const Picker = ({
