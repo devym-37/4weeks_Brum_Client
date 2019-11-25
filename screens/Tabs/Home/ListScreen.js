@@ -19,10 +19,7 @@ import { withNavigation } from "react-navigation";
 
 const ListScreen = props => {
   const [refreshing, setRefreshing] = useState(false);
-  // const [orders, setOrders] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const [isopenLoginModal, setIsopenLoginModal] = useState(false);
-
+  const [orders, setOrders] = useState(props.order);
   const refresh = async () => {
     try {
       setRefreshing(true);
@@ -30,7 +27,8 @@ const ListScreen = props => {
       let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
       // console.log(`refresh: `, getAllOrders);
       setOrders([...getCampusOrders.data.data.orders]);
-      // console.log(getCampusOrders);
+
+      console.log(`order: `, getCampusOrders);
     } catch (e) {
       console.log(`Can't refresh data. error message: ${e}`);
     } finally {
@@ -38,31 +36,6 @@ const ListScreen = props => {
     }
   };
 
-  // const preLoad = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const loggedIn = await AsyncStorage.getItem("userToken");
-  //     // console.log(`ListScreen token: `, loggedIn);
-  //     if (!loggedIn) {
-  //       setIsopenLoginModal(true);
-  //     }
-
-  //     const selectedCampus = await AsyncStorage.getItem("campus");
-  //     let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
-
-  //     setOrders([...getCampusOrders.data.data.orders]);
-  //     // console.log(`getAllOrders: `, getAllOrders.data.data.orders);
-  //   } catch (e) {
-  //     console.log(`Can't fetch data from server. error message: ${e}`);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   preLoad();
-  // }, []);
-  // console.log("preLoad", preLoad());
   return (
     <>
       <ScrollView
@@ -71,17 +44,19 @@ const ListScreen = props => {
         }
       >
         <Content>
-          {props.orders.map((data, i) => (
-            <View key={i}>
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate("OrderDetailScreen");
-                }}
-              >
-                <ListCard data={data} />
-              </TouchableOpacity>
-            </View>
-          ))}
+          {props.orders &&
+            props.orders.map((data, i) => (
+              <View key={i}>
+                <TouchableOpacity
+                  onPress={() => {
+                    props.navigation.navigate("OrderDetailScreen");
+                  }}
+                >
+                  <ListCard data={data} />
+                  {/* <OrderCard {...data} /> */}
+                </TouchableOpacity>
+              </View>
+            ))}
         </Content>
       </ScrollView>
     </>

@@ -13,9 +13,12 @@ import AuthModal from "../../Auth/AuthModal";
 import { serverApi } from "../../../components/API";
 import constants from "../../../constants";
 import styles from "../../../styles";
-import MapScreen from "./MapScreen";
+
+import MapView from "../../../components/MapView";
 import ListScreen from "./ListScreen";
 import Loader from "../../../components/Loader";
+import { CurrentLocationButton } from "../../../navigation/CurrentLocationBtn";
+import { MapLocationButton } from "../../../navigation/MapLocationBtn";
 
 const View = styled.View``;
 const Container = styled.View`
@@ -38,13 +41,11 @@ const LeftToggleButton = styled.View`
   justify-content: center;
   align-items: center;
   border: 1.2px;
-  background-color: ${props =>
-    props.clicked ? styles.mainColor : "transparent"};
+  background-color: ${props => (props.clicked ? styles.mainColor : "#fff")};
   border-color: ${styles.mainColor};
   border-right-width: 0.6px;
   border-bottom-left-radius: 6;
   border-top-left-radius: 6;
-  /* background-color: whitesmoke; */
 `;
 
 const LeftToggleText = styled.Text`
@@ -61,13 +62,11 @@ const RightToggleButton = styled.View`
   align-items: center;
   width: 110;
   border: 1.2px;
-  background-color: ${props =>
-    props.clicked ? styles.mainColor : "transparent"};
+  background-color: ${props => (props.clicked ? styles.mainColor : "#fff")};
   border-color: ${styles.mainColor};
   border-left-width: 0.6px;
   border-bottom-right-radius: 6;
   border-top-right-radius: 6;
-  /* background-color: whitesmoke; */
   z-index: 8;
 `;
 
@@ -80,22 +79,52 @@ const RightToggleText = styled.Text`
 const HomeScreen = ({ navigation }) => {
   const [leftClicked, setLeftClicked] = useState(true);
   const [rightClicked, setRightClicked] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [region, setRegion] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isopenLoginModal, setIsopenLoginModal] = useState(false);
 
-  const refresh = async () => {
-    try {
-      setRefreshing(true);
-      const selectedCampus = await AsyncStorage.getItem("campus");
-      let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
-      setOrders([...getCampusOrders.data.data.orders]);
-    } catch (e) {
-      console.log(`Can't refresh data. error message: ${e}`);
-    } finally {
-      setRefreshing(false);
-    }
+  const getDefaultCampusMap = campus => {
+    const campusRegion = constants.campus[campus].position;
+
+    const _region = {
+      latitude: campusRegion.latitude,
+      longitude: campusRegion.longitude,
+      latitudeDelta: constants.LATITUDE_DELTA,
+      longitudeDelta: constants.LONGITUDE_DELTA
+    };
+    setRegion(_region);
+    this.map.animateToRegion(_region);
+  };
+
+  // const getLocation = async () => {
+  //   const geo = await navigator.geolocation.getCurrentPosition();
+
+  // await navigator.geolocation.getCurrentPosition(position => {
+  //   let currentLat = parseFloat(position.coords.latitude);
+  //   let currentLng = parseFloat(position.coords.longitude);
+
+  //   let currentRegion = {
+  //     latitude: currentLat,
+  //     longitude: currentLng
+  //   };
+  //   setCurrentLocation({ ...currentRegion }); // 8
+  // });
+  // };
+
+  const userCurrentLocation = () => {
+    // const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
+    console.log(`currentLocation: `, currentLocation);
+    // const _userRegion = {
+    //   // class structure
+    //   latitude: latitude,
+    //   longitude: longitude,
+    //   latitudeDelta: constants.LATITUDE_DELTA,
+    //   longitudeDelta: constants.LONGITUDE_DELTA
+    // };
+
+    // this.map.animateToRegion(_userRegion);
   };
 
   const preLoad = async () => {
@@ -108,8 +137,10 @@ const HomeScreen = ({ navigation }) => {
 
       const selectedCampus = await AsyncStorage.getItem("campus");
       let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
-
       setOrders([...getCampusOrders.data.data.orders]);
+
+      getDefaultCampusMap(selectedCampus);
+      getLocation();
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     } finally {
@@ -129,6 +160,25 @@ const HomeScreen = ({ navigation }) => {
           <Loader />
         ) : (
           <>
+            {leftClicked && region && (
+              <>
+                <MapLocationButton
+                  cb={() => {
+                    getDefaultCampusMap();
+                  }}
+                />
+                <CurrentLocationButton
+                  cb={() => {
+                    userCurrentLocation();
+                  }}
+                />
+                <MapView
+                  latitude={region.latitude}
+                  longitude={region.longitude}
+                  orders={orders}
+                />
+              </>
+            )}
             <Container>
               <ButtonContainer>
                 <Touchable
@@ -157,11 +207,8 @@ const HomeScreen = ({ navigation }) => {
                 </Touchable>
               </ButtonContainer>
             </Container>
-            {leftClicked ? (
-              <MapScreen orders={orders} />
-            ) : (
-              <ListScreen orders={orders} />
-            )}
+
+            {rightClicked && <ListScreen orders={orders} />}
           </>
         )}
       </View>

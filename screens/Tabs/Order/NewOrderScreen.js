@@ -61,36 +61,6 @@ const View = styled.View`
   align-items: center;
   flex: 1;
 `;
-const InputWrapper = styled.View`
-  margin: 0;
-  width: ${constants.width - 150};
-  height: 44;
-  border: 1 solid;
-  z-index: 10;
-  position: absolute;
-`;
-const LinkContainer = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  margin: 10px 0 20px 0;
-`;
-
-const Touchable = styled.TouchableOpacity``;
-
-const Link = styled.View``;
-
-const LinkText = styled.Text`
-  color: ${props => props.theme.greyColor};
-  font-weight: 400;
-  text-decoration: underline;
-  text-decoration-color: ${props => props.theme.greyColor};
-`;
-const Text = styled.Text`
-  color: ${props => props.theme.greyColor};
-  font-weight: 400;
-`;
 
 const ImageContainer = styled.View`
   width: ${constants.width - 30};
@@ -210,7 +180,7 @@ const NewOrderScreen = props => {
                   onBlur={handleBlur("title")}
                 />
                 <ErrorMessage />
-                {/* <ErrorMessage errorValue={touched.title && errors.title} /> */}
+
                 <Picker
                   text={props.category ? props.category : "카테고리 선택"}
                   onPress={handleCategoryFilter}
@@ -233,8 +203,7 @@ const NewOrderScreen = props => {
                 />
 
                 <ErrorMessage errorValue={touched.arrival && errors.arrival} />
-                {/* <TouchableOpacity onPress={showDateTimePicker}> */}
-                {/*  <InputWrapper onPress={showDateTimePicker} /> */}
+
                 <Picker
                   text={timeText}
                   onPress={showDateTimePicker}
