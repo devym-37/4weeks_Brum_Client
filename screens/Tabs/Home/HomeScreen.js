@@ -77,6 +77,7 @@ const RightToggleText = styled.Text`
   font-size: 13;
 `;
 const HomeScreen = ({ navigation }) => {
+  // console.log(`Home Nav: `, navigation.getParam("campus"));
   const [leftClicked, setLeftClicked] = useState(true);
   const [rightClicked, setRightClicked] = useState(false);
   const [region, setRegion] = useState(null);
