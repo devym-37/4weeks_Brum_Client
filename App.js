@@ -36,6 +36,7 @@ import SelectPhoto from "./screens/Photo/SelectPhoto";
 import OrderDetailScreen from "./screens/Tabs/Order/OrderDetailScreen";
 
 import SearchAddress from "./screens/Tabs/Order/SearchAddress";
+import HomeScreen from "./screens/Tabs/HomeScreen";
 
 // React Native: App
 export default function App() {
@@ -76,6 +77,7 @@ export default function App() {
   // {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}  // push 시 추가
   // <HomeNavigation />
   //<MainNavigation />
+  // <SearchAddress />
   return loaded && isLoggedIn !== null ? (
     // Redux: Global Store
     <Provider store={store}>

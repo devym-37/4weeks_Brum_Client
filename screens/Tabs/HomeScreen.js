@@ -70,10 +70,10 @@ const Home = props => {
 
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
-      let currentLat = parseFloat(position.coords.latitude);
-      let currentLng = parseFloat(position.coords.longitude);
+      const currentLat = parseFloat(position.coords.latitude);
+      const currentLng = parseFloat(position.coords.longitude);
 
-      let currentRegion = {
+      const currentRegion = {
         latitude: currentLat,
         longitude: currentLng
       };

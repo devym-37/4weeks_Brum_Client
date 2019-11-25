@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import MapScreen from "../../../components/MapView";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
+import FormInput from "../../../components/Inputs/FormInput";
 
 const Container = styled.View`
   flex: 1;
@@ -49,18 +50,22 @@ const SearchAddress = () => {
     (async () => {
       await getLocation();
     })();
-  }, []);
+  }, [currentLocation]);
 
   return (
-    <Container>
-      <Text>주소 검색 스크린</Text>
-      <MapScreen />
-      <CurrentLocationButton
-        callback={() => {
-          userCurrentLocation();
-        }}
-      />
-    </Container>
+    <>
+      <Container>
+        <MapScreen
+          latitude={currentLocation.latitude}
+          longitude={currentLocation.longitude}
+        />
+        <CurrentLocationButton
+          callback={() => {
+            userCurrentLocation();
+          }}
+        />
+      </Container>
+    </>
   );
 };
 
