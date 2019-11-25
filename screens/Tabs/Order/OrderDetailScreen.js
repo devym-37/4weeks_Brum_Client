@@ -84,6 +84,7 @@ const OderDetailScreen = props => {
   const [orderId, setOrderId] = useState(1);
   const [view, setView] = useState(1);
   const [category, setCategory] = useState("기타");
+  const [hostUser, setHostUser] = useState(false);
 
   const handelApply = async (val1, val2) => {
     const value1 = val1.value; //bidprice
@@ -224,7 +225,8 @@ const OderDetailScreen = props => {
 
         const oderDetail = await serverApi.oderdetail(props.orderId, usertoken);
 
-        const { userId } = oderDetail.data.data.userId;
+        console.log("요청내역", oderDetail);
+        const { userId } = oderDetail.data.data;
         const {
           departures,
           arrivals,
@@ -240,10 +242,11 @@ const OderDetailScreen = props => {
           views
         } = oderDetail.data.data.order;
 
-        console.log(oderDetail.data.data.order);
+        console.log(oderDetail.data.data);
 
         if (oderDetail.data.isSuccess) {
-          console.log("들어옴");
+          console.log("들어옴", hostId);
+          console.log(userId);
           setOrderId(props.orderId);
           setDepartures(departures); //departures
           if (arrivals === null) {
@@ -257,6 +260,7 @@ const OderDetailScreen = props => {
           setApplicants(applicants); //applicats
           setUserId(userId); //userid
           setDetails(details); //details
+          setHostUser(hostId === userId);
           // console.log(campusList);
           console.log("listcampus", constants.campusList[hostInfo.campus]);
           setCampus(constants.campusList[hostInfo.campus].kor); //campus
@@ -281,6 +285,9 @@ const OderDetailScreen = props => {
           } else {
             setDesiredArrivalTime(desiredArrivalTime);
           }
+        } else {
+          Alert.alert("로그인해주세요");
+          console.log(oderDetail.data.comment);
         }
 
         //----- set variables , applicants---
@@ -299,23 +306,30 @@ const OderDetailScreen = props => {
 
   renderContent = () => (
     <View style={styles.panel}>
-      {isPrice ? (
+      {!hostUser ? (
+        isPrice ? (
+          <Item style={{ marginTop: 10 }}>
+            <Input {...bidprice} placeholder="₩가격 제안(선택사항)" />
+            <Text>
+              <Ionicons name="md-checkmark-circle-outline" size={22} />
+              {"  "}희망비용 수락
+            </Text>
+          </Item>
+        ) : (
+          <Item disabled style={{ marginTop: 10 }}>
+            <Input disabled placeholder="가격제안 불가" />
+          </Item>
+        )
+      ) : (
+        <></>
+      )}
+      {!hostUser ? (
         <Item style={{ marginTop: 10 }}>
-          <Input {...bidprice} placeholder="₩가격 제안(선택사항)" />
-          <Text>
-            <Ionicons name="md-checkmark-circle-outline" size={22} />
-            {"  "}희망비용 수락
-          </Text>
+          <Input {...rmsg} placeholder="러너의 메세지(선택사항)" />
         </Item>
       ) : (
-        <Item disabled style={{ marginTop: 10 }}>
-          <Input disabled placeholder="가격제안 불가" />
-        </Item>
+        <></>
       )}
-
-      <Item style={{ marginTop: 10 }}>
-        <Input {...rmsg} placeholder="러너의 메세지(선택사항)" />
-      </Item>
     </View>
   );
 
@@ -326,53 +340,64 @@ const OderDetailScreen = props => {
       <Row style={{ alignSelf: "center" }}>
         <Ionicons name="md-arrow-dropup-circle" size={35} />
       </Row>
-      {didApply ? (
-        <Row>
-          <Col style={{ margin: 10 }}>
-            <Text
-              style={{
-                fontSize: 23,
+      {!hostUser ? (
+        didApply ? (
+          <Row>
+            <Col style={{ margin: 10 }}>
+              <Text
+                style={{
+                  fontSize: 23,
 
-                textAlignVertical: "center"
-              }}
-            >
-              ₩ {price}
-            </Text>
-          </Col>
-          <Col style={{ padding: -10 }}>
-            <MainButton
-              onPress={handelApplyCancle}
-              width={250}
-              text="지원취소하기"
-            />
-            <MainButton
-              onPress={handelApplymod}
-              width={250}
-              text="지원취소하기"
-            />
-          </Col>
-        </Row>
+                  textAlignVertical: "center"
+                }}
+              >
+                ₩ {price}
+              </Text>
+            </Col>
+            <Col style={{ padding: -10 }}>
+              <MainButton
+                onPress={handelApplyCancle}
+                width={250}
+                text="지원취소하기"
+              />
+              <MainButton
+                onPress={handelApplymod}
+                width={250}
+                text="지원취소하기"
+              />
+            </Col>
+          </Row>
+        ) : (
+          <Row>
+            <Col style={{ margin: 10 }}>
+              <Text
+                style={{
+                  fontSize: 23,
+
+                  textAlignVertical: "center"
+                }}
+              >
+                ₩ {price}
+              </Text>
+            </Col>
+            <Col style={{ padding: -10 }}>
+              <MainButton
+                onPress={() => {
+                  handelApply(bidprice, rmsg);
+                }}
+                width={250}
+                text="러너지원하기"
+              />
+            </Col>
+          </Row>
+        )
       ) : (
         <Row>
-          <Col style={{ margin: 10 }}>
-            <Text
-              style={{
-                fontSize: 23,
-
-                textAlignVertical: "center"
-              }}
-            >
-              ₩ {price}
-            </Text>
+          <Col>
+            <MainButton width={250} text="수정하기" />
           </Col>
-          <Col style={{ padding: -10 }}>
-            <MainButton
-              onPress={() => {
-                handelApply(bidprice, rmsg);
-              }}
-              width={250}
-              text="러너지원하기"
-            />
+          <Col>
+            <MainButton width={250} text="삭제하기" />
           </Col>
         </Row>
       )}
@@ -407,13 +432,28 @@ const OderDetailScreen = props => {
           </Row>
           <Row>
             <Content>
-              {/* {imageurl ? (
-        <Row>
-          <Image />
-        </Row>
-      ) : (
-        <></>
-      )} */}
+              {Array.isArray(imageurl) ? (
+                <Row>
+                  <FlatList
+                    horizontal
+                    pagingEnabled
+                    scrollEnabled
+                    showsHorizontalScrollIndicator={false}
+                    snapToAlignment="center"
+                    data={imageurl}
+                    keyExtractor={(item, index) => `${index}`}
+                    renderItem={({ item }) => (
+                      <Image
+                        source={item}
+                        resizeMode="contain"
+                        style={{ width, height: height / 2.8 }}
+                      />
+                    )}
+                  />
+                </Row>
+              ) : (
+                <></>
+              )}
 
               <Row>
                 <Col>
@@ -488,23 +528,12 @@ const OderDetailScreen = props => {
               </Row>
             </Content>
 
-            {hostId === userId ? (
-              <Row>
-                <Col>
-                  <MainButton width={250} text="수정하기" />
-                </Col>
-                <Col>
-                  <MainButton width={250} text="삭제하기" />
-                </Col>
-              </Row>
-            ) : (
-              <BottomSheet
-                style={{ backgroundColor: "#f7f5eee8" }}
-                snapPoints={[100, 210, 100]}
-                renderContent={renderContent}
-                renderHeader={renderHeader}
-              />
-            )}
+            <BottomSheet
+              style={{ backgroundColor: "#f7f5eee8" }}
+              snapPoints={[100, 210, 100]}
+              renderContent={renderContent}
+              renderHeader={renderHeader}
+            />
           </Row>
         </Grid>
       )}
