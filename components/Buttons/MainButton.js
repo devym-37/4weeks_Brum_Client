@@ -37,12 +37,12 @@ const MainButton = ({
   </Touchable>
 );
 
-MainButton.propTypes = {
-  text: PropTypes.string.isRequired,
-  onPress: PropTypes.func.isRequired,
-  loading: PropTypes.bool,
-  width: PropTypes.number,
-  color: PropTypes.string
-};
+// MainButton.propTypes = {
+//   text: PropTypes.string.isRequired,
+//   onPress: PropTypes.func.isRequired,
+//   loading: PropTypes.bool,
+//   width: PropTypes.number,
+//   color: PropTypes.string
+// };
 
 export default MainButton;

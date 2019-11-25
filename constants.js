@@ -9,6 +9,8 @@ const orderCategory = [
   "사다주기",
   "생활편의",
   "편의점",
-  "간편배송"
+  "간편배송",
+  "기타"
 ];
+
 export default { width, height, orderCategory };
