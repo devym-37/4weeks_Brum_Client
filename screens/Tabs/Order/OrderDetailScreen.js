@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import GhostButton from "../../../components/Buttons/GhostButton";
+
 import { withNavigation } from "react-navigation";
 import MapView from "react-native-maps";
 //import constants from "../../constants";
@@ -10,7 +11,9 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
-  AsyncStorage
+  AsyncStorage,
+  RefreshControl,
+  Alert
 } from "react-native";
 import {
   Content,
@@ -28,56 +31,224 @@ import {
   Image,
   Button,
   Item,
-  Input
+  Input,
+  Spinner
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import BottomSheet from "reanimated-bottom-sheet";
 import MainButton from "../../../components/Buttons/MainButton";
+import utils from "../../../utils";
+import Mapscreen from "../../../components/MapView";
+import useInput from "../../../hooks/useInput";
+import FormInput from "../../../components/Inputs/FormInput";
 
 import { serverApi } from "../../../components/API";
 
 const OderDetailScreen = props => {
-  const [region, setRegion] = useState();
+  //view 추가해야함
+  const [region, setRegion] = useState({
+    latitude: 37.55737,
+    longitude: 127.047132
+  });
   //const { isOpen } = this.state;
   const [Loading, setLoading] = useState();
   const [imageurl, setImageurl] = useState(
     "https://i.kym-cdn.com/entries/icons/original/000/026/638/cat.jpg"
   );
-  const [arrivals, setArrivals] = useState("식당");
+  const [arrivals, setArrivals] = useState("");
   const [departures, setDepartures] = useState("한양대 공학관");
   const [details, setDetails] = useState("없음1");
   const [campus, setCampus] = useState("한양대학교");
   const [price, setPrice] = useState("200");
   const [title, setTitle] = useState("심부름하실 분");
   const [msg, setMsg] = useState("안녕하세요");
-  //const [region, setRegion] = useState();
+  const [img, setImg] = useState(
+    "https://i.kym-cdn.com/entries/icons/original/000/026/638/cat.jpg"
+  );
+  const [nickname, setNickname] = useState("nobody");
+  const [desiredArrivalTime, setDesiredArrivalTime] = useState("");
+  const [createdat, setCreatedat] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [hostId, setHostId] = useState(null);
+  const [applicants, setApplicants] = useState(null);
+  const [didApply, setDidApply] = useState(false);
+  const [isPrice, setIsPrice] = useState(false);
+  const [userToken, setUserToken] = useState(null);
+  const rmsg = useInput("");
+  const bidprice = useInput("");
 
-  useEffect(() => {
+  const handelApply = async (val1, val2) => {
+    const value1 = val1.value; //bidprice
+    const value2 = val2.value; //msg
+    const orderId = 1;
+
+    try {
+      setLoading(true);
+      const result = await serverApi.apply(value1, value2, userToken, orderId);
+      console.log(result.data);
+      if (result.data.isSuccess) {
+        //return await refresh
+      }
+    } catch (e) {
+      console.log("faild", e);
+      Alert.alert("지원실패");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handelApplyCancle = async () => {
+    try {
+      setLoading(true);
+      const result = await serverApi.cancleapply(userToken, orderId);
+      console.log(result.data);
+      if (result.data.isSuccess) {
+        //return await refresh
+      }
+    } catch (e) {
+      console.log("faild", e);
+      Alert.alert("지원취소실패");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const refresh = async () => {
+    try {
+      setRefreshing(true);
+      //await AsyncStorage.getItem("userId"); //연결 후 빼기
+
+      //const usertoken = await AsyncStorage.getItem("userToken");
+      //await AsyncStorage.getItem("userId"); //연결 후 빼기
+
+      const usertoken = await AsyncStorage.getItem("userToken");
+
+      const orderId = 1;
+
+      const oderDetail = await serverApi.oderdetail(orderId, usertoken);
+
+      const { userId } = oderDetail.data.data.userId;
+
+      const {
+        departures,
+        arrivals,
+        details,
+        hostInfo,
+        price,
+        title,
+        createdAt,
+        desiredArrivalTime,
+        applicants,
+        hostId
+      } = oderDetail.data.data.order;
+
+      console.log(oderDetail.data.data.order);
+      console.log("hk", departures);
+      if (oderDetail.data.isSuccess) {
+        console.log("들어옴");
+
+        setDepartures(departures);
+        if (arrivals === null) {
+          setArrivals("");
+        } else {
+          setArrivals(arrivals);
+        }
+
+        setHostId(hostId);
+        setApplicants(applicants);
+        setUserId(userId);
+        setDetails(details);
+        setCampus(hostInfo.campus);
+        //numberwithcommas
+        const getprice = utils.numberWithCommas(price);
+        setPrice(getprice);
+        setTitle(title);
+        setImg(hostInfo.image);
+        setNickname(hostInfo.nickname);
+
+        //createdat
+        const time = utils.transferTime(createdAt);
+        setCreatedat(time);
+        if (desiredArrivalTime === null) {
+          setDesiredArrivalTime("");
+        } else {
+          setDesiredArrivalTime(desiredArrivalTime);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(props => {
     // Create an scoped async function in the hook
     let isCancelled = false;
 
-    async function fetchData() {
+    async function fetchData(props) {
       try {
         setLoading(true);
         //await AsyncStorage.getItem("userId"); //연결 후 빼기
 
-        //const usertoken = await AsyncStorage.getItem("userToken");
+        const usertoken = await AsyncStorage.getItem("userToken");
 
-        const usertoken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicGhvbmUiOiIwMTAxMjM0MTIzNCIsImlhdCI6MTU3NDMwMTM3NywiZXhwIjoxNTc5NDg1Mzc3fQ.sSXGnTTGUKIyXkEywO4LgF2VXgYlT_ypf7lxjGlaAH8";
-        const userId = 1;
+        setUserToken(usertoken);
+        const orderId = 1;
 
-        const oderDetail = await serverApi.oderdetail(1, usertoken);
+        const oderDetail = await serverApi.oderdetail(orderId, usertoken);
+
+        const { userId } = oderDetail.data.data.userId;
+        const {
+          departures,
+          arrivals,
+          details,
+          hostInfo,
+          price,
+          title,
+          createdAt,
+          desiredArrivalTime,
+          applicants,
+          hostId,
+          isPrice
+        } = oderDetail.data.data.order;
+
         console.log(oderDetail.data.data.order);
-        console.log("hk", oderDetail.data.isSuccess);
+
         if (oderDetail.data.isSuccess) {
           console.log("들어옴");
-          setDepartures(oderDetail.data.data.order.departures);
-          setDetails(oderDetail.data.data.order.details);
-          setCampus(oderDetail.data.data.order.hostInfo.campus);
-          setPrice(oderDetail.data.data.order.price);
-          setTitle(oderDetail.data.data.order.title);
+
+          setDepartures(departures); //departures
+          if (arrivals === null) {
+            //arrivals
+            setArrivals("");
+          } else {
+            setArrivals(arrivals);
+          }
+          setHostId(hostId); //hostid
+          setApplicants(applicants); //applicats
+          setUserId(userId); //userid
+          setDetails(details); //details
+          setCampus(hostInfo.campus); //campus
+          //numberwithcommas
+          const getprice = utils.numberWithCommas(price); //price
+          setPrice(getprice);
+          setIsPrice(isPrice);
+          setTitle(title); //title
+          setImg(hostInfo.image); // thumbnail
+          setNickname(hostInfo.nickname); //nickname
+          //createdat
+          const time = utils.transferTime(createdAt);
+          setCreatedat(time);
+          if (desiredArrivalTime === null) {
+            //desired arrivaltime
+            setDesiredArrivalTime("");
+          } else {
+            setDesiredArrivalTime(desiredArrivalTime);
+          }
         }
+
+        //----- set variables , applicants---
       } catch (e) {
         console.error(e);
       } finally {
@@ -92,145 +263,203 @@ const OderDetailScreen = props => {
   }, []);
 
   renderContent = () => (
-    /* render */
+    <View style={styles.panel}>
+      {isPrice ? (
+        <Item style={{ marginTop: 10 }}>
+          <Input {...bidprice} placeholder="₩가격 제안(선택사항)" />
+          <Text>
+            <Ionicons name="md-checkmark-circle-outline" size={22} />
+            {"  "}희망비용 수락
+          </Text>
+        </Item>
+      ) : (
+        <Item disabled style={{ marginTop: 10 }}>
+          <Input disabled placeholder="가격제안 불가" />
+          <Text>
+            <Ionicons name="md-checkmark-circle-outline" size={22} />
+            {"  "}희망비용 수락
+          </Text>
+        </Item>
+      )}
 
-    <View>
       <Item style={{ marginTop: 10 }}>
-        <Input placeholder="₩가격 제안(선택사항)" />
-        <Text>
-          <Ionicons name="md-checkmark-circle-outline" />
-          희망비용 수락
-        </Text>
-        {/* <MainButton width={250} text="희망비용 수락" /> */}
-      </Item>
-
-      <Item style={{ marginTop: 10 }}>
-        <MainButton text="바로 지원하기" />
+        <Input {...rmsg} placeholder="러너의 메세지(선택사항)" />
       </Item>
     </View>
   );
 
   renderHeader = () => (
     /* render */
-    <View>
+
+    <View style={styles.panel}>
       <Row style={{ alignSelf: "center" }}>
         <Ionicons name="md-arrow-dropup-circle" size={35} />
       </Row>
-      <Row>
-        <Col style={{ margin: 10 }}>
-          <Text
-            style={{
-              fontSize: 18,
+      {didApply ? (
+        <Row>
+          <Col style={{ margin: 10 }}>
+            <Text
+              style={{
+                fontSize: 23,
 
-              textAlignVertical: "center"
-            }}
-          >
-            {price}
-          </Text>
-        </Col>
-        <Col style={{ padding: -10 }}>
-          <MainButton width={250} text="러너지원하기" />
-        </Col>
-      </Row>
+                textAlignVertical: "center"
+              }}
+            >
+              ₩ {price}
+            </Text>
+          </Col>
+          <Col style={{ padding: -10 }}>
+            <MainButton
+              onPress={handelApplyCancle}
+              width={250}
+              text="지원취소하기"
+            />
+          </Col>
+        </Row>
+      ) : (
+        <Row>
+          <Col style={{ margin: 10 }}>
+            <Text
+              style={{
+                fontSize: 23,
+
+                textAlignVertical: "center"
+              }}
+            >
+              ₩ {price}
+            </Text>
+          </Col>
+          <Col style={{ padding: -10 }}>
+            <MainButton
+              onPress={() => {
+                handelApply(bidprice, rmsg);
+              }}
+              width={250}
+              text="러너지원하기"
+            />
+          </Col>
+        </Row>
+      )}
     </View>
   );
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <Grid style={{ height: Dimensions.get("window").height }}>
-        <Row style={{ height: 10 }}>
-          {/* <MapView
-        style={styles.mapStyle}
-        provider="google"
-        ref={map => {
-          this.map = map;
-        }}
-        initialRegion={this.state.region}
-        onRegionChange={this.onRegionChange}
-        showsCompass={true}
-        showsUserLocation={true}
-        showsMyLocationButton={false}
-        followsUserLocation={true}
-        zoomEnabled={true}
-        scrollEnabled={true}
-        showsScale={true}
-        rotateEnabled={false}
-        /> */}
-        </Row>
-        <Content>
-          {/* {imageurl ? (
-            <Row>
-              <Image />
-            </Row>
-          ) : (
-            <></>
-          )} */}
-
-          <List>
-            <ListItem avatar>
-              <Left>
-                <Thumbnail
-                  source={{
-                    uri:
-                      "https://i.kym-cdn.com/entries/icons/original/000/026/638/cat.jpg"
-                  }}
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+      }
+    >
+      {Loading ? (
+        <Spinner
+          style={{
+            alignSelf: "center",
+            height: Dimensions.get("window").height
+          }}
+        />
+      ) : (
+        <Grid>
+          <Row>
+            <Col>
+              <Content style={styles.test}>
+                <Mapscreen
+                  latitude={region.latitude}
+                  longitude={region.longitude}
                 />
-              </Left>
-              <Body>
-                <Text>정재숙</Text>
-                <Text note>{campus}</Text>
-              </Body>
-              <Right>
-                <Text>
-                  매너점수 <Ionicons name="md-happy"></Ionicons> 3.7/5.0
-                </Text>
-              </Right>
-            </ListItem>
-          </List>
+              </Content>
+            </Col>
+          </Row>
+          <Row>
+            <Content>
+              {/* {imageurl ? (
+        <Row>
+          <Image />
+        </Row>
+      ) : (
+        <></>
+      )} */}
 
-          <Row style={{ marginTop: 10 }}>
-            <Text style={{ fontSize: 20, marginLeft: 10 }}>{title}</Text>
+              <Row>
+                <Col>
+                  <List>
+                    <ListItem avatar>
+                      <Left>
+                        <Thumbnail
+                          source={{
+                            uri: img
+                          }}
+                        />
+                      </Left>
+                      <Body>
+                        <Text>{nickname}</Text>
+                        <Text note>{campus}</Text>
+                      </Body>
+                      <Right style={{ alignSelf: "center" }}>
+                        <Text style={{ fontSize: 16, marginBottom: 12 }}>
+                          매너점수 3.7/5.0
+                        </Text>
+                      </Right>
+                    </ListItem>
+                  </List>
+                </Col>
+              </Row>
+              <Row style={{ marginTop: 10 }}>
+                <Text style={{ fontSize: 20, marginLeft: 10 }}>{title}</Text>
+              </Row>
+              <Row>
+                <Text note style={{ margin: 3, marginLeft: 10 }}>
+                  {createdat}
+                </Text>
+              </Row>
+              <Row style={{ margin: 5, marginLeft: 10 }}>
+                <Text note>
+                  <Ionicons name="md-disc" />
+                  {"   "}
+                  출발지 : {arrivals}
+                </Text>
+              </Row>
+              <Row style={{ margin: 5, marginLeft: 10 }}>
+                <Text note>
+                  <Ionicons name="md-disc" />
+                  {"   "}
+                  도착지 : {departures}
+                </Text>
+              </Row>
+              <Row style={{ margin: 5, marginLeft: 10 }}>
+                <Text note>
+                  <Ionicons name="md-stopwatch" /> {"   "}
+                  희망도착시간 : {desiredArrivalTime}
+                </Text>
+              </Row>
+              <Row>
+                <Text style={{ margin: 10 }}>{details}</Text>
+              </Row>
+              <Row style={styles.bottom}></Row>
+            </Content>
+
+            {hostId === userId ? (
+              <Row>
+                <Col>
+                  <MainButton width={250} text="수정하기" />
+                </Col>
+                <Col>
+                  <MainButton width={250} text="삭제하기" />
+                </Col>
+              </Row>
+            ) : (
+              <BottomSheet
+                style={{ backgroundColor: "#f7f5eee8" }}
+                snapPoints={[100, 210, 100]}
+                renderContent={renderContent}
+                renderHeader={renderHeader}
+              />
+            )}
           </Row>
-          <Row>
-            <Text note style={{ marginLeft: 10 }}>
-              1분 전
-            </Text>
-          </Row>
-          <Row style={{ margin: 10 }}>
-            <Text note>
-              <Ionicons name="md-disc" />
-              {"   "}
-              {departures}
-            </Text>
-          </Row>
-          <Row style={{ margin: 10 }}>
-            <Text note>
-              <Ionicons name="md-happy" /> {"   "}희망 도착시간
-            </Text>
-          </Row>
-          <Row>
-            <Text style={{ margin: 10 }}>{details}</Text>
-          </Row>
-        </Content>
-        {msg ? (
-          <BottomSheet
-            style={{ backgroundColor: "#f7f5eee8" }}
-            snapPoints={[100, 210, 100]}
-            renderContent={renderContent}
-            renderHeader={renderHeader}
-          />
-        ) : (
-          <BottomSheet
-            snapPoints={[100, 100, 50]}
-            renderContent={renderContent}
-            renderHeader={renderHeader}
-          />
-        )}
-      </Grid>
+        </Grid>
+      )}
     </ScrollView>
   );
 };
-//</ScrollView>List Avatar
 
 export default OderDetailScreen;
 
@@ -250,5 +479,15 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: "black"
+  },
+  panel: {
+    backgroundColor: "white"
+  },
+  test: {
+    backgroundColor: "#00000040",
+    height: Dimensions.get("window").height / 2
+  },
+  bottom: {
+    height: 200
   }
 });

@@ -87,7 +87,12 @@ export default function App() {
     <AppLoading />
   );
 }
-/* {isAllowed ? (
+/*
+{isLoggedIn ? <MainNavigation /> : <StartNavigation />}
+  {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
+
+
+{isAllowed ? (
   isLoggedIn ? (
     <MainNavigation />
   ) : (
