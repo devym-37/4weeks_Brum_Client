@@ -45,6 +45,7 @@ DefaultOrderScreen = ({ navigation }) => {
       const userToken = await AsyncStorage.getItem("userToken");
 
       let requestUserOrders = await serverApi.getUserOrders(userToken);
+      console.log(`requestUserOrders: `, requestUserOrders);
       setOrders([...requestUserOrders.data.data.orders]);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
@@ -72,10 +73,18 @@ DefaultOrderScreen = ({ navigation }) => {
         }).length === 0 ? (
         <DefaultOrder />
       ) : (
-        orders.map((order, i) => <OrderCard key={i} {...order} />)
+        orders.map((order, i) => (
+          <OrderCard
+            key={i}
+            {...order}
+            onPress={() => {
+              navigation.navigate("ApplicantsList", { orderId: "1" });
+            }}
+          />
+        ))
       )}
     </ScrollView>
   );
 };
 
-export default withNavigation(DefaultOrderScreen);
+export default DefaultOrderScreen;

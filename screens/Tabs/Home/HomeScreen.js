@@ -6,6 +6,7 @@ import {
   Platform,
   RefreshControl,
   AsyncStorage,
+  Alert,
   TouchableOpacity
 } from "react-native";
 import styled from "styled-components";
@@ -19,6 +20,7 @@ import ListScreen from "./ListScreen";
 import Loader from "../../../components/Loader";
 import { CurrentLocationButton } from "../../../navigation/CurrentLocationBtn";
 import { MapLocationButton } from "../../../navigation/MapLocationBtn";
+import { NavigationEvents } from "react-navigation";
 
 const View = styled.View``;
 const Container = styled.View`
@@ -77,6 +79,7 @@ const RightToggleText = styled.Text`
   font-size: 13;
 `;
 const HomeScreen = ({ navigation }) => {
+  // console.log(`Home Nav: `, navigation.getParam("campus"));
   const [leftClicked, setLeftClicked] = useState(true);
   const [rightClicked, setRightClicked] = useState(false);
   const [region, setRegion] = useState(null);
@@ -160,6 +163,7 @@ const HomeScreen = ({ navigation }) => {
           <Loader />
         ) : (
           <>
+            {/* <NavigationEvents onDidFocus={() => Alert.alert("Refreshed")} /> */}
             {leftClicked && region && (
               <>
                 <MapLocationButton
