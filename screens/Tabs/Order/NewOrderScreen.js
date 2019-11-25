@@ -141,7 +141,7 @@ const NewOrderScreen = props => {
   };
 
   const handleSend = async values => {
-    console.log(`signup values: `, values);
+    // console.log(`signup values: `, values);
     if (values.name.length === 0 || values.password.length === 0) {
       Alert.alert("입력이 올바르지 않습니다");
     }

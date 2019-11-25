@@ -91,17 +91,20 @@ const Signup = props => {
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye-off");
 
   const handleSend = async values => {
-    console.log(`signup values: `, values);
+    // console.log(`signup values: `, values);
     if (values.name.length === 0 || values.password.length === 0) {
       Alert.alert("입력이 올바르지 않습니다");
     }
 
     try {
+      const selectedCampus = await AsyncStorage.getItem("campus");
+      // console.log(`회원가입 캠퍼스: `, selectedCampus);
       const signUp = await serverApi.register(
         values.phone,
         values.password,
         values.name,
-        values.age
+        values.age,
+        selectedCampus
       );
 
       Alert.alert("회원가입 및 로그인이 완료되었습니다");

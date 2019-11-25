@@ -27,6 +27,7 @@ export const toastApi = {
 export const serverApi = {
   verifyPhoneNumber: phone => sApi.post("register/phone", { phone }),
   getAllOrders: () => sApi.get("order"),
+  getCampusOrders: campus => sApi.get(`order/campus/${campus}`),
   getUserOrders: userToken =>
     sApi.get("user/order", {
       headers: {
@@ -40,12 +41,21 @@ export const serverApi = {
       phone: id,
       password: ps
     }),
-  register: (phone, password, name, age, sex = "male", agreementAd = false) =>
+  register: (
+    phone,
+    password,
+    name,
+    age,
+    campus,
+    sex = "male",
+    agreementAd = false
+  ) =>
     sApi.post("register", {
       phone,
       password,
       nickname: name,
       age,
+      campus,
       sex,
       agreementAd
     }),
@@ -90,7 +100,7 @@ export const serverApi = {
         }
       }
     ),
-  oderdetail: (userid, usertoken) =>
+  orderdetail: (userid, usertoken) =>
     sApi.get(`order/${userid}`, {
       headers: {
         "Content-Type": "multipart/form-data",

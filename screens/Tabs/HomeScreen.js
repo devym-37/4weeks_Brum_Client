@@ -42,13 +42,13 @@ const Home = props => {
   const [isOpen, setIsOpen] = useState(false);
 
   const getCampusLatLng = selectCampus => {
-    if (selectCampus === "한양대") {
+    if (selectCampus === "hanyang") {
       return { latitude: 37.55737, longitude: 127.047132 };
-    } else if (selectCampus === "연세대") {
+    } else if (selectCampus === "yonsei") {
       return { latitude: 37.564624, longitude: 126.93755 };
-    } else if (selectCampus === "서울대") {
+    } else if (selectCampus === "snu") {
       return { latitude: 37.459228, longitude: 126.952052 };
-    } else if (selectCampus === "이화여대") {
+    } else if (selectCampus === "ihwa") {
       return { latitude: 37.561865, longitude: 126.946714 };
     }
   };

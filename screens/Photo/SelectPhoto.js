@@ -56,7 +56,7 @@ const SelectPhoto = props => {
     try {
       setLoading(true);
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      console.log(status);
+      // console.log(status);
       if (status === "granted") {
         setHasPermission(true);
         getPhotos();

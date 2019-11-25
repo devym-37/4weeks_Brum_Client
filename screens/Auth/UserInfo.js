@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-
 import {
   Picker,
   Image,
@@ -22,8 +21,7 @@ import { setApiKey } from "expo-location";
 import { serverApi } from "../../components/API";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { UniList } from "../../components/unilist";
-//import { Camera } from "expo-camera";
-//import { serverApi } from '../../components/api';
+import constants from "../../constants";
 
 const View = styled.View`
   justify-content: center;
@@ -53,11 +51,14 @@ const Userinfo = props => {
 
     async function fetchData() {
       try {
-        await AsyncStorage.setItem("campus", "한양대"); //연결 후 빼기
+        // await AsyncStorage.setItem("campus", "한양대"); //연결 후 빼기
 
         const selectedMajor = await AsyncStorage.getItem("campus");
-        console.log("캠퍼스선택", selectedMajor);
-        selectedMajor ? setSelected(selectedMajor) : setSelected("한양대");
+        // console.log("캠퍼스선택", selectedMajor);
+
+        selectedMajor
+          ? setSelected(selectedMajor[selectedMajor].kor)
+          : setSelected("한양대");
       } catch (e) {
         console.error(e);
       }
@@ -74,8 +75,8 @@ const Userinfo = props => {
       Permissions.CAMERA_ROLL,
       Permissions.CAMERA
     );
-    console.log("상태", status);
-    console.log(ImagePicker);
+    // console.log("상태", status);
+    // console.log(ImagePicker);
     setCameraPermission(status === "granted");
     try {
       setLoading(true);
@@ -85,7 +86,7 @@ const Userinfo = props => {
         aspect: [4, 3],
         quality: 1
       });
-      console.log("상태dfsd", result.uri);
+      // console.log("상태dfsd", result.uri);
       if (!result.cancelled) {
         setImageadded(result.uri);
       }
@@ -100,15 +101,15 @@ const Userinfo = props => {
       Permissions.CAMERA_ROLL,
       Permissions.CAMERA
     );
-    console.log("상태", status);
-    console.log(ImagePicker);
+    // console.log("상태", status);
+    // console.log(ImagePicker);
     let result = await ImagePicker.launchCameraLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1
     });
-    console.log("상태dfsd", result.uri);
+    // console.log("상태dfsd", result.uri);
     if (!result.cancelled) {
       setImageadded(result.uri);
     }
@@ -122,11 +123,11 @@ const Userinfo = props => {
   };
 
   const onValueChange = e => {
-    console.log("선택된 옵션", e);
+    // console.log("선택된 옵션", e);
     setSelected(e);
   };
   const onValueChangemajor = e => {
-    console.log("선택된 옵션", e);
+    // console.log("선택된 옵션", e);
     setSelectedmajor(e);
   };
 

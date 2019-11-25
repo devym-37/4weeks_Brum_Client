@@ -24,9 +24,11 @@ const ListScreen = ({ navigation }) => {
   const refresh = async () => {
     try {
       setRefreshing(true);
-      let getAllOrders = await serverApi.getAllOrders();
+      const selectedCampus = await AsyncStorage.getItem("campus");
+      let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
       // console.log(`refresh: `, getAllOrders);
-      console.log(orders);
+      setOrders([...getCampusOrders.data.data.orders]);
+      // console.log(getCampusOrders);
     } catch (e) {
       console.log(`Can't refresh data. error message: ${e}`);
     } finally {
@@ -42,8 +44,11 @@ const ListScreen = ({ navigation }) => {
       if (!loggedIn) {
         setIsopenLoginModal(true);
       }
-      let getAllOrders = await serverApi.getAllOrders();
-      setOrders([...getAllOrders.data.data.orders]);
+
+      const selectedCampus = await AsyncStorage.getItem("campus");
+      let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
+
+      setOrders([...getCampusOrders.data.data.orders]);
       // console.log(`getAllOrders: `, getAllOrders.data.data.orders);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
