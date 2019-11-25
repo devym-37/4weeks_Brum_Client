@@ -21,7 +21,7 @@ export default ({ navigation }) => {
 
   const handleNextButton = async () => {
     if (campus) {
-      console.log(`constants.campus`, constants.campus);
+      // console.log(`constants.campus`, constants.campus);
       const engCampus = findKey(constants.campus, obj => {
         return obj.kor === campus;
       });

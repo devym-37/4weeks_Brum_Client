@@ -44,7 +44,7 @@ import FormInput from "../../../components/Inputs/FormInput";
 
 import { serverApi } from "../../../components/API";
 
-const OderDetailScreen = props => {
+const OrderDetailScreen = props => {
   //view 추가해야함
   const [region, setRegion] = useState({
     latitude: 37.55737,
@@ -86,7 +86,7 @@ const OderDetailScreen = props => {
     try {
       setLoading(true);
       const result = await serverApi.apply(value1, value2, userToken, orderId);
-      console.log(result.data);
+      // console.log(result.data);
       if (result.data.isSuccess) {
         //return await refresh
       }
@@ -102,7 +102,7 @@ const OderDetailScreen = props => {
     try {
       setLoading(true);
       const result = await serverApi.cancleapply(userToken, orderId);
-      console.log(result.data);
+      // console.log(result.data);
       if (result.data.isSuccess) {
         //return await refresh
       }
@@ -125,9 +125,9 @@ const OderDetailScreen = props => {
 
       const orderId = 1;
 
-      const oderDetail = await serverApi.oderdetail(orderId, usertoken);
+      const orderDetail = await serverApi.orderdetail(orderId, usertoken);
 
-      const { userId } = oderDetail.data.data.userId;
+      const { userId } = orderDetail.data.data.userId;
 
       const {
         departures,
@@ -140,12 +140,12 @@ const OderDetailScreen = props => {
         desiredArrivalTime,
         applicants,
         hostId
-      } = oderDetail.data.data.order;
+      } = orderDetail.data.data.order;
 
-      console.log(oderDetail.data.data.order);
-      console.log("hk", departures);
-      if (oderDetail.data.isSuccess) {
-        console.log("들어옴");
+      // console.log(orderDetail.data.data.order);
+      // console.log("hk", departures);
+      if (orderDetail.data.isSuccess) {
+        // console.log("들어옴");
 
         setDepartures(departures);
         if (arrivals === null) {
@@ -196,9 +196,9 @@ const OderDetailScreen = props => {
         setUserToken(usertoken);
         const orderId = 1;
 
-        const oderDetail = await serverApi.oderdetail(orderId, usertoken);
-
-        const { userId } = oderDetail.data.data.userId;
+        const orderDetail = await serverApi.orderdetail(orderId, usertoken);
+        // console.log(`orderDetail: `, orderDetail);
+        const { userId } = orderDetail.data.data.userId;
         const {
           departures,
           arrivals,
@@ -211,12 +211,12 @@ const OderDetailScreen = props => {
           applicants,
           hostId,
           isPrice
-        } = oderDetail.data.data.order;
+        } = orderDetail.data.data.order;
 
-        console.log(oderDetail.data.data.order);
+        // console.log(orderDetail.data.data.order);
 
-        if (oderDetail.data.isSuccess) {
-          console.log("들어옴");
+        if (orderDetail.data.isSuccess) {
+          // console.log("들어옴");
 
           setDepartures(departures); //departures
           if (arrivals === null) {
@@ -461,7 +461,7 @@ const OderDetailScreen = props => {
   );
 };
 
-export default OderDetailScreen;
+export default OrderDetailScreen;
 
 const styles = StyleSheet.create({
   container: {

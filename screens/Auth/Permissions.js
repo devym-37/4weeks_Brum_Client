@@ -48,7 +48,7 @@ export default PermissionApp = props => {
         Permissions.LOCATION,
         Permissions.CAMERA
       );
-      console.log("상태확인", status);
+      // console.log("상태확인", status);
       if (status === "granted") {
         //props.reduxPermissions(true);
         await AsyncStorage.setItem("permiSsions", "true");

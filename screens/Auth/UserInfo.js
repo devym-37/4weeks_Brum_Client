@@ -54,7 +54,7 @@ const Userinfo = props => {
         // await AsyncStorage.setItem("campus", "한양대"); //연결 후 빼기
 
         const selectedMajor = await AsyncStorage.getItem("campus");
-        console.log("캠퍼스선택", selectedMajor);
+        // console.log("캠퍼스선택", selectedMajor);
 
         selectedMajor
           ? setSelected(selectedMajor[selectedMajor].kor)
@@ -75,8 +75,8 @@ const Userinfo = props => {
       Permissions.CAMERA_ROLL,
       Permissions.CAMERA
     );
-    console.log("상태", status);
-    console.log(ImagePicker);
+    // console.log("상태", status);
+    // console.log(ImagePicker);
     setCameraPermission(status === "granted");
     try {
       setLoading(true);
@@ -86,7 +86,7 @@ const Userinfo = props => {
         aspect: [4, 3],
         quality: 1
       });
-      console.log("상태dfsd", result.uri);
+      // console.log("상태dfsd", result.uri);
       if (!result.cancelled) {
         setImageadded(result.uri);
       }
@@ -101,15 +101,15 @@ const Userinfo = props => {
       Permissions.CAMERA_ROLL,
       Permissions.CAMERA
     );
-    console.log("상태", status);
-    console.log(ImagePicker);
+    // console.log("상태", status);
+    // console.log(ImagePicker);
     let result = await ImagePicker.launchCameraLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1
     });
-    console.log("상태dfsd", result.uri);
+    // console.log("상태dfsd", result.uri);
     if (!result.cancelled) {
       setImageadded(result.uri);
     }
@@ -123,11 +123,11 @@ const Userinfo = props => {
   };
 
   const onValueChange = e => {
-    console.log("선택된 옵션", e);
+    // console.log("선택된 옵션", e);
     setSelected(e);
   };
   const onValueChangemajor = e => {
-    console.log("선택된 옵션", e);
+    // console.log("선택된 옵션", e);
     setSelectedmajor(e);
   };
 
