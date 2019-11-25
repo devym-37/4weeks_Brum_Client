@@ -22,11 +22,11 @@ import {
   FooterTab
 } from "native-base";
 import { connect } from "react-redux";
-import { login } from "../../redux/actions/authActions";
-import AuthModal from "../Auth/AuthModal";
-import MapView from "../../components/MapView";
-import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
-import { MapLocationButton } from "../../navigation/MapLocationBtn";
+import { login } from "../../../redux/actions/authActions";
+import AuthModal from "../../Auth/AuthModal";
+import MapView from "../../../components/MapView";
+import { CurrentLocationButton } from "../../../navigation/CurrentLocationBtn";
+import { MapLocationButton } from "../../../navigation/MapLocationBtn";
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;

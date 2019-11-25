@@ -10,16 +10,18 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Content } from "native-base";
-import AuthModal from "../Auth/AuthModal";
-import { serverApi } from "../../components/API";
-import ListCard from "../ListCard";
-import OrderCard from "../../components/Cards/OrderCard";
+import AuthModal from "../../Auth/AuthModal";
+import { serverApi } from "../../../components/API";
+import ListCard from "../../ListCard";
+import OrderCard from "../../../components/Cards/OrderCard";
+import Loader from "../../../components/Loader";
+import { withNavigation } from "react-navigation";
 
-const ListScreen = ({ navigation }) => {
+const ListScreen = props => {
   const [refreshing, setRefreshing] = useState(false);
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [isopenLoginModal, setIsopenLoginModal] = useState(false);
+  // const [orders, setOrders] = useState([]);
+  // const [loading, setLoading] = useState(false);
+  // const [isopenLoginModal, setIsopenLoginModal] = useState(false);
 
   const refresh = async () => {
     try {
@@ -36,52 +38,50 @@ const ListScreen = ({ navigation }) => {
     }
   };
 
-  const preLoad = async () => {
-    try {
-      setLoading(true);
-      const loggedIn = await AsyncStorage.getItem("userToken");
-      // console.log(`ListScreen token: `, loggedIn);
-      if (!loggedIn) {
-        setIsopenLoginModal(true);
-      }
+  // const preLoad = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const loggedIn = await AsyncStorage.getItem("userToken");
+  //     // console.log(`ListScreen token: `, loggedIn);
+  //     if (!loggedIn) {
+  //       setIsopenLoginModal(true);
+  //     }
 
-      const selectedCampus = await AsyncStorage.getItem("campus");
-      let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
+  //     const selectedCampus = await AsyncStorage.getItem("campus");
+  //     let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
 
-      setOrders([...getCampusOrders.data.data.orders]);
-      // console.log(`getAllOrders: `, getAllOrders.data.data.orders);
-    } catch (e) {
-      console.log(`Can't fetch data from server. error message: ${e}`);
-    }
-  };
+  //     setOrders([...getCampusOrders.data.data.orders]);
+  //     // console.log(`getAllOrders: `, getAllOrders.data.data.orders);
+  //   } catch (e) {
+  //     console.log(`Can't fetch data from server. error message: ${e}`);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    preLoad();
-  }, []);
+  // useEffect(() => {
+  //   preLoad();
+  // }, []);
   // console.log("preLoad", preLoad());
   return (
     <>
-      {isopenLoginModal && <AuthModal />}
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
       >
         <Content>
-          {orders.map((data, i) => (
+          {props.orders.map((data, i) => (
             <View key={i}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("OrderDetailScreen");
+                  props.navigation.navigate("OrderDetailScreen");
                 }}
               >
                 <ListCard data={data} />
               </TouchableOpacity>
             </View>
           ))}
-          {/* {orders.map((data, i) => (
-            <OrderCard key={i} {...data} />
-          ))} */}
         </Content>
       </ScrollView>
     </>
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ListScreen;
+export default withNavigation(ListScreen);

@@ -9,8 +9,8 @@ import { createAppContainer } from "react-navigation";
 import ChatScreen from "../screens/Tabs/Chats.js/DefaultChatsScreen";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
-import ListScreen from "../screens/Tabs/ListScreen";
-import HomeScreen from "../screens/Tabs/HomeScreen";
+import ListScreen from "../screens/Tabs/Home/ListScreen";
+import HomeScreen from "../screens/Tabs/Home/HomeScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import { createStackNavigator } from "react-navigation-stack";
 import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
@@ -45,7 +45,7 @@ const stackFactory = (initialRoute, customConfig) =>
 const BottomNavigation = createBottomTabNavigator(
   {
     Home: {
-      screen: stackFactory(ListScreen, {
+      screen: stackFactory(HomeScreen, {
         headerRight: <NotificationLink />,
         headerLeft: <HomeTitleLink />
       }),
