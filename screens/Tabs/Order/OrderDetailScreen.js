@@ -12,7 +12,8 @@ import {
   Dimensions,
   FlatList,
   AsyncStorage,
-  RefreshControl
+  RefreshControl,
+  Alert
 } from "react-native";
 import {
   Content,
@@ -37,7 +38,9 @@ import { Ionicons } from "@expo/vector-icons";
 import BottomSheet from "reanimated-bottom-sheet";
 import MainButton from "../../../components/Buttons/MainButton";
 import utils from "../../../utils";
-import Mapscreen from "../../../components/MapScreen";
+import Mapscreen from "../../../components/MapView";
+import useInput from "../../../hooks/useInput";
+import FormInput from "../../../components/Inputs/FormInput";
 
 import { serverApi } from "../../../components/API";
 
@@ -71,6 +74,45 @@ const OderDetailScreen = props => {
   const [applicants, setApplicants] = useState(null);
   const [didApply, setDidApply] = useState(false);
   const [isPrice, setIsPrice] = useState(false);
+  const [userToken, setUserToken] = useState(null);
+  const rmsg = useInput("");
+  const bidprice = useInput("");
+
+  const handelApply = async (val1, val2) => {
+    const value1 = val1.value; //bidprice
+    const value2 = val2.value; //msg
+    const orderId = 1;
+
+    try {
+      setLoading(true);
+      const result = await serverApi.apply(value1, value2, userToken, orderId);
+      console.log(result.data);
+      if (result.data.isSuccess) {
+        //return await refresh
+      }
+    } catch (e) {
+      console.log("faild", e);
+      Alert.alert("지원실패");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handelApplyCancle = async () => {
+    try {
+      setLoading(true);
+      const result = await serverApi.cancleapply(userToken, orderId);
+      console.log(result.data);
+      if (result.data.isSuccess) {
+        //return await refresh
+      }
+    } catch (e) {
+      console.log("faild", e);
+      Alert.alert("지원취소실패");
+    } finally {
+      setLoading(false);
+    }
+  };
   const refresh = async () => {
     try {
       setRefreshing(true);
@@ -140,17 +182,18 @@ const OderDetailScreen = props => {
     }
   };
 
-  useEffect(() => {
+  useEffect(props => {
     // Create an scoped async function in the hook
     let isCancelled = false;
 
-    async function fetchData() {
+    async function fetchData(props) {
       try {
         setLoading(true);
         //await AsyncStorage.getItem("userId"); //연결 후 빼기
 
         const usertoken = await AsyncStorage.getItem("userToken");
 
+        setUserToken(usertoken);
         const orderId = 1;
 
         const oderDetail = await serverApi.oderdetail(orderId, usertoken);
@@ -223,7 +266,7 @@ const OderDetailScreen = props => {
     <View style={styles.panel}>
       {isPrice ? (
         <Item style={{ marginTop: 10 }}>
-          <Input placeholder="₩가격 제안(선택사항)" />
+          <Input {...bidprice} placeholder="₩가격 제안(선택사항)" />
           <Text>
             <Ionicons name="md-checkmark-circle-outline" size={22} />
             {"  "}희망비용 수락
@@ -240,7 +283,7 @@ const OderDetailScreen = props => {
       )}
 
       <Item style={{ marginTop: 10 }}>
-        <Input placeholder="러너의 메세지(선택사항)" />
+        <Input {...rmsg} placeholder="러너의 메세지(선택사항)" />
       </Item>
     </View>
   );
@@ -266,7 +309,11 @@ const OderDetailScreen = props => {
             </Text>
           </Col>
           <Col style={{ padding: -10 }}>
-            <MainButton width={250} text="러너지원하기" />
+            <MainButton
+              onPress={handelApplyCancle}
+              width={250}
+              text="지원취소하기"
+            />
           </Col>
         </Row>
       ) : (
@@ -283,7 +330,13 @@ const OderDetailScreen = props => {
             </Text>
           </Col>
           <Col style={{ padding: -10 }}>
-            <MainButton width={250} text="러너지원하기" />
+            <MainButton
+              onPress={() => {
+                handelApply(bidprice, rmsg);
+              }}
+              width={250}
+              text="러너지원하기"
+            />
           </Col>
         </Row>
       )}

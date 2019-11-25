@@ -6,14 +6,16 @@ import {
   Text,
   Platform,
   RefreshControl,
-  AsyncStorage
+  AsyncStorage,
+  TouchableOpacity
 } from "react-native";
 import { Content } from "native-base";
 import AuthModal from "../Auth/AuthModal";
 import { serverApi } from "../../components/API";
 import ListCard from "../ListCard";
+import OrderCard from "../../components/Cards/OrderCard";
 
-const ListScreen = () => {
+const ListScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -61,9 +63,20 @@ const ListScreen = () => {
         }
       >
         <Content>
-          {orders.map(data => (
-            <ListCard data={data} />
+          {orders.map((data, i) => (
+            <View key={i}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("OrderDetailScreen");
+                }}
+              >
+                <ListCard data={data} />
+              </TouchableOpacity>
+            </View>
           ))}
+          {/* {orders.map((data, i) => (
+            <OrderCard key={i} {...data} />
+          ))} */}
         </Content>
       </ScrollView>
     </>

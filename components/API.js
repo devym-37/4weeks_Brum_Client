@@ -26,6 +26,7 @@ export const toastApi = {
 
 export const serverApi = {
   verifyPhoneNumber: phone => sApi.post("register/phone", { phone }),
+  getAllOrders: () => sApi.get("order"),
   getUserOrders: userToken =>
     sApi.get("user/order", {
       headers: {
@@ -104,7 +105,52 @@ export const serverApi = {
         "Access-Control-Allow-Headers": "x-access-token",
         "x-access-token": usertoken
       }
-    })
+    }),
+  apply: (bidprice, msg, usertoken, orderId) =>
+    sApi.post(
+      `order/${orderId}/apply`,
+      {
+        bidPrice: bidprice,
+        applyComment: msg
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": usertoken
+        }
+      }
+    ),
+  reapply: (bidprice, msg, usertoken, orderId) =>
+    sApi.put(
+      `order/${orderId}/apply`,
+      {
+        bidPrice: bidprice,
+        applyComment: msg
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": usertoken
+        }
+      }
+    ),
+  cancleapply: (usertoken, orderId) =>
+    sApi.put(
+      `order/${orderId}/apply`,
+      {
+        bidPrice: bidprice,
+        applyComment: msg
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": usertoken
+        }
+      }
+    )
 };
 /* {
   "bidPrice" : "2000",

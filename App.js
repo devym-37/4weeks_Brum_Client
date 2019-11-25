@@ -13,6 +13,7 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 // Imports: Navigations
 import StartNavigation from "./navigation/StartNavigation";
 import MainNavigation from "./navigation/MainNavigation";
+import LoggedOutMainNavigation from "./navigation/LoggedOutMainNavigation";
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
@@ -49,7 +50,8 @@ export default function App() {
         ...AntDesign.font
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
-
+      await Asset.loadAsync([require("./assets/checkedBox.png")]);
+      await Asset.loadAsync([require("./assets/uncheckedBox.png")]);
       //
       await AsyncStorage.setItem("permiSsions", "true");
       //빼기
@@ -87,7 +89,7 @@ export default function App() {
 }
 /*
 {isLoggedIn ? <MainNavigation /> : <StartNavigation />}
-
+  {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
 
 
 {isAllowed ? (
