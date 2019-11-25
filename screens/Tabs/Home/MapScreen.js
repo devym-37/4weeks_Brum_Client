@@ -22,11 +22,19 @@ import {
   FooterTab
 } from "native-base";
 import { connect } from "react-redux";
+<<<<<<< HEAD:screens/Tabs/HomeScreen.js
 import { login } from "../../redux/actions/authActions";
 import AuthModal from "../Auth/AuthModal";
 import MapView from "../../components/MapView";
 import { CurrentLocationButton } from "../../components/Buttons/CurrentLocationBtn";
 import { MapLocationButton } from "../../components/Buttons/MapLocationBtn";
+=======
+import { login } from "../../../redux/actions/authActions";
+import AuthModal from "../../Auth/AuthModal";
+import MapView from "../../../components/MapView";
+import { CurrentLocationButton } from "../../../navigation/CurrentLocationBtn";
+import { MapLocationButton } from "../../../navigation/MapLocationBtn";
+>>>>>>> 0f778ae4d5499108e31ec4e18ebbc673ddc7d976:screens/Tabs/Home/MapScreen.js
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
