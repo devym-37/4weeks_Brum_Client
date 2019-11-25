@@ -28,7 +28,7 @@ import { permissions } from "./redux/actions/permissionsActions";
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
 
-import ListCard from "./screens/ListCard";
+import ListCard from "./components/Cards/ListCard";
 import PermissionApp from "./screens/Auth/Permissions";
 import Userinfo from "./screens/Auth/UserInfo";
 import SelectCampus from "./screens/Start/SelectCampus";

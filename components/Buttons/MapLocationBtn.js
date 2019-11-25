@@ -14,6 +14,7 @@ export const MapLocationButton = function(props) {
   // if props.bottom is passed, use it. if not, set bottom to 110
   const Bottom = props.bottom ? props.bottom : 240;
   const iosBottom = props.bottom ? props.bottom : 290;
+
   return (
     <View
       style={[
