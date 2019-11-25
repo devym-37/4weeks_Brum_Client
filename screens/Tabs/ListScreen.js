@@ -41,7 +41,7 @@ const ListScreen = ({ navigation, reduxOrderId }) => {
     try {
       setLoading(true);
       const loggedIn = await AsyncStorage.getItem("userToken");
-      // console.log(`ListScreen token: `, loggedIn);
+      console.log(`ListScreen token: `, loggedIn);
       if (!loggedIn) {
         setIsopenLoginModal(true);
       }
