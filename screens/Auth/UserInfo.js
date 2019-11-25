@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-
 import {
   Picker,
   Image,
@@ -22,8 +21,7 @@ import { setApiKey } from "expo-location";
 import { serverApi } from "../../components/API";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { UniList } from "../../components/unilist";
-//import { Camera } from "expo-camera";
-//import { serverApi } from '../../components/api';
+import constants from "../../constants";
 
 const View = styled.View`
   justify-content: center;
@@ -53,11 +51,14 @@ const Userinfo = props => {
 
     async function fetchData() {
       try {
-        await AsyncStorage.setItem("campus", "한양대"); //연결 후 빼기
+        // await AsyncStorage.setItem("campus", "한양대"); //연결 후 빼기
 
         const selectedMajor = await AsyncStorage.getItem("campus");
         console.log("캠퍼스선택", selectedMajor);
-        selectedMajor ? setSelected(selectedMajor) : setSelected("한양대");
+
+        selectedMajor
+          ? setSelected(selectedMajor[selectedMajor].kor)
+          : setSelected("한양대");
       } catch (e) {
         console.error(e);
       }

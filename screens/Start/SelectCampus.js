@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Picker, AsyncStorage } from "react-native";
 import { Header } from "react-native-elements";
+import findKey from "lodash.findkey";
 import MainButton from "../../components/Buttons/MainButton";
 import constants from "../../constants";
 const View = styled.View`
@@ -20,7 +21,12 @@ export default ({ navigation }) => {
 
   const handleNextButton = async () => {
     if (campus) {
-      await AsyncStorage.setItem("campus", campus);
+      console.log(`constants.campus`, constants.campus);
+      const engCampus = findKey(constants.campus, obj => {
+        return obj.kor === campus;
+      });
+      // console.log(engCampus);
+      await AsyncStorage.setItem("campus", engCampus);
     }
     navigation.navigate("Home");
   };

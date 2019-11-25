@@ -97,11 +97,13 @@ const Signup = props => {
     }
 
     try {
+      const selectedCampus = await AsyncStorage.getItem("campus");
       const signUp = await serverApi.register(
         values.phone,
         values.password,
         values.name,
-        values.age
+        values.age,
+        selectedCampus
       );
 
       Alert.alert("회원가입 및 로그인이 완료되었습니다");

@@ -40,12 +40,21 @@ export const serverApi = {
       phone: id,
       password: ps
     }),
-  register: (phone, password, name, age, sex = "male", agreementAd = false) =>
+  register: (
+    phone,
+    password,
+    name,
+    age,
+    campus,
+    sex = "male",
+    agreementAd = false
+  ) =>
     sApi.post("register", {
       phone,
       password,
       nickname: name,
       age,
+      campus,
       sex,
       agreementAd
     }),
