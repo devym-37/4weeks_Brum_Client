@@ -14,7 +14,7 @@ const Text = styled.Text`
 `;
 
 DefaultChatsScreen = ({ navigation }) => {
-  console.log(`order nav: `, navigation);
+  // console.log(`order nav: `, navigation);
   return (
     <Container>
       <Text>현재 진행중인 대화가 없어요.</Text>

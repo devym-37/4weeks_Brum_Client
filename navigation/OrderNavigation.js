@@ -1,7 +1,7 @@
 import { createStackNavigator } from "react-navigation-stack";
 import NewOrder from "../screens/Tabs/Order/NewOrderScreen";
 import { stackStyles } from "./config";
-import OderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
+import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
 import HeaderLink from "../components/HeaderLink";
 import { Button } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
@@ -9,7 +9,7 @@ import { AntDesign } from "@expo/vector-icons";
 const OrderNavigation = createStackNavigator(
   {
     OrderDetail: {
-      screen: OderDetailScreen,
+      screen: OrderDetailScreen,
       navigationOptions: {
         headerTitle: " ",
         headerRight: handle => (

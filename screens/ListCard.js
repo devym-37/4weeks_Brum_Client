@@ -20,20 +20,21 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 
 const ListCard = props => {
   const { data } = props;
-  console.log("data", data);
+  // console.log("data", data);
   return (
     <Card>
       <CardItem cardBody style={{ marginTop: 10 }}>
         <Image
           source={{
-            uri: "https://tistory3.daumcdn.net/tistory/2864444/attach/628442af44f545c788ffdc5035464f98"
+            uri:
+              "https://tistory3.daumcdn.net/tistory/2864444/attach/628442af44f545c788ffdc5035464f98"
           }}
           style={{ height: 120, width: 120, flex: 0.6 }}
         />
         <Left>
           <Body>
             <Text style={{ height: 25 }}>{data.title}</Text>
-            <Row>
+            {/* <Row>
               <Thumbnail
                 style={{
                   width: 34,
@@ -42,9 +43,7 @@ const ListCard = props => {
                 }}
                 source={{
                   uri:
-                    data.hostInfo.image === null
-                      ? "https://tistory3.daumcdn.net/tistory/2864444/attach/628442af44f545c788ffdc5035464f98"
-                      : data.hostInfo.image
+                    data.hostInfo.image
                 }}
               ></Thumbnail>
               <Text
@@ -56,7 +55,7 @@ const ListCard = props => {
               >
                 {data.hostInfo.nickname}
               </Text>
-            </Row>
+            </Row> */}
 
             <Text note style={{ height: 24 }}>
               출발지 : {data.departures}
@@ -72,7 +71,12 @@ const ListCard = props => {
               <Text note style={{ height: 25, width: 100 }}>
                 비용 : {data.price !== null ? data.price : "협의"}
               </Text>
-              <SimpleLineIcons active name="speech" size={18} style={{ paddingLeft: 55, paddingRight: 5 }} />
+              <SimpleLineIcons
+                active
+                name="speech"
+                size={18}
+                style={{ paddingLeft: 55, paddingRight: 5 }}
+              />
               <Text
                 note
                 style={{

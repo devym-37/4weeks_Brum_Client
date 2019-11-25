@@ -51,6 +51,8 @@ export default {
     return status[num];
   },
   shortenText: (text, num) => {
-    return text.length > num ? text.substr(0, num + 1) + `・・・` : text;
+    return text && text.length > num
+      ? text.substr(0, num + 1) + `・・・`
+      : text;
   }
 };

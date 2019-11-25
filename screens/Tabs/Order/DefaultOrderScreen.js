@@ -67,7 +67,7 @@ DefaultOrderScreen = ({ navigation }) => {
       {loading ? (
         <Loader />
       ) : orders.filter(order => {
-          console.log(order);
+          // console.log(order);
           return order.orderStatus < 5;
         }).length === 0 ? (
         <DefaultOrder />
