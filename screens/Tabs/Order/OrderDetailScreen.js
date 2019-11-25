@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import GhostButton from "../../../components/Buttons/GhostButton";
+
 import { withNavigation } from "react-navigation";
 import MapView from "react-native-maps";
 //import constants from "../../constants";
@@ -10,7 +11,8 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
-  AsyncStorage
+  AsyncStorage,
+  RefreshControl
 } from "react-native";
 import {
   Content,
@@ -63,6 +65,80 @@ const OderDetailScreen = props => {
   const [nickname, setNickname] = useState("nobody");
   const [desiredArrivalTime, setDesiredArrivalTime] = useState("");
   const [createdat, setCreatedat] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [hostId, setHostId] = useState(null);
+  const [applicants, setApplicants] = useState(null);
+  const [didApply, setDidApply] = useState(false);
+  const [isPrice, setIsPrice] = useState(false);
+  const refresh = async () => {
+    try {
+      setRefreshing(true);
+      //await AsyncStorage.getItem("userId"); //연결 후 빼기
+
+      //const usertoken = await AsyncStorage.getItem("userToken");
+      //await AsyncStorage.getItem("userId"); //연결 후 빼기
+
+      const usertoken = await AsyncStorage.getItem("userToken");
+
+      const orderId = 1;
+
+      const oderDetail = await serverApi.oderdetail(orderId, usertoken);
+
+      const { userId } = oderDetail.data.data.userId;
+
+      const {
+        departures,
+        arrivals,
+        details,
+        hostInfo,
+        price,
+        title,
+        createdAt,
+        desiredArrivalTime,
+        applicants,
+        hostId
+      } = oderDetail.data.data.order;
+
+      console.log(oderDetail.data.data.order);
+      console.log("hk", departures);
+      if (oderDetail.data.isSuccess) {
+        console.log("들어옴");
+
+        setDepartures(departures);
+        if (arrivals === null) {
+          setArrivals("");
+        } else {
+          setArrivals(arrivals);
+        }
+
+        setHostId(hostId);
+        setApplicants(applicants);
+        setUserId(userId);
+        setDetails(details);
+        setCampus(hostInfo.campus);
+        //numberwithcommas
+        const getprice = utils.numberWithCommas(price);
+        setPrice(getprice);
+        setTitle(title);
+        setImg(hostInfo.image);
+        setNickname(hostInfo.nickname);
+
+        //createdat
+        const time = utils.transferTime(createdAt);
+        setCreatedat(time);
+        if (desiredArrivalTime === null) {
+          setDesiredArrivalTime("");
+        } else {
+          setDesiredArrivalTime(desiredArrivalTime);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     // Create an scoped async function in the hook
@@ -73,13 +149,13 @@ const OderDetailScreen = props => {
         setLoading(true);
         //await AsyncStorage.getItem("userId"); //연결 후 빼기
 
-        //const usertoken = await AsyncStorage.getItem("userToken");
+        const usertoken = await AsyncStorage.getItem("userToken");
 
-        const usertoken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicGhvbmUiOiIwMTAxMjM0MTIzNCIsImlhdCI6MTU3NDMwMTM3NywiZXhwIjoxNTc5NDg1Mzc3fQ.sSXGnTTGUKIyXkEywO4LgF2VXgYlT_ypf7lxjGlaAH8";
-        const userId = 1;
+        const orderId = 1;
 
-        const oderDetail = await serverApi.oderdetail(1, usertoken);
+        const oderDetail = await serverApi.oderdetail(orderId, usertoken);
+
+        const { userId } = oderDetail.data.data.userId;
         const {
           departures,
           arrivals,
@@ -88,39 +164,48 @@ const OderDetailScreen = props => {
           price,
           title,
           createdAt,
-          desiredArrivalTime
+          desiredArrivalTime,
+          applicants,
+          hostId,
+          isPrice
         } = oderDetail.data.data.order;
 
         console.log(oderDetail.data.data.order);
-        console.log("hk", departures);
+
         if (oderDetail.data.isSuccess) {
           console.log("들어옴");
 
-          setDepartures(departures);
+          setDepartures(departures); //departures
           if (arrivals === null) {
+            //arrivals
             setArrivals("");
           } else {
             setArrivals(arrivals);
           }
-
-          setDetails(details);
-          setCampus(hostInfo.campus);
+          setHostId(hostId); //hostid
+          setApplicants(applicants); //applicats
+          setUserId(userId); //userid
+          setDetails(details); //details
+          setCampus(hostInfo.campus); //campus
           //numberwithcommas
-          const getprice = utils.numberWithCommas(price);
+          const getprice = utils.numberWithCommas(price); //price
           setPrice(getprice);
-          setTitle(title);
-          setImg(hostInfo.image);
-          setNickname(hostInfo.nickname);
-
+          setIsPrice(isPrice);
+          setTitle(title); //title
+          setImg(hostInfo.image); // thumbnail
+          setNickname(hostInfo.nickname); //nickname
           //createdat
           const time = utils.transferTime(createdAt);
           setCreatedat(time);
           if (desiredArrivalTime === null) {
+            //desired arrivaltime
             setDesiredArrivalTime("");
           } else {
             setDesiredArrivalTime(desiredArrivalTime);
           }
         }
+
+        //----- set variables , applicants---
       } catch (e) {
         console.error(e);
       } finally {
@@ -135,17 +220,24 @@ const OderDetailScreen = props => {
   }, []);
 
   renderContent = () => (
-    /* render */
-
     <View style={styles.panel}>
-      <Item style={{ marginTop: 10 }}>
-        <Input placeholder="₩가격 제안(선택사항)" />
-        <Text>
-          <Ionicons name="md-checkmark-circle-outline" />
-          희망비용 수락
-        </Text>
-        {/* <MainButton width={250} text="희망비용 수락" /> */}
-      </Item>
+      {isPrice ? (
+        <Item style={{ marginTop: 10 }}>
+          <Input placeholder="₩가격 제안(선택사항)" />
+          <Text>
+            <Ionicons name="md-checkmark-circle-outline" size={22} />
+            {"  "}희망비용 수락
+          </Text>
+        </Item>
+      ) : (
+        <Item disabled style={{ marginTop: 10 }}>
+          <Input disabled placeholder="가격제안 불가" />
+          <Text>
+            <Ionicons name="md-checkmark-circle-outline" size={22} />
+            {"  "}희망비용 수락
+          </Text>
+        </Item>
+      )}
 
       <Item style={{ marginTop: 10 }}>
         <Input placeholder="러너의 메세지(선택사항)" />
@@ -155,31 +247,56 @@ const OderDetailScreen = props => {
 
   renderHeader = () => (
     /* render */
+
     <View style={styles.panel}>
       <Row style={{ alignSelf: "center" }}>
         <Ionicons name="md-arrow-dropup-circle" size={35} />
       </Row>
-      <Row>
-        <Col style={{ margin: 10 }}>
-          <Text
-            style={{
-              fontSize: 23,
+      {didApply ? (
+        <Row>
+          <Col style={{ margin: 10 }}>
+            <Text
+              style={{
+                fontSize: 23,
 
-              textAlignVertical: "center"
-            }}
-          >
-            ₩ {price}
-          </Text>
-        </Col>
-        <Col style={{ padding: -10 }}>
-          <MainButton width={250} text="러너지원하기" />
-        </Col>
-      </Row>
+                textAlignVertical: "center"
+              }}
+            >
+              ₩ {price}
+            </Text>
+          </Col>
+          <Col style={{ padding: -10 }}>
+            <MainButton width={250} text="러너지원하기" />
+          </Col>
+        </Row>
+      ) : (
+        <Row>
+          <Col style={{ margin: 10 }}>
+            <Text
+              style={{
+                fontSize: 23,
+
+                textAlignVertical: "center"
+              }}
+            >
+              ₩ {price}
+            </Text>
+          </Col>
+          <Col style={{ padding: -10 }}>
+            <MainButton width={250} text="러너지원하기" />
+          </Col>
+        </Row>
+      )}
     </View>
   );
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+      }
+    >
       {Loading ? (
         <Spinner
           style={{
@@ -258,25 +375,28 @@ const OderDetailScreen = props => {
               <Row style={{ margin: 5, marginLeft: 10 }}>
                 <Text note>
                   <Ionicons name="md-stopwatch" /> {"   "}
-                  {desiredArrivalTime}
+                  희망도착시간 : {desiredArrivalTime}
                 </Text>
               </Row>
               <Row>
                 <Text style={{ margin: 10 }}>{details}</Text>
               </Row>
-              <Row style={styles.test2}></Row>
+              <Row style={styles.bottom}></Row>
             </Content>
-            {msg ? (
-              <BottomSheet
-                style={{ backgroundColor: "#f7f5eee8" }}
-                snapPoints={[100, 210, 100]}
-                renderContent={renderContent}
-                renderHeader={renderHeader}
-              />
+
+            {hostId === userId ? (
+              <Row>
+                <Col>
+                  <MainButton width={250} text="수정하기" />
+                </Col>
+                <Col>
+                  <MainButton width={250} text="삭제하기" />
+                </Col>
+              </Row>
             ) : (
               <BottomSheet
                 style={{ backgroundColor: "#f7f5eee8" }}
-                snapPoints={[100, 100, 50]}
+                snapPoints={[100, 210, 100]}
                 renderContent={renderContent}
                 renderHeader={renderHeader}
               />
@@ -314,7 +434,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#00000040",
     height: Dimensions.get("window").height / 2
   },
-  test2: {
+  bottom: {
     height: 200
   }
 });

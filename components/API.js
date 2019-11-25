@@ -106,3 +106,7 @@ export const serverApi = {
       }
     })
 };
+/* {
+  "bidPrice" : "2000",
+  "applyComment" : "10분안에 배달 쌉가능"
+} */
