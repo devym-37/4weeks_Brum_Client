@@ -11,6 +11,7 @@ import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/ListScreen";
 import HomeScreen from "../screens/Tabs/HomeScreen";
+import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import { createStackNavigator } from "react-navigation-stack";
 
@@ -31,6 +32,12 @@ const stackFactory = (initialRoute, customConfig) =>
       screen: ApplicantsList,
       navigationOptions: {
         title: "내요청 상세보기"
+      }
+    },
+    OrderDetailScreen: {
+      screen: OrderDetailScreen,
+      navigationOptions: {
+        title: "요청 상세보기"
       }
     }
   });

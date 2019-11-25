@@ -1,9 +1,18 @@
 {
   "expoServerPort": 19000,
+<<<<<<< HEAD
   "expoServerNgrokUrl": "https://df-jwp.leeyoungmin.brum-client.exp.direct",
   "packagerNgrokUrl": "https://packager.df-jwp.leeyoungmin.brum-client.exp.direct",
   "ngrokPid": 26884,
   "devToolsPort": 19002,
   "packagerPort": 19001,
   "packagerPid": 8388
+=======
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
+  "devToolsPort": 19002,
+  "packagerPort": 19003,
+  "packagerPid": 14415
+>>>>>>> a9dffd831b2ae8f2b7b763a88d69e97eeb6e494c
 }

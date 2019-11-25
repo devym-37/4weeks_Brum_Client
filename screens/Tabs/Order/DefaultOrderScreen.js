@@ -43,6 +43,7 @@ DefaultOrderScreen = ({ navigation }) => {
     try {
       setLoading(true);
       const userToken = await AsyncStorage.getItem("userToken");
+
       let requestUserOrders = await serverApi.getUserOrders(userToken);
       setOrders([...requestUserOrders.data.data.orders]);
     } catch (e) {
