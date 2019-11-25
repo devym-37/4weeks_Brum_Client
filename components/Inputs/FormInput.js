@@ -4,8 +4,6 @@ import constants from "../../constants";
 import { withNavigation } from "react-navigation";
 
 const Container = styled.View`
-  /* margin-bottom: 10px; */
-  justify-content: flex-start;
   align-items: flex-start;
 `;
 
@@ -17,7 +15,7 @@ const InputContainer = styled.View`
 `;
 const Divider = styled.View`
   width: ${constants.width - 30};
-  /* padding: 0 20px; */
+
   height: 1;
   background-color: ${props => props.theme.lightGreyColor};
 `;

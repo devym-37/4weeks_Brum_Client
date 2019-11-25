@@ -8,22 +8,21 @@ import {
   AsyncStorage
 } from "react-native";
 import MapView from "react-native-maps";
-
 import { Container } from "native-base";
+
+import constants from "../constants";
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
-const LATITUDE_DELTA = 0.006;
-const LONGITUDE_DELTA = 0.001;
 
 const MapScreen = props => {
-  const { latitude = LATITUDE, longitude = LONGITUDE } = props;
+  const { latitude, longitude } = props;
 
   const region = {
     latitude,
     longitude,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA
+    latitudeDelta: constants.LATITUDE_DELTA,
+    longitudeDelta: constants.LONGITUDE_DELTA
   };
 
   return (
@@ -35,12 +34,7 @@ const MapScreen = props => {
           ref={map => {
             this.map = map;
           }}
-          initialRegion={{
-            latitude: latitude || 122,
-            longitude: longitude || 122,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA
-          }}
+          initialRegion={region}
           onRegionChange={this.onRegionChange}
           showsCompass={true}
           showsUserLocation={true}
@@ -57,11 +51,11 @@ const MapScreen = props => {
   );
 };
 
-export default MapScreen;
-
 const styles = StyleSheet.create({
   mapStyle: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height
   }
 });
+
+export default MapScreen;
