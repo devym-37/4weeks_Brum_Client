@@ -35,6 +35,8 @@ import SelectCampus from "./screens/Start/SelectCampus";
 import SelectPhoto from "./screens/Photo/SelectPhoto";
 import OderDetailScreen from "./screens/Tabs/Order/OrderDetailScreen";
 
+import SearchAddress from "./screens/Tabs/Order/SearchAddress";
+
 // React Native: App
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -71,7 +73,7 @@ export default function App() {
     preLoad();
   }, []);
 
-  // {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}  // push 시 추가
+  // {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}  // push 시 추가
   // <HomeNavigation />
   //<MainNavigation />
   return loaded && isLoggedIn !== null ? (
@@ -79,7 +81,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
+          <SearchAddress />
         </PersistGate>
       </ThemeProvider>
     </Provider>
