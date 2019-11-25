@@ -16,6 +16,7 @@ import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import { createStackNavigator } from "react-navigation-stack";
 
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
+import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
 
@@ -46,8 +47,8 @@ const BottomNavigation = createBottomTabNavigator(
   {
     Home: {
       screen: stackFactory(ListScreen, {
-        title: "한양대",
-        headerRight: <NotificationLink />
+        headerRight: <NotificationLink />,
+        headerLeft: <HomeTitleLink />
       }),
       navigationOptions: {
         title: "홈",

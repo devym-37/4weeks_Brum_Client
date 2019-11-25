@@ -35,7 +35,7 @@ const PickerContainer = styled.View`
 `;
 const Text = styled.Text`
   color: ${props => props.color};
-  font-size: 17px;
+  font-size: 17;
 `;
 
 const Picker = ({
