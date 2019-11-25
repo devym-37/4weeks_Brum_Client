@@ -83,6 +83,7 @@ const OderDetailScreen = props => {
   const bidprice = useInput("");
   const [orderId, setOrderId] = useState(1);
   const [view, setView] = useState(1);
+  const [category, setCategory] = useState("기타");
 
   const handelApply = async (val1, val2) => {
     const value1 = val1.value; //bidprice
@@ -119,6 +120,23 @@ const OderDetailScreen = props => {
       setLoading(false);
     }
   };
+
+  const handelApplymod = async () => {
+    try {
+      setLoading(true);
+      const result = await serverApi.cancleapply(userToken, orderId);
+      console.log(result.data);
+      if (result.data.isSuccess) {
+        //return await refresh
+      }
+    } catch (e) {
+      console.log("faild", e);
+      Alert.alert("지원취소실패");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const refresh = async () => {
     console.log("orderid", orderId);
     try {
@@ -324,6 +342,11 @@ const OderDetailScreen = props => {
           <Col style={{ padding: -10 }}>
             <MainButton
               onPress={handelApplyCancle}
+              width={250}
+              text="지원취소하기"
+            />
+            <MainButton
+              onPress={handelApplymod}
               width={250}
               text="지원취소하기"
             />
