@@ -67,7 +67,7 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
-  uploadimage: async (usertoken, imgfile) => {
+  uploadimage: async (userToken, imgfile) => {
     const formData = new FormData();
     formData.append("file", {
       name: "profil",
@@ -81,11 +81,11 @@ export const serverApi = {
       headers: {
         "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
         "Access-Control-Allow-Headers": "x-access-token",
-        "x-access-token": usertoken
+        "x-access-token": userToken
       }
     });
   },
-  password: (phone, pw, usertoken) =>
+  password: (phone, pw, userToken) =>
     sApi.put(
       "password",
       {
@@ -96,16 +96,24 @@ export const serverApi = {
         headers: {
           "Content-Type": "multipart/form-data",
           "Access-Control-Allow-Headers": "x-access-token",
-          "x-access-token": usertoken
+          "x-access-token": userToken
         }
       }
     ),
-  orderdetail: (userid, usertoken) =>
+  getApplicantList: (orderId, userToken) =>
+    sApi.get(`user/order/${orderId}/applicant`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
+  orderdetail: (userid, userToken) =>
     sApi.get(`order/${userid}`, {
       headers: {
         "Content-Type": "multipart/form-data",
         "Access-Control-Allow-Headers": "x-access-token",
-        "x-access-token": usertoken
+        "x-access-token": userToken
       }
     }),
   campus: (campus, major) =>
@@ -113,10 +121,10 @@ export const serverApi = {
       headers: {
         "Content-Type": "multipart/form-data",
         "Access-Control-Allow-Headers": "x-access-token",
-        "x-access-token": usertoken
+        "x-access-token": userToken
       }
     }),
-  apply: (bidprice, msg, usertoken, orderId) =>
+  apply: (bidprice, msg, userToken, orderId) =>
     sApi.post(
       `order/${orderId}/apply`,
       {
@@ -127,11 +135,11 @@ export const serverApi = {
         headers: {
           "Content-Type": "multipart/form-data",
           "Access-Control-Allow-Headers": "x-access-token",
-          "x-access-token": usertoken
+          "x-access-token": userToken
         }
       }
     ),
-  reapply: (bidprice, msg, usertoken, orderId) =>
+  reapply: (bidprice, msg, userToken, orderId) =>
     sApi.put(
       `order/${orderId}/apply`,
       {
@@ -142,11 +150,11 @@ export const serverApi = {
         headers: {
           "Content-Type": "multipart/form-data",
           "Access-Control-Allow-Headers": "x-access-token",
-          "x-access-token": usertoken
+          "x-access-token": userToken
         }
       }
     ),
-  cancleapply: (usertoken, orderId) =>
+  cancleapply: (userToken, orderId) =>
     sApi.put(
       `order/${orderId}/apply`,
       {
@@ -157,7 +165,7 @@ export const serverApi = {
         headers: {
           "Content-Type": "multipart/form-data",
           "Access-Control-Allow-Headers": "x-access-token",
-          "x-access-token": usertoken
+          "x-access-token": userToken
         }
       }
     )

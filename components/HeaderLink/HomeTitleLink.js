@@ -10,6 +10,7 @@ import { AsyncStorage } from "react-native";
 import constants from "../../constants";
 import ModalDropdown from "react-native-modal-dropdown";
 import map from "lodash.map";
+import findKey from "lodash.findkey";
 const Touchable = styled.TouchableOpacity``;
 const TitleContainer = styled.View`
   flex-direction: row;
@@ -36,9 +37,15 @@ export default withNavigation(({ navigation }) => {
     setCampus(constants.campus[selectedCampus].kor);
   };
 
-  const handleSelect = e => {
-    setCampus(arrayOfCampus[e]);
-    navigation.pop({ campus: arrayOfCampus[e] });
+  const handleSelect = async e => {
+    const reselectedCampus = arrayOfCampus[e];
+    setCampus(reselectedCampus);
+    const engCampus = findKey(
+      constants.campus,
+      obj => obj.kor === reselectedCampus
+    );
+    await AsyncStorage.setItem("campus", engCampus);
+    navigation.push("Home");
   };
 
   useEffect(() => {
@@ -46,7 +53,7 @@ export default withNavigation(({ navigation }) => {
   }, []);
 
   return (
-    <Touchable onPress={() => console.log(`홈화면 캠퍼스 이름 클릭`)}>
+    <Touchable>
       <Container>
         {campus && (
           <Touchable>
