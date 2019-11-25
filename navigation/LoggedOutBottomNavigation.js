@@ -13,7 +13,7 @@ import ListScreen from "../screens/Tabs/ListScreen";
 import HomeScreen from "../screens/Tabs/HomeScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import { createStackNavigator } from "react-navigation-stack";
-
+import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
@@ -31,6 +31,12 @@ const stackFactory = (initialRoute, customConfig) =>
       screen: ApplicantsList,
       navigationOptions: {
         title: "내요청 상세보기"
+      }
+    },
+    OrderDetailScreen: {
+      screen: OrderDetailScreen,
+      navigationOptions: {
+        title: "요청 상세보기"
       }
     }
   });
