@@ -14,8 +14,11 @@ import AuthModal from "../Auth/AuthModal";
 import { serverApi } from "../../components/API";
 import ListCard from "../ListCard";
 import OrderCard from "../../components/Cards/OrderCard";
+import { connect } from "react-redux";
 
-const ListScreen = ({ navigation }) => {
+import { orderIdSaver } from "../../redux/actions/orderActions";
+
+const ListScreen = ({ navigation, reduxOrderId }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -44,7 +47,7 @@ const ListScreen = ({ navigation }) => {
       }
       let getAllOrders = await serverApi.getAllOrders();
       setOrders([...getAllOrders.data.data.orders]);
-      // console.log(`getAllOrders: `, getAllOrders.data.data.orders);
+      console.log(`getAllOrders: `, getAllOrders.data.data.orders);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     }
@@ -64,9 +67,11 @@ const ListScreen = ({ navigation }) => {
       >
         <Content>
           {orders.map((data, i) => (
-            <View key={i}>
+            <View key={data.orderId}>
               <TouchableOpacity
                 onPress={() => {
+                  console.log("ddddddd", data.orderId);
+                  reduxOrderId(data.orderId);
                   navigation.navigate("OrderDetailScreen");
                 }}
               >
@@ -108,4 +113,18 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ListScreen;
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    orderId: state.orderReducer.orderId
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxOrderId: orderId => dispatch(orderIdSaver(orderId))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListScreen);

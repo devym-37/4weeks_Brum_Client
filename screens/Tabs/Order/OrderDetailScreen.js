@@ -4,7 +4,7 @@ import GhostButton from "../../../components/Buttons/GhostButton";
 
 import { withNavigation } from "react-navigation";
 import MapView from "react-native-maps";
-//import constants from "../../constants";
+import constants from "../../../constants";
 import {
   ScrollView,
   Block,
@@ -43,6 +43,10 @@ import useInput from "../../../hooks/useInput";
 import FormInput from "../../../components/Inputs/FormInput";
 
 import { serverApi } from "../../../components/API";
+import { StringDecoder } from "string_decoder";
+import { connect } from "react-redux";
+
+import { orderIdSaver } from "../../../redux/actions/orderActions";
 
 const OderDetailScreen = props => {
   //view 추가해야함
@@ -77,11 +81,13 @@ const OderDetailScreen = props => {
   const [userToken, setUserToken] = useState(null);
   const rmsg = useInput("");
   const bidprice = useInput("");
+  const [orderId, setOrderId] = useState(1);
+  const [view, setView] = useState(1);
 
   const handelApply = async (val1, val2) => {
     const value1 = val1.value; //bidprice
     const value2 = val2.value; //msg
-    const orderId = 1;
+    // const orderId = 1;
 
     try {
       setLoading(true);
@@ -114,6 +120,7 @@ const OderDetailScreen = props => {
     }
   };
   const refresh = async () => {
+    console.log("orderid", orderId);
     try {
       setRefreshing(true);
       //await AsyncStorage.getItem("userId"); //연결 후 빼기
@@ -123,7 +130,7 @@ const OderDetailScreen = props => {
 
       const usertoken = await AsyncStorage.getItem("userToken");
 
-      const orderId = 1;
+      //const orderId = 1;
 
       const oderDetail = await serverApi.oderdetail(orderId, usertoken);
 
@@ -158,7 +165,8 @@ const OderDetailScreen = props => {
         setApplicants(applicants);
         setUserId(userId);
         setDetails(details);
-        setCampus(hostInfo.campus);
+
+        setCampus(campusList.campusList[hostInfo.campus].kor);
         //numberwithcommas
         const getprice = utils.numberWithCommas(price);
         setPrice(getprice);
@@ -182,11 +190,11 @@ const OderDetailScreen = props => {
     }
   };
 
-  useEffect(props => {
+  useEffect(() => {
     // Create an scoped async function in the hook
     let isCancelled = false;
 
-    async function fetchData(props) {
+    async function fetchData() {
       try {
         setLoading(true);
         //await AsyncStorage.getItem("userId"); //연결 후 빼기
@@ -194,9 +202,9 @@ const OderDetailScreen = props => {
         const usertoken = await AsyncStorage.getItem("userToken");
 
         setUserToken(usertoken);
-        const orderId = 1;
+        console.log("orderId프롭스확인", props.orderId);
 
-        const oderDetail = await serverApi.oderdetail(orderId, usertoken);
+        const oderDetail = await serverApi.oderdetail(props.orderId, usertoken);
 
         const { userId } = oderDetail.data.data.userId;
         const {
@@ -210,14 +218,15 @@ const OderDetailScreen = props => {
           desiredArrivalTime,
           applicants,
           hostId,
-          isPrice
+          isPrice,
+          views
         } = oderDetail.data.data.order;
 
         console.log(oderDetail.data.data.order);
 
         if (oderDetail.data.isSuccess) {
           console.log("들어옴");
-
+          setOrderId(props.orderId);
           setDepartures(departures); //departures
           if (arrivals === null) {
             //arrivals
@@ -225,14 +234,22 @@ const OderDetailScreen = props => {
           } else {
             setArrivals(arrivals);
           }
+          setView(views);
           setHostId(hostId); //hostid
           setApplicants(applicants); //applicats
           setUserId(userId); //userid
           setDetails(details); //details
-          setCampus(hostInfo.campus); //campus
+          // console.log(campusList);
+          console.log("listcampus", constants.campusList[hostInfo.campus]);
+          setCampus(constants.campusList[hostInfo.campus].kor); //campus
           //numberwithcommas
-          const getprice = utils.numberWithCommas(price); //price
-          setPrice(getprice);
+          if (price === null) {
+            setPrice("협의");
+          } else {
+            const getprice = utils.numberWithCommas(price); //price
+            setPrice(getprice);
+          }
+
           setIsPrice(isPrice);
           setTitle(title); //title
           setImg(hostInfo.image); // thumbnail
@@ -275,10 +292,6 @@ const OderDetailScreen = props => {
       ) : (
         <Item disabled style={{ marginTop: 10 }}>
           <Input disabled placeholder="가격제안 불가" />
-          <Text>
-            <Ionicons name="md-checkmark-circle-outline" size={22} />
-            {"  "}희망비용 수락
-          </Text>
         </Item>
       )}
 
@@ -432,9 +445,24 @@ const OderDetailScreen = props => {
                 </Text>
               </Row>
               <Row>
-                <Text style={{ margin: 10 }}>{details}</Text>
+                <Text style={{ margin: 10, height: 200 }}>{details}</Text>
               </Row>
-              <Row style={styles.bottom}></Row>
+
+              <Row style={styles.bottom}>
+                <Text
+                  note
+                  style={{
+                    alignSelf: "flex-start",
+                    textAlign: "right",
+                    marginLeft: 15
+                  }}
+                >
+                  <Ionicons size={22} name="md-eye">
+                    {" "}
+                    {view}
+                  </Ionicons>
+                </Text>
+              </Row>
             </Content>
 
             {hostId === userId ? (
@@ -461,8 +489,6 @@ const OderDetailScreen = props => {
   );
 };
 
-export default OderDetailScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -488,6 +514,15 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height / 2
   },
   bottom: {
-    height: 200
+    height: 150
   }
 });
+
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    orderId: state.orderReducer.orderId
+  };
+};
+
+export default connect(mapStateToProps)(OderDetailScreen);

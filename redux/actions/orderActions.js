@@ -22,3 +22,8 @@ export const imagesSaver = images => ({
   type: "CREATE",
   images: images
 });
+
+export const orderIdSaver = orderId => ({
+  type: "CREATE",
+  orderId: orderId
+});
