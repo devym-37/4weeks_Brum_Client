@@ -46,7 +46,7 @@ import { serverApi } from "../../../components/API";
 import { StringDecoder } from "string_decoder";
 import { connect } from "react-redux";
 
-import { orderIdSaver } from "../../../redux/actions/orderActions";
+import { orderIdSaver,imagesSaver,timeSaver,titleSaver,categorySaver,isPriceSaver } from "../../../redux/actions/orderActions";
 
 const OrderDetailScreen = props => {
   //view 추가해야함
@@ -142,6 +142,14 @@ const OrderDetailScreen = props => {
   };
 
   const handleReorder = () => {
+    //redux
+    props.reduxTitle(title)
+    props.reduxTime(createdat)
+    props.reduxIsPrice(isPrice)
+    props.reduxCategory(category)
+    props.reduxImages(imageurl)
+    props.reduxOrderId(orderId)
+
     props.navigation.navigate("NewOrderScreen");
   };
   const refresh = () => {
@@ -184,7 +192,8 @@ const OrderDetailScreen = props => {
         applicants,
         hostId,
         isPrice,
-        views
+        views,
+        category
       } = oderDetail.data.data.order;
 
       console.log(oderDetail.data.data);
@@ -200,6 +209,7 @@ const OrderDetailScreen = props => {
         } else {
           setArrivals(arrivals);
         }
+        setCategory(category);
         setView(views);
         setHostId(hostId); //hostid
         setApplicants(applicants); //applicats
@@ -431,9 +441,19 @@ const OrderDetailScreen = props => {
                 <Text style={{ fontSize: 20, marginLeft: 10 }}>{title}</Text>
               </Row>
               <Row>
-                <Text note style={{ margin: 3, marginLeft: 10 }}>
-                  {createdat}
-                </Text>
+                <Col>
+                  <Text note style={{ margin: 3, marginLeft: 10 }}>
+                    {createdat}
+                  </Text>
+                </Col>
+                <Col>
+                  <Text
+                    note
+                    style={{ margin: 3, marginRight: 10, textAlign: "right" }}
+                  >
+                    {category}
+                  </Text>
+                </Col>
               </Row>
               <Row style={{ margin: 5, marginLeft: 10 }}>
                 <Text note>
@@ -521,8 +541,29 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
+    title: state.orderReducer.title,
+    time: state.orderReducer.desiredArrival,
+    isPrice: state.orderReducer.isPrice,
+    category: state.orderReducer.category,
+    images: state.orderReducer.images,
     orderId: state.orderReducer.orderId
   };
 };
 
-export default connect(mapStateToProps)(OrderDetailScreen);
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    // Login
+    
+    reduxTitle: title => dispatch(titleSaver(title)),
+    reduxTime: time => dispatch(timeSaver(time)),////
+    reduxIsPrice: isPrice => dispatch(isPriceSaver(isPrice)),
+    reduxCategory: category => dispatch(categorySaver(category)),
+    reduxImages: imageurl => dispatch(imagesSaver(imageurl)),
+    reduxOrderId: orderId => dispatch(orderIdSaver(orderId)),
+  };
+};
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderDetailScreen);

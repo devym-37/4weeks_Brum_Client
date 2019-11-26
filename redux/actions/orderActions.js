@@ -27,3 +27,8 @@ export const orderIdSaver = orderId => ({
   type: "CREATE",
   orderId: orderId
 });
+
+export const isPriceSaver = isPrice => ({
+  type: "CREATE",
+  orderId: isPrice
+});
