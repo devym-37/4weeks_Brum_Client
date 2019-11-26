@@ -46,7 +46,14 @@ import { serverApi } from "../../../components/API";
 import { StringDecoder } from "string_decoder";
 import { connect } from "react-redux";
 
-import { orderIdSaver } from "../../../redux/actions/orderActions";
+import {
+  orderIdSaver,
+  imagesSaver,
+  timeSaver,
+  titleSaver,
+  categorySaver,
+  isPriceSaver
+} from "../../../redux/actions/orderActions";
 
 const OrderDetailScreen = props => {
   //view 추가해야함
@@ -79,18 +86,28 @@ const OrderDetailScreen = props => {
   const [didApply, setDidApply] = useState(false);
   const [isPrice, setIsPrice] = useState(false);
   const [userToken, setUserToken] = useState(null);
-  const rmsg = useInput("");
-  const bidprice = useInput("");
+  const [rmsg, setRmsg] = useState("");
+  const [bidprice, setBidprice] = useState("");
   const [orderId, setOrderId] = useState(1);
   const [view, setView] = useState(1);
   const [category, setCategory] = useState("기타");
   const [hostUser, setHostUser] = useState(false);
 
+  const valueBidprice = text => {
+    console.log("onchange", text.nativeEvent.text);
+    setBidprice(text);
+  };
+
+  const valueRmsg = text => {
+    console.log("onchange", text.nativeEvent.text);
+    setRmsg(text);
+  };
+
   const handelApply = async (val1, val2) => {
     const value1 = val1.value; //bidprice
     const value2 = val2.value; //msg
     // const orderId = 1;
-
+    console.log("entered");
     try {
       setLoading(true);
       const result = await serverApi.apply(value1, value2, userToken, orderId);
@@ -113,9 +130,13 @@ const OrderDetailScreen = props => {
     try {
       setLoading(true);
       const result = await serverApi.cancleapply(userToken, orderId);
-      // console.log(result.data);
+      console.log("hi", result.data.isSuccess);
       if (result.data.isSuccess) {
         //return await refresh
+        console.log("취소성공", result.data);
+        setDidApply(false);
+
+        fetchData();
       }
     } catch (e) {
       console.log("faild", e);
@@ -125,10 +146,17 @@ const OrderDetailScreen = props => {
     }
   };
 
-  const handelApplymod = async () => {
+  const handelApplymod = async (val1, val2) => {
+    const value1 = val1.value; //bidprice
+    const value2 = val2.value; //msg
     try {
       setLoading(true);
-      const result = await serverApi.cancleapply(userToken, orderId);
+      const result = await serverApi.reapply(
+        value1,
+        value2,
+        userToken,
+        orderId
+      );
       console.log(result.data);
       if (result.data.isSuccess) {
         //return await refresh
@@ -142,10 +170,35 @@ const OrderDetailScreen = props => {
   };
 
   const handleReorder = () => {
+    //redux
+    props.reduxTitle(title);
+    props.reduxTime(createdat);
+    props.reduxIsPrice(isPrice);
+    props.reduxCategory(category);
+    props.reduxImages(imageurl);
+    props.reduxOrderId(orderId);
+
     props.navigation.navigate("NewOrderScreen");
   };
   const refresh = () => {
     fetchData();
+  };
+
+  const handleDeleteOrder = async () => {
+    try {
+      const result = await serverApi.cancleorder(orderId, userToken);
+      console.log(result);
+
+      if (result.data.isSuccess) {
+        props.navigation.navigate("BottomNavigation"); //맞나?
+      } else {
+        Alert.alert("실패했습니다. 다시 시도해 주세요");
+      }
+      //fetchData();
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
   };
 
   useEffect(() => {
@@ -184,7 +237,8 @@ const OrderDetailScreen = props => {
         applicants,
         hostId,
         isPrice,
-        views
+        views,
+        category
       } = oderDetail.data.data.order;
 
       console.log(oderDetail.data.data);
@@ -200,6 +254,7 @@ const OrderDetailScreen = props => {
         } else {
           setArrivals(arrivals);
         }
+        setCategory(category);
         setView(views);
         setHostId(hostId); //hostid
         setApplicants(applicants); //applicats
@@ -257,7 +312,12 @@ const OrderDetailScreen = props => {
       {!hostUser ? (
         isPrice ? (
           <Item style={{ marginTop: 10 }}>
-            <Input {...bidprice} placeholder="₩가격 제안(선택사항)" />
+            <Input
+              onChange={text => {
+                valueBidprice(text);
+              }}
+              placeholder="₩가격 제안(선택사항)"
+            />
             <Text>
               <Ionicons name="md-checkmark-circle-outline" size={22} />
               {"  "}희망비용 수락
@@ -273,7 +333,12 @@ const OrderDetailScreen = props => {
       )}
       {!hostUser ? (
         <Item style={{ marginTop: 10 }}>
-          <Input {...rmsg} placeholder="러너의 메세지(선택사항)" />
+          <Input
+            onChange={text => {
+              valueRmsg(text);
+            }}
+            placeholder="러너의 메세지(선택사항)"
+          />
         </Item>
       ) : (
         <></>
@@ -302,17 +367,17 @@ const OrderDetailScreen = props => {
                 ₩ {price}
               </Text>
             </Col>
-            <Col style={{ padding: -10 }}>
+            <Col style={{ padding: 3 }}>
               <MainButton
-                onPress={handelApplyCancle}
-                width={250}
-                text="지원취소하기"
+                onPress={() => {
+                  handelApplymod(bidprice, rmsg);
+                }}
+                width={290}
+                text="수정"
               />
-              <MainButton
-                onPress={handelApplymod}
-                width={250}
-                text="지원취소하기"
-              />
+            </Col>
+            <Col style={{ padding: 3, marginRight: 30 }}>
+              <MainButton onPress={handelApplyCancle} width={290} text="취소" />
             </Col>
           </Row>
         ) : (
@@ -345,7 +410,11 @@ const OrderDetailScreen = props => {
             <MainButton onPress={handleReorder} width={250} text="수정하기" />
           </Col>
           <Col>
-            <MainButton width={250} text="삭제하기" />
+            <MainButton
+              onPress={handleDeleteOrder}
+              width={250}
+              text="삭제하기"
+            />
           </Col>
         </Row>
       )}
@@ -431,9 +500,19 @@ const OrderDetailScreen = props => {
                 <Text style={{ fontSize: 20, marginLeft: 10 }}>{title}</Text>
               </Row>
               <Row>
-                <Text note style={{ margin: 3, marginLeft: 10 }}>
-                  {createdat}
-                </Text>
+                <Col>
+                  <Text note style={{ margin: 3, marginLeft: 10 }}>
+                    {createdat}
+                  </Text>
+                </Col>
+                <Col>
+                  <Text
+                    note
+                    style={{ margin: 3, marginRight: 10, textAlign: "right" }}
+                  >
+                    {category}
+                  </Text>
+                </Col>
               </Row>
               <Row style={{ margin: 5, marginLeft: 10 }}>
                 <Text note>
@@ -521,8 +600,27 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
+    title: state.orderReducer.title,
+    time: state.orderReducer.desiredArrival,
+    isPrice: state.orderReducer.isPrice,
+    category: state.orderReducer.category,
+    images: state.orderReducer.images,
     orderId: state.orderReducer.orderId
   };
 };
 
-export default connect(mapStateToProps)(OrderDetailScreen);
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    // Login
+
+    reduxTitle: title => dispatch(titleSaver(title)),
+    reduxTime: time => dispatch(timeSaver(time)), ////
+    reduxIsPrice: isPrice => dispatch(isPriceSaver(isPrice)),
+    reduxCategory: category => dispatch(categorySaver(category)),
+    reduxImages: imageurl => dispatch(imagesSaver(imageurl)),
+    reduxOrderId: orderId => dispatch(orderIdSaver(orderId))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderDetailScreen);

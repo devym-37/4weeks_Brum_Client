@@ -116,8 +116,14 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
-  /* cancleorder:()
-    , */
+  cancleorder: (orderId, userToken) =>
+    sApi.delete(`/user/order/${orderId}`, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   campus: (campus, major) =>
     sApi.put(`user/campus`, {
       headers: {
@@ -157,12 +163,9 @@ export const serverApi = {
       }
     ),
   cancleapply: (userToken, orderId) =>
-    sApi.put(
+    sApi.delete(
       `order/${orderId}/apply`,
-      {
-        bidPrice: bidprice,
-        applyComment: msg
-      },
+
       {
         headers: {
           "Content-Type": "multipart/form-data",
