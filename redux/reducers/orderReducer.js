@@ -8,7 +8,8 @@ const initialState = {
   price: null,
   details: null,
   images: null,
-  isPrice: false
+  isPrice: false,
+  orderId: null
 };
 
 // Reducers (Modifies The State And Returns A New State)
@@ -24,7 +25,8 @@ const orderReducer = (state = initialState, action) => {
         details: action.details,
         title: action.title,
         isPrice: action.isPrice,
-        images: action.images
+        images: action.images,
+        orderId: action.orderId
       };
     }
     // Default

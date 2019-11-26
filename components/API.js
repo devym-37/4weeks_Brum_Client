@@ -116,6 +116,8 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
+  /* cancleorder:()
+    , */
   campus: (campus, major) =>
     sApi.put(`user/campus`, {
       headers: {

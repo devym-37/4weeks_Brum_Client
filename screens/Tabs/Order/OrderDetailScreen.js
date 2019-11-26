@@ -4,7 +4,7 @@ import GhostButton from "../../../components/Buttons/GhostButton";
 
 import { withNavigation } from "react-navigation";
 import MapView from "react-native-maps";
-//import constants from "../../constants";
+import constants from "../../../constants";
 import {
   ScrollView,
   Block,
@@ -43,6 +43,10 @@ import useInput from "../../../hooks/useInput";
 import FormInput from "../../../components/Inputs/FormInput";
 
 import { serverApi } from "../../../components/API";
+import { StringDecoder } from "string_decoder";
+import { connect } from "react-redux";
+
+import { orderIdSaver } from "../../../redux/actions/orderActions";
 
 const OrderDetailScreen = props => {
   //view 추가해야함
@@ -77,22 +81,29 @@ const OrderDetailScreen = props => {
   const [userToken, setUserToken] = useState(null);
   const rmsg = useInput("");
   const bidprice = useInput("");
+  const [orderId, setOrderId] = useState(1);
+  const [view, setView] = useState(1);
+  const [category, setCategory] = useState("기타");
+  const [hostUser, setHostUser] = useState(false);
 
   const handelApply = async (val1, val2) => {
     const value1 = val1.value; //bidprice
     const value2 = val2.value; //msg
-    const orderId = 1;
+    // const orderId = 1;
 
     try {
       setLoading(true);
       const result = await serverApi.apply(value1, value2, userToken, orderId);
-      // console.log(result.data);
+      console.log(result.data);
       if (result.data.isSuccess) {
         //return await refresh
+        console.log("지원성공", result.data);
+        fetchData();
+      } else {
+        Alert.alert(`지원실패, ${result.data.comment}`);
       }
     } catch (e) {
       console.log("faild", e);
-      Alert.alert("지원실패");
     } finally {
       setLoading(false);
     }
@@ -113,22 +124,54 @@ const OrderDetailScreen = props => {
       setLoading(false);
     }
   };
-  const refresh = async () => {
-    try {
-      setRefreshing(true);
-      //await AsyncStorage.getItem("userId"); //연결 후 빼기
 
-      //const usertoken = await AsyncStorage.getItem("userToken");
+  const handelApplymod = async () => {
+    try {
+      setLoading(true);
+      const result = await serverApi.cancleapply(userToken, orderId);
+      console.log(result.data);
+      if (result.data.isSuccess) {
+        //return await refresh
+      }
+    } catch (e) {
+      console.log("faild", e);
+      Alert.alert("지원취소실패");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReorder = () => {
+    props.navigation.navigate("NewOrderScreen");
+  };
+  const refresh = () => {
+    fetchData();
+  };
+
+  useEffect(() => {
+    // Create an scoped async function in the hook
+    let isCancelled = false;
+
+    fetchData();
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
+  async function fetchData() {
+    try {
+      setLoading(true);
       //await AsyncStorage.getItem("userId"); //연결 후 빼기
 
       const usertoken = await AsyncStorage.getItem("userToken");
 
-      const orderId = 1;
+      setUserToken(usertoken);
+      console.log("orderId프롭스확인", props);
 
-      const orderDetail = await serverApi.orderdetail(orderId, usertoken);
+      const oderDetail = await serverApi.orderdetail(props.orderId, usertoken);
 
-      const { userId } = orderDetail.data.data.userId;
-
+      console.log("요청내역", oderDetail);
+      const { userId } = oderDetail.data.data;
       const {
         departures,
         arrivals,
@@ -139,152 +182,102 @@ const OrderDetailScreen = props => {
         createdAt,
         desiredArrivalTime,
         applicants,
-        hostId
-      } = orderDetail.data.data.order;
+        hostId,
+        isPrice,
+        views
+      } = oderDetail.data.data.order;
 
-      // console.log(orderDetail.data.data.order);
-      // console.log("hk", departures);
-      if (orderDetail.data.isSuccess) {
-        // console.log("들어옴");
+      console.log(oderDetail.data.data);
 
-        setDepartures(departures);
+      if (oderDetail.data.isSuccess) {
+        console.log("들어옴", hostId);
+        console.log(userId);
+        setOrderId(props.orderId);
+        setDepartures(departures); //departures
         if (arrivals === null) {
+          //arrivals
           setArrivals("");
         } else {
           setArrivals(arrivals);
         }
+        setView(views);
+        setHostId(hostId); //hostid
+        setApplicants(applicants); //applicats
+        setUserId(userId); //userid
+        setDetails(details); //details
+        setHostUser(hostId === userId);
 
-        setHostId(hostId);
-        setApplicants(applicants);
-        setUserId(userId);
-        setDetails(details);
-        setCampus(hostInfo.campus);
+        for (let i = 0; i < applicants.length; i++) {
+          console.log("지원자목록", applicants[i].userId);
+
+          if (applicants[i].userId === userId) {
+            setDidApply(true);
+          }
+        }
+
+        // console.log(campusList);
+        console.log("listcampus", constants.campusList[hostInfo.campus]);
+        setCampus(constants.campusList[hostInfo.campus].kor); //campus
         //numberwithcommas
-        const getprice = utils.numberWithCommas(price);
-        setPrice(getprice);
-        setTitle(title);
-        setImg(hostInfo.image);
-        setNickname(hostInfo.nickname);
+        if (price === null) {
+          setPrice("협의");
+        } else {
+          const getprice = utils.numberWithCommas(price); //price
+          setPrice(getprice);
+        }
 
+        setIsPrice(isPrice);
+        setTitle(title); //title
+        setImg(hostInfo.image); // thumbnail
+        setNickname(hostInfo.nickname); //nickname
         //createdat
         const time = utils.transferTime(createdAt);
         setCreatedat(time);
         if (desiredArrivalTime === null) {
+          //desired arrivaltime
           setDesiredArrivalTime("");
         } else {
           setDesiredArrivalTime(desiredArrivalTime);
         }
+      } else {
+        Alert.alert("로그인해주세요");
+        console.log(oderDetail.data.comment);
       }
+
+      //----- set variables , applicants---
     } catch (e) {
       console.error(e);
     } finally {
-      setRefreshing(false);
+      setLoading(false);
     }
-  };
-
-  useEffect(props => {
-    // Create an scoped async function in the hook
-    let isCancelled = false;
-
-    async function fetchData(props) {
-      try {
-        setLoading(true);
-        //await AsyncStorage.getItem("userId"); //연결 후 빼기
-
-        const usertoken = await AsyncStorage.getItem("userToken");
-
-        setUserToken(usertoken);
-        const orderId = 1;
-
-        const orderDetail = await serverApi.orderdetail(orderId, usertoken);
-        // console.log(`orderDetail: `, orderDetail);
-        const { userId } = orderDetail.data.data.userId;
-        const {
-          departures,
-          arrivals,
-          details,
-          hostInfo,
-          price,
-          title,
-          createdAt,
-          desiredArrivalTime,
-          applicants,
-          hostId,
-          isPrice
-        } = orderDetail.data.data.order;
-
-        // console.log(orderDetail.data.data.order);
-
-        if (orderDetail.data.isSuccess) {
-          // console.log("들어옴");
-
-          setDepartures(departures); //departures
-          if (arrivals === null) {
-            //arrivals
-            setArrivals("");
-          } else {
-            setArrivals(arrivals);
-          }
-          setHostId(hostId); //hostid
-          setApplicants(applicants); //applicats
-          setUserId(userId); //userid
-          setDetails(details); //details
-          setCampus(hostInfo.campus); //campus
-          //numberwithcommas
-          const getprice = utils.numberWithCommas(price); //price
-          setPrice(getprice);
-          setIsPrice(isPrice);
-          setTitle(title); //title
-          setImg(hostInfo.image); // thumbnail
-          setNickname(hostInfo.nickname); //nickname
-          //createdat
-          const time = utils.transferTime(createdAt);
-          setCreatedat(time);
-          if (desiredArrivalTime === null) {
-            //desired arrivaltime
-            setDesiredArrivalTime("");
-          } else {
-            setDesiredArrivalTime(desiredArrivalTime);
-          }
-        }
-
-        //----- set variables , applicants---
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-    return () => {
-      isCancelled = true;
-    };
-  }, []);
+  }
 
   renderContent = () => (
     <View style={styles.panel}>
-      {isPrice ? (
+      {!hostUser ? (
+        isPrice ? (
+          <Item style={{ marginTop: 10 }}>
+            <Input {...bidprice} placeholder="₩가격 제안(선택사항)" />
+            <Text>
+              <Ionicons name="md-checkmark-circle-outline" size={22} />
+              {"  "}희망비용 수락
+            </Text>
+          </Item>
+        ) : (
+          <Item disabled style={{ marginTop: 10 }}>
+            <Input disabled placeholder="가격제안 불가" />
+          </Item>
+        )
+      ) : (
+        <></>
+      )}
+      {!hostUser ? (
         <Item style={{ marginTop: 10 }}>
-          <Input {...bidprice} placeholder="₩가격 제안(선택사항)" />
-          <Text>
-            <Ionicons name="md-checkmark-circle-outline" size={22} />
-            {"  "}희망비용 수락
-          </Text>
+          <Input {...rmsg} placeholder="러너의 메세지(선택사항)" />
         </Item>
       ) : (
-        <Item disabled style={{ marginTop: 10 }}>
-          <Input disabled placeholder="가격제안 불가" />
-          <Text>
-            <Ionicons name="md-checkmark-circle-outline" size={22} />
-            {"  "}희망비용 수락
-          </Text>
-        </Item>
+        <></>
       )}
-
-      <Item style={{ marginTop: 10 }}>
-        <Input {...rmsg} placeholder="러너의 메세지(선택사항)" />
-      </Item>
     </View>
   );
 
@@ -295,48 +288,64 @@ const OrderDetailScreen = props => {
       <Row style={{ alignSelf: "center" }}>
         <Ionicons name="md-arrow-dropup-circle" size={35} />
       </Row>
-      {didApply ? (
-        <Row>
-          <Col style={{ margin: 10 }}>
-            <Text
-              style={{
-                fontSize: 23,
+      {!hostUser ? (
+        didApply ? (
+          <Row>
+            <Col style={{ margin: 10 }}>
+              <Text
+                style={{
+                  fontSize: 23,
 
-                textAlignVertical: "center"
-              }}
-            >
-              ₩ {price}
-            </Text>
-          </Col>
-          <Col style={{ padding: -10 }}>
-            <MainButton
-              onPress={handelApplyCancle}
-              width={250}
-              text="지원취소하기"
-            />
-          </Col>
-        </Row>
+                  textAlignVertical: "center"
+                }}
+              >
+                ₩ {price}
+              </Text>
+            </Col>
+            <Col style={{ padding: -10 }}>
+              <MainButton
+                onPress={handelApplyCancle}
+                width={250}
+                text="지원취소하기"
+              />
+              <MainButton
+                onPress={handelApplymod}
+                width={250}
+                text="지원취소하기"
+              />
+            </Col>
+          </Row>
+        ) : (
+          <Row>
+            <Col style={{ margin: 10 }}>
+              <Text
+                style={{
+                  fontSize: 23,
+
+                  textAlignVertical: "center"
+                }}
+              >
+                ₩ {price}
+              </Text>
+            </Col>
+            <Col style={{ padding: -10 }}>
+              <MainButton
+                onPress={() => {
+                  handelApply(bidprice, rmsg);
+                }}
+                width={250}
+                text="러너지원하기"
+              />
+            </Col>
+          </Row>
+        )
       ) : (
         <Row>
-          <Col style={{ margin: 10 }}>
-            <Text
-              style={{
-                fontSize: 23,
-
-                textAlignVertical: "center"
-              }}
-            >
-              ₩ {price}
-            </Text>
+          <Col>
+            <MainButton onPress={handleReorder} width={250} text="수정하기" />
           </Col>
-          <Col style={{ padding: -10 }}>
-            <MainButton
-              onPress={() => {
-                handelApply(bidprice, rmsg);
-              }}
-              width={250}
-              text="러너지원하기"
-            />
+          <Col>
+            <MainButton width={250} text="삭제하기" />
           </Col>
         </Row>
       )}
@@ -371,13 +380,28 @@ const OrderDetailScreen = props => {
           </Row>
           <Row>
             <Content>
-              {/* {imageurl ? (
-        <Row>
-          <Image />
-        </Row>
-      ) : (
-        <></>
-      )} */}
+              {Array.isArray(imageurl) ? (
+                <Row>
+                  <FlatList
+                    horizontal
+                    pagingEnabled
+                    scrollEnabled
+                    showsHorizontalScrollIndicator={false}
+                    snapToAlignment="center"
+                    data={imageurl}
+                    keyExtractor={(item, index) => `${index}`}
+                    renderItem={({ item }) => (
+                      <Image
+                        source={item}
+                        resizeMode="contain"
+                        style={{ width, height: height / 2.8 }}
+                      />
+                    )}
+                  />
+                </Row>
+              ) : (
+                <></>
+              )}
 
               <Row>
                 <Col>
@@ -432,36 +456,38 @@ const OrderDetailScreen = props => {
                 </Text>
               </Row>
               <Row>
-                <Text style={{ margin: 10 }}>{details}</Text>
+                <Text style={{ margin: 10, height: 200 }}>{details}</Text>
               </Row>
-              <Row style={styles.bottom}></Row>
+
+              <Row style={styles.bottom}>
+                <Text
+                  note
+                  style={{
+                    alignSelf: "flex-start",
+                    textAlign: "right",
+                    marginLeft: 15
+                  }}
+                >
+                  <Ionicons size={22} name="md-eye">
+                    {" "}
+                    {view}
+                  </Ionicons>
+                </Text>
+              </Row>
             </Content>
 
-            {hostId === userId ? (
-              <Row>
-                <Col>
-                  <MainButton width={250} text="수정하기" />
-                </Col>
-                <Col>
-                  <MainButton width={250} text="삭제하기" />
-                </Col>
-              </Row>
-            ) : (
-              <BottomSheet
-                style={{ backgroundColor: "#f7f5eee8" }}
-                snapPoints={[100, 210, 100]}
-                renderContent={renderContent}
-                renderHeader={renderHeader}
-              />
-            )}
+            <BottomSheet
+              style={{ backgroundColor: "#f7f5eee8" }}
+              snapPoints={[100, 210, 100]}
+              renderContent={renderContent}
+              renderHeader={renderHeader}
+            />
           </Row>
         </Grid>
       )}
     </ScrollView>
   );
 };
-
-export default OrderDetailScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -488,6 +514,15 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height / 2
   },
   bottom: {
-    height: 200
+    height: 150
   }
 });
+
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    orderId: state.orderReducer.orderId
+  };
+};
+
+export default connect(mapStateToProps)(OrderDetailScreen);

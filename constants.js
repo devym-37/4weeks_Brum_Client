@@ -13,6 +13,14 @@ const orderCategory = [
   "기타"
 ];
 
+const campusList = {
+  hanyang: { kor: "한양대", eng: "hanyang" },
+  snu: { kor: "서울대", eng: "snu" },
+  yonsei: { kor: "연세대", eng: "yonsei" },
+  ehwa: { kor: "이화여대", eng: "ehwa" }
+};
+
+//export default { width, height, orderCategory, campusList };
 const campus = {
   hanyang: {
     kor: "한양대",
@@ -46,6 +54,7 @@ export default {
   height,
   orderCategory,
   campus,
+  campusList,
   LATITUDE,
   LONGITUDE,
   LATITUDE_DELTA,

@@ -16,6 +16,9 @@ import ListCard from "../../ListCard";
 import OrderCard from "../../../components/Cards/OrderCard";
 import Loader from "../../../components/Loader";
 import { withNavigation } from "react-navigation";
+import { connect } from "react-redux";
+
+import { orderIdSaver } from "../../../redux/actions/orderActions";
 
 const ListScreen = props => {
   const [refreshing, setRefreshing] = useState(false);
@@ -49,6 +52,8 @@ const ListScreen = props => {
               <View key={i}>
                 <TouchableOpacity
                   onPress={() => {
+                    console.log("ㄴㅇㄴㅇㄹ", data.orderId);
+                    props.reduxOrderId(data.orderId);
                     props.navigation.navigate("OrderDetailScreen");
                   }}
                 >
@@ -88,4 +93,20 @@ const styles = StyleSheet.create({
   }
 });
 
-export default withNavigation(ListScreen);
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    orderId: state.orderReducer.orderId
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxOrderId: orderId => dispatch(orderIdSaver(orderId))
+  };
+};
+
+export default withNavigation(
+  connect(mapStateToProps, mapDispatchToProps)(ListScreen)
+);
