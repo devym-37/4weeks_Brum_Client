@@ -29,7 +29,7 @@ const ListScreen = ({ navigation, reduxOrderId }) => {
       setRefreshing(true);
       let getAllOrders = await serverApi.getAllOrders();
       // console.log(`refresh: `, getAllOrders);
-      console.log(orders);
+      console.log("imhere");
     } catch (e) {
       console.log(`Can't refresh data. error message: ${e}`);
     } finally {
@@ -47,7 +47,7 @@ const ListScreen = ({ navigation, reduxOrderId }) => {
       }
       let getAllOrders = await serverApi.getAllOrders();
       setOrders([...getAllOrders.data.data.orders]);
-      console.log(`getAllOrders: `, getAllOrders.data.data.orders);
+      console.log(`getAllOrders: `, getAllOrders.data.data);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     }
@@ -70,7 +70,7 @@ const ListScreen = ({ navigation, reduxOrderId }) => {
             <View key={data.orderId}>
               <TouchableOpacity
                 onPress={() => {
-                  console.log("ddddddd", data.orderId);
+                  console.log("ㄴㅇㄴㅇㄹ", data.orderId);
                   reduxOrderId(data.orderId);
                   navigation.navigate("OrderDetailScreen");
                 }}

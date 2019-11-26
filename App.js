@@ -18,7 +18,7 @@ import LoggedOutMainNavigation from "./navigation/LoggedOutMainNavigation";
 
 import Signup from "./screens/Auth/Signup";
 
-import MapView from "./screens/Tabs/HomeScreen";
+import MapView from "./screens/Tabs/Home/MapScreen";
 
 // Imports: Redux Persist Persister
 import { store, persistor } from "./redux/store/store";
@@ -33,7 +33,7 @@ import PermissionApp from "./screens/Auth/Permissions";
 import Userinfo from "./screens/Auth/UserInfo";
 import SelectCampus from "./screens/Start/SelectCampus";
 import SelectPhoto from "./screens/Photo/SelectPhoto";
-import OderDetailScreen from "./screens/Tabs/Order/OrderDetailScreen";
+import OrderDetailScreen from "./screens/Tabs/Order/OrderDetailScreen";
 
 // React Native: App
 export default function App() {
@@ -63,7 +63,7 @@ export default function App() {
 
       setLoaded(true);
     } catch (e) {
-      console.log(`preLoad error: `, e);
+      // console.log(`preLoad error: `, e);
     }
   };
 

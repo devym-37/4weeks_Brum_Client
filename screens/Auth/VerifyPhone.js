@@ -54,7 +54,7 @@ const VerifyPhone = props => {
         props.navigation.navigate("Confirm");
       } else {
         const selectedPage = await AsyncStorage.getItem("page");
-        console.log("선택한 페이지", selectedPage);
+        // console.log("선택한 페이지", selectedPage);
         if (selectedPage === "resetpw") {
           props.navigation.navigate("ResetPw");
         } else {

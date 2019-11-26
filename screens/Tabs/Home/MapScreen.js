@@ -22,11 +22,11 @@ import {
   FooterTab
 } from "native-base";
 import { connect } from "react-redux";
-import { login } from "../../redux/actions/authActions";
-import AuthModal from "../Auth/AuthModal";
-import MapView from "../../components/MapView";
-import { CurrentLocationButton } from "../../navigation/CurrentLocationBtn";
-import { MapLocationButton } from "../../navigation/MapLocationBtn";
+import { login } from "../../../redux/actions/authActions";
+import AuthModal from "../../Auth/AuthModal";
+import MapView from "../../../components/MapView";
+import { CurrentLocationButton } from "../../../navigation/CurrentLocationBtn";
+import { MapLocationButton } from "../../../navigation/MapLocationBtn";
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
@@ -35,23 +35,10 @@ const LONGITUDE_DELTA = 0.001;
 
 const Home = props => {
   console.log("HomeScreen props", props);
-  // const [campus, setCampus] = useState("");
   const [region, setRegion] = useState({});
   const [currentLocation, setCurrentLocation] = useState({});
   const [defaultCampus, setDefaultCampus] = useState({});
   const [isOpen, setIsOpen] = useState(false);
-
-  const getCampusLatLng = selectCampus => {
-    if (selectCampus === "한양대") {
-      return { latitude: 37.55737, longitude: 127.047132 };
-    } else if (selectCampus === "연세대") {
-      return { latitude: 37.564624, longitude: 126.93755 };
-    } else if (selectCampus === "서울대") {
-      return { latitude: 37.459228, longitude: 126.952052 };
-    } else if (selectCampus === "이화여대") {
-      return { latitude: 37.561865, longitude: 126.946714 };
-    }
-  };
 
   const getDefaultCampusMap = async () => {
     const selectedCampus = await AsyncStorage.getItem("campus");
@@ -115,7 +102,6 @@ const Home = props => {
 
   return (
     <>
-      {isOpen && <AuthModal />}
       <Container style={styles.container}>
         <Content>
           <MapLocationButton

@@ -48,7 +48,7 @@ import { connect } from "react-redux";
 
 import { orderIdSaver } from "../../../redux/actions/orderActions";
 
-const OderDetailScreen = props => {
+const OrderDetailScreen = props => {
   //view 추가해야함
   const [region, setRegion] = useState({
     latitude: 37.55737,
@@ -97,10 +97,13 @@ const OderDetailScreen = props => {
       console.log(result.data);
       if (result.data.isSuccess) {
         //return await refresh
+        console.log("지원성공", result.data);
+        fetchData();
+      } else {
+        Alert.alert(`지원실패, ${result.data.comment}`);
       }
     } catch (e) {
       console.log("faild", e);
-      Alert.alert("지원실패");
     } finally {
       setLoading(false);
     }
@@ -110,7 +113,7 @@ const OderDetailScreen = props => {
     try {
       setLoading(true);
       const result = await serverApi.cancleapply(userToken, orderId);
-      console.log(result.data);
+      // console.log(result.data);
       if (result.data.isSuccess) {
         //return await refresh
       }
@@ -138,23 +141,37 @@ const OderDetailScreen = props => {
     }
   };
 
-  const refresh = async () => {
-    console.log("orderid", orderId);
-    try {
-      setRefreshing(true);
-      //await AsyncStorage.getItem("userId"); //연결 후 빼기
+  const handleReorder = () => {
+    props.navigation.navigate("NewOrderScreen");
+  };
+  const refresh = () => {
+    fetchData();
+  };
 
-      //const usertoken = await AsyncStorage.getItem("userToken");
+  useEffect(() => {
+    // Create an scoped async function in the hook
+    let isCancelled = false;
+
+    fetchData();
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
+  async function fetchData() {
+    try {
+      setLoading(true);
       //await AsyncStorage.getItem("userId"); //연결 후 빼기
 
       const usertoken = await AsyncStorage.getItem("userToken");
 
-      //const orderId = 1;
+      setUserToken(usertoken);
+      console.log("orderId프롭스확인", props);
 
-      const oderDetail = await serverApi.oderdetail(orderId, usertoken);
+      const oderDetail = await serverApi.orderdetail(props.orderId, usertoken);
 
-      const { userId } = oderDetail.data.data.userId;
-
+      console.log("요청내역", oderDetail);
+      const { userId } = oderDetail.data.data;
       const {
         departures,
         arrivals,
@@ -165,144 +182,75 @@ const OderDetailScreen = props => {
         createdAt,
         desiredArrivalTime,
         applicants,
-        hostId
+        hostId,
+        isPrice,
+        views
       } = oderDetail.data.data.order;
 
-      console.log(oderDetail.data.data.order);
-      console.log("hk", departures);
-      if (oderDetail.data.isSuccess) {
-        console.log("들어옴");
+      console.log(oderDetail.data.data);
 
-        setDepartures(departures);
+      if (oderDetail.data.isSuccess) {
+        console.log("들어옴", hostId);
+        console.log(userId);
+        setOrderId(props.orderId);
+        setDepartures(departures); //departures
         if (arrivals === null) {
+          //arrivals
           setArrivals("");
         } else {
           setArrivals(arrivals);
         }
+        setView(views);
+        setHostId(hostId); //hostid
+        setApplicants(applicants); //applicats
+        setUserId(userId); //userid
+        setDetails(details); //details
+        setHostUser(hostId === userId);
 
-        setHostId(hostId);
-        setApplicants(applicants);
-        setUserId(userId);
-        setDetails(details);
+        for (let i = 0; i < applicants.length; i++) {
+          console.log("지원자목록", applicants[i].userId);
 
-        setCampus(campusList.campusList[hostInfo.campus].kor);
+          if (applicants[i].userId === userId) {
+            setDidApply(true);
+          }
+        }
+
+        // console.log(campusList);
+        console.log("listcampus", constants.campusList[hostInfo.campus]);
+        setCampus(constants.campusList[hostInfo.campus].kor); //campus
         //numberwithcommas
-        const getprice = utils.numberWithCommas(price);
-        setPrice(getprice);
-        setTitle(title);
-        setImg(hostInfo.image);
-        setNickname(hostInfo.nickname);
+        if (price === null) {
+          setPrice("협의");
+        } else {
+          const getprice = utils.numberWithCommas(price); //price
+          setPrice(getprice);
+        }
 
+        setIsPrice(isPrice);
+        setTitle(title); //title
+        setImg(hostInfo.image); // thumbnail
+        setNickname(hostInfo.nickname); //nickname
         //createdat
         const time = utils.transferTime(createdAt);
         setCreatedat(time);
         if (desiredArrivalTime === null) {
+          //desired arrivaltime
           setDesiredArrivalTime("");
         } else {
           setDesiredArrivalTime(desiredArrivalTime);
         }
+      } else {
+        Alert.alert("로그인해주세요");
+        console.log(oderDetail.data.comment);
       }
+
+      //----- set variables , applicants---
     } catch (e) {
       console.error(e);
     } finally {
-      setRefreshing(false);
+      setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    // Create an scoped async function in the hook
-    let isCancelled = false;
-
-    async function fetchData() {
-      try {
-        setLoading(true);
-        //await AsyncStorage.getItem("userId"); //연결 후 빼기
-
-        const usertoken = await AsyncStorage.getItem("userToken");
-
-        setUserToken(usertoken);
-        console.log("orderId프롭스확인", props.orderId);
-
-        const oderDetail = await serverApi.oderdetail(props.orderId, usertoken);
-
-        console.log("요청내역", oderDetail);
-        const { userId } = oderDetail.data.data;
-        const {
-          departures,
-          arrivals,
-          details,
-          hostInfo,
-          price,
-          title,
-          createdAt,
-          desiredArrivalTime,
-          applicants,
-          hostId,
-          isPrice,
-          views
-        } = oderDetail.data.data.order;
-
-        console.log(oderDetail.data.data);
-
-        if (oderDetail.data.isSuccess) {
-          console.log("들어옴", hostId);
-          console.log(userId);
-          setOrderId(props.orderId);
-          setDepartures(departures); //departures
-          if (arrivals === null) {
-            //arrivals
-            setArrivals("");
-          } else {
-            setArrivals(arrivals);
-          }
-          setView(views);
-          setHostId(hostId); //hostid
-          setApplicants(applicants); //applicats
-          setUserId(userId); //userid
-          setDetails(details); //details
-          setHostUser(hostId === userId);
-          // console.log(campusList);
-          console.log("listcampus", constants.campusList[hostInfo.campus]);
-          setCampus(constants.campusList[hostInfo.campus].kor); //campus
-          //numberwithcommas
-          if (price === null) {
-            setPrice("협의");
-          } else {
-            const getprice = utils.numberWithCommas(price); //price
-            setPrice(getprice);
-          }
-
-          setIsPrice(isPrice);
-          setTitle(title); //title
-          setImg(hostInfo.image); // thumbnail
-          setNickname(hostInfo.nickname); //nickname
-          //createdat
-          const time = utils.transferTime(createdAt);
-          setCreatedat(time);
-          if (desiredArrivalTime === null) {
-            //desired arrivaltime
-            setDesiredArrivalTime("");
-          } else {
-            setDesiredArrivalTime(desiredArrivalTime);
-          }
-        } else {
-          Alert.alert("로그인해주세요");
-          console.log(oderDetail.data.comment);
-        }
-
-        //----- set variables , applicants---
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-    return () => {
-      isCancelled = true;
-    };
-  }, []);
+  }
 
   renderContent = () => (
     <View style={styles.panel}>
@@ -394,7 +342,7 @@ const OderDetailScreen = props => {
       ) : (
         <Row>
           <Col>
-            <MainButton width={250} text="수정하기" />
+            <MainButton onPress={handleReorder} width={250} text="수정하기" />
           </Col>
           <Col>
             <MainButton width={250} text="삭제하기" />
@@ -577,4 +525,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(OderDetailScreen);
+export default connect(mapStateToProps)(OrderDetailScreen);

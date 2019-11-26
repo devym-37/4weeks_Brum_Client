@@ -32,7 +32,7 @@ const MyPageScreen = ({ navigation }) => {
       if (userToken) {
         const userProfile = await serverApi.user(userToken);
         if (userProfile.data.data) {
-          console.log(`userProfile: `, userProfile.data.data);
+          // console.log(`userProfile: `, userProfile.data.data);
           setLoggedIn(true);
           setButtonName("임시 로그아웃 버튼");
           setProfile({ ...userProfile.data.data });
