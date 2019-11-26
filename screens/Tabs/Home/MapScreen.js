@@ -22,11 +22,11 @@ import {
   FooterTab
 } from "native-base";
 import { connect } from "react-redux";
-import { login } from "../../redux/actions/authActions";
-import AuthModal from "../Auth/AuthModal";
-import MapView from "../../components/MapView";
-import { CurrentLocationButton } from "../../components/Buttons/CurrentLocationBtn";
-import { MapLocationButton } from "../../components/Buttons/MapLocationBtn";
+import { login } from "../../../redux/actions/authActions";
+import AuthModal from "../../Auth/AuthModal";
+import MapViews from "../../../components/MapView";
+import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
+import { MapLocationButton } from "../../../components/Buttons/MapLocationBtn";
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
@@ -55,12 +55,13 @@ const Home = props => {
 
   const getDefaultCampusMap = async () => {
     const selectedCampus = await AsyncStorage.getItem("campus");
-    const campusRegion = getCampusLatLng(selectedCampus);
+    console.log("selectedCampus", selectedCampus);
+    const campusRegion = await getCampusLatLng(selectedCampus);
 
     const _region = {
       // class structure
-      latitude: campusRegion.latitude,
-      longitude: campusRegion.longitude,
+      latitude: LATITUDE,
+      longitude: LONGITUDE,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
     };
@@ -68,7 +69,7 @@ const Home = props => {
     this.map.animateToRegion(_region);
   };
 
-  const getLocation = () => {
+  const getLocation = async () => {
     navigator.geolocation.getCurrentPosition(position => {
       const currentLat = parseFloat(position.coords.latitude);
       const currentLng = parseFloat(position.coords.longitude);
@@ -91,6 +92,7 @@ const Home = props => {
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
     };
+    console.log("_userRegion", _userRegion);
 
     this.map.animateToRegion(_userRegion);
   };
@@ -118,6 +120,9 @@ const Home = props => {
       {isOpen && <AuthModal />}
       <Container style={styles.container}>
         <Content>
+          {region.latitude !== null && (
+            <MapViews latitude={LATITUDE} longitude={LONGITUDE} />
+          )}
           <MapLocationButton
             cb={() => {
               getDefaultCampusMap();
@@ -128,9 +133,6 @@ const Home = props => {
               userCurrentLocation();
             }}
           />
-          {region.latitude !== null && (
-            <MapView latitude={region.latitude} longitude={region.longitude} />
-          )}
         </Content>
       </Container>
     </>
@@ -151,14 +153,12 @@ const styles = StyleSheet.create({
     color: "black"
   }
 });
-
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    departure: state.orderDepartureReducer.departure
+    loggedIn: state.authReducer.loggedIn
   };
 };
-
 const mapDispatchToProps = dispatch => {
   // Action
   return {
