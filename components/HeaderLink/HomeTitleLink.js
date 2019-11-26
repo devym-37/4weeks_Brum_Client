@@ -45,7 +45,7 @@ export default withNavigation(({ navigation }) => {
       obj => obj.kor === reselectedCampus
     );
     await AsyncStorage.setItem("campus", engCampus);
-    navigation.push("Home");
+    navigation.push("Home", { campus: engCampus });
   };
 
   useEffect(() => {

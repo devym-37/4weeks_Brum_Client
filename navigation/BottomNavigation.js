@@ -5,18 +5,20 @@ import { AntDesign } from "@expo/vector-icons";
 
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 
-import ChatScreen from "../screens/Tabs/Chats.js/DefaultChatsScreen";
+import ChatListScreen from "../screens/Tabs/Chats/ChatListScreen";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/Home/ListScreen";
 import HomeScreen from "../screens/Tabs/Home/HomeScreen";
 import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
-import { createStackNavigator } from "react-navigation-stack";
-
+import ChatScreen from "../screens/Tabs/Chats/ChatScreen";
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
+import BackLink from "../components/HeaderLink/BackLink";
 import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
+import ChatHeaderLink from "../components/HeaderLink/ChatHeaderLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
 
@@ -71,7 +73,7 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Chats: {
-      screen: stackFactory(ChatScreen, { title: "채팅" }),
+      screen: stackFactory(ChatListScreen, { title: "채팅" }),
       navigationOptions: {
         title: "채팅",
         tabBarIcon: ({ focused, tintColor }) => (

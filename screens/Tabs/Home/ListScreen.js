@@ -66,7 +66,6 @@ const ListScreen = props => {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center"
   },

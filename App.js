@@ -1,6 +1,7 @@
 // Imports: Dependencies
 import React, { useState, useEffect } from "react";
-import { View, Text, AsyncStorage } from "react-native";
+import { connectActionSheet } from "@expo/react-native-action-sheet";
+import { AsyncStorage } from "react-native";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { AppLoading } from "expo";
@@ -36,7 +37,7 @@ import SelectPhoto from "./screens/Photo/SelectPhoto";
 import OrderDetailScreen from "./screens/Tabs/Order/OrderDetailScreen";
 
 // React Native: App
-export default function App() {
+const App = () => {
   const [loaded, setLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [isAllowed, setisAllowed] = useState(null);
@@ -86,7 +87,9 @@ export default function App() {
   ) : (
     <AppLoading />
   );
-}
+};
+
+export default connectActionSheet(App);
 /*
 {isLoggedIn ? <MainNavigation /> : <StartNavigation />}
   {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
