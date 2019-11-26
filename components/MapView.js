@@ -12,7 +12,7 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { Container } from "native-base";
 import { DestinationInput } from "./Inputs/DestinationInput";
-import { DeparterInput } from "./Inputs/DepartureInput";
+import { DepartureInput } from "./Inputs/DepartureInput";
 import { connect } from "react-redux";
 import {
   departureSave,
@@ -91,11 +91,8 @@ const MapScreen = props => {
   return (
     <>
       <Container>
-        {props.orderPosition === true ? (
-          <DestinationInput destination={regions} />
-        ) : (
-          <Text></Text>
-        )}
+        <DestinationInput destination={regions} />
+        <DepartureInput />
         <MapView
           style={styles.mapStyle}
           provider="google"

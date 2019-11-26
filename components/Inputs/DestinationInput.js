@@ -1,5 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Platform
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ifIphoneX } from "react-native-iphone-x-helper";
 import constants from "../../constants";
@@ -17,7 +24,10 @@ export const DestinationInput = function(props) {
       }}
       style={[
         styles.container,
-        { top: HEIGHT - Bottom, ...ifIphoneX({ top: HEIGHT - iosBottom }) }
+        {
+          top: Platform.OS === "android" ? HEIGHT - Bottom : HEIGHT - 95,
+          ...ifIphoneX({ top: HEIGHT - iosBottom })
+        }
       ]}
     >
       <View style={styles.leftCol}>
@@ -25,7 +35,7 @@ export const DestinationInput = function(props) {
           style={{ width: 30, height: 28 }}
           source={require("../../assets/Delivery_arrival.png")}
         />
-        <Text note style={{ fontSize: 12, color: "#545454" }}>
+        <Text note style={{ fontSize: 12, color: "#545454", paddingTop: 3 }}>
           도착지
         </Text>
       </View>
@@ -53,7 +63,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000000",
     elevation: 7,
     shadowRadius: 5,
-    shadowOpacity: 1.0
+    shadowOpacity: 0.2
   },
   leftCol: {
     flex: 1,
