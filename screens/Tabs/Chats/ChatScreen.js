@@ -33,6 +33,7 @@ const IncomingMessage = styled.View`
   /* padding-left: 28px; */
   position: relative;
   flex-direction: row;
+  align-self: flex-start;
 `;
 
 const SentMessage = styled.View`
@@ -60,12 +61,28 @@ const SentMessageContent = styled.View`
 `;
 const MessageAuthor = styled.Text`
   padding-bottom: 6px;
+  font-size: 12;
+  font-weight: 500;
 `;
-const MessageBubble = styled.View`
+const SentMessageBubble = styled.View`
   background-color: white;
   box-shadow: 0 30px 60px rgba(50, 50, 93, 0.25);
   padding: 10px 20px;
-  border-radius: 16px;
+  border-radius: 20px;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 18px;
+  border-bottom-left-radius: 18px;
+  box-shadow: 2px 5px 4px rgba(0, 0, 0, 0.03);
+`;
+
+const IncomingMessageBubble = styled.View`
+  background-color: white;
+  box-shadow: 0 30px 60px rgba(50, 50, 93, 0.25);
+  padding: 10px 20px;
+  border-radius: 20px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 18px;
+  box-shadow: 2px 5px 4px rgba(0, 0, 0, 0.03);
 `;
 const Message = styled.Text`
   display: flex;
@@ -158,9 +175,9 @@ const ChatScreen = ({ navigation }) => {
             />
             <MessageContent>
               <MessageAuthor>이영민</MessageAuthor>
-              <MessageBubble>
+              <IncomingMessageBubble>
                 <Message>환영합니다!</Message>
-              </MessageBubble>
+              </IncomingMessageBubble>
             </MessageContent>
             <MessageTimestamp>11:23</MessageTimestamp>
           </IncomingMessage>
@@ -169,9 +186,9 @@ const ChatScreen = ({ navigation }) => {
             <SentMessageContent>
               <MessageTimestamp>11:23</MessageTimestamp>
 
-              <MessageBubble>
+              <SentMessageBubble>
                 <Message>네 감사합니다</Message>
-              </MessageBubble>
+              </SentMessageBubble>
             </SentMessageContent>
           </SentMessage>
         </ChatMessages>
