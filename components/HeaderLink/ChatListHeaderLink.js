@@ -7,17 +7,10 @@ const Container = styled.TouchableOpacity``;
 
 export default withNavigation(({ navigation }) => (
   <>
-    <Container onPress={() => navigation.navigate("FilterNavigation")}>
+    <Container onPress={() => navigation.navigate("ChatFilterNavigation")}>
       <Ionicons
         name="ios-options"
         size={24}
-        style={{ color: "#666", marginRight: 12 }}
-      />
-    </Container>
-    <Container onPress={() => navigation.navigate("NotificationNavigation")}>
-      <AntDesign
-        name="bells"
-        size={22}
         style={{ color: "#666", marginRight: 12 }}
       />
     </Container>

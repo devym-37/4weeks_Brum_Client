@@ -8,8 +8,11 @@ import {
   AsyncStorage
 } from "react-native";
 import MapView from "react-native-maps";
+<<<<<<< HEAD
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
+=======
+>>>>>>> e90a3fba5e96a1b8f6537ab7daadbb809f0064c0
 import { Container } from "native-base";
 import { DestinationInput } from "./Inputs/DestinationInput";
 import { DepartureInput } from "./Inputs/DepartureInput";
@@ -19,10 +22,10 @@ import {
   arrivalSave
 } from "../redux/actions/orderPositionActions";
 
+import constants from "../constants";
+
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
-const LATITUDE_DELTA = 0.006;
-const LONGITUDE_DELTA = 0.001;
 
 const styles = StyleSheet.create({
   mapStyle: {
@@ -49,14 +52,18 @@ const styles = StyleSheet.create({
 });
 
 const MapScreen = props => {
+<<<<<<< HEAD
   const { latitude = LATITUDE, longitude = LONGITUDE } = props;
   const [regions, setRegions] = useState({});
+=======
+  const { latitude, longitude } = props;
+>>>>>>> e90a3fba5e96a1b8f6537ab7daadbb809f0064c0
 
   const region = {
     latitude,
     longitude,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA
+    latitudeDelta: constants.LATITUDE_DELTA,
+    longitudeDelta: constants.LONGITUDE_DELTA
   };
   // props.reduxDeparturePosition(address[0]);
 
@@ -117,6 +124,7 @@ const MapScreen = props => {
   );
 };
 
+<<<<<<< HEAD
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
@@ -132,3 +140,13 @@ const mapDispatchToProps = dispatch => {
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
+=======
+const styles = StyleSheet.create({
+  mapStyle: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height
+  }
+});
+
+export default MapScreen;
+>>>>>>> e90a3fba5e96a1b8f6537ab7daadbb809f0064c0

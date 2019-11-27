@@ -113,24 +113,22 @@ const CountContainer = styled.View`
   align-items: flex-end;
   margin-top: -2px;
 `;
-const OrderCard = ({
-  title,
-  departures,
-  arrivals,
-  desiredArrivalTime,
-  price,
-  orderStatus,
+const ApplicantCard = ({
+  applicantId,
+  applicantInfo,
+  applyComment,
+  applyStatus,
   createdAt,
-  views,
-  applicants,
-  onPress
+  bidPrice,
+  onPress,
+  children,
+  ...rest
 }) => {
-  const priceWithComma = price && utils.numberWithCommas(Number(price));
+  const bidPriceWithComma =
+    bidPrice && utils.numberWithCommas(Number(bidPrice));
   const timeStamp = utils.transferTime(createdAt);
-  const status = utils.transferOrderStatus(orderStatus);
-  const shortTitle = utils.shortenText(title, 19);
-  const shortArrivals = utils.shortenText(arrivals, 7);
-  const shortDeparture = utils.shortenText(departures, 7);
+  const avgOfScores = utils.avgOfScores(applicantInfo.getScore);
+  const numOfScores = utils.numOfScores(applicantInfo.getScore);
   return (
     <>
       <Touchable onPress={onPress}>
@@ -138,50 +136,58 @@ const OrderCard = ({
           <ContentContainer>
             <Thumbnail
               source={{
-                uri:
-                  "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png"
+                uri: applicantInfo.image
               }}
             />
             <TextContainer>
-              <Title>{shortTitle}</Title>
-
+              <Title>{applicantInfo.nickname}</Title>
               <SpotContainer>
                 <Time>{timeStamp}</Time>
                 <Time>・</Time>
-                <Spot>{shortDeparture}</Spot>
-                <AntDesign
+                <Spot>
+                  {applicantInfo.university
+                    ? applicantInfo.university
+                    : `미인증 회원`}
+                </Spot>
+                <Time>・</Time>
+                <Spot>{`평점 : ${avgOfScores}/5.0(${numOfScores}개)`}</Spot>
+                {/* <AntDesign
                   name="arrowright"
                   size={13}
                   style={{ color: "#737b84", paddingRight: 6 }}
                 />
-                <Spot>{shortArrivals}</Spot>
+                <Spot>{shortArrivals}</Spot> */}
               </SpotContainer>
               <Container>
-                <StatusContainer>
-                  <Status>{status}</Status>
-                </StatusContainer>
-                <Price>{price ? `${priceWithComma}원` : `협의가능`}</Price>
+                {/* <StatusContainer> */}
+                {/* <Status>{status}</Status> */}
+                {/* </StatusContainer> */}
+                <Price>
+                  {bidPrice ? `${bidPriceWithComma}원` : `제시금액에 가능`}
+                </Price>
               </Container>
+              {/* <Price>{applyComment ? applyComment : `러너 지원합니다`}</Price> */}
               <CountContainer>
                 <Container>
-                  <Ionicons
+                  {/* <Ionicons
                     name="md-paper-plane"
                     size={15}
                     style={{ color: "#737b84", paddingTop: 1 }}
                   />
-                  <Count>{applicants.length}</Count>
+                  <Count>{applicants.length}</Count> */}
                 </Container>
                 <Container>
-                  <AntDesign
+                  {/* <AntDesign
                     name="eyeo"
                     size={15}
                     style={{ color: "#737b84", marginLeft: 8, paddingTop: 1 }}
                   />
-                  <Count>{views}</Count>
+                  <Count>{views}</Count> */}
                 </Container>
               </CountContainer>
             </TextContainer>
           </ContentContainer>
+          {children}
         </CardContainer>
         <Divider />
       </Touchable>
@@ -189,7 +195,7 @@ const OrderCard = ({
   );
 };
 
-export default withNavigation(OrderCard);
+export default withNavigation(ApplicantCard);
 
 // "title": "한양대 공학관 -> 우리집으로 무거운 물건좀 옮겨주세요",
 //                 "departures": "한양대 공학관",

@@ -14,8 +14,11 @@ import AuthModal from "../Auth/AuthModal";
 import { serverApi } from "../../components/API";
 import ListCard from "../../components/Cards/ListCard";
 import OrderCard from "../../components/Cards/OrderCard";
+import { connect } from "react-redux";
 
-const ListScreen = ({ navigation }) => {
+import { orderIdSaver } from "../../redux/actions/orderActions";
+
+const ListScreen = ({ navigation, reduxOrderId }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,11 +27,9 @@ const ListScreen = ({ navigation }) => {
   const refresh = async () => {
     try {
       setRefreshing(true);
-      const selectedCampus = await AsyncStorage.getItem("campus");
-      let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
+      let getAllOrders = await serverApi.getAllOrders();
       // console.log(`refresh: `, getAllOrders);
-      setOrders([...getCampusOrders.data.data.orders]);
-      // console.log(getCampusOrders);
+      console.log("imhere");
     } catch (e) {
       console.log(`Can't refresh data. error message: ${e}`);
     } finally {
@@ -40,16 +41,13 @@ const ListScreen = ({ navigation }) => {
     try {
       setLoading(true);
       const loggedIn = await AsyncStorage.getItem("userToken");
-      // console.log(`ListScreen token: `, loggedIn);
+      console.log(`ListScreen token: `, loggedIn);
       if (!loggedIn) {
         setIsopenLoginModal(true);
       }
-
-      const selectedCampus = await AsyncStorage.getItem("campus");
-      let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
-
-      setOrders([...getCampusOrders.data.data.orders]);
-      // console.log(`getAllOrders: `, getAllOrders.data.data.orders);
+      let getAllOrders = await serverApi.getAllOrders();
+      setOrders([...getAllOrders.data.data.orders]);
+      console.log(`getAllOrders: `, getAllOrders.data.data);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     }
@@ -69,9 +67,11 @@ const ListScreen = ({ navigation }) => {
       >
         <Content>
           {orders.map((data, i) => (
-            <View key={i}>
+            <View key={data.orderId}>
               <TouchableOpacity
                 onPress={() => {
+                  console.log("ㄴㅇㄴㅇㄹ", data.orderId);
+                  reduxOrderId(data.orderId);
                   navigation.navigate("OrderDetailScreen");
                 }}
               >
@@ -113,4 +113,18 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ListScreen;
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    orderId: state.orderReducer.orderId
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxOrderId: orderId => dispatch(orderIdSaver(orderId))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListScreen);

@@ -3,6 +3,6 @@
   "lanType": "ip",
   "dev": true,
   "minify": false,
-  "urlRandomness": "df-jwp",
+  "urlRandomness": null,
   "https": false
 }

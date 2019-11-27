@@ -22,11 +22,19 @@ import {
   FooterTab
 } from "native-base";
 import { connect } from "react-redux";
+<<<<<<< HEAD:screens/Tabs/HomeScreen.js
+import { login } from "../../redux/actions/authActions";
+import AuthModal from "../Auth/AuthModal";
+import MapView from "../../components/MapView";
+import { CurrentLocationButton } from "../../components/Buttons/CurrentLocationBtn";
+import { MapLocationButton } from "../../components/Buttons/MapLocationBtn";
+=======
 import { login } from "../../../redux/actions/authActions";
 import AuthModal from "../../Auth/AuthModal";
-import MapViews from "../../../components/MapView";
-import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
-import { MapLocationButton } from "../../../components/Buttons/MapLocationBtn";
+import MapView from "../../../components/MapView";
+import { CurrentLocationButton } from "../../../navigation/CurrentLocationBtn";
+import { MapLocationButton } from "../../../navigation/MapLocationBtn";
+>>>>>>> e90a3fba5e96a1b8f6537ab7daadbb809f0064c0:screens/Tabs/Home/MapScreen.js
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
@@ -35,33 +43,19 @@ const LONGITUDE_DELTA = 0.001;
 
 const Home = props => {
   console.log("HomeScreen props", props);
-  // const [campus, setCampus] = useState("");
   const [region, setRegion] = useState({});
   const [currentLocation, setCurrentLocation] = useState({});
   const [defaultCampus, setDefaultCampus] = useState({});
   const [isOpen, setIsOpen] = useState(false);
 
-  const getCampusLatLng = selectCampus => {
-    if (selectCampus === "hanyang") {
-      return { latitude: 37.55737, longitude: 127.047132 };
-    } else if (selectCampus === "yonsei") {
-      return { latitude: 37.564624, longitude: 126.93755 };
-    } else if (selectCampus === "snu") {
-      return { latitude: 37.459228, longitude: 126.952052 };
-    } else if (selectCampus === "ihwa") {
-      return { latitude: 37.561865, longitude: 126.946714 };
-    }
-  };
-
   const getDefaultCampusMap = async () => {
     const selectedCampus = await AsyncStorage.getItem("campus");
-    console.log("selectedCampus", selectedCampus);
-    const campusRegion = await getCampusLatLng(selectedCampus);
+    const campusRegion = getCampusLatLng(selectedCampus);
 
     const _region = {
       // class structure
-      latitude: LATITUDE,
-      longitude: LONGITUDE,
+      latitude: campusRegion.latitude,
+      longitude: campusRegion.longitude,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
     };
@@ -69,7 +63,7 @@ const Home = props => {
     this.map.animateToRegion(_region);
   };
 
-  const getLocation = async () => {
+  const getLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
       const currentLat = parseFloat(position.coords.latitude);
       const currentLng = parseFloat(position.coords.longitude);
@@ -92,7 +86,6 @@ const Home = props => {
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
     };
-    console.log("_userRegion", _userRegion);
 
     this.map.animateToRegion(_userRegion);
   };
@@ -117,12 +110,8 @@ const Home = props => {
 
   return (
     <>
-      {isOpen && <AuthModal />}
       <Container style={styles.container}>
         <Content>
-          {region.latitude !== null && (
-            <MapViews latitude={LATITUDE} longitude={LONGITUDE} />
-          )}
           <MapLocationButton
             cb={() => {
               getDefaultCampusMap();
@@ -133,6 +122,9 @@ const Home = props => {
               userCurrentLocation();
             }}
           />
+          {region.latitude !== null && (
+            <MapView latitude={region.latitude} longitude={region.longitude} />
+          )}
         </Content>
       </Container>
     </>
@@ -153,12 +145,14 @@ const styles = StyleSheet.create({
     color: "black"
   }
 });
+
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    loggedIn: state.authReducer.loggedIn
+    departure: state.orderDepartureReducer.departure
   };
 };
+
 const mapDispatchToProps = dispatch => {
   // Action
   return {

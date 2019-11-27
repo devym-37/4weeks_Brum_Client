@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/react-native-action-sheet": "^3.4.0",
     "@expo/vector-icons": "^10.0.6",
     "@react-native-community/async-storage": "^1.6.3",
     "@types/expo": "^33.0.1",
@@ -35,6 +36,7 @@
     "lodash": "^4.17.15",
     "lodash.find": "^4.6.0",
     "lodash.findkey": "^4.6.0",
+    "lodash.map": "^4.6.0",
     "multer": "^1.4.2",
     "native-base": "^2.13.8",
     "prop-types": "^15.7.2",
@@ -52,8 +54,10 @@
     "react-native-maps": "0.25.0",
     "react-native-modal": "^11.5.3",
     "react-native-modal-datetime-picker": "^7.6.0",
+    "react-native-modal-dropdown": "^0.7.0",
     "react-native-modal-selector": "^1.1.2",
     "react-native-modest-checkbox": "^3.3.0",
+    "react-native-phone-call": "^1.0.9",
     "react-native-reanimated": "^1.2.0",
     "react-native-screens": "^1.0.0-alpha.23",
     "react-native-web": "^0.11.7",

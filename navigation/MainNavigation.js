@@ -9,6 +9,8 @@ import FilterNavigation from "./FilterNavigation";
 import AuthNavigation from "./AuthNavigation";
 import NewOrderNavigation from "./NewOrderNavigation";
 import PhotoNavigation from "./PhotoNavigation";
+import ChatNavigation from "./ChatNavigation";
+import ChatFilterNavigation from "./ChatFilterNavigation";
 import { stackStyles } from "./config";
 
 const MainNavigation = createStackNavigator(
@@ -19,6 +21,8 @@ const MainNavigation = createStackNavigator(
     FilterNavigation,
     NewOrderNavigation,
     PhotoNavigation,
+    ChatNavigation,
+    ChatFilterNavigation,
     NotificationNavigation
   },
   {
