@@ -20,6 +20,7 @@ import BackLink from "../components/HeaderLink/BackLink";
 import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
 import ChatHeaderLink from "../components/HeaderLink/ChatHeaderLink";
 import ChatListHeaderLink from "../components/HeaderLink/ChatListHeaderLink";
+import CancelOrderLink from "../components/HeaderLink/CancelOrderlLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
 
@@ -34,9 +35,12 @@ const stackFactory = (initialRoute, customConfig) =>
     },
     ApplicantsList: {
       screen: ApplicantsList,
-      navigationOptions: {
-        title: "내요청 상세보기"
-      }
+      navigationOptions: ({ navigation }) => ({
+        title: "내요청 상세보기",
+        headerRight: (
+          <CancelOrderLink orderId={navigation.getParam("orderId")} />
+        )
+      })
     },
     OrderDetailScreen: {
       screen: OrderDetailScreen,
