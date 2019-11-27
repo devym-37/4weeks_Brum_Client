@@ -19,6 +19,7 @@ import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
 import BackLink from "../components/HeaderLink/BackLink";
 import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
 import ChatHeaderLink from "../components/HeaderLink/ChatHeaderLink";
+import ChatListHeaderLink from "../components/HeaderLink/ChatListHeaderLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
 
@@ -73,7 +74,10 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Chats: {
-      screen: stackFactory(ChatListScreen, { title: "채팅" }),
+      screen: stackFactory(ChatListScreen, {
+        title: "채팅",
+        headerRight: <ChatListHeaderLink />
+      }),
       navigationOptions: {
         title: "채팅",
         tabBarIcon: ({ focused, tintColor }) => (
