@@ -146,37 +146,46 @@ const ApplicantsList = ({ navigation }) => {
 
   const FirstRoute = () => (
     <>
-      {loading ? (
-        <Loader />
-      ) : applicantList && applicantList.length === 0 ? (
-        <Text>지원자가 없습니다</Text>
-      ) : (
-        applicantList &&
-        applicantList.map(applicant => (
-          <ApplicantCard key={applicant.applicantId} {...applicant}>
-            <Button
-              onPress={() => handleChoice(applicant.applicantInfo.userId)}
-            >
-              <ButtonText>러너 선택</ButtonText>
-            </Button>
-          </ApplicantCard>
-        ))
-      )}
+      <ScrollView
+        style={{ backgroundColor: "#f1f3f5" }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        }
+      >
+        {loading ? (
+          <Loader />
+        ) : applicantList && applicantList.length === 0 ? (
+          <Text>지원자가 없습니다</Text>
+        ) : (
+          applicantList &&
+          applicantList.map(applicant => (
+            <ApplicantCard key={applicant.applicantId} {...applicant}>
+              <Button
+                onPress={() => handleChoice(applicant.applicantInfo.userId)}
+              >
+                <ButtonText>러너 선택</ButtonText>
+              </Button>
+            </ApplicantCard>
+          ))
+        )}
+      </ScrollView>
     </>
   );
   const SecondRoute = () => (
-    <Container>
-      <Text>내요청상세</Text>
-    </Container>
-  );
-
-  return (
     <ScrollView
       style={{ backgroundColor: "#f1f3f5" }}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
+      <Container>
+        <Text>내요청상세</Text>
+      </Container>
+    </ScrollView>
+  );
+
+  return (
+    <>
       <TabView
         navigationState={{ index, routes: [...routes] }}
         renderScene={SceneMap({
@@ -187,7 +196,7 @@ const ApplicantsList = ({ navigation }) => {
         onIndexChange={index => setIndex(index)}
         initialLayout={{ width: constants.width }}
       />
-    </ScrollView>
+    </>
   );
 };
 
