@@ -8,6 +8,7 @@ import Loader from "../../../components/Loader";
 import ApplicantCard from "../../../components/Cards/ApplicantCard";
 import GhostButton from "../../../components/Buttons/GhostButton";
 import styles from "../../../styles";
+
 const Container = styled.View`
   flex: 1;
   justify-content: center;
@@ -38,7 +39,46 @@ const ApplicantsList = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [applicantList, setApplicantList] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  // console.log(`orderId: `, navigation.getParam("orderId"));
+  const [orderId, setOrderId] = useState(navigation.getParam("orderId"));
+  const handleConfirm = async deliverId => {
+    console.log(`deliverId: `, deliverId);
+    // console.log(`deliverId: `, typeof deliverId);
+    console.log(`orderId: `, orderId);
+    try {
+      setLoading(true);
+      const userToken = await AsyncStorage.getItem("userToken");
+      const request = await serverApi.choiceDeliver(
+        orderId,
+        deliverId,
+        userToken
+      );
+      console.log(`배달자 등록: `, request);
+    } catch (e) {
+      console.log(`Can't put selected deliverId on Server. Error: ${e}`);
+    } finally {
+      setLoading(false);
+      navigation.navigate("Chats");
+    }
+  };
+  const handleChoice = deliverId => {
+    // console.log(`event: `, deliverId);
+    return Alert.alert(
+      "러너 선택 확인",
+      `확인을 누르면 선택취소가 불가능합니다. 
+      계속 진행하시겠어요?`,
+      [
+        {
+          text: "확인",
+          onPress: () => handleConfirm(deliverId)
+        },
+        {
+          text: "취소",
+          style: "cancel"
+        }
+      ],
+      { cancelable: false }
+    );
+  };
   const preLoad = async () => {
     try {
       setLoading(true);
@@ -53,7 +93,7 @@ const ApplicantsList = ({ navigation }) => {
         ["applied", "chosen"].includes(applicant.applyStatus)
       );
       setApplicantList([...filteredApplicants]);
-      console.log(`getApplicantList: `, getApplicantList.data.data.applicants);
+      // console.log(`getApplicantList: `, getApplicantList.data.data.applicants);
     } catch (e) {
       console.log(`Can't fetch list of applicants. Error: ${e}`);
     } finally {
@@ -75,7 +115,7 @@ const ApplicantsList = ({ navigation }) => {
         ["applied", "chosen"].includes(applicant.applyStatus)
       );
       setApplicantList([...filteredApplicants]);
-      console.log(`getApplicantList: `, getApplicantList.data.data.applicants);
+      // console.log(`getApplicantList: `, getApplicantList.data.data.applicants);
     } catch (e) {
       console.log(`Can't fetch list of applicants. Error: ${e}`);
     } finally {
@@ -102,15 +142,11 @@ const ApplicantsList = ({ navigation }) => {
         applicantList &&
         applicantList.map(applicant => (
           <ApplicantCard key={applicant.applicantId} {...applicant}>
-            <Button onPress={() => Alert.alert("선택완료")}>
+            <Button
+              onPress={() => handleChoice(applicant.applicantInfo.userId)}
+            >
               <ButtonText>러너 선택</ButtonText>
             </Button>
-            {/* <GhostButton
-              text={"러너 선택"}
-              width={300}
-              height={8}
-              onPress={() => Alert.alert("선택완료")}
-            /> */}
           </ApplicantCard>
         ))
       )}
@@ -118,7 +154,7 @@ const ApplicantsList = ({ navigation }) => {
   );
 };
 
-export default withNavigation(ApplicantsList);
+export default ApplicantsList;
 
 // Array [
 //   Object {

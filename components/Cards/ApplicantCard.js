@@ -127,13 +127,8 @@ const ApplicantCard = ({
   const bidPriceWithComma =
     bidPrice && utils.numberWithCommas(Number(bidPrice));
   const timeStamp = utils.transferTime(createdAt);
-  // const status = utils.transferOrderStatus(orderStatus);
-  // const shortTitle = utils.shortenText(title, 19);
-  const numOfReview = applicantInfo.getScore.length;
-  const avgOfReview =
-    applicantInfo.getScore.reduce((acc, curr) => {
-      return acc + curr.score;
-    }, 0) / numOfReview;
+  const avgOfScores = utils.avgOfScores(applicantInfo.getScore);
+  const numOfScores = utils.numOfScores(applicantInfo.getScore);
   return (
     <>
       <Touchable onPress={onPress}>
@@ -152,12 +147,10 @@ const ApplicantCard = ({
                 <Spot>
                   {applicantInfo.university
                     ? applicantInfo.university
-                    : `신원 미인증`}
+                    : `미인증 회원`}
                 </Spot>
                 <Time>・</Time>
-                <Spot>{`평점 : ${avgOfReview.toFixed(
-                  1
-                )}/5.0(${numOfReview}개)`}</Spot>
+                <Spot>{`평점 : ${avgOfScores}/5.0(${numOfScores}개)`}</Spot>
                 {/* <AntDesign
                   name="arrowright"
                   size={13}
@@ -170,7 +163,7 @@ const ApplicantCard = ({
                 {/* <Status>{status}</Status> */}
                 {/* </StatusContainer> */}
                 <Price>
-                  {bidPrice ? `${bidpriceWithComma}원` : `제시금액에 가능`}
+                  {bidPrice ? `${bidPriceWithComma}원` : `제시금액에 가능`}
                 </Price>
               </Container>
               {/* <Price>{applyComment ? applyComment : `러너 지원합니다`}</Price> */}

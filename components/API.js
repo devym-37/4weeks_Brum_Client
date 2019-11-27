@@ -94,7 +94,7 @@ export const serverApi = {
       },
       {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
           "Access-Control-Allow-Headers": "x-access-token",
           "x-access-token": userToken
         }
@@ -108,6 +108,28 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
+  choiceDeliver: (orderId, deliverId, userToken) => {
+    return sApi.put(
+      `user/order/${orderId}/applicant`,
+      { deliverId },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": userToken
+        }
+      }
+    );
+  },
+  getAllChats: userToken => {
+    return sApi.get("user/chat", {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    });
+  },
   orderdetail: (userid, userToken) =>
     sApi.get(`order/${userid}`, {
       headers: {

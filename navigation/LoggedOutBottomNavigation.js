@@ -6,7 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer } from "react-navigation";
 
-import ChatScreen from "../screens/Tabs/Chats.js/DefaultChatsScreen";
+import ChatScreen from "../screens/Tabs/Chats/ChatListScreen";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/Home/ListScreen";

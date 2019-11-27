@@ -22,7 +22,9 @@ import { CurrentLocationButton } from "../../../navigation/CurrentLocationBtn";
 import { MapLocationButton } from "../../../navigation/MapLocationBtn";
 import { NavigationEvents } from "react-navigation";
 
-const View = styled.View``;
+const View = styled.View`
+  /* background-color: #f1f3f5; */
+`;
 const Container = styled.View`
   align-items: center;
   margin-top: 12;
@@ -101,34 +103,19 @@ const HomeScreen = ({ navigation }) => {
     this.map.animateToRegion(_region);
   };
 
-  // const getLocation = async () => {
-  //   const geo = await navigator.geolocation.getCurrentPosition();
-
-  // await navigator.geolocation.getCurrentPosition(position => {
-  //   let currentLat = parseFloat(position.coords.latitude);
-  //   let currentLng = parseFloat(position.coords.longitude);
-
-  //   let currentRegion = {
-  //     latitude: currentLat,
-  //     longitude: currentLng
-  //   };
-  //   setCurrentLocation({ ...currentRegion }); // 8
-  // });
+  // const userCurrentLocation = () => {
+  // const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
+  // console.log(`currentLocation: `, currentLocation);
+  // const _userRegion = {
+  //   // class structure
+  //   latitude: latitude,
+  //   longitude: longitude,
+  //   latitudeDelta: constants.LATITUDE_DELTA,
+  //   longitudeDelta: constants.LONGITUDE_DELTA
   // };
 
-  const userCurrentLocation = () => {
-    // const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
-    console.log(`currentLocation: `, currentLocation);
-    // const _userRegion = {
-    //   // class structure
-    //   latitude: latitude,
-    //   longitude: longitude,
-    //   latitudeDelta: constants.LATITUDE_DELTA,
-    //   longitudeDelta: constants.LONGITUDE_DELTA
-    // };
-
-    // this.map.animateToRegion(_userRegion);
-  };
+  // this.map.animateToRegion(_userRegion);
+  // };
 
   const preLoad = async () => {
     try {

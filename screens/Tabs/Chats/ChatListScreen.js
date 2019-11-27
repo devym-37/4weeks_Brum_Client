@@ -6,7 +6,7 @@ import { withNavigation } from "react-navigation";
 import { serverApi } from "../../../components/API";
 
 import DefaultOrder from "../../../components/DefaultOrder";
-import OrderCard from "../../../components/Cards/OrderCard";
+import ChatCard from "../../../components/Cards/ChatCard";
 import Loader from "../../../components/Loader";
 
 const Container = styled.View`
@@ -21,18 +21,22 @@ const Text = styled.Text`
   margin-bottom: 4px;
 `;
 
-DefaultOrderScreen = ({ navigation }) => {
+const ChatListScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
-  const [orders, setOrders] = useState([]);
+  const [chats, setChats] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const handleClick = username => {
+    console.log(`username: `, username);
+    navigation.navigate("ChatNavigation", { username: username });
+  };
 
   const refresh = async () => {
     try {
       setRefreshing(true);
-      const userToken = await AsyncStorage.getItem("userToken");
-      let requestUserOrders = await serverApi.getUserOrders(userToken);
-      // console.log(`리프레쉬 오더 `, requestUserOrders);
-      setOrders([...requestUserOrders.data.data.orders]);
+      let userToken = await AsyncStorage.getItem("userToken");
+      let requestChats = await serverApi.getAllChats(userToken);
+      setChats([...requestChats.data]);
     } catch (e) {
       console.log(`Can't refresh data. error message: ${e}`);
     } finally {
@@ -42,11 +46,10 @@ DefaultOrderScreen = ({ navigation }) => {
   const preLoad = async () => {
     try {
       setLoading(true);
-      const userToken = await AsyncStorage.getItem("userToken");
-
-      let requestUserOrders = await serverApi.getUserOrders(userToken);
-      // console.log(`requestUserOrders: `, requestUserOrders);
-      setOrders([...requestUserOrders.data.data.orders]);
+      let userToken = await AsyncStorage.getItem("userToken");
+      let requestChats = await serverApi.getAllChats(userToken);
+      console.log(`chats: `, requestChats.data);
+      setChats([...requestChats.data.data]);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     } finally {
@@ -67,24 +70,19 @@ DefaultOrderScreen = ({ navigation }) => {
     >
       {loading ? (
         <Loader />
-      ) : orders.filter(order => {
-          // console.log(order);
-          return order.orderStatus < 5;
-        }).length === 0 ? (
-        <DefaultOrder />
-      ) : (
-        orders.map((order, i) => (
-          <OrderCard
+      ) : chats ? (
+        chats.map((chat, i) => (
+          <ChatCard
             key={i}
-            {...order}
-            onPress={() => {
-              navigation.navigate("ApplicantsList", { orderId: order.orderId });
-            }}
-          />
+            onPress={() => handleClick(chat.deliverInfo.nickname)}
+            {...chat}
+          ></ChatCard>
         ))
+      ) : (
+        <DefaultOrder />
       )}
     </ScrollView>
   );
 };
 
-export default DefaultOrderScreen;
+export default ChatListScreen;
