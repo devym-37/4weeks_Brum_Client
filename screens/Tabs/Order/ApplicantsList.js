@@ -121,7 +121,7 @@ const ApplicantsList = ({ navigation }) => {
         ["applied", "chosen"].includes(applicant.applyStatus)
       );
       setApplicantList([...filteredApplicants]);
-      // console.log(`getApplicantList: `, getApplicantList.data.data.applicants);
+      console.log(`getApplicantList: `, getApplicantList.data.data);
     } catch (e) {
       console.log(`Can't fetch list of applicants. Error: ${e}`);
     } finally {

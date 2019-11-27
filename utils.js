@@ -87,6 +87,15 @@ export default {
       : text;
   },
 
+  scoreColorPicker: num => {
+    if (typeof num !== "number") num = Number(num);
+
+    if (!isNaN(num)) {
+      if (num >= 4.0) return "#32B049";
+      if (num >= 3.0) return "#4181D0";
+      else return "#757575";
+    }
+  },
   numOfScores: arrayOfScores => arrayOfScores.length,
 
   avgOfScores: arrayOfScores => {

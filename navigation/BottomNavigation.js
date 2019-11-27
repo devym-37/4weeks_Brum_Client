@@ -9,10 +9,10 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import ChatListScreen from "../screens/Tabs/Chats/ChatListScreen";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
+import OrderDetailScreen from "../screens/Tabs/Order/OrderDetail";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/Home/ListScreen";
 import HomeScreen from "../screens/Tabs/Home/HomeScreen";
-import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import ChatScreen from "../screens/Tabs/Chats/ChatScreen";
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
