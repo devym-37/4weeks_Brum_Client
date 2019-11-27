@@ -18,6 +18,8 @@ import { API } from "../../../APIS";
 import _ from "lodash";
 import constants from "../../../constants";
 import { Container } from "native-base";
+import { connect } from "react-redux";
+import { destinationAction } from "../../../redux/actions/destinationAction";
 
 //Show map... select location to go to
 //Get location route with Google Location API
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class OrderDepartureAddress extends Component {
+class OrderDepartureAddress extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -120,7 +122,10 @@ export default class OrderDepartureAddress extends Component {
     const { isFocused } = this.state;
     const locationPredictions = this.state.locationPredictions.map(
       prediction => (
-        <View style={{ alignContent: "center", alignItems: "center", flex: 1 }}>
+        <View
+          key={prediction.id}
+          style={{ alignContent: "center", alignItems: "center", flex: 1 }}
+        >
           <TouchableHighlight
             style={styles.containers}
             onPress={() => this.pressedPrediction(prediction)}
@@ -149,24 +154,31 @@ export default class OrderDepartureAddress extends Component {
       )
     );
     return (
-      <>
-        <Container style={styles.container}>
-          <TextInput
-            placeholder="주소 검색"
-            style={styles.destinationInput}
-            selectionColor={"#F13564"}
-            underlineColorAndroid={isFocused ? "#F13564" : "#D3D3D3"}
-            onFocus={this.handleFocus}
-            onBlur={this.handleBlur}
-            onChangeText={destination => {
-              this.setState({ destination });
-              this.onChangeDestinationDebounced(destination);
-            }}
-            value={this.state.destination}
-          />
-          {locationPredictions}
-        </Container>
-      </>
+      <Container style={styles.container}>
+        <TextInput
+          placeholder="주소 검색"
+          style={styles.destinationInput}
+          selectionColor={"#F13564"}
+          underlineColorAndroid={isFocused ? "#F13564" : "#D3D3D3"}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+          onChangeText={destination => {
+            this.setState({ destination });
+            this.onChangeDestinationDebounced(destination);
+          }}
+          value={this.state.destination}
+        />
+        {locationPredictions}
+      </Container>
     );
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    // Login
+    reduxDestination: destination => dispatch(destinationSave(destination))
+  };
+};
+export default connect(mapDispatchToProps)(OrderDepartureAddress);
