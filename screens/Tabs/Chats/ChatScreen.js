@@ -88,7 +88,6 @@ const Message = styled.Text`
   display: flex;
   align-items: center;
   font-size: 15;
-  /* width: 50%; */
 `;
 const MessageTimestamp = styled.Text`
   align-self: flex-end;

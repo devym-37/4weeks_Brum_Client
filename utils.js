@@ -65,7 +65,7 @@ export default {
     if (gap("year"))
       return `${createdAt.year.substr(2)}/${createdAt.month}/${date}`;
     if (gap("month") || gap("date"))
-      return `${createdAt.month}월 ${createdAt.date}알`;
+      return `${createdAt.month}월 ${createdAt.date}일`;
     else return `${createdAt.hour}:${createdAt.min}`;
   },
   transferOrderStatus: num => {
