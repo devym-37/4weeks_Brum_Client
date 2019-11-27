@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Dimensions, Text, Image } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  Text,
+  Image,
+  SafeAreaView
+} from "react-native";
 import styled from "styled-components";
 
 import MapScreen from "../../../components/MapView";
@@ -7,6 +13,10 @@ import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocati
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
 import { Marker } from "react-native-maps";
+import OrderAddress from "./OrderAddress";
+import { DestinationInput } from "../../../components/Inputs/DestinationInput";
+import { DepartureInput } from "../../../components/Inputs/DepartureInput";
+import { connect } from "react-redux";
 
 const Container = styled.View`
   flex: 1;
@@ -42,8 +52,9 @@ const styles = StyleSheet.create({
   }
 });
 
-const SearchAddress = () => {
+const SearchAddress = ({ navigation, ...props }) => {
   const [currentLocation, setCurrentLocation] = useState({});
+  const [regions, setRegions] = useState({});
 
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -71,6 +82,10 @@ const SearchAddress = () => {
     this.map.animateToRegion(_userRegion);
   };
 
+  const handleClickDeparture = () => {
+    navigation.navigate("orderAddress");
+  };
+
   useEffect(() => {
     (async () => {
       await getLocation();
@@ -79,27 +94,43 @@ const SearchAddress = () => {
 
   return (
     <>
-      <Container>
-        <MapScreen
-          latitude={currentLocation.latitude}
-          longitude={currentLocation.longitude}
-          showLocation={false}
-          orderPosition={true}
-        ></MapScreen>
-        <Image
-          style={{ width: 40, height: 40 }}
-          source={require("../../../assets/Delivery_arrival.png")}
-        />
-        <Text style={styles.center}></Text>
-        <CurrentLocationButton
-          callback={() => {
-            userCurrentLocation();
-          }}
-          bottom={90}
-        />
-      </Container>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Container>
+          <Text>Test{JSON.stringify(props.orderDestination)}</Text>
+          <DepartureInput
+            onPress={handleClickDeparture}
+            departure={props.orderDestination}
+          />
+          <DestinationInput />
+
+          <MapScreen
+            latitude={currentLocation.latitude}
+            longitude={currentLocation.longitude}
+            showLocation={false}
+          ></MapScreen>
+          <Image
+            style={{ width: 40, height: 40 }}
+            source={require("../../../assets/Delivery_arrival.png")}
+          />
+          <Text style={styles.center}></Text>
+          <CurrentLocationButton
+            callback={() => {
+              userCurrentLocation();
+            }}
+            bottom={140}
+          />
+        </Container>
+      </SafeAreaView>
     </>
   );
 };
 
-export default SearchAddress;
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    departureAddress: state.orderPositionReducer.departureAddress,
+    orderDestination: state.destinationReducer.destination
+  };
+};
+
+export default connect(mapStateToProps)(SearchAddress);

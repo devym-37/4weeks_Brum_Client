@@ -58,8 +58,6 @@ const MapScreen = props => {
     latitudeDelta: constants.LATITUDE_DELTA,
     longitudeDelta: constants.LONGITUDE_DELTA
   };
-  // props.reduxDeparturePosition(address[0]);
-
   const geoCode = async address => {
     const geo = await Location.geocodeAsync(address);
     return geo;
@@ -76,23 +74,11 @@ const MapScreen = props => {
     console.log("address", address[0]);
     // console.log("geolatlng", geolatlng);
     setRegions(address[0]);
+    this.props.reduxDepartureAddress(address[0]);
   };
-  useEffect(() => {
-    recordEvent();
-  }, []);
-
-  //   <View style={[styles.bubble, styles.latlng]}>
-  //   <Text style={styles.centeredText}>
-  //     {regions.region}
-  //     {regions.street}
-  //     {regions.name}
-  //   </Text>
-  // </View>
   return (
     <>
       <Container>
-        <DepartureInput destination={this.props || undefined} />
-        <DestinationInput destination={regions} />
         <MapView
           style={styles.mapStyle}
           provider="google"
@@ -131,6 +117,8 @@ const mapDispatchToProps = dispatch => {
   return {
     // Login
     reduxDeparturePosition: departure => dispatch(departureSave(departure)),
+    reduxDepartureAddress: departureAddress =>
+      dispatch(departureAddressSave(departureAddress)),
     reduxArrivalPosition: arrival => dispatch(arrivalSave(arrival))
   };
 };

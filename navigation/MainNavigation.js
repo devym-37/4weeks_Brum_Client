@@ -11,6 +11,7 @@ import NewOrderNavigation from "./NewOrderNavigation";
 import PhotoNavigation from "./PhotoNavigation";
 import ChatNavigation from "./ChatNavigation";
 import ChatFilterNavigation from "./ChatFilterNavigation";
+import DepatureNavigation from "./DepatureNavigation";
 import { stackStyles } from "./config";
 
 const MainNavigation = createStackNavigator(
@@ -23,7 +24,8 @@ const MainNavigation = createStackNavigator(
     PhotoNavigation,
     ChatNavigation,
     ChatFilterNavigation,
-    NotificationNavigation
+    NotificationNavigation,
+    DepatureNavigation
   },
   {
     navigationOptions: {

@@ -17,6 +17,7 @@ import MapView from "react-native-maps";
 import { API } from "../../../APIS";
 import _ from "lodash";
 import constants from "../../../constants";
+import { withNavigation } from "react-navigation";
 import { Container } from "native-base";
 import { connect } from "react-redux";
 import { destinationSave } from "../../../redux/actions/destinationAction";
@@ -128,9 +129,15 @@ class OrderDepartureAddress extends Component {
         >
           <TouchableHighlight
             style={styles.containers}
-            onPress={() =>
-              this.pressedPrediction(prediction.structured_formatting.main_text)
-            }
+            onPress={() => {
+              this.pressedPrediction(
+                prediction.structured_formatting.main_text
+              );
+              this.props.reduxDestination(
+                prediction.structured_formatting.main_text
+              );
+              this.props.navigation.goBack(null);
+            }}
             key={prediction.id}
           >
             <React.Fragment>
@@ -190,7 +197,6 @@ const mapDispatchToProps = dispatch => {
     reduxDestination: destination => dispatch(destinationSave(destination))
   };
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OrderDepartureAddress);
+export default withNavigation(
+  connect(mapStateToProps, mapDispatchToProps)(OrderDepartureAddress)
+);

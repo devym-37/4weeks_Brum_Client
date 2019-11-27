@@ -15,15 +15,15 @@ const WIDTH = constants.width;
 const HEIGHT = constants.height;
 
 export const DestinationInput = function(props) {
-  const Bottom = props.bottom ? props.bottom : 140;
-  const iosBottom = props.bottom ? props.bottom : 190;
+  const Bottom = props.bottom ? props.bottom : 190;
+  const iosBottom = props.bottom ? props.bottom : 240;
   return (
     <TouchableOpacity
       onPress={() => {}}
       style={[
         styles.container,
         {
-          top: Platform.OS === "android" ? HEIGHT - Bottom : HEIGHT - 95,
+          top: Platform.OS === "android" ? HEIGHT - Bottom : HEIGHT - 145,
           ...ifIphoneX({ top: HEIGHT - iosBottom })
         }
       ]}
@@ -38,10 +38,7 @@ export const DestinationInput = function(props) {
         </Text>
       </View>
       <View style={styles.centerCol}>
-        <Text style={{ fontSize: 14, color: "#545454" }}>
-          {props.destination.region} {props.destination.street}{" "}
-          {props.destination.name}
-        </Text>
+        <Text style={{ fontSize: 14, color: "#545454" }}></Text>
       </View>
     </TouchableOpacity>
   );
