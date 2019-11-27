@@ -21,7 +21,7 @@ export default withNavigation(({ navigation, orderId }) => {
   const handleClick = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      const request = await serverApi.cancelOrder(orderId, userToken);
+      const request = await serverApi.cancelMyOrder(orderId, userToken);
       console.log(`요청취소 server response: `, request);
       const resetAction = StackActions.reset({
         key: null,

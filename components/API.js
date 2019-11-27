@@ -146,7 +146,7 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
-  cancleorder: (orderId, userToken) =>
+  cancelMyOrder: (orderId, userToken) =>
     sApi.delete(`/user/order/${orderId}`, {
       headers: {
         "Content-Type": "multipart/form-data",

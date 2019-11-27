@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ScrollView, RefreshControl, AsyncStorage } from "react-native";
-
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { withNavigation } from "react-navigation";
 import { serverApi } from "../../../components/API";
 
 import DefaultOrder from "../../../components/DefaultOrder";
 import OrderCard from "../../../components/Cards/OrderCard";
 import Loader from "../../../components/Loader";
-
+import constants from "../../../constants";
+import styles from "../../../styles";
 const Container = styled.View`
   flex: 1;
   margin-top: 50%;
@@ -25,7 +26,11 @@ DefaultOrderScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [index, setIndex] = useState(0);
+  const [routes, setRoutes] = useState([
+    { key: "first", title: "지원자 리스트" },
+    { key: "second", title: "내요청 상세보기" }
+  ]);
   const refresh = async () => {
     try {
       setRefreshing(true);
@@ -58,13 +63,19 @@ DefaultOrderScreen = ({ navigation }) => {
     preLoad();
   }, []);
 
-  return (
-    <ScrollView
-      style={{ backgroundColor: "#f1f3f5" }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-      }
-    >
+  const _renderTabBar = props => (
+    <TabBar
+      {...props}
+      activeColor="#333"
+      inactiveColor="#333"
+      indicatorStyle={{ backgroundColor: styles.mainColor }}
+      style={{ backgroundColor: "white" }}
+      labelStyle={{ fontSize: 16 }}
+    />
+  );
+
+  const FirstRoute = () => (
+    <>
       {loading ? (
         <Loader />
       ) : orders.filter(order => {
@@ -83,6 +94,49 @@ DefaultOrderScreen = ({ navigation }) => {
           />
         ))
       )}
+    </>
+  );
+
+  const SecondRoute = () => (
+    <Container>
+      <Text>내요청상세</Text>
+    </Container>
+  );
+  return (
+    <ScrollView
+      style={{ backgroundColor: "#f1f3f5" }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+      }
+    >
+      <TabView
+        navigationState={{ index, routes: [...routes] }}
+        renderScene={SceneMap({
+          first: FirstRoute,
+          second: SecondRoute
+        })}
+        renderTabBar={_renderTabBar}
+        onIndexChange={index => setIndex(index)}
+        initialLayout={{ width: constants.width }}
+      />
+      {/* {loading ? (
+        <Loader />
+      ) : orders.filter(order => {
+          // console.log(order);
+          return order.orderStatus < 5;
+        }).length === 0 ? (
+        <DefaultOrder />
+      ) : (
+        orders.map((order, i) => (
+          <OrderCard
+            key={i}
+            {...order}
+            onPress={() => {
+              navigation.navigate("ApplicantsList", { orderId: order.orderId });
+            }}
+          />
+        ))
+      )} */}
     </ScrollView>
   );
 };

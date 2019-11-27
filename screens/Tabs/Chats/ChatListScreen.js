@@ -70,7 +70,7 @@ const ChatListScreen = ({ navigation }) => {
     >
       {loading ? (
         <Loader />
-      ) : chats ? (
+      ) : chats && chats.deliverInfo ? (
         chats.map((chat, i) => (
           <ChatCard
             key={i}
