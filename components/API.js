@@ -121,6 +121,14 @@ export const serverApi = {
       }
     );
   },
+  cancelOrder: (orderId, userToken) =>
+    sApi.delete(`order/${orderId}/apply`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   getAllChats: userToken => {
     return sApi.get("user/chat", {
       headers: {
