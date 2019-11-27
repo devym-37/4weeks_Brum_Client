@@ -19,7 +19,7 @@ import _ from "lodash";
 import constants from "../../../constants";
 import { Container } from "native-base";
 import { connect } from "react-redux";
-import { destinationAction } from "../../../redux/actions/destinationAction";
+import { destinationSave } from "../../../redux/actions/destinationAction";
 
 //Show map... select location to go to
 //Get location route with Google Location API
@@ -94,7 +94,8 @@ class OrderDepartureAddress extends Component {
   };
 
   async onChangeDestination(destination) {
-    console.log("destination", { destination });
+    console.log("destination [1] :", destination);
+    console.log("destination [2] :", { destination });
     this.setState({ destination });
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API}&input={${destination}}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
     const result = await fetch(apiUrl);
@@ -106,18 +107,17 @@ class OrderDepartureAddress extends Component {
   }
 
   pressedPrediction(prediction) {
-    console.log("prediction", prediction);
+    // console.log("prediction [3] :", prediction);
+    this.props.reduxDestination(prediction);
+    // console.log("OderAddress Test : ", this.props.orderDestination);
     Keyboard.dismiss();
     this.setState({
       locationPredictions: [],
-      destination: prediction.description.substring(5)
+      destination: prediction
     });
     Keyboard;
   }
-  //   {prediction.description.substring(5)}
-  //   <TouchableHighlight
-  //   onPress={() => this.pressedPrediction(prediction)}
-  // >
+
   render() {
     const { isFocused } = this.state;
     const locationPredictions = this.state.locationPredictions.map(
@@ -128,7 +128,9 @@ class OrderDepartureAddress extends Component {
         >
           <TouchableHighlight
             style={styles.containers}
-            onPress={() => this.pressedPrediction(prediction)}
+            onPress={() =>
+              this.pressedPrediction(prediction.structured_formatting.main_text)
+            }
             key={prediction.id}
           >
             <React.Fragment>
@@ -174,6 +176,13 @@ class OrderDepartureAddress extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    orderDestination: state.destinationReducer.destination
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   // Action
   return {
@@ -181,4 +190,7 @@ const mapDispatchToProps = dispatch => {
     reduxDestination: destination => dispatch(destinationSave(destination))
   };
 };
-export default connect(mapDispatchToProps)(OrderDepartureAddress);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OrderDepartureAddress);

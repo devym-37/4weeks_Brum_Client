@@ -72,7 +72,7 @@ const MapScreen = props => {
 
   const recordEvent = async regionChange => {
     const address = await reverseGeocode(regionChange);
-    const geolatlng = await geoCode("한양대 사회과학관");
+    const geolatlng = await geoCode(this.props.orderDestination);
     console.log("address", address[0]);
     console.log("geolatlng", geolatlng);
     setRegions(address[0]);
@@ -91,8 +91,8 @@ const MapScreen = props => {
   return (
     <>
       <Container>
+        <DepartureInput destination={this.props.orderDestination} />
         <DestinationInput destination={regions} />
-        <DepartureInput />
         <MapView
           style={styles.mapStyle}
           provider="google"
@@ -120,7 +120,8 @@ const MapScreen = props => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    loggedIn: state.authReducer.loggedIn
+    loggedIn: state.authReducer.loggedIn,
+    orderDestination: state.destinationReducer.destination
   };
 };
 const mapDispatchToProps = dispatch => {

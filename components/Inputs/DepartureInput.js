@@ -38,7 +38,9 @@ export const DepartureInput = function(props) {
         </Text>
       </View>
       <View style={styles.centerCol}>
-        <Text style={{ fontSize: 14, color: "#545454" }}>선택사항</Text>
+        <Text style={{ fontSize: 14, color: "#545454" }}>
+          {props.destination ? props.destination : "출발지 선택"}
+        </Text>
       </View>
     </TouchableOpacity>
   );
