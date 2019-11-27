@@ -6,14 +6,15 @@ import { MaterialIcons } from "@expo/vector-icons";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
-export const MapLocationButton = function(props) {
+export const CurrentLocationButton = function(props) {
   //if props.cb is passed, use it. if not, console.log() when cb() is called.
-  const cb = props.cb
-    ? props.cb
-    : () => console.log("callback function not passed to MapLocationButton");
+  const callback = props.callback
+    ? props.callback
+    : () =>
+        console.log("callback function not passed to CurrentLocationButton");
   // if props.bottom is passed, use it. if not, set bottom to 110
-  const Bottom = props.bottom ? props.bottom : 240;
-  const iosBottom = props.bottom ? props.bottom : 290;
+  const Bottom = props.bottom ? props.bottom : 190;
+  const iosBottom = props.bottom ? props.bottom + 50 : 240;
   return (
     <View
       style={[
@@ -25,11 +26,11 @@ export const MapLocationButton = function(props) {
       ]}
     >
       <MaterialIcons
-        name="location-on"
+        name="my-location"
         color="#24282C"
         size={25}
         onPress={() => {
-          cb();
+          callback();
         }}
       />
     </View>
@@ -38,7 +39,7 @@ export const MapLocationButton = function(props) {
 
 const styles = StyleSheet.create({
   container: {
-    zIndex: 9,
+    zIndex: 8,
     position: "absolute",
     width: 44,
     height: 44,
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000000",
     elevation: 7,
     shadowRadius: 5,
-    shadowOpacity: 0.2,
+    // shadowOpacity: 0.2,
     justifyContent: "space-around",
     alignItems: "center"
   }

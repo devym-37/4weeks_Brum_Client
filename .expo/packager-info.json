@@ -1,1 +1,9 @@
-{}
+{
+  "packagerPort": 19001,
+  "packagerPid": 7424,
+  "devToolsPort": 19002,
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://p7-zmj.leeyoungmin.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.p7-zmj.leeyoungmin.brum-client.exp.direct",
+  "ngrokPid": 18708
+}
