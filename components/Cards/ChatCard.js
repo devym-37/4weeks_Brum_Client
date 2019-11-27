@@ -36,6 +36,8 @@ const OrderTitle = styled.Text`
   font-size: 14px;
   padding-left: 6;
   margin-top: -5;
+  color: #737b84;
+  font-weight: 500;
 `;
 const ChatColumn = styled.View`
   flex-direction: row;
