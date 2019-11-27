@@ -36,7 +36,7 @@ import SelectPhoto from "./screens/Photo/SelectPhoto";
 import OrderDetailScreen from "./screens/Tabs/Order/OrderDetailScreen";
 
 import SearchAddress from "./screens/Tabs/Order/SearchAddress";
-import HomeScreen from "./screens/Tabs/HomeScreen";
+import OrderAddress from "./screens/Tabs/Order/OrderAddress";
 
 // React Native: App
 export default function App() {
@@ -83,7 +83,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          <SearchAddress />
+          <OrderAddress />
         </PersistGate>
       </ThemeProvider>
     </Provider>

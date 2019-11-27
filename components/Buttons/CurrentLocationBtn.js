@@ -39,7 +39,7 @@ export const CurrentLocationButton = function(props) {
 
 const styles = StyleSheet.create({
   container: {
-    zIndex: 9,
+    zIndex: 8,
     position: "absolute",
     width: 44,
     height: 44,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000000",
     elevation: 7,
     shadowRadius: 5,
-    shadowOpacity: 0.2,
+    // shadowOpacity: 0.2,
     justifyContent: "space-around",
     alignItems: "center"
   }

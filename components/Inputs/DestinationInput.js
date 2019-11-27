@@ -19,9 +19,7 @@ export const DestinationInput = function(props) {
   const iosBottom = props.bottom ? props.bottom : 190;
   return (
     <TouchableOpacity
-      onPress={() => {
-        console.log("clicked");
-      }}
+      onPress={() => {}}
       style={[
         styles.container,
         {
@@ -54,7 +52,7 @@ const styles = StyleSheet.create({
     zIndex: 9,
     position: "absolute",
     flexDirection: "row",
-    width: WIDTH - 100,
+    width: WIDTH - 35,
     height: 50,
     left: 20,
     borderRadius: 10,
@@ -72,6 +70,7 @@ const styles = StyleSheet.create({
   },
   centerCol: {
     flex: 6,
-    alignItems: "center"
+    alignItems: "center",
+    paddingRight: 25
   }
 });

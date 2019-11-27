@@ -6,7 +6,6 @@ import MapScreen from "../../../components/MapView";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
-import SearchInput from "./SearchInput";
 
 const Container = styled.View`
   flex: 1;
