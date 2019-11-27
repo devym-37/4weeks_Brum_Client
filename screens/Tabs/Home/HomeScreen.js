@@ -15,7 +15,7 @@ import { serverApi } from "../../../components/API";
 import constants from "../../../constants";
 import styles from "../../../styles";
 
-import MapView from "../../../components/MapView";
+import MapScreen from "../../../components/MapView";
 import ListScreen from "./ListScreen";
 import Loader from "../../../components/Loader";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
@@ -163,7 +163,7 @@ const HomeScreen = ({ navigation }) => {
                     userCurrentLocation();
                   }}
                 />
-                <MapView
+                <MapScreen
                   latitude={region.latitude}
                   longitude={region.longitude}
                   orders={orders}

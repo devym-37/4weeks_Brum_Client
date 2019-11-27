@@ -7,7 +7,7 @@ import {
   Platform,
   AsyncStorage
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { Container } from "native-base";
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   centeredText: { textAlign: "center" }
 });
 
-const MapView = props => {
+const MapScreen = props => {
   const { latitude = LATITUDE, longitude = LONGITUDE } = props;
   const [regions, setRegions] = useState({});
 
@@ -72,9 +72,9 @@ const MapView = props => {
 
   const recordEvent = async regionChange => {
     const address = await reverseGeocode(regionChange);
-    const geolatlng = await geoCode(this.props.orderDestination);
+    // const geolatlng = await geoCode(this.props.orderDestination);
     console.log("address", address[0]);
-    console.log("geolatlng", geolatlng);
+    // console.log("geolatlng", geolatlng);
     setRegions(address[0]);
   };
   useEffect(() => {
@@ -91,7 +91,7 @@ const MapView = props => {
   return (
     <>
       <Container>
-        <DepartureInput destination={this.props.orderDestination} />
+        <DepartureInput destination={this.props || undefined} />
         <DestinationInput destination={regions} />
         <MapView
           style={styles.mapStyle}
@@ -111,7 +111,9 @@ const MapView = props => {
           showsScale={true}
           rotateEnabled={false}
           loadingEnabled={true}
-        />
+        >
+          <Marker coordinate={{ latitude: LATITUDE, longitude: LONGITUDE }} />
+        </MapView>
       </Container>
     </>
   );
@@ -132,4 +134,4 @@ const mapDispatchToProps = dispatch => {
     reduxArrivalPosition: arrival => dispatch(arrivalSave(arrival))
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(MapView);
+export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);

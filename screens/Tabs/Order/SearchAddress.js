@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Dimensions, Text, Image } from "react-native";
 import styled from "styled-components";
 
-import MapView from "../../../components/MapView";
+import MapScreen from "../../../components/MapView";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
+import { Marker } from "react-native-maps";
 
 const Container = styled.View`
   flex: 1;
@@ -79,12 +80,12 @@ const SearchAddress = () => {
   return (
     <>
       <Container>
-        <MapView
+        <MapScreen
           latitude={currentLocation.latitude}
           longitude={currentLocation.longitude}
           showLocation={false}
           orderPosition={true}
-        />
+        ></MapScreen>
         <Image
           style={{ width: 40, height: 40 }}
           source={require("../../../assets/Delivery_arrival.png")}

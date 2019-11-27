@@ -1,8 +1,8 @@
 {
+  "urlRandomness": "pb-tes",
   "hostType": "lan",
   "lanType": "ip",
   "dev": true,
   "minify": false,
-  "urlRandomness": "p7-zmj",
   "https": false
 }
