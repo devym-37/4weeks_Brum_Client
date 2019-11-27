@@ -8,6 +8,7 @@ import phoneReducer from "./phoneReducer";
 import campusReducer from "./campusReducer";
 import orderReducer from "./orderReducer";
 import orderPositionReducer from "./orderPositionReducer";
+import destinationReducer from "./destinationReducer";
 // Redux: Root Reducer
 const rootReducer = combineReducers({
   authReducer,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   phoneReducer,
   campusReducer,
   orderReducer,
-  orderPositionReducer
+  orderPositionReducer,
+  destinationReducer
 });
 
 // Exports
