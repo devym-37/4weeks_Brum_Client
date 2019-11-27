@@ -77,7 +77,7 @@ class Fire {
     return firebase.database.ServerValue.TIMESTAMP;
   }
   // send the message to the Backend
-  send = messages => {
+  send = (messages, orderid) => {
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
       const message = {
@@ -85,21 +85,59 @@ class Fire {
         user,
         timestamp: this.timestamp
       };
-      this.append(message);
+      this.append(message, orderid);
     }
   };
 
-  append = message =>
+  append = (message, orderid) =>
     firebase
       .database()
-      .ref("messages/1")
+      .ref(`threads/${orderid}/messages`)
       .push(message);
 
-  appendChatrooms = () =>
+  appendChatrooms = (userId, orderId, deliverId) =>
     firebase
       .database()
-      .ref("/users")
-      .push({ id: "jeong", threads: [1, 2] });
+      .ref(`threads/${orderId}/users/${userId}`)
+      .set(true)
+      .then(() =>
+        firebase
+          .database()
+          .ref(`threads/${orderId}/users/${deliverId}`)
+          .set(true)
+      )
+      .then(() =>
+        firebase
+          .database()
+          .ref(`users/${userId}/threads/${orderId}`)
+          .set(true)
+      )
+      .then(() =>
+        firebase
+          .database()
+          .ref(`users/${deliverId}/threads/${orderId}`)
+          .set(true)
+      );
+
+  appendUser = (userId, orderId) =>
+    firebase
+      .database()
+      .ref(`users/${userId}/name`)
+      .set(userId)
+      .then(() => {
+        firebase
+          .database()
+          .ref("users")
+          .on("value", data => {
+            console.log(data);
+          });
+      });
+
+  onList = userId =>
+    firebase
+      .database()
+      .ref(`users/${userId}/threads`)
+      .on("value", data => data);
 
   // close the connection to the Backend
   off() {

@@ -24,8 +24,8 @@ class Chat extends React.Component {
       <GiftedChat
         messages={this.state.messages}
         onSend={Fire.shared.send}
-        onInputTextChanged={Fire.shared.appendChatrooms}
         user={this.user}
+        oderid={1}
       />
     );
   }

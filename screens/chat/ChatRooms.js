@@ -1,6 +1,6 @@
 import React from "react";
 import { GiftedChat } from "react-native-gifted-chat"; // 0.3.0
-
+import { Button, View } from "react-native";
 import Fire from "./Fire";
 
 class ChatRooms extends React.Component {
@@ -12,20 +12,31 @@ class ChatRooms extends React.Component {
     messages: []
   };
 
-  get user() {
-    return {
-      name: this.props.navigation.state.params.name,
-      _id: Fire.shared.uid
-    };
+  handlechooseone() {
+    const userId = 1;
+    const orderId = 2;
+    const deliverId = 3;
+    Fire.shared.appendChatrooms(userId, orderId, deliverId);
+  }
+  handleadduser() {
+    const userId = 1;
+    const orderId = 3;
+    const deliverId = 4;
+    Fire.shared.appendUser(userId, orderId, deliverId);
   }
 
   render() {
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={Fire.shared.send}
-        user={this.user}
-      />
+      <View>
+        <Button
+          title="채팅으로"
+          onPress={() => {
+            this.props.navigation.navigate("Chat");
+          }}
+        />
+        <Button onPress={this.handlechooseone.bind(this)} title="지원자선택" />
+        <Button onPress={this.handleadduser.bind(this)} title="유저추가" />
+      </View>
     );
   }
 
@@ -41,4 +52,4 @@ class ChatRooms extends React.Component {
   }
 }
 
-export default Chat;
+export default ChatRooms;
