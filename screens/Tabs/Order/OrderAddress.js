@@ -14,7 +14,7 @@ import {
   Body
 } from "react-native";
 import MapView from "react-native-maps";
-import { API } from "../../../APIS";
+import { API } from "../../../components/API";
 import _ from "lodash";
 import constants from "../../../constants";
 import { Container } from "native-base";
