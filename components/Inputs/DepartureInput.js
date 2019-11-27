@@ -39,7 +39,7 @@ export const DepartureInput = function(props) {
         </Text>
       </View>
       <View style={styles.centerCol}>
-        <Text style={{ fontSize: 17, color: "#545454" }}>
+        <Text style={{ fontSize: 16, color: "#545454" }}>
           {props.departure ? props.departure : "출발지 선택"}
         </Text>
       </View>
@@ -75,11 +75,11 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = state => {
-  // Redux Store --> Component
-  return {
-    orderDestination: state.destinationReducer.destination
-  };
-};
+// const mapStateToProps = state => {
+//   // Redux Store --> Component
+//   return {
+//     orderDestination: state.destinationReducer.destination
+//   };
+// };
 
-export default connect(mapStateToProps)(DepartureInput);
+// export default connect(mapStateToProps)(DepartureInput);

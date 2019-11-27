@@ -69,12 +69,12 @@ const MapScreen = props => {
   };
 
   const recordEvent = async regionChange => {
-    const address = await reverseGeocode(regionChange);
-    // const geolatlng = await geoCode(this.props.orderDestination);
-    console.log("address", address[0]);
-    // console.log("geolatlng", geolatlng);
+    // const address = await reverseGeocode(regionChange);
+    const geolatlng = await geoCode("한양대학교");
+    // console.log("address", address[0]);
+    console.log("geolatlng", geolatlng);
     setRegions(address[0]);
-    this.props.reduxDepartureAddress(address[0]);
+    // this.props.reduxDepartureAddress(address[0]);
   };
   return (
     <>
@@ -97,9 +97,7 @@ const MapScreen = props => {
           showsScale={true}
           rotateEnabled={false}
           loadingEnabled={true}
-        >
-          <Marker coordinate={{ latitude: LATITUDE, longitude: LONGITUDE }} />
-        </MapView>
+        ></MapView>
       </Container>
     </>
   );

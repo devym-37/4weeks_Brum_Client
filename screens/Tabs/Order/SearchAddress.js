@@ -13,7 +13,6 @@ import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocati
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
 import { Marker } from "react-native-maps";
-import OrderAddress from "./OrderAddress";
 import { DestinationInput } from "../../../components/Inputs/DestinationInput";
 import { DepartureInput } from "../../../components/Inputs/DepartureInput";
 import { connect } from "react-redux";
@@ -71,6 +70,7 @@ const SearchAddress = ({ navigation, ...props }) => {
 
   const userCurrentLocation = () => {
     const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
+    const [regions, setRegions] = useState({});
 
     const _userRegion = {
       latitude: latitude,
@@ -86,9 +86,35 @@ const SearchAddress = ({ navigation, ...props }) => {
     navigation.navigate("orderAddress");
   };
 
+  const handleClickArrival = () => {
+    navigation.navigate("arrivalAddress");
+  };
+
+  const geoCode = async address => {
+    const geo = await Location.geocodeAsync(address);
+    return geo;
+  };
+
+  const reverseGeocode = async location => {
+    const reverseGeo = await Location.reverseGeocodeAsync(location);
+    return reverseGeo;
+  };
+
+  const recordEvent = async () => {
+    // const address = await reverseGeocode(regionChange);
+    // const geolatlng = await geoCode("한양대학교");
+    // console.log("address", address[0]);
+    // console.log("geolatlng", geolatlng);
+    // setRegions(address[0]);
+    // this.props.reduxDepartureAddress(address[0]);
+    return geolatlng;
+  };
+
   useEffect(() => {
     (async () => {
       await getLocation();
+      await reverseGeocode();
+      await recordEvent();
     })();
   }, []);
 
@@ -96,13 +122,14 @@ const SearchAddress = ({ navigation, ...props }) => {
     <>
       <SafeAreaView style={{ flex: 1 }}>
         <Container>
-          <Text>Test{JSON.stringify(props.orderDestination)}</Text>
           <DepartureInput
             onPress={handleClickDeparture}
             departure={props.orderDestination}
           />
-          <DestinationInput />
-
+          <DestinationInput
+            onPress={handleClickArrival}
+            destination={props.departureLocation}
+          />
           <MapScreen
             latitude={currentLocation.latitude}
             longitude={currentLocation.longitude}
@@ -128,9 +155,18 @@ const SearchAddress = ({ navigation, ...props }) => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    departureAddress: state.orderPositionReducer.departureAddress,
-    orderDestination: state.destinationReducer.destination
+    orderDestination: state.destinationReducer.destination,
+    departureLocation: state.destinationReducer.departureLocation
   };
 };
 
-export default connect(mapStateToProps)(SearchAddress);
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxDestination: destination => dispatch(destinationSave(destination)),
+    reduxDepartureLocation: departureLocation =>
+      dispatch(departureLocationSave(departureLocation))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchAddress);

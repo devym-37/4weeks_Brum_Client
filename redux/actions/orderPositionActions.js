@@ -3,9 +3,9 @@ export const departureSave = departure => ({
   departure: departure
 });
 
-export const departureAddressSave = arrival => ({
+export const departureAddressSave = departureAddress => ({
   type: "SAVE",
-  arrival: arrival
+  departureAddress: departureAddress
 });
 
 export const arrivalSave = arrival => ({
