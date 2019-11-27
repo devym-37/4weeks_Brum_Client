@@ -14,6 +14,8 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import StartNavigation from "./navigation/StartNavigation";
 import MainNavigation from "./navigation/MainNavigation";
 import LoggedOutMainNavigation from "./navigation/LoggedOutMainNavigation";
+
+import ChatNavigation from "./navigation/chatNavigation";
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
@@ -79,7 +81,7 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
+          <ChatNavigation />
         </PersistGate>
       </ThemeProvider>
     </Provider>
