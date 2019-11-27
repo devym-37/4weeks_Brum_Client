@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { withNavigation } from "react-navigation";
-import { serverApi } from "../../../components/API";
 import { AsyncStorage, RefreshControl, Alert } from "react-native";
+import { withNavigation } from "react-navigation";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import styled from "styled-components";
+import { serverApi } from "../../../components/API";
 import { ScrollView } from "react-native-gesture-handler";
 import Loader from "../../../components/Loader";
 import ApplicantCard from "../../../components/Cards/ApplicantCard";
 import GhostButton from "../../../components/Buttons/GhostButton";
 import styles from "../../../styles";
-
+import constants from "../../../constants";
 const Container = styled.View`
   flex: 1;
   justify-content: center;
@@ -39,6 +40,11 @@ const ApplicantsList = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [applicantList, setApplicantList] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [routes, setRoutes] = useState([
+    { key: "first", title: "지원자 리스트" },
+    { key: "second", title: "내 요청내용" }
+  ]);
   const [orderId, setOrderId] = useState(navigation.getParam("orderId"));
   const handleConfirm = async deliverId => {
     console.log(`deliverId: `, deliverId);
@@ -127,13 +133,19 @@ const ApplicantsList = ({ navigation }) => {
     preLoad();
   }, []);
 
-  return (
-    <ScrollView
-      style={{ backgroundColor: "#f1f3f5" }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
-      }
-    >
+  const _renderTabBar = props => (
+    <TabBar
+      {...props}
+      activeColor="#333"
+      inactiveColor="#333"
+      indicatorStyle={{ backgroundColor: styles.mainColor }}
+      style={{ backgroundColor: "white" }}
+      labelStyle={{ fontSize: 16 }}
+    />
+  );
+
+  const FirstRoute = () => (
+    <>
       {loading ? (
         <Loader />
       ) : applicantList && applicantList.length === 0 ? (
@@ -150,6 +162,31 @@ const ApplicantsList = ({ navigation }) => {
           </ApplicantCard>
         ))
       )}
+    </>
+  );
+  const SecondRoute = () => (
+    <Container>
+      <Text>내요청상세</Text>
+    </Container>
+  );
+
+  return (
+    <ScrollView
+      style={{ backgroundColor: "#f1f3f5" }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+      }
+    >
+      <TabView
+        navigationState={{ index, routes: [...routes] }}
+        renderScene={SceneMap({
+          first: FirstRoute,
+          second: SecondRoute
+        })}
+        renderTabBar={_renderTabBar}
+        onIndexChange={index => setIndex(index)}
+        initialLayout={{ width: constants.width }}
+      />
     </ScrollView>
   );
 };

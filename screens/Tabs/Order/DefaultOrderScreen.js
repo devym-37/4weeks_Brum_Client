@@ -8,7 +8,8 @@ import { serverApi } from "../../../components/API";
 import DefaultOrder from "../../../components/DefaultOrder";
 import OrderCard from "../../../components/Cards/OrderCard";
 import Loader from "../../../components/Loader";
-
+import constants from "../../../constants";
+import styles from "../../../styles";
 const Container = styled.View`
   flex: 1;
   margin-top: 50%;
@@ -65,24 +66,28 @@ DefaultOrderScreen = ({ navigation }) => {
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
       }
     >
-      {loading ? (
-        <Loader />
-      ) : orders.filter(order => {
-          // console.log(order);
-          return order.orderStatus < 5;
-        }).length === 0 ? (
-        <DefaultOrder />
-      ) : (
-        orders.map((order, i) => (
-          <OrderCard
-            key={i}
-            {...order}
-            onPress={() => {
-              navigation.navigate("ApplicantsList", { orderId: order.orderId });
-            }}
-          />
-        ))
-      )}
+      <>
+        {loading ? (
+          <Loader />
+        ) : orders.filter(order => {
+            // console.log(order);
+            return order.orderStatus < 5;
+          }).length === 0 ? (
+          <DefaultOrder />
+        ) : (
+          orders.map((order, i) => (
+            <OrderCard
+              key={i}
+              {...order}
+              onPress={() => {
+                navigation.navigate("ApplicantsList", {
+                  orderId: order.orderId
+                });
+              }}
+            />
+          ))
+        )}
+      </>
     </ScrollView>
   );
 };
