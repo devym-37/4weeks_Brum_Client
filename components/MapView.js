@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   centeredText: { textAlign: "center" }
 });
 
-const MapScreen = props => {
+const MapView = props => {
   const { latitude = LATITUDE, longitude = LONGITUDE } = props;
   const [regions, setRegions] = useState({});
 
@@ -132,4 +132,4 @@ const mapDispatchToProps = dispatch => {
     reduxArrivalPosition: arrival => dispatch(arrivalSave(arrival))
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(MapView);

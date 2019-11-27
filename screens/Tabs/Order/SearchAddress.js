@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Dimensions, Text, Image } from "react-native";
 import styled from "styled-components";
 
-import MapScreen from "../../../components/MapView";
+import MapView from "../../../components/MapView";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
@@ -79,7 +79,7 @@ const SearchAddress = () => {
   return (
     <>
       <Container>
-        <MapScreen
+        <MapView
           latitude={currentLocation.latitude}
           longitude={currentLocation.longitude}
           showLocation={false}

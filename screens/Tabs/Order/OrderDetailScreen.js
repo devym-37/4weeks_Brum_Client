@@ -38,7 +38,7 @@ import { Ionicons } from "@expo/vector-icons";
 import BottomSheet from "reanimated-bottom-sheet";
 import MainButton from "../../../components/Buttons/MainButton";
 import utils from "../../../utils";
-import Mapscreen from "../../../components/MapView";
+import MapView from "../../../components/MapView";
 import useInput from "../../../hooks/useInput";
 import FormInput from "../../../components/Inputs/FormInput";
 
@@ -440,7 +440,7 @@ const OrderDetailScreen = props => {
           <Row>
             <Col>
               <Content style={styles.test}>
-                <Mapscreen
+                <MapView
                   latitude={region.latitude}
                   longitude={region.longitude}
                 />
