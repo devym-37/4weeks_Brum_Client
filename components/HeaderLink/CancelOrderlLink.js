@@ -7,7 +7,7 @@ import {
 } from "react-navigation";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { serverApi } from "../API";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, Alert } from "react-native";
 
 const Container = styled.TouchableOpacity``;
 
@@ -18,7 +18,7 @@ const Text = styled.Text`
   padding-right: 15;
 `;
 export default withNavigation(({ navigation, orderId }) => {
-  const handleClick = async () => {
+  const handleCancel = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       const request = await serverApi.cancelMyOrder(orderId, userToken);
@@ -33,6 +33,23 @@ export default withNavigation(({ navigation, orderId }) => {
     } catch (e) {
       console.log(`Can't cancel order with server API. Error: ${e}`);
     }
+  };
+  const handleClick = () => {
+    Alert.alert(
+      null,
+      "요청을 취소하면 모든 요청내용이 삭제됩니다. 계속 진항하시겠습니까?",
+      [
+        {
+          text: "확인",
+          onPress: handleCancel
+        },
+        {
+          text: "취소",
+          style: "cancel"
+        }
+      ],
+      { cancelable: false }
+    );
   };
   return (
     <>
