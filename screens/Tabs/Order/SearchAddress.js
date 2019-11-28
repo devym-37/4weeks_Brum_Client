@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Dimensions, Text, Image } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  Text,
+  Image,
+  SafeAreaView
+} from "react-native";
 import styled from "styled-components";
 
 import MapScreen from "../../../components/MapView";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
+import { Marker } from "react-native-maps";
+import { DestinationInput } from "../../../components/Inputs/DestinationInput";
+import { DepartureInput } from "../../../components/Inputs/DepartureInput";
+import { connect } from "react-redux";
 
 const Container = styled.View`
   flex: 1;
@@ -41,8 +51,9 @@ const styles = StyleSheet.create({
   }
 });
 
-const SearchAddress = () => {
+const SearchAddress = ({ navigation, ...props }) => {
   const [currentLocation, setCurrentLocation] = useState({});
+  const [position, setPosition] = useState({});
 
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -57,7 +68,7 @@ const SearchAddress = () => {
     });
   };
 
-  const userCurrentLocation = () => {
+  const userCurrentLocation = props => {
     const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
 
     const _userRegion = {
@@ -70,35 +81,70 @@ const SearchAddress = () => {
     this.map.animateToRegion(_userRegion);
   };
 
+  const handleClickDeparture = () => {
+    navigation.navigate("orderAddress");
+  };
+
+  const handleClickArrival = () => {
+    navigation.navigate("arrivalAddress");
+  };
+
   useEffect(() => {
     (async () => {
       await getLocation();
     })();
   }, []);
-
+  //   <Image
+  //   style={{ width: 40, height: 40 }}
+  //   source={require("../../../assets/Delivery_arrival.png")}
+  // />
+  // <Text>props.departureLocation : {JSON.stringify(position)}</Text>
   return (
     <>
-      <Container>
-        <MapScreen
-          latitude={currentLocation.latitude}
-          longitude={currentLocation.longitude}
-          showLocation={false}
-          orderPosition={true}
-        />
-        <Image
-          style={{ width: 40, height: 40 }}
-          source={require("../../../assets/Delivery_arrival.png")}
-        />
-        <Text style={styles.center}></Text>
-        <CurrentLocationButton
-          callback={() => {
-            userCurrentLocation();
-          }}
-          bottom={90}
-        />
-      </Container>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Container>
+          <DepartureInput
+            onPress={handleClickDeparture}
+            departure={props.orderDestination}
+          />
+          <DestinationInput
+            onPress={handleClickArrival}
+            destination={props.departureLocation}
+          />
+          <MapScreen
+            latitude={currentLocation.latitude}
+            longitude={currentLocation.longitude}
+            showLocation={false}
+            marker={props.departureLocation}
+          ></MapScreen>
+          <Text style={styles.center}></Text>
+          <CurrentLocationButton
+            callback={() => {
+              userCurrentLocation();
+            }}
+            bottom={140}
+          />
+        </Container>
+      </SafeAreaView>
     </>
   );
 };
 
-export default SearchAddress;
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    orderDestination: state.destinationReducer.destination,
+    departureLocation: state.destinationReducer.departureLocation
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxDestination: destination => dispatch(destinationSave(destination)),
+    reduxDepartureLocation: departureLocation =>
+      dispatch(departureLocationSave(departureLocation))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchAddress);

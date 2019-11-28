@@ -10,20 +10,21 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { ifIphoneX } from "react-native-iphone-x-helper";
 import constants from "../../constants";
+import { connect } from "react-redux";
 
 const WIDTH = constants.width;
 const HEIGHT = constants.height;
 
 export const DepartureInput = function(props) {
-  const Bottom = props.bottom ? props.bottom : 200;
-  const iosBottom = props.bottom ? props.bottom : 250;
+  const Bottom = props.bottom ? props.bottom : 250;
+  const iosBottom = props.bottom ? props.bottom : 300;
   return (
     <TouchableOpacity
-      onPress={() => {}}
+      onPress={() => props.onPress()}
       style={[
         styles.container,
         {
-          top: Platform.OS === "android" ? HEIGHT - Bottom : HEIGHT - 155,
+          top: Platform.OS === "android" ? HEIGHT - Bottom : HEIGHT - 200,
           ...ifIphoneX({ top: HEIGHT - iosBottom })
         }
       ]}
@@ -38,7 +39,9 @@ export const DepartureInput = function(props) {
         </Text>
       </View>
       <View style={styles.centerCol}>
-        <Text style={{ fontSize: 14, color: "#545454" }}>선택사항</Text>
+        <Text style={{ fontSize: 16, color: "#545454" }}>
+          {props.departure ? props.departure : "출발지 선택"}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -71,3 +74,12 @@ const styles = StyleSheet.create({
     paddingRight: 25
   }
 });
+
+// const mapStateToProps = state => {
+//   // Redux Store --> Component
+//   return {
+//     orderDestination: state.destinationReducer.destination
+//   };
+// };
+
+// export default connect(mapStateToProps)(DepartureInput);
