@@ -25,6 +25,14 @@ export const toastApi = {
 };
 
 export const serverApi = {
+  userDislikeOrder: (orderId, userToken) =>
+    sApi.delete(`user/like/order/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   userLikeOrder: (orderId, userToken) =>
     sApi.post(`user/like/order/${orderId}`, {
       headers: {
