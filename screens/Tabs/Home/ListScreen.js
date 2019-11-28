@@ -23,7 +23,8 @@ import { orderIdSaver } from "../../../redux/actions/orderActions";
 
 const ListScreen = props => {
   const [refreshing, setRefreshing] = useState(false);
-  const [orders, setOrders] = useState(props.order);
+  const [orders, setOrders] = useState(props.orders);
+
   const refresh = async () => {
     try {
       setRefreshing(true);
@@ -40,13 +41,14 @@ const ListScreen = props => {
     }
   };
 
-  const handleClick = async () => {
+  const handleClick = async orderId => {
+    // console.log(`orders: `, orders);
     const userToken = await AsyncStorage.getItem("userToken");
 
     if (userToken) {
-      props.reduxOrderId(data.orderId);
+      props.reduxOrderId(orderId);
       props.navigation.navigate("OrderNavigation", {
-        orderId: data.orderId
+        orderId: orderId
       });
     } else {
       Alert.alert(
@@ -78,7 +80,11 @@ const ListScreen = props => {
         <Content>
           {props.orders &&
             props.orders.map((data, i) => (
-              <OrderCard {...data} key={i} onPress={handleClick} />
+              <OrderCard
+                {...data}
+                key={i}
+                onPress={() => handleClick(data.orderId)}
+              />
             ))}
         </Content>
       </ScrollView>

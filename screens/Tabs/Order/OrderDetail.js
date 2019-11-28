@@ -296,6 +296,7 @@ const OrderDetailScreen = ({ navigation }) => {
   const price =
     data &&
     (data.price ? utils.numberWithCommas(data.price) + "원" : "비용협의");
+
   const isPrice = data && data.isPrice;
   const mapScreen =
     "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png";
@@ -308,6 +309,25 @@ const OrderDetailScreen = ({ navigation }) => {
   const departure = data && (data.departures ? data.departures : "없음");
   const arrival = data && (data.arrivals ? data.arrivals : "없음");
 
+  const handleClickLikeButton = async () => {
+    setIsLiked(!isLiked);
+    console.log(`userToken: `, userToken);
+    try {
+      const userToken = await AsyncStorage.getItem("userToken");
+      if (!isLiked) {
+        const postRequest = await serverApi.userLikeOrder(orderId, userToken);
+        console.log(`라이크 서버요청: `, postRequest);
+      } else {
+        const postDislikeRequest = await serverApi.userDislikeOrder(
+          orderId,
+          userToken
+        );
+        // console.log(`라이크 취소 서버요청: `, postDislikeRequest);
+      }
+    } catch (e) {
+      console.log(`Can't post data of userLikeOrder on server. Error: ${e}`);
+    }
+  };
   const handleOpen = () => {
     setVisible(true);
   };
@@ -364,8 +384,24 @@ const OrderDetailScreen = ({ navigation }) => {
     setUserToken(userToken);
     const data = await serverApi.orderdetail(orderId, userToken);
     setData({ ...data.data.data.order });
+    console.log(
+      `data.data.data.order.userLikeOrders: `,
+      data.data.data.order.userLikeOrders
+    );
 
-    if (data.data.data.userId === data.data.data.order.hostId) {
+    const userId = data.data.data.userId;
+    console.log(userId);
+    const userLikeOrderList = data.data.data.order.userLikeOrders;
+    if (
+      userLikeOrderList.length === 0 ||
+      find(userLikeOrderList, obj => obj.userId === userId) === undefined
+    ) {
+      setIsLiked(false);
+    } else {
+      setIsLiked(true);
+    }
+    // setIsLiked()
+    if (userId === data.data.data.order.hostId) {
       setIsHost(true);
     } else if (
       find(
@@ -521,7 +557,7 @@ const OrderDetailScreen = ({ navigation }) => {
               )
             ) : (
               <>
-                <Touchable onPress={() => setIsLiked(!isLiked)}>
+                <Touchable onPress={handleClickLikeButton}>
                   <IconContainer>
                     {isLiked ? (
                       <AntDesign
