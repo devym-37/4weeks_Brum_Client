@@ -14,7 +14,7 @@ const InputContainer = styled.View`
   background-color: #fff;
 `;
 const Divider = styled.View`
-  width: ${constants.width - 30};
+  width: ${props => constants.width - props.dividerWidth};
 
   height: 1;
   background-color: ${props => props.theme.lightGreyColor};
@@ -33,6 +33,7 @@ const TextInput = styled.TextInput`
 
 const FormInput = ({
   width = 30,
+  dividerWidth = 30,
   placeholder,
   children,
   isUnderline = true,
@@ -46,10 +47,10 @@ const FormInput = ({
           placeholderTextColor="#d5dae0"
           placeholder={placeholder}
           {...rest}
-        ></TextInput>
+        />
         {children}
       </InputContainer>
-      {isUnderline && <Divider />}
+      {isUnderline && <Divider dividerWidth={width} />}
     </>
   );
 };

@@ -129,7 +129,7 @@ const OrderDetailScreen = props => {
   const handelApplyCancle = async () => {
     try {
       setLoading(true);
-      const result = await serverApi.cancleapply(userToken, orderId);
+      const result = await serverApi.cancelapply(orderId, userToken);
       console.log("hi", result.data.isSuccess);
       if (result.data.isSuccess) {
         //return await refresh
@@ -186,7 +186,7 @@ const OrderDetailScreen = props => {
 
   const handleDeleteOrder = async () => {
     try {
-      const result = await serverApi.cancleorder(orderId, userToken);
+      const result = await serverApi.cancelMyOrder(orderId, userToken);
       console.log(result);
 
       if (result.data.isSuccess) {

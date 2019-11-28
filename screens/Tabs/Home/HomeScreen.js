@@ -84,8 +84,8 @@ const RightToggleText = styled.Text`
 `;
 const HomeScreen = ({ navigation }) => {
   // console.log(`Home Nav: `, navigation.getParam("campus"));
-  const [leftClicked, setLeftClicked] = useState(true);
-  const [rightClicked, setRightClicked] = useState(false);
+  const [leftClicked, setLeftClicked] = useState(false);
+  const [rightClicked, setRightClicked] = useState(true);
   const [region, setRegion] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [orders, setOrders] = useState([]);

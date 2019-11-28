@@ -9,7 +9,12 @@ import { AppLoading } from "expo";
 // Imports: Assets
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import {
+  Ionicons,
+  AntDesign,
+  FontAwesome,
+  MaterialCommunityIcons
+} from "@expo/vector-icons";
 
 // Imports: Navigations
 import StartNavigation from "./navigation/StartNavigation";
@@ -34,7 +39,7 @@ import PermissionApp from "./screens/Auth/Permissions";
 import Userinfo from "./screens/Auth/UserInfo";
 import SelectCampus from "./screens/Start/SelectCampus";
 import SelectPhoto from "./screens/Photo/SelectPhoto";
-import OrderDetailScreen from "./screens/Tabs/Order/OrderDetailScreen";
+import OrderDetailScreen from "./screens/Tabs/Order/OrderDetail";
 
 import SearchAddress from "./screens/Tabs/Order/SearchAddress";
 import OrderAddress from "./screens/Tabs/Order/OrderAddress";
@@ -51,7 +56,9 @@ const App = () => {
         Roboto: require("native-base/Fonts/Roboto.ttf"),
         Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
         ...Ionicons.font,
-        ...AntDesign.font
+        ...AntDesign.font,
+        ...FontAwesome.font,
+        ...MaterialCommunityIcons.font
       });
       await Asset.loadAsync([require("./assets/logo.png")]);
       await Asset.loadAsync([require("./assets/checkedBox.png")]);
@@ -85,6 +92,7 @@ const App = () => {
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
           {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
+          {/* {isLoggedIn ? <OrderDetailScreen /> : <LoggedOutMainNavigation />} */}
         </PersistGate>
       </ThemeProvider>
     </Provider>

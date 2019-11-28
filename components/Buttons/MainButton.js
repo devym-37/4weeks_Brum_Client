@@ -24,6 +24,7 @@ const Text = styled.Text`
 `;
 
 const MainButton = ({
+  className = "",
   color = "main",
   text,
   width = 150,
