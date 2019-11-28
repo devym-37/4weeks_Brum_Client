@@ -134,6 +134,7 @@ const HomeScreen = ({ navigation }) => {
 
       const selectedCampus = await AsyncStorage.getItem("campus");
       let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
+
       setOrders([...getCampusOrders.data.data.orders]);
 
       getDefaultCampusMap(selectedCampus);

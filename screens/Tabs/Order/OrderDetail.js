@@ -308,6 +308,20 @@ const OrderDetailScreen = ({ navigation }) => {
   const departure = data && (data.departures ? data.departures : "없음");
   const arrival = data && (data.arrivals ? data.arrivals : "없음");
 
+  const handleClickLikeButton = async () => {
+    setIsLiked(!isLiked);
+    try {
+      const userToken = await AsyncStorage.getItem("userToken");
+      if (!isLiked) {
+        const postRequest = await serverApi.userLikeOrder(orderId, userToken);
+        console.log(`라이크 서버요청: `, postRequest);
+      } else {
+        console.log(`라이크 취소!`);
+      }
+    } catch (e) {
+      console.log(`Can't post data of userLikeOrder on server. Error: ${e}`);
+    }
+  };
   const handleOpen = () => {
     setVisible(true);
   };
@@ -521,7 +535,7 @@ const OrderDetailScreen = ({ navigation }) => {
               )
             ) : (
               <>
-                <Touchable onPress={() => setIsLiked(!isLiked)}>
+                <Touchable onPress={handleClickLikeButton}>
                   <IconContainer>
                     {isLiked ? (
                       <AntDesign
