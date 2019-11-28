@@ -9,10 +9,10 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import ChatListScreen from "../screens/Tabs/Chats/ChatListScreen";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
+import OrderDetailScreen from "../screens/Tabs/Order/OrderDetail";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/Home/ListScreen";
 import HomeScreen from "../screens/Tabs/Home/HomeScreen";
-import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import ChatScreen from "../screens/Tabs/Chats/ChatScreen";
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
@@ -21,6 +21,7 @@ import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
 import ChatHeaderLink from "../components/HeaderLink/ChatHeaderLink";
 import ChatListHeaderLink from "../components/HeaderLink/ChatListHeaderLink";
 import CancelOrderLink from "../components/HeaderLink/CancelOrderlLink";
+import NewOrderLink from "../components/HeaderLink/NewOrderLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
 
@@ -41,13 +42,13 @@ const stackFactory = (initialRoute, customConfig) =>
           <CancelOrderLink orderId={navigation.getParam("orderId")} />
         )
       })
-    },
-    OrderDetailScreen: {
-      screen: OrderDetailScreen,
-      navigationOptions: {
-        title: "요청 상세보기"
-      }
     }
+    // OrderDetailScreen: {
+    //   screen: OrderDetailScreen,
+    //   navigationOptions: {
+    //     title: "요청 상세보기"
+    //   }
+    // }
   });
 
 const BottomNavigation = createBottomTabNavigator(
@@ -67,7 +68,8 @@ const BottomNavigation = createBottomTabNavigator(
     Order: {
       screen: stackFactory(OrderScreen, {
         title: "내 요청",
-        backgroundColor: "#f1f3f5"
+        backgroundColor: "#f1f3f5",
+        headerRight: <NewOrderLink />
       }),
       navigationOptions: {
         backgroundColor: "#f1f3f5",

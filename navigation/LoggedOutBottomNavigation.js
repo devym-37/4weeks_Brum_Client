@@ -13,7 +13,7 @@ import ListScreen from "../screens/Tabs/Home/ListScreen";
 import HomeScreen from "../screens/Tabs/Home/HomeScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import { createStackNavigator } from "react-navigation-stack";
-import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
+import OrderDetailScreen from "../screens/Tabs/Order/OrderDetail";
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
 import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
 import { stackStyles } from "./config";

@@ -1,6 +1,7 @@
 // Initial State
 const initialState = {
-  destination: null
+  destination: null,
+  departureLocation: null
 };
 
 // Reducers (Modifies The State And Returns A New State)
@@ -12,7 +13,8 @@ const destinationReducer = (state = initialState, action) => {
         // State
         ...state,
         // Redux Store
-        destination: action.destination
+        destination: action.destination,
+        departureLocation: action.departureLocation
       };
     }
     // Default

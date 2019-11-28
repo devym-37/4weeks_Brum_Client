@@ -131,66 +131,64 @@ const ApplicantCard = ({
   const numOfScores = utils.numOfScores(applicantInfo.getScore);
   return (
     <>
-      <Touchable onPress={onPress}>
-        <CardContainer>
-          <ContentContainer>
-            <Thumbnail
-              source={{
-                uri: applicantInfo.image
-              }}
-            />
-            <TextContainer>
-              <Title>{applicantInfo.nickname}</Title>
-              <SpotContainer>
-                <Time>{timeStamp}</Time>
-                <Time>・</Time>
-                <Spot>
-                  {applicantInfo.university
-                    ? applicantInfo.university
-                    : `미인증 회원`}
-                </Spot>
-                <Time>・</Time>
-                <Spot>{`평점 : ${avgOfScores}/5.0(${numOfScores}개)`}</Spot>
-                {/* <AntDesign
+      <CardContainer>
+        <ContentContainer>
+          <Thumbnail
+            source={{
+              uri: applicantInfo.image
+            }}
+          />
+          <TextContainer>
+            <Title>{applicantInfo.nickname}</Title>
+            <SpotContainer>
+              <Time>{timeStamp}</Time>
+              <Time>・</Time>
+              <Spot>
+                {applicantInfo.university
+                  ? applicantInfo.university
+                  : `미인증 회원`}
+              </Spot>
+              <Time>・</Time>
+              <Spot>{`평점 : ${avgOfScores}/5.0(${numOfScores}개)`}</Spot>
+              {/* <AntDesign
                   name="arrowright"
                   size={13}
                   style={{ color: "#737b84", paddingRight: 6 }}
                 />
                 <Spot>{shortArrivals}</Spot> */}
-              </SpotContainer>
+            </SpotContainer>
+            <Container>
+              {/* <StatusContainer> */}
+              {/* <Status>{status}</Status> */}
+              {/* </StatusContainer> */}
+              <Price>
+                {bidPrice ? `${bidPriceWithComma}원` : `제시금액에 가능`}
+              </Price>
+            </Container>
+            {/* <Price>{applyComment ? applyComment : `러너 지원합니다`}</Price> */}
+            <CountContainer>
               <Container>
-                {/* <StatusContainer> */}
-                {/* <Status>{status}</Status> */}
-                {/* </StatusContainer> */}
-                <Price>
-                  {bidPrice ? `${bidPriceWithComma}원` : `제시금액에 가능`}
-                </Price>
-              </Container>
-              {/* <Price>{applyComment ? applyComment : `러너 지원합니다`}</Price> */}
-              <CountContainer>
-                <Container>
-                  {/* <Ionicons
+                {/* <Ionicons
                     name="md-paper-plane"
                     size={15}
                     style={{ color: "#737b84", paddingTop: 1 }}
                   />
                   <Count>{applicants.length}</Count> */}
-                </Container>
-                <Container>
-                  {/* <AntDesign
+              </Container>
+              <Container>
+                {/* <AntDesign
                     name="eyeo"
                     size={15}
                     style={{ color: "#737b84", marginLeft: 8, paddingTop: 1 }}
                   />
                   <Count>{views}</Count> */}
-                </Container>
-              </CountContainer>
-            </TextContainer>
-          </ContentContainer>
-          {children}
-        </CardContainer>
-        <Divider />
-      </Touchable>
+              </Container>
+            </CountContainer>
+          </TextContainer>
+        </ContentContainer>
+        {children}
+      </CardContainer>
+      <Divider />
     </>
   );
 };

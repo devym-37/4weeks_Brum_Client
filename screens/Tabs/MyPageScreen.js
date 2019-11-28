@@ -62,7 +62,7 @@ const MyPageScreen = ({ navigation }) => {
       // navigation.dispatch(resetAction);
     } else {
       setButtonName("임시 로그아웃 버튼");
-      navigation.navigate("AuthNavigation");
+      navigation.navigate("Login");
     }
   };
   useEffect(() => {

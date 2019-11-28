@@ -91,12 +91,18 @@ const ChatCard = ({ onPress, ...props }) => {
   const username = deliverInfo.nickname;
   const avatar = deliverInfo.image;
   const shortenTitle = utils.shortenText(title, 20);
-  const isHost = hostId === deliverId;
+  const isHost = hostId !== deliverId;
   const orderTimeStamp = `[19.11.26] `;
   // const orderTimeStamp = orderTim
-  const latestChat = chats[0];
-  const timeStamp = utils.transferChatTimeStamp(latestChat.createdAt);
-  const chatPreview = latestChat.chatDetail;
+  const latestChat = chats && chats.length > 0 ? chats[0] : null;
+  const timeStamp =
+    chats &&
+    (chats.length > 0
+      ? utils.transferChatTimeStamp(latestChat.createdAt)
+      : "방금 전");
+  const chatPreview = latestChat
+    ? latestChat.chatDetail
+    : "러너와 대화를 시작하세요:)";
 
   return (
     <Touchable onPress={onPress}>

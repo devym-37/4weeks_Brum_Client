@@ -25,6 +25,7 @@ const ChatListScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [chats, setChats] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState();
 
   const handleClick = username => {
     console.log(`username: `, username);
@@ -50,6 +51,7 @@ const ChatListScreen = ({ navigation }) => {
       let requestChats = await serverApi.getAllChats(userToken);
       console.log(`chats: `, requestChats.data);
       setChats([...requestChats.data.data]);
+      setUserId(requestChats.data.userId);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     } finally {
@@ -65,16 +67,17 @@ const ChatListScreen = ({ navigation }) => {
     <ScrollView
       style={{ backgroundColor: "#f1f3f5" }}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        <RefreshControl refreshing={refreshing} onRefresh={preLoad} />
       }
     >
       {loading ? (
         <Loader />
-      ) : chats && chats.deliverInfo ? (
+      ) : chats ? (
         chats.map((chat, i) => (
           <ChatCard
             key={i}
             onPress={() => handleClick(chat.deliverInfo.nickname)}
+            userId={userId}
             {...chat}
           ></ChatCard>
         ))

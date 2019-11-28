@@ -14,13 +14,15 @@ import AuthModal from "../../Auth/AuthModal";
 import { serverApi } from "../../../components/API";
 import constants from "../../../constants";
 import styles from "../../../styles";
-
-import MapView from "../../../components/MapView";
+import { Marker } from "react-native-maps";
+import MapScreen from "../../../components/MapView";
 import ListScreen from "./ListScreen";
 import Loader from "../../../components/Loader";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
 import { MapLocationButton } from "../../../components/Buttons/MapLocationBtn";
 import { NavigationEvents } from "react-navigation";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
 
 const View = styled.View`
   /* background-color: #f1f3f5; */
@@ -82,14 +84,15 @@ const RightToggleText = styled.Text`
 `;
 const HomeScreen = ({ navigation }) => {
   // console.log(`Home Nav: `, navigation.getParam("campus"));
-  const [leftClicked, setLeftClicked] = useState(true);
-  const [rightClicked, setRightClicked] = useState(false);
+  const [leftClicked, setLeftClicked] = useState(false);
+  const [rightClicked, setRightClicked] = useState(true);
   const [region, setRegion] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isopenLoginModal, setIsopenLoginModal] = useState(false);
-
+  const [marker, setMarker] = useState(null);
+  const [campus, setCampus] = useState();
   const getDefaultCampusMap = campus => {
     const campusRegion = constants.campus[campus].position;
 
@@ -103,19 +106,23 @@ const HomeScreen = ({ navigation }) => {
     this.map.animateToRegion(_region);
   };
 
-  // const userCurrentLocation = () => {
-  // const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
-  // console.log(`currentLocation: `, currentLocation);
-  // const _userRegion = {
-  //   // class structure
-  //   latitude: latitude,
-  //   longitude: longitude,
-  //   latitudeDelta: constants.LATITUDE_DELTA,
-  //   longitudeDelta: constants.LONGITUDE_DELTA
-  // };
+  const geoCode = async address => {
+    const geo = await Location.geocodeAsync(address);
+    return geo;
+  };
 
-  // this.map.animateToRegion(_userRegion);
-  // };
+  const markerPosition = async () => {
+    const selectedCampus = await AsyncStorage.getItem("campus");
+    const orderPosition = await serverApi.getCampusOrders("snu");
+    console.log(
+      "orderPosition : ",
+      orderPosition.data.data.orders[0].departures
+    );
+    const testOrder = orderPosition.data.data.orders[0].departures;
+    const geolatlng = await geoCode("한양대학교 대학원");
+    console.log("{geolatlng} : ", geolatlng[0]);
+    setMarker(geolatlng[0]);
+  };
 
   const preLoad = async () => {
     try {
@@ -127,6 +134,7 @@ const HomeScreen = ({ navigation }) => {
 
       const selectedCampus = await AsyncStorage.getItem("campus");
       let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
+
       setOrders([...getCampusOrders.data.data.orders]);
 
       getDefaultCampusMap(selectedCampus);
@@ -140,8 +148,9 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
+    markerPosition();
   }, []);
-
+  // position: { latitude: 37.55737, longitude: 127.047132 }
   return (
     <>
       {isopenLoginModal && <AuthModal />}
@@ -163,11 +172,12 @@ const HomeScreen = ({ navigation }) => {
                     userCurrentLocation();
                   }}
                 />
-                <MapView
+                <MapScreen
                   latitude={region.latitude}
                   longitude={region.longitude}
                   orders={orders}
-                />
+                  position={marker}
+                ></MapScreen>
               </>
             )}
             <Container>
