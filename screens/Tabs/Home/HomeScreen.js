@@ -92,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [isopenLoginModal, setIsopenLoginModal] = useState(false);
   const [marker, setMarker] = useState(null);
-
+  const [campus, setCampus] = useState();
   const getDefaultCampusMap = campus => {
     const campusRegion = constants.campus[campus].position;
 

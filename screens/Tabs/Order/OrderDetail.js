@@ -311,11 +311,12 @@ const OrderDetailScreen = ({ navigation }) => {
 
   const handleClickLikeButton = async () => {
     setIsLiked(!isLiked);
+    console.log(`userToken: `, userToken);
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       if (!isLiked) {
         const postRequest = await serverApi.userLikeOrder(orderId, userToken);
-        // console.log(`라이크 서버요청: `, postRequest);
+        console.log(`라이크 서버요청: `, postRequest);
       } else {
         const postDislikeRequest = await serverApi.userDislikeOrder(
           orderId,

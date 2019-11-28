@@ -32,6 +32,7 @@ export default withNavigation(({ navigation }) => {
   const [campus, setCampus] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const arrayOfCampus = map(constants.campus, obj => obj.kor);
+
   const getCampusName = async () => {
     const selectedCampus = await AsyncStorage.getItem("campus");
     setCampus(constants.campus[selectedCampus].kor);
