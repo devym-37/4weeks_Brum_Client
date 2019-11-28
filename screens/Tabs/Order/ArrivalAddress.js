@@ -21,6 +21,8 @@ import { withNavigation } from "react-navigation";
 import { Container } from "native-base";
 import { connect } from "react-redux";
 import { departureLocationSave } from "../../../redux/actions/destinationAction";
+import { arrivalSave } from "../../../redux/actions/orderPositionActions";
+import Geocoder from "react-native-geocoding";
 
 //Show map... select location to go to
 //Get location route with Google Location API
@@ -119,6 +121,17 @@ class OrderArrivalAddress extends Component {
     Keyboard;
   }
 
+  async getData(address) {
+    Geocoder.setApiKey(API);
+
+    Geocoder.from(address)
+      .then(json => {
+        const location = json.results[0].geometry.location;
+        console.log("location", location);
+      })
+      .catch(error => console.log(error));
+  }
+
   render() {
     const { isFocused } = this.state;
     const locationPredictions = this.state.locationPredictions.map(
@@ -136,6 +149,7 @@ class OrderArrivalAddress extends Component {
               this.props.reduxDepartureLocation(
                 prediction.structured_formatting.main_text
               );
+              this.getData(prediction.structured_formatting.main_text);
               this.props.navigation.goBack(null);
             }}
             key={prediction.id}
@@ -186,7 +200,8 @@ class OrderArrivalAddress extends Component {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    departureLocation: state.destinationReducer.departureLocation
+    departureLocation: state.destinationReducer.departureLocation,
+    arrivalLatLng: state.orderPositionReducer.arrivalLatLng
   };
 };
 
@@ -195,7 +210,8 @@ const mapDispatchToProps = dispatch => {
   return {
     // Login
     reduxDepartureLocation: departureLocation =>
-      dispatch(departureLocationSave(departureLocation))
+      dispatch(departureLocationSave(departureLocation)),
+    reduxArrivalLatLng: arrivalLatLng => dispatch(arrivalSave(arrivalLatLng))
   };
 };
 export default withNavigation(

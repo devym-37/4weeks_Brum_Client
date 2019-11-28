@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
 
 const SearchAddress = ({ navigation, ...props }) => {
   const [currentLocation, setCurrentLocation] = useState({});
-  const [regions, setRegions] = useState({});
+  const [position, setPosition] = useState({});
 
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -68,9 +68,8 @@ const SearchAddress = ({ navigation, ...props }) => {
     });
   };
 
-  const userCurrentLocation = () => {
+  const userCurrentLocation = props => {
     const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
-    const [regions, setRegions] = useState({});
 
     const _userRegion = {
       latitude: latitude,
@@ -90,34 +89,16 @@ const SearchAddress = ({ navigation, ...props }) => {
     navigation.navigate("arrivalAddress");
   };
 
-  const geoCode = async address => {
-    const geo = await Location.geocodeAsync(address);
-    return geo;
-  };
-
-  const reverseGeocode = async location => {
-    const reverseGeo = await Location.reverseGeocodeAsync(location);
-    return reverseGeo;
-  };
-
-  const recordEvent = async () => {
-    // const address = await reverseGeocode(regionChange);
-    // const geolatlng = await geoCode("한양대학교");
-    // console.log("address", address[0]);
-    // console.log("geolatlng", geolatlng);
-    // setRegions(address[0]);
-    // this.props.reduxDepartureAddress(address[0]);
-    return geolatlng;
-  };
-
   useEffect(() => {
     (async () => {
       await getLocation();
-      await reverseGeocode();
-      await recordEvent();
     })();
   }, []);
-
+  //   <Image
+  //   style={{ width: 40, height: 40 }}
+  //   source={require("../../../assets/Delivery_arrival.png")}
+  // />
+  // <Text>props.departureLocation : {JSON.stringify(position)}</Text>
   return (
     <>
       <SafeAreaView style={{ flex: 1 }}>
@@ -134,11 +115,8 @@ const SearchAddress = ({ navigation, ...props }) => {
             latitude={currentLocation.latitude}
             longitude={currentLocation.longitude}
             showLocation={false}
+            marker={props.departureLocation}
           ></MapScreen>
-          <Image
-            style={{ width: 40, height: 40 }}
-            source={require("../../../assets/Delivery_arrival.png")}
-          />
           <Text style={styles.center}></Text>
           <CurrentLocationButton
             callback={() => {

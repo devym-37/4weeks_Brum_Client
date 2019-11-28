@@ -70,12 +70,13 @@ const MapScreen = props => {
 
   const recordEvent = async regionChange => {
     // const address = await reverseGeocode(regionChange);
-    const geolatlng = await geoCode("한양대학교");
+    const geolatlng = await geoCode(props.marker);
     // console.log("address", address[0]);
-    console.log("geolatlng", geolatlng);
-    setRegions(address[0]);
+    console.log("geolatlng[123]", JSON.stringify(geolatlng));
+    setRegions(geolatlng);
     // this.props.reduxDepartureAddress(address[0]);
   };
+
   return (
     <>
       <Container>
@@ -107,7 +108,8 @@ const mapStateToProps = state => {
   // Redux Store --> Component
   return {
     loggedIn: state.authReducer.loggedIn,
-    orderDestination: state.destinationReducer.destination
+    orderDestination: state.destinationReducer.destination,
+    departureLocation: state.destinationReducer.departureLocation
   };
 };
 const mapDispatchToProps = dispatch => {
