@@ -42,7 +42,7 @@ import SelectPhoto from "./screens/Photo/SelectPhoto";
 import OrderDetailScreen from "./screens/Tabs/Order/OrderDetail";
 
 import SearchAddress from "./screens/Tabs/Order/SearchAddress";
-import OrderAddress from "./screens/Tabs/Order/OrderAddress";
+import DepartureAddress from "./screens/Tabs/Order/DepartureAddress";
 
 // React Native: App
 const App = () => {

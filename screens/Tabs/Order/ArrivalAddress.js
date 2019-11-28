@@ -146,7 +146,7 @@ class OrderArrivalAddress extends Component {
               this.pressedPrediction(
                 prediction.structured_formatting.main_text
               );
-              this.props.reduxDepartureLocation(
+              this.props.reduxArrivalLocation(
                 prediction.structured_formatting.main_text
               );
               this.getData(prediction.structured_formatting.main_text);
@@ -200,7 +200,7 @@ class OrderArrivalAddress extends Component {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    departureLocation: state.destinationReducer.departureLocation,
+    arrivalLocation: state.destinationReducer.arrivalLocation,
     arrivalLatLng: state.orderPositionReducer.arrivalLatLng
   };
 };
@@ -209,8 +209,8 @@ const mapDispatchToProps = dispatch => {
   // Action
   return {
     // Login
-    reduxDepartureLocation: departureLocation =>
-      dispatch(departureLocationSave(departureLocation)),
+    reduxArrivalLocation: arrivalLocation =>
+      dispatch(departureLocationSave(arrivalLocation)),
     reduxArrivalLatLng: arrivalLatLng => dispatch(arrivalSave(arrivalLatLng))
   };
 };

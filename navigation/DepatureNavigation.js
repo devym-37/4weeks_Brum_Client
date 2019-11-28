@@ -1,12 +1,12 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 import { stackStyles } from "./config";
-import orderAddress from "../screens/Tabs/Order/OrderAddress";
+import departureAddress from "../screens/Tabs/Order/DepartureAddress";
 import BackLink from "../components/HeaderLink/BackLink";
 
 export default createStackNavigator({
-  orderAddress: {
-    screen: orderAddress,
+  departureAddress: {
+    screen: departureAddress,
     navigationOptions: {
       headerStyle: {
         ...stackStyles

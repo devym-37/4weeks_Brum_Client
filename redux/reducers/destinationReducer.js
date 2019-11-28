@@ -1,6 +1,6 @@
 // Initial State
 const initialState = {
-  destination: null,
+  arrivalLocation: null,
   departureLocation: null
 };
 
@@ -13,7 +13,7 @@ const destinationReducer = (state = initialState, action) => {
         // State
         ...state,
         // Redux Store
-        destination: action.destination,
+        arrivalLocation: action.arrivalLocation,
         departureLocation: action.departureLocation
       };
     }
