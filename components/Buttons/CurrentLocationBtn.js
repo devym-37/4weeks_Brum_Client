@@ -14,7 +14,7 @@ export const CurrentLocationButton = function(props) {
         console.log("callback function not passed to CurrentLocationButton");
   // if props.bottom is passed, use it. if not, set bottom to 110
   const Bottom = props.bottom ? props.bottom : 190;
-  const iosBottom = props.bottom ? props.bottom + 50 : 240;
+  const iosBottom = props.bottom ? props.bottom : 240;
   return (
     <View
       style={[
@@ -39,7 +39,7 @@ export const CurrentLocationButton = function(props) {
 
 const styles = StyleSheet.create({
   container: {
-    zIndex: 8,
+    zIndex: 10,
     position: "absolute",
     width: 44,
     height: 44,
