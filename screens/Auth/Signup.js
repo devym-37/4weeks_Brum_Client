@@ -26,6 +26,7 @@ import { serverApi } from "../../components/API";
 
 // Imports: Redux Actions
 import { login } from "../../redux/actions/authActions";
+import { campusSaver } from "../../redux/actions/campusActions";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -91,13 +92,13 @@ const Signup = props => {
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye-off");
 
   const handleSend = async values => {
-    // console.log(`signup values: `, values);
     if (values.name.length === 0 || values.password.length === 0) {
       Alert.alert("입력이 올바르지 않습니다");
     }
 
     try {
-      const selectedCampus = await AsyncStorage.getItem("campus");
+      // const selectedCampus = await AsyncStorage.getItem("campus");
+      const selectedCampus = props.campus ? props.campus : "hanyang";
       // console.log(`회원가입 캠퍼스: `, selectedCampus);
       const signUp = await serverApi.register(
         values.phone,
@@ -113,9 +114,9 @@ const Signup = props => {
         await AsyncStorage.setItem("userToken", signUp.data.token);
         props.reduxLogin(true);
         Alert.alert("회원가입 및 로그인이 완료되었습니다");
-        setTimeout(() => {
-          props.navigation.navigate("BottomNavigation");
-        }, 200);
+
+        props.navigation.navigate("BottomNavigation");
+
         // setTimeout(() => {
         //   props.navigation.navigate("Userinfo");
         // }, 200);
@@ -290,7 +291,8 @@ const Signup = props => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    phone: state.phoneReducer.phone
+    phone: state.phoneReducer.phone,
+    campus: state.campusReducer.campus
   };
 };
 
