@@ -191,7 +191,13 @@ const NewOrderScreen = props => {
                   errorValue={touched.category && errors.category}
                 />
                 <Picker
-                  text={departure}
+                  text={
+                    props.arrivalLocation
+                      ? props.departureLocation
+                        ? `${props.departureLocation} → ${props.arrivalLocation}`
+                        : `${props.arrivalLocation}`
+                      : departure
+                  }
                   onPress={handleAddressButton}
                   color="#1D2025"
                 />
@@ -288,7 +294,9 @@ const mapStateToProps = state => {
     time: state.orderReducer.desiredArrival,
     isPrice: state.orderReducer.isPrice,
     category: state.orderReducer.category,
-    images: state.orderReducer.images
+    images: state.orderReducer.images,
+    arrivalLocation: state.destinationReducer.arrivalLocation,
+    departureLocation: state.destinationReducer.departureLocation
   };
 };
 

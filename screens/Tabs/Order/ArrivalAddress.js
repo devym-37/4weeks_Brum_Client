@@ -20,7 +20,7 @@ import constants from "../../../constants";
 import { withNavigation } from "react-navigation";
 import { Container } from "native-base";
 import { connect } from "react-redux";
-import { departureLocationSave } from "../../../redux/actions/destinationAction";
+import { arrivalLocationSave } from "../../../redux/actions/destinationAction";
 import { arrivalSave } from "../../../redux/actions/orderPositionActions";
 import Geocoder from "react-native-geocoding";
 
@@ -111,7 +111,7 @@ class OrderArrivalAddress extends Component {
 
   pressedPrediction(prediction) {
     // console.log("prediction [3] :", prediction);
-    this.props.reduxDepartureLocation(prediction);
+    this.props.reduxArrivalLocation(prediction);
     // console.log("OderAddress Test : ", this.props.orderDestination);
     Keyboard.dismiss();
     this.setState({
@@ -210,7 +210,7 @@ const mapDispatchToProps = dispatch => {
   return {
     // Login
     reduxArrivalLocation: arrivalLocation =>
-      dispatch(departureLocationSave(arrivalLocation)),
+      dispatch(arrivalLocationSave(arrivalLocation)),
     reduxArrivalLatLng: arrivalLatLng => dispatch(arrivalSave(arrivalLatLng))
   };
 };

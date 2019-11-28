@@ -105,11 +105,11 @@ const SearchAddress = ({ navigation, ...props }) => {
         <Container>
           <DepartureInput
             onPress={handleClickDeparture}
-            departure={props.orderDestination}
+            departure={props.departureLocation}
           />
           <DestinationInput
             onPress={handleClickArrival}
-            destination={props.departureLocation}
+            destination={props.arrivalLocation}
           />
           <MapScreen
             latitude={currentLocation.latitude}
