@@ -21,6 +21,7 @@ import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
 import ChatHeaderLink from "../components/HeaderLink/ChatHeaderLink";
 import ChatListHeaderLink from "../components/HeaderLink/ChatListHeaderLink";
 import CancelOrderLink from "../components/HeaderLink/CancelOrderlLink";
+import NewOrderLink from "../components/HeaderLink/NewOrderLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
 
@@ -67,7 +68,8 @@ const BottomNavigation = createBottomTabNavigator(
     Order: {
       screen: stackFactory(OrderScreen, {
         title: "내 요청",
-        backgroundColor: "#f1f3f5"
+        backgroundColor: "#f1f3f5",
+        headerRight: <NewOrderLink />
       }),
       navigationOptions: {
         backgroundColor: "#f1f3f5",

@@ -4,6 +4,7 @@ import {
   ScrollView,
   View,
   Text,
+  Alert,
   Platform,
   RefreshControl,
   AsyncStorage,
@@ -39,6 +40,34 @@ const ListScreen = props => {
     }
   };
 
+  const handleClick = async () => {
+    const userToken = await AsyncStorage.getItem("userToken");
+
+    if (userToken) {
+      props.reduxOrderId(data.orderId);
+      props.navigation.navigate("OrderNavigation", {
+        orderId: data.orderId
+      });
+    } else {
+      Alert.alert(
+        null,
+        "가입 또는 로그인이 필요합니다. 회원가입 및 로그인을 하시겠어요?",
+        [
+          {
+            text: "회원가입",
+            onPress: () => props.navigation.navigate("VerifyPhone")
+          },
+          {
+            text: "취소",
+            style: "cancel"
+          },
+          { text: "로그인", onPress: () => props.navigation.navigate("Login") }
+        ],
+        { cancelable: false }
+      );
+    }
+  };
+
   return (
     <>
       <ScrollView
@@ -49,27 +78,7 @@ const ListScreen = props => {
         <Content>
           {props.orders &&
             props.orders.map((data, i) => (
-              <View key={i}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // console.log("ㄴㅇㄴㅇㄹ", data.orderId);
-                    props.reduxOrderId(data.orderId);
-                    props.navigation.navigate("OrderNavigation", {
-                      orderId: data.orderId
-                    });
-                  }}
-                >
-                  {/* <ListCard data={data} /> */}
-                  <OrderCard
-                    {...data}
-                    onPress={() => {
-                      props.navigation.navigate("OrderNavigation", {
-                        orderId: data.orderId
-                      });
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
+              <OrderCard {...data} key={i} onPress={handleClick} />
             ))}
         </Content>
       </ScrollView>
