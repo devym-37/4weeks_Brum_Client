@@ -91,12 +91,8 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-<<<<<<< HEAD
           {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
           {/* {isLoggedIn ? <OrderDetailScreen /> : <LoggedOutMainNavigation />} */}
-=======
-          <OrderAddress />
->>>>>>> d7b06da66bd3901ac2ecbacc83bce2738283a595
         </PersistGate>
       </ThemeProvider>
     </Provider>
