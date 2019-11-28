@@ -28,7 +28,7 @@ const MainNavigation = createStackNavigator(
     ChatFilterNavigation,
     NotificationNavigation,
     DepatureNavigation,
-    ArrivalNavigation
+    ArrivalNavigation,
     OrderNavigation
   },
   {
