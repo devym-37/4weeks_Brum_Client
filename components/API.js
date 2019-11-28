@@ -33,16 +33,16 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
-  userLikeOrder: async (orderId, userToken) => {
+  userLikeOrder: async (orderId, userToken) =>
     // console.log(`유저토큰: `, userToken);
-    return await sApi.put(`user/like/order/${orderId}`, {
+    await sApi.post(`user/like/order/${orderId}`, null, {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Headers": "x-access-token",
         "x-access-token": userToken
       }
-    });
-  },
+    }),
+
   verifyPhoneNumber: phone => sApi.post("register/phone", { phone }),
   getAllOrders: () => sApi.get("order"),
   getCampusOrders: campus => sApi.get(`order/campus/${campus}`),

@@ -322,7 +322,7 @@ const OrderDetailScreen = ({ navigation }) => {
           orderId,
           userToken
         );
-        // console.log(`라이크 취소 서버요청: `, postDislikeRequest);
+        console.log(`라이크 취소 서버요청: `, postDislikeRequest);
       }
     } catch (e) {
       console.log(`Can't post data of userLikeOrder on server. Error: ${e}`);
