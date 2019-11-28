@@ -20,7 +20,7 @@ import constants from "../../../constants";
 import { withNavigation } from "react-navigation";
 import { Container } from "native-base";
 import { connect } from "react-redux";
-import { destinationSave } from "../../../redux/actions/destinationAction";
+import { departureLocationSave } from "../../../redux/actions/destinationAction";
 
 //Show map... select location to go to
 //Get location route with Google Location API
@@ -109,8 +109,8 @@ class OrderDepartureAddress extends Component {
 
   pressedPrediction(prediction) {
     // console.log("prediction [3] :", prediction);
-    this.props.reduxDestination(prediction);
-    // console.log("OderAddress Test : ", this.props.orderDestination);
+    this.props.reduxDepartureLocation(prediction);
+    // console.log("OderAddress Test : ", this.props.departureLocation);
     Keyboard.dismiss();
     this.setState({
       locationPredictions: [],
@@ -183,7 +183,7 @@ class OrderDepartureAddress extends Component {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    orderDestination: state.destinationReducer.destination
+    departureLocation: state.destinationReducer.departureLocation
   };
 };
 
@@ -191,7 +191,8 @@ const mapDispatchToProps = dispatch => {
   // Action
   return {
     // Login
-    reduxDestination: destination => dispatch(destinationSave(destination))
+    reduxDepartureLocation: departureLocation =>
+      dispatch(departureLocationSave(departureLocation))
   };
 };
 export default withNavigation(

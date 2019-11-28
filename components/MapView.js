@@ -99,19 +99,18 @@ const MapScreen = props => {
           showsScale={true}
           rotateEnabled={false}
           loadingEnabled={true}
-        >
-          <Marker coordinate={props.position}>
-            <Image
-              source={require("../assets/Delivery_arrival.png")}
-              style={{ width: 45, height: 45 }}
-            />
-          </Marker>
-        </MapView>
+        ></MapView>
       </Container>
     </>
   );
 };
 
+// <Marker coordinate={props.position}>
+// <Image
+//   source={require("../assets/Delivery_arrival.png")}
+//   style={{ width: 45, height: 45 }}
+// />
+// </Marker>
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {

@@ -1,6 +1,6 @@
-export const destinationSave = destination => ({
+export const arrivalLocationSave = arrivalLocation => ({
   type: "SAVE",
-  destination: destination
+  arrivalLocation: arrivalLocation
 });
 
 export const departureLocationSave = departureLocation => ({

@@ -82,7 +82,7 @@ const SearchAddress = ({ navigation, ...props }) => {
   };
 
   const handleClickDeparture = () => {
-    navigation.navigate("orderAddress");
+    navigation.navigate("departureAddress");
   };
 
   const handleClickArrival = () => {
@@ -133,7 +133,7 @@ const SearchAddress = ({ navigation, ...props }) => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    orderDestination: state.destinationReducer.destination,
+    arrivalLocation: state.destinationReducer.arrivalLocation,
     departureLocation: state.destinationReducer.departureLocation
   };
 };
@@ -141,7 +141,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   // Action
   return {
-    reduxDestination: destination => dispatch(destinationSave(destination)),
+    reduxArrivalLocation: arrivalLocation =>
+      dispatch(arrivalLocationSave(arrivalLocation)),
     reduxDepartureLocation: departureLocation =>
       dispatch(departureLocationSave(departureLocation))
   };
