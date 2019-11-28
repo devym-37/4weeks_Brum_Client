@@ -5,7 +5,8 @@ import {
   View,
   Dimensions,
   Platform,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -98,7 +99,14 @@ const MapScreen = props => {
           showsScale={true}
           rotateEnabled={false}
           loadingEnabled={true}
-        ></MapView>
+        >
+          <Marker coordinate={props.position}>
+            <Image
+              source={require("../assets/Delivery_arrival.png")}
+              style={{ width: 45, height: 45 }}
+            />
+          </Marker>
+        </MapView>
       </Container>
     </>
   );
