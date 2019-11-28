@@ -15,6 +15,7 @@ import { login } from "../../redux/actions/authActions";
 import { serverApi } from "../../components/API";
 import { store, persistor } from "../../redux/store/store";
 import * as Yup from "yup";
+import { resetCounter } from "../../redux/actions/passwordErrorCountActions";
 
 const validationSchema = Yup.object().shape({
   password: Yup.string()
@@ -67,10 +68,11 @@ const ResetPw = props => {
         }
         Alert.alert(
           "성공",
-          "비밀번호가 성공적으로 변경되었습니다",
-          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          "비밀번호가 변경되었습니다",
+          [{ text: "확인", onPress: () => console.log("OK Pressed") }],
           { cancelable: false }
         );
+        props.reduxResetErrorCount();
         props.reduxLogin(false);
 
         props.navigation.navigate("Login");
@@ -107,7 +109,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   // Action
   return {
-    // Login
+    reduxResetErrorCount: () => dispatch(resetCounter()),
     reduxLogin: trueFalse => dispatch(login(trueFalse))
   };
 };
