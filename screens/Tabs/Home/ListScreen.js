@@ -12,7 +12,7 @@ import {
 import { Content } from "native-base";
 import AuthModal from "../../Auth/AuthModal";
 import { serverApi } from "../../../components/API";
-import ListCard from "../../ListCard";
+import ListCard from "../../../components/Cards/ListCard";
 import OrderCard from "../../../components/Cards/OrderCard";
 import Loader from "../../../components/Loader";
 import { withNavigation } from "react-navigation";

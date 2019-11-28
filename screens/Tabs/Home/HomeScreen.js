@@ -18,8 +18,8 @@ import styles from "../../../styles";
 import MapView from "../../../components/MapView";
 import ListScreen from "./ListScreen";
 import Loader from "../../../components/Loader";
-import { CurrentLocationButton } from "../../../navigation/CurrentLocationBtn";
-import { MapLocationButton } from "../../../navigation/MapLocationBtn";
+import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
+import { MapLocationButton } from "../../../components/Buttons/MapLocationBtn";
 import { NavigationEvents } from "react-navigation";
 
 const View = styled.View`

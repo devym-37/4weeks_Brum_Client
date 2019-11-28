@@ -34,12 +34,15 @@ import { permissions } from "./redux/actions/permissionsActions";
 import { ThemeProvider } from "styled-components";
 import styles from "./styles";
 
-import ListCard from "./screens/ListCard";
+import ListCard from "./components/Cards/ListCard";
 import PermissionApp from "./screens/Auth/Permissions";
 import Userinfo from "./screens/Auth/UserInfo";
 import SelectCampus from "./screens/Start/SelectCampus";
 import SelectPhoto from "./screens/Photo/SelectPhoto";
 import OrderDetailScreen from "./screens/Tabs/Order/OrderDetail";
+
+import SearchAddress from "./screens/Tabs/Order/SearchAddress";
+import OrderAddress from "./screens/Tabs/Order/OrderAddress";
 
 // React Native: App
 const App = () => {
@@ -79,16 +82,21 @@ const App = () => {
     preLoad();
   }, []);
 
-  // {isLoggedIn ? <LoggedInNavigation /> : <StartNavigation />}  // push 시 추가
+  // {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}  // push 시 추가
   // <HomeNavigation />
   //<MainNavigation />
+  // <SearchAddress />
   return loaded && isLoggedIn !== null ? (
     // Redux: Global Store
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
+<<<<<<< HEAD
           {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
           {/* {isLoggedIn ? <OrderDetailScreen /> : <LoggedOutMainNavigation />} */}
+=======
+          <OrderAddress />
+>>>>>>> d7b06da66bd3901ac2ecbacc83bce2738283a595
         </PersistGate>
       </ThemeProvider>
     </Provider>
