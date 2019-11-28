@@ -70,7 +70,7 @@ const ListScreen = ({ navigation, reduxOrderId }) => {
             <View key={data.orderId}>
               <TouchableOpacity
                 onPress={() => {
-                  console.log("ㄴㅇㄴㅇㄹ", data.orderId);
+                  // console.log("ㄴㅇㄴㅇㄹ", data.orderId);
                   reduxOrderId(data.orderId);
                   navigation.navigate("OrderDetailScreen");
                 }}

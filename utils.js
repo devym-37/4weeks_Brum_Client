@@ -1,7 +1,10 @@
 import { Linking, Alert, Platform } from "react-native";
 export default {
   numberWithCommas: x => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // if (!x) return "비용 협의";
+    if (typeof x === "number")
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    else return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   },
 
   transferTime: time => {
@@ -91,8 +94,8 @@ export default {
     if (typeof num !== "number") num = Number(num);
 
     if (!isNaN(num)) {
-      if (num >= 4.0) return "#32B049";
-      if (num >= 3.0) return "#4181D0";
+      if (num >= 3.5) return "#32B049";
+      if (num >= 2.5) return "#4181D0";
       else return "#757575";
     }
   },

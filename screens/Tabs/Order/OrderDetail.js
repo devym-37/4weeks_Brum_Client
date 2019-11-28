@@ -1,15 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { ScrollView, SafeAreaView, ActivityIndicator } from "react-native";
+import {
+  ScrollView,
+  SafeAreaView,
+  ActivityIndicator,
+  Alert,
+  AsyncStorage,
+  RefreshControl
+} from "react-native";
+import { Backdrop } from "react-native-backdrop";
+import Checkbox from "react-native-modest-checkbox";
+import checkedBox from "../../../assets/checkedBox.png";
+import uncheckedBox from "../../../assets/uncheckedBox.png";
+import {
+  withNavigation,
+  NavigationActions,
+  StackActions
+} from "react-navigation";
 import {
   AntDesign,
   FontAwesome,
   MaterialCommunityIcons
 } from "@expo/vector-icons";
-// import MainButton from "../../../components/Buttons/MainButton";
+import find from "lodash.find";
+import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
 import styles from "../../../styles";
 import utils from "../../../utils";
+import { serverApi } from "../../../components/API";
+
 const Container = styled.View`
   flex: 1;
   align-items: center;
@@ -17,12 +36,13 @@ const Container = styled.View`
 
 const Image = styled.Image`
   width: ${constants.width};
-  /* flex:3 */
-  height: ${constants.height / 2.5};
+
+  height: ${constants.height / 3};
 `;
 
 const UserContainer = styled.View`
   background-color: white;
+  margin-top: 12;
   flex-direction: row;
   justify-content: space-between;
   padding: 0 15px;
@@ -83,12 +103,40 @@ const ApplyButton = styled.View`
   margin: 0;
   padding: 14px 10px;
   width: ${props => constants.width - props.width};
-  margin: 0;
+  border-radius: 4px;
+`;
+const EditButton = styled.View`
+  background-color: ${props =>
+    props.disabled ? styles.inActiveColor : styles.mainColor};
+  margin-left: 8px;
+  padding: 14px 10px;
+  width: ${props => constants.width - props.width};
+  border-radius: 4px;
+`;
+const DeleteButton = styled.View`
+  border: 1px;
+  border-color: ${props =>
+    props.disabled ? styles.inActiveColor : styles.mainColor};
+  margin-left: 8px;
+  padding: 14px 10px;
+  width: ${props => constants.width - props.width};
   border-radius: 4px;
 `;
 
+const DeleteButtonText = styled.Text`
+  color: ${props => (props.disabled ? styles.inActiveColor : styles.mainColor)};
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+`;
+const EditButtonContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
 const ButtonText = styled.Text`
-  color: white;
+  /* color: ${props => (props.disabled ? "#E8E2E4" : "white")}; */
+  color : white;
   text-align: center;
   font-size: 15px;
   font-weight: 600;
@@ -108,7 +156,7 @@ const Divider = styled.View`
 
 const OrderTitle = styled.Text`
   color: #333;
-  font-size: 24;
+  font-size: 20;
   font-weight: 600;
   padding-bottom: 8;
 `;
@@ -120,22 +168,24 @@ const TimeStamp = styled.Text`
 `;
 const DepartureContainer = styled.View`
   flex-direction: row;
+  /* flex-wrap: wrap; */
   align-items: center;
 `;
 const ArrivalContainer = styled.View`
   flex-direction: row;
+  /* flex-wrap: wrap; */
   align-items: center;
   margin-bottom: 24;
 `;
 
 const Address = styled.Text`
   color: #737b84;
-  font-size: 15;
+  font-size: 13;
   margin-left: 4;
   padding-left: 4;
 `;
 const Message = styled.Text`
-  font-size: 18;
+  font-size: 16;
   color: #333;
   margin-bottom: 24;
   line-height: 24;
@@ -167,13 +217,26 @@ const BottomContainer = styled.View`
   position: relative;
   align-items: center;
   background-color: #feffff;
-  width: ${constants.width};
-  height: ${constants.height / 12};
+  width: ${props =>
+    props.width ? constants.width - props.width : constants.width};
+  height: ${constants.height / 10};
+  box-shadow: 0 -3px 5px rgba(0, 0, 0, 0.04);
 `;
 
 const ContentContainer = styled.View`
   flex-direction: row;
   padding: 0 20px;
+
+  width: ${constants.width};
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const MarginContentContainer = styled.View`
+  flex-direction: row;
+  margin-top: 20px;
+  padding: 0 20px;
+  box-shadow: 0 -3px 5px rgba(0, 0, 0, 0.04);
   width: ${constants.width};
   align-items: center;
   justify-content: space-between;
@@ -183,6 +246,12 @@ const VerticalDivider = styled.View`
   background-color: #d0d6dc;
   width: 1;
   height: 32;
+`;
+
+const View = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 `;
 
 // const Text = styled.Text``;
@@ -195,34 +264,143 @@ const IconContainer = styled.Text`
   padding-left: 12px;
 `;
 
+const Text = styled.Text``;
 const Touchable = styled.TouchableOpacity``;
 
-const OrderDetailScreen = () => {
+const DropContainer = styled.View`
+  width: 200;
+  justify-content: center;
+  padding-bottom: 30;
+  height: 200;
+`;
+const OrderDetailScreen = ({ navigation }) => {
+  const [orderId, setorderId] = useState(navigation.getParam("orderId"));
+  const [userToken, setUserToken] = useState();
+  const [isHost, setIsHost] = useState(false);
+  const [isRunner, setIsRunner] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-
-  const avatar =
-    "https://lendersccs.com/wp-content/uploads/2017/02/placeholder-user.png";
-  const username = "김조은";
-  const university = "서울대";
-  const score = "4.7";
+  const [visible, setVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [data, setData] = useState(null);
+  const [bidPrice, setBidPrice] = useState("");
+  const [runnerMessage, setRunnerMessage] = useState("");
+  const [checked, setChecked] = useState(false);
+  const avatar = data && data.hostInfo.image;
+  const username = data && data.hostInfo.nickname;
+  const university =
+    data &&
+    (data.hostInfo.university ? data.hostInfo.university : "미인증 회원");
+  const score = data && utils.avgOfScores(data.hostInfo.getScore);
   const color = utils.scoreColorPicker(score);
-  const price = "5,000";
-  const isPrice = false;
+  const price =
+    data &&
+    (data.price ? utils.numberWithCommas(data.price) + "원" : "비용협의");
+  const isPrice = data && data.isPrice;
   const mapScreen =
     "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png";
-  const title = "서점에서 책 사다주세요(급함)";
-  const timeStamp = "15초 전";
-  const message =
-    "서울대입구역 나나서점에서 화학 전공서적 사다주세요. 수업 20분 전이라 당장 가능한 분 우대요!";
-  const numOfApplicants = 5;
-  const likes = 2;
-  const views = 102;
-  const departure = "서울 관악구 남부순환로 220, 나나문고";
-  const arrival = "서울 관악구 관악로 1, 서울대학교 38동 201호";
+  const title = data && data.title;
+  const timeStamp = data && utils.transferTime(data.createdAt);
+  const message = data && data.details;
+  const numOfApplicants = data && utils.numOfScores(data.hostInfo.getScore);
+  const likes = 0;
+  const views = data && data.views;
+  const departure = data && (data.departures ? data.departures : "없음");
+  const arrival = data && (data.arrivals ? data.arrivals : "없음");
+
+  const handleOpen = () => {
+    setVisible(true);
+  };
+
+  const handleClose = () => {
+    setVisible(false);
+  };
+
+  const handleApplyButton = async () => {
+    if (isPrice) {
+      // Alert.alert("백드롭열림");
+      setVisible(true);
+    } else {
+      try {
+        setLoading(true);
+        // const orderId = navigation.getParam("orderId");
+        const request = await serverApi.apply(null, null, userToken, orderId);
+      } catch (e) {
+        console.log(`Can't post data of applying on server. Error : `, e);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const result = await serverApi.cancelMyOrder(orderId, userToken);
+      console.log(`delete : `, result);
+
+      if (result.data.isSuccess) {
+        const resetAction = StackActions.reset({
+          key: null,
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: "Home" })]
+        });
+
+        navigation.dispatch(resetAction);
+      } else {
+        Alert.alert("실패했습니다. 다시 시도해 주세요");
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
+  };
+
+  const handleEdit = () => {
+    Alert.alert("Edit!");
+  };
+
+  const preLoad = async () => {
+    const userToken = await AsyncStorage.getItem("userToken");
+    setUserToken(userToken);
+    const data = await serverApi.orderdetail(orderId, userToken);
+    setData({ ...data.data.data.order });
+
+    if (data.data.data.userId === data.data.data.order.hostId) {
+      setIsHost(true);
+    } else if (
+      find(
+        data.data.data.order.applicants,
+        obj => obj.userId === data.data.data.userId
+      )
+    ) {
+      setIsRunner(true);
+    }
+
+    console.log(
+      `호스트인가요? `,
+      data.data.data.userId === data.data.data.order.hostId
+    );
+    console.log(
+      `러너인가요? `,
+      find(
+        data.data.data.order.applicants,
+        obj => obj.userId === data.data.data.userId
+      )
+    );
+  };
+
+  useEffect(() => {
+    preLoad();
+  }, []);
+
   return (
     <>
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={preLoad} />
+          }
+        >
           <Container>
             <Image source={{ uri: mapScreen }} />
             <UserContainer>
@@ -236,7 +414,7 @@ const OrderDetailScreen = () => {
               <ScoreContainer>
                 <ScoreLabel>매너 점수</ScoreLabel>
                 <AntDesign
-                  name={score > 4 ? "smileo" : score > 3 ? "meh" : "frowno"}
+                  name={score > 3.4 ? "smileo" : score > 2.4 ? "meh" : "frowno"}
                   size={32}
                   style={{ color, marginRight: 8, marginTop: -6 }}
                 />
@@ -282,37 +460,187 @@ const OrderDetailScreen = () => {
         </ScrollView>
         <BottomContainer>
           <ContentContainer>
-            <Touchable onPress={() => setIsLiked(!isLiked)}>
-              <IconContainer>
-                {isLiked ? (
-                  <AntDesign
-                    name="heart"
-                    size={26}
-                    style={{ color: styles.mainColor }}
-                  />
-                ) : (
-                  <AntDesign
-                    name="hearto"
-                    size={26}
-                    style={{ color: styles.mainColor }}
-                  />
-                )}
-              </IconContainer>
-            </Touchable>
-            <VerticalDivider />
-            <PriceContainer>
-              <Price>{`${price}원`}</Price>
-              <PriceOption>
-                {isPrice ? "가격제안 가능" : "가격제안 불가"}
-              </PriceOption>
-            </PriceContainer>
-            <Touchable>
-              <ApplyButton width={250}>
-                <ButtonText>러너 지원하기</ButtonText>
-              </ApplyButton>
-            </Touchable>
+            {isHost ? (
+              data.deliverId ? (
+                <>
+                  <IconContainer>
+                    <AntDesign
+                      name="hearto"
+                      size={26}
+                      style={{ color: styles.inActiveColor }}
+                    />
+                  </IconContainer>
+
+                  <VerticalDivider />
+                  <PriceContainer>
+                    <Price>{price}</Price>
+                    <PriceOption>
+                      {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                    </PriceOption>
+                  </PriceContainer>
+                  <EditButtonContainer>
+                    <DeleteButton width={350} disabled={true}>
+                      <DeleteButtonText disabled={true}>삭제</DeleteButtonText>
+                    </DeleteButton>
+
+                    <EditButton disabled={true} width={350}>
+                      <ButtonText disabled={true}>수정</ButtonText>
+                    </EditButton>
+                  </EditButtonContainer>
+                </>
+              ) : (
+                <>
+                  <IconContainer>
+                    <AntDesign
+                      name="hearto"
+                      size={26}
+                      style={{ color: "#E8E2E4" }}
+                    />
+                  </IconContainer>
+
+                  <VerticalDivider />
+                  <PriceContainer>
+                    <Price>{price}</Price>
+                    <PriceOption>
+                      {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                    </PriceOption>
+                  </PriceContainer>
+                  <EditButtonContainer>
+                    <Touchable onPress={handleDelete}>
+                      <DeleteButton width={350}>
+                        <DeleteButtonText>삭제</DeleteButtonText>
+                      </DeleteButton>
+                    </Touchable>
+                    <Touchable onPress={handleEdit}>
+                      <EditButton width={350}>
+                        <ButtonText>수정</ButtonText>
+                      </EditButton>
+                    </Touchable>
+                  </EditButtonContainer>
+                </>
+              )
+            ) : (
+              <>
+                <Touchable onPress={() => setIsLiked(!isLiked)}>
+                  <IconContainer>
+                    {isLiked ? (
+                      <AntDesign
+                        name="heart"
+                        size={26}
+                        style={{ color: styles.mainColor }}
+                      />
+                    ) : (
+                      <AntDesign
+                        name="hearto"
+                        size={26}
+                        style={{ color: styles.mainColor }}
+                      />
+                    )}
+                  </IconContainer>
+                </Touchable>
+                <VerticalDivider />
+                <PriceContainer>
+                  <Price>{price}</Price>
+                  <PriceOption>
+                    {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                  </PriceOption>
+                </PriceContainer>
+                <Touchable onPress={handleApplyButton}>
+                  <ApplyButton width={250}>
+                    <ButtonText>러너 지원하기</ButtonText>
+                  </ApplyButton>
+                </Touchable>
+              </>
+            )}
           </ContentContainer>
         </BottomContainer>
+        <Backdrop
+          visible={visible}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          onClose={() => {}}
+          swipeConfig={{
+            velocityThreshold: 0.3,
+            directionalOffsetThreshold: 80
+          }}
+          animationConfig={{
+            speed: 14,
+            bounciness: 4
+          }}
+          overlayColor="rgba(0,0,0,0.32)"
+          backdropStyle={{
+            backgroundColor: "#fff",
+            justifyContent: "flex-start"
+          }}
+        >
+          <DropContainer>
+            <>
+              <BottomContainer width={40}>
+                <FormInput
+                  placeholder={"₩ 희망 배달금액(선택사항)"}
+                  width={140}
+                  isUnderline={false}
+                >
+                  <Checkbox
+                    label="희망비용 수락"
+                    checkboxStyle={{ height: 22, width: 22 }}
+                    labelStyle={{ color: "#1D2025", marginLeft: -4 }}
+                    checked={checked}
+                    containerStyle={{
+                      width: 110,
+                      marginLeft: -20
+                    }}
+                    checkedImage={checkedBox}
+                    uncheckedImage={uncheckedBox}
+                    onChange={() => {
+                      setChecked(!checked);
+                    }}
+                  />
+                </FormInput>
+                <Divider />
+                <FormInput
+                  placeholder={"메세지(선택사항)"}
+                  width={50}
+                  isUnderline={false}
+                />
+                <Divider />
+                <MarginContentContainer>
+                  <>
+                    <Touchable onPress={() => setIsLiked(!isLiked)}>
+                      <IconContainer>
+                        {isLiked ? (
+                          <AntDesign
+                            name="heart"
+                            size={26}
+                            style={{ color: styles.mainColor }}
+                          />
+                        ) : (
+                          <AntDesign
+                            name="hearto"
+                            size={26}
+                            style={{ color: styles.mainColor }}
+                          />
+                        )}
+                      </IconContainer>
+                    </Touchable>
+                    <VerticalDivider />
+                    <PriceContainer>
+                      <Price>{price}</Price>
+                      <PriceOption>
+                        {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                      </PriceOption>
+                    </PriceContainer>
+                    <Touchable onPress={handleApplyButton}>
+                      <ApplyButton width={250}>
+                        <ButtonText>러너 지원하기</ButtonText>
+                      </ApplyButton>
+                    </Touchable>
+                  </>
+                </MarginContentContainer>
+              </BottomContainer>
+            </>
+          </DropContainer>
+        </Backdrop>
       </SafeAreaView>
     </>
   );

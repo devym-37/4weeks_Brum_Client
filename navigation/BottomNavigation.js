@@ -41,13 +41,13 @@ const stackFactory = (initialRoute, customConfig) =>
           <CancelOrderLink orderId={navigation.getParam("orderId")} />
         )
       })
-    },
-    OrderDetailScreen: {
-      screen: OrderDetailScreen,
-      navigationOptions: {
-        title: "요청 상세보기"
-      }
     }
+    // OrderDetailScreen: {
+    //   screen: OrderDetailScreen,
+    //   navigationOptions: {
+    //     title: "요청 상세보기"
+    //   }
+    // }
   });
 
 const BottomNavigation = createBottomTabNavigator(

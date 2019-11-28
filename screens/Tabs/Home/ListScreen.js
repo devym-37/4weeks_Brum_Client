@@ -52,13 +52,22 @@ const ListScreen = props => {
               <View key={i}>
                 <TouchableOpacity
                   onPress={() => {
-                    console.log("ㄴㅇㄴㅇㄹ", data.orderId);
+                    // console.log("ㄴㅇㄴㅇㄹ", data.orderId);
                     props.reduxOrderId(data.orderId);
-                    props.navigation.navigate("OrderDetailScreen");
+                    props.navigation.navigate("OrderNavigation", {
+                      orderId: data.orderId
+                    });
                   }}
                 >
-                  <ListCard data={data} />
-                  {/* <OrderCard {...data} /> */}
+                  {/* <ListCard data={data} /> */}
+                  <OrderCard
+                    {...data}
+                    onPress={() => {
+                      props.navigation.navigate("OrderNavigation", {
+                        orderId: data.orderId
+                      });
+                    }}
+                  />
                 </TouchableOpacity>
               </View>
             ))}

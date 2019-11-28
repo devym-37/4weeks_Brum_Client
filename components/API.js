@@ -121,14 +121,6 @@ export const serverApi = {
       }
     );
   },
-  cancelOrder: (orderId, userToken) =>
-    sApi.delete(`order/${orderId}/apply`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "x-access-token",
-        "x-access-token": userToken
-      }
-    }),
   getAllChats: userToken => {
     return sApi.get("user/chat", {
       headers: {
@@ -138,8 +130,8 @@ export const serverApi = {
       }
     });
   },
-  orderdetail: (userid, userToken) =>
-    sApi.get(`order/${userid}`, {
+  orderdetail: (orderId, userToken) =>
+    sApi.get(`order/${orderId}`, {
       headers: {
         "Content-Type": "multipart/form-data",
         "Access-Control-Allow-Headers": "x-access-token",
@@ -192,7 +184,7 @@ export const serverApi = {
         }
       }
     ),
-  cancleapply: (userToken, orderId) =>
+  cancelApply: (orderId, userToken) =>
     sApi.delete(
       `order/${orderId}/apply`,
 

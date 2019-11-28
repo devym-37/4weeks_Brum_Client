@@ -87,8 +87,8 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          {/* {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />} */}
-          {isLoggedIn ? <OrderDetailScreen /> : <LoggedOutMainNavigation />}
+          {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
+          {/* {isLoggedIn ? <OrderDetailScreen /> : <LoggedOutMainNavigation />} */}
         </PersistGate>
       </ThemeProvider>
     </Provider>

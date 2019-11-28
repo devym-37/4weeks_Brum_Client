@@ -10,6 +10,7 @@ import AuthNavigation from "./AuthNavigation";
 import NewOrderNavigation from "./NewOrderNavigation";
 import PhotoNavigation from "./PhotoNavigation";
 import ChatNavigation from "./ChatNavigation";
+import OrderNavigation from "./OrderNavigation";
 import ChatFilterNavigation from "./ChatFilterNavigation";
 import { stackStyles } from "./config";
 
@@ -23,7 +24,8 @@ const MainNavigation = createStackNavigator(
     PhotoNavigation,
     ChatNavigation,
     ChatFilterNavigation,
-    NotificationNavigation
+    NotificationNavigation,
+    OrderNavigation
   },
   {
     navigationOptions: {
