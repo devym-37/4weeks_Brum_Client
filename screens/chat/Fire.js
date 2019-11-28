@@ -1,11 +1,11 @@
 import firebase from "firebase";
-
+import { AsyncStorage } from "react-native";
 class Fire {
   constructor() {
     this.init();
     this.observeAuth();
   }
-
+  orderId = null;
   init = () => {
     if (!firebase.apps.length) {
       firebase.initializeApp({
@@ -61,23 +61,30 @@ class Fire {
     return message;
   };
 
-  on = callback =>
+  on = async callback => {
+    const orderid = await AsyncStorage.getItem("orderid");
+    this.orderId = orderid;
+    console.log("Fire", this.orderId);
+
     firebase
       .database()
-      .ref("messages/1")
+      .ref(`threads/${this.orderId}/messages`)
       .limitToLast(20)
       .on("child_added", snapshot => callback(this.parse(snapshot)));
+  };
 
-  onUsersThreads = callback =>
-    this.ref(`/users/${userId}/threads`)
-      .limitToLast(20)
-      .on("child_added", snapshot => callback(this.parse(snapshot)));
+  getorderid = async () => {
+    const orderid = await AsyncStorage.getItem("orderid");
+    this.orderId = orderid;
+    console.log("shsladkfhasldfh", this.orderId);
+  };
 
   get timestamp() {
     return firebase.database.ServerValue.TIMESTAMP;
   }
   // send the message to the Backend
-  send = (messages, orderid) => {
+  send = messages => {
+    const orderid = 1;
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
       const message = {
@@ -85,15 +92,20 @@ class Fire {
         user,
         timestamp: this.timestamp
       };
-      this.append(message, orderid);
+      this.append(message);
     }
   };
 
-  append = (message, orderid) =>
+  append = async message => {
+    const orderid = await AsyncStorage.getItem("orderid");
+    this.orderId = orderid;
+    console.log("Fire", this.orderId);
+
     firebase
       .database()
-      .ref(`threads/${orderid}/messages`)
+      .ref(`threads/${this.orderId}/messages`)
       .push(message);
+  };
 
   appendChatrooms = (userId, orderId, deliverId) =>
     firebase
@@ -132,12 +144,6 @@ class Fire {
             console.log(data);
           });
       });
-
-  onList = userId =>
-    firebase
-      .database()
-      .ref(`users/${userId}/threads`)
-      .on("value", data => data);
 
   // close the connection to the Backend
   off() {

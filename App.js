@@ -16,7 +16,7 @@ import StartNavigation from "./navigation/StartNavigation";
 import MainNavigation from "./navigation/MainNavigation";
 import LoggedOutMainNavigation from "./navigation/LoggedOutMainNavigation";
 
-import ChatNavigation from "./navigation/chatNavigation";
+import ChatNavigation from "./navigation/ChatNavigation";
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
@@ -86,7 +86,7 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
-          <ChatNavigation />
+          {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
         </PersistGate>
       </ThemeProvider>
     </Provider>

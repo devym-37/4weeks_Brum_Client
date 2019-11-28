@@ -10,6 +10,7 @@ import ApplicantCard from "../../../components/Cards/ApplicantCard";
 import GhostButton from "../../../components/Buttons/GhostButton";
 import styles from "../../../styles";
 import constants from "../../../constants";
+
 const Container = styled.View`
   flex: 1;
   justify-content: center;

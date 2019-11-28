@@ -1,5 +1,6 @@
 import React from "react";
 import { GiftedChat } from "react-native-gifted-chat"; // 0.3.0
+import { AsyncStorage } from "react-native";
 
 import Fire from "./Fire";
 
@@ -8,25 +9,146 @@ class Chat extends React.Component {
     title: (navigation.state.params || {}).name || "Chat!"
   });
 
-  state = {
-    messages: []
-  };
-
+  constructor() {
+    super();
+    this.state = {
+      messages: [],
+      Loading: false,
+      orderId: null,
+      userId: null
+    };
+  }
   get user() {
+    //const user = redux
     return {
-      name: this.props.navigation.state.params.name,
+      //  name: this.props.navigation.state.params.name,
       _id: Fire.shared.uid
     };
   }
 
   render() {
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={Fire.shared.send}
-        user={this.user}
-        oderid={1}
-      />
+      this.state.userId !== null && (
+        <GiftedChat
+          messages={this.state.messages}
+          onSend={Fire.shared.send}
+          user={5}
+        />
+      )
+    );
+  }
+
+  onChats = orderid =>
+    firebase
+      .database()
+      .ref(`threads/${orderid}/messages`)
+      .on("value", data => {
+        const newarr = [];
+        for (const key in data.val()) {
+          newarr.push(key);
+        }
+        console.log(newarr);
+
+        this.setState({
+          chats: newarr
+        });
+      });
+
+  componentDidMount() {
+    //const orderid= this.props.orderid
+    console.log("propsprops", this.props);
+
+    this.getUserId();
+
+    Fire.shared.on(message => {
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, message)
+      }));
+    });
+  }
+  componentWillUnmount() {
+    Fire.shared.off();
+  }
+
+  async getUserId() {
+    const userid = await AsyncStorage.getItem("userId");
+    const orderid = await AsyncStorage.getItem("orderid");
+    console.log("유저아이디", userid);
+    this.setState({
+      userId: userid,
+      orderId: orderid
+    });
+  }
+}
+
+export default Chat;
+
+/* import React from "react";
+import { GiftedChat } from "react-native-gifted-chat"; // 0.3.0
+import { Button, View } from "react-native";
+import Fire from "./Fire";
+import { ScrollView } from "react-native-gesture-handler";
+import {
+  Container,
+  Header,
+  Content,
+  Card,
+  CardItem,
+  Thumbnail,
+  Text,
+  Button,
+  Icon,
+  Left,
+  Body,
+  Right,
+  Footer,
+  Row
+} from "native-base";
+
+class ChatRooms extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: "채팅"
+  });
+
+  state = {
+    messages: []
+  };
+
+  handlechooseone() {
+    const userId = 1;
+    const orderId = 2;
+    const deliverId = 3;
+    Fire.shared.appendChatrooms(userId, orderId, deliverId);
+  }
+  handleadduser() {
+    const userId = 1;
+    const orderId = 3;
+    const deliverId = 4;
+    Fire.shared.appendUser(userId, orderId, deliverId);
+  }
+
+  handlechats() {
+    const userId = 1;
+    Fire.shared.onList(userId);
+  }
+
+  render() {
+    return (
+      <Card>
+         <CardItem cardBody style={{ marginTop: 10 }}>
+
+           
+         </CardItem>
+        <Button
+          title="채팅으로"
+          onPress={() => {
+            this.props.navigation.navigate("Chat");
+          }}
+        />
+        <Button onPress={this.handlechooseone.bind(this)} title="지원자선택" />
+        <Button onPress={this.handleadduser.bind(this)} title="유저추가" />
+        <Button onPress={this.handlechats.bind(this)} title="채팅방목록" />
+      </Card>
     );
   }
 
@@ -42,4 +164,5 @@ class Chat extends React.Component {
   }
 }
 
-export default Chat;
+export default ChatRooms;
+ */

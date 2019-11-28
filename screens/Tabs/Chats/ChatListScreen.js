@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { ScrollView, RefreshControl, AsyncStorage } from "react-native";
+import { ScrollView, RefreshControl, AsyncStorage, Button } from "react-native";
 
 import { withNavigation } from "react-navigation";
 import { serverApi } from "../../../components/API";
