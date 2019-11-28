@@ -23,6 +23,8 @@ import { MapLocationButton } from "../../../components/Buttons/MapLocationBtn";
 import { NavigationEvents } from "react-navigation";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
+import { connect } from "react-redux";
+import { campusSaver } from "../../../redux/actions/campusActions";
 
 const View = styled.View`
   /* background-color: #f1f3f5; */
@@ -82,7 +84,7 @@ const RightToggleText = styled.Text`
   color: ${props => (props.clicked ? "#fff" : styles.mainColor)};
   font-size: 13;
 `;
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, ...props }) => {
   // console.log(`Home Nav: `, navigation.getParam("campus"));
   const [leftClicked, setLeftClicked] = useState(false);
   const [rightClicked, setRightClicked] = useState(true);
@@ -112,7 +114,9 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const markerPosition = async () => {
-    const selectedCampus = await AsyncStorage.getItem("campus");
+    // const selectedCampus = await AsyncStorage.getItem("campus");
+    const selectedCampus = props.campus;
+
     const orderPosition = await serverApi.getCampusOrders("snu");
     console.log(
       "orderPosition : ",
@@ -132,7 +136,8 @@ const HomeScreen = ({ navigation }) => {
         setIsopenLoginModal(true);
       }
 
-      const selectedCampus = await AsyncStorage.getItem("campus");
+      // const selectedCampus = await AsyncStorage.getItem("campus");
+      const selectedCampus = props.campus ? props.campus : "hanyang";
       let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
 
       setOrders([...getCampusOrders.data.data.orders]);
@@ -150,6 +155,12 @@ const HomeScreen = ({ navigation }) => {
     preLoad();
     markerPosition();
   }, []);
+
+  useEffect(() => {
+    preLoad();
+    markerPosition();
+  }, [props.campus]);
+
   // position: { latitude: 37.55737, longitude: 127.047132 }
   return (
     <>
@@ -217,4 +228,18 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-export default HomeScreen;
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    campus: state.campusReducer.campus
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxCampus: campus => dispatch(campusSaver(campus))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

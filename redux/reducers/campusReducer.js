@@ -1,6 +1,6 @@
 // Initial State
 const initialState = {
-  campus: null
+  campus: "hanyang"
 };
 
 // Reducers (Modifies The State And Returns A New State)

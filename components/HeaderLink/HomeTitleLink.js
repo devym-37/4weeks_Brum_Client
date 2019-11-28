@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { AsyncStorage } from "react-native";
 import styled from "styled-components";
 import {
   withNavigation,
   NavigationActions,
   StackActions
 } from "react-navigation";
+import { connect } from "react-redux";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { AsyncStorage } from "react-native";
-import constants from "../../constants";
 import ModalDropdown from "react-native-modal-dropdown";
+import { campusSaver } from "../../redux/actions/campusActions";
 import map from "lodash.map";
 import findKey from "lodash.findkey";
+import constants from "../../constants";
 const Touchable = styled.TouchableOpacity``;
 const TitleContainer = styled.View`
   flex-direction: row;
@@ -28,30 +30,35 @@ const Text = styled.Text`
 
 // const arrayOfCampus = constants.campus.map(obj => obj.kor);
 
-export default withNavigation(({ navigation }) => {
-  const [campus, setCampus] = useState(null);
+const HomTitleLink = withNavigation(({ navigation, ...props }) => {
+  let selectedCampus = props.campus ? props.campus : "hanyang";
+  let engCampus = selectedCampus && constants.campus[selectedCampus].kor;
+
+  const [campus, setCampus] = useState(engCampus);
   const [refreshing, setRefreshing] = useState(false);
   const arrayOfCampus = map(constants.campus, obj => obj.kor);
 
-  const getCampusName = async () => {
-    const selectedCampus = await AsyncStorage.getItem("campus");
-    setCampus(constants.campus[selectedCampus].kor);
-  };
+  // const getCampusName = () => {
+  //   // const selectedCampus = await AsyncStorage.getItem("campus");
+  //   const selectedCampus = props.campus;
+  //   setCampus(constants.campus[selectedCampus].kor);
+  // };
 
-  const handleSelect = async e => {
+  const handleSelect = e => {
     const reselectedCampus = arrayOfCampus[e];
     setCampus(reselectedCampus);
     const engCampus = findKey(
       constants.campus,
       obj => obj.kor === reselectedCampus
     );
-    await AsyncStorage.setItem("campus", engCampus);
+    // await AsyncStorage.setItem("campus", engCampus);
+    props.reduxCampus(engCampus);
     navigation.push("Home", { campus: engCampus });
   };
 
-  useEffect(() => {
-    getCampusName();
-  }, []);
+  // useEffect(() => {
+  //   getCampusName();
+  // }, []);
 
   return (
     <Touchable>
@@ -97,3 +104,17 @@ export default withNavigation(({ navigation }) => {
     </Touchable>
   );
 });
+
+const mapStateToProps = state => {
+  return {
+    campus: state.campusReducer.campus
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    reduxCampus: campus => dispatch(campusSaver(campus))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomTitleLink);

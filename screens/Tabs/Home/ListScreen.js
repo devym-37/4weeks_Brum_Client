@@ -28,7 +28,7 @@ const ListScreen = props => {
   const refresh = async () => {
     try {
       setRefreshing(true);
-      const selectedCampus = await AsyncStorage.getItem("campus");
+      const selectedCampus = props.campus;
       let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
       // console.log(`refresh: `, getAllOrders);
       setOrders([...getCampusOrders.data.data.orders]);
@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    orderId: state.orderReducer.orderId
+    orderId: state.orderReducer.orderId,
+    campus: state.campusReducer.campus
   };
 };
 
