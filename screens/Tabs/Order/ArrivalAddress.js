@@ -14,12 +14,15 @@ import {
   Body
 } from "react-native";
 import MapView from "react-native-maps";
-import { API } from "../../../components/API";
+import { API } from "../../../APIS";
 import _ from "lodash";
 import constants from "../../../constants";
+import { withNavigation } from "react-navigation";
 import { Container } from "native-base";
 import { connect } from "react-redux";
-import { destinationAction } from "../../../redux/actions/destinationAction";
+import { departureLocationSave } from "../../../redux/actions/destinationAction";
+import { arrivalSave } from "../../../redux/actions/orderPositionActions";
+import Geocoder from "react-native-geocoding";
 
 //Show map... select location to go to
 //Get location route with Google Location API
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
   }
 });
 
-class OrderDepartureAddress extends Component {
+class OrderArrivalAddress extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -94,7 +97,8 @@ class OrderDepartureAddress extends Component {
   };
 
   async onChangeDestination(destination) {
-    console.log("destination", { destination });
+    console.log("destination [1] :", destination);
+    console.log("destination [2] :", { destination });
     this.setState({ destination });
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API}&input={${destination}}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
     const result = await fetch(apiUrl);
@@ -106,18 +110,28 @@ class OrderDepartureAddress extends Component {
   }
 
   pressedPrediction(prediction) {
-    console.log("prediction", prediction);
+    // console.log("prediction [3] :", prediction);
+    this.props.reduxDepartureLocation(prediction);
+    // console.log("OderAddress Test : ", this.props.orderDestination);
     Keyboard.dismiss();
     this.setState({
       locationPredictions: [],
-      destination: prediction.description.substring(5)
+      destination: prediction
     });
     Keyboard;
   }
-  //   {prediction.description.substring(5)}
-  //   <TouchableHighlight
-  //   onPress={() => this.pressedPrediction(prediction)}
-  // >
+
+  async getData(address) {
+    Geocoder.setApiKey(API);
+
+    Geocoder.from(address)
+      .then(json => {
+        const location = json.results[0].geometry.location;
+        console.log("location", location);
+      })
+      .catch(error => console.log(error));
+  }
+
   render() {
     const { isFocused } = this.state;
     const locationPredictions = this.state.locationPredictions.map(
@@ -128,7 +142,16 @@ class OrderDepartureAddress extends Component {
         >
           <TouchableHighlight
             style={styles.containers}
-            onPress={() => this.pressedPrediction(prediction)}
+            onPress={() => {
+              this.pressedPrediction(
+                prediction.structured_formatting.main_text
+              );
+              this.props.reduxArrivalLocation(
+                prediction.structured_formatting.main_text
+              );
+              this.getData(prediction.structured_formatting.main_text);
+              this.props.navigation.goBack(null);
+            }}
             key={prediction.id}
           >
             <React.Fragment>
@@ -174,11 +197,23 @@ class OrderDepartureAddress extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    arrivalLocation: state.destinationReducer.arrivalLocation,
+    arrivalLatLng: state.orderPositionReducer.arrivalLatLng
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   // Action
   return {
     // Login
-    reduxDestination: destination => dispatch(destinationSave(destination))
+    reduxArrivalLocation: arrivalLocation =>
+      dispatch(departureLocationSave(arrivalLocation)),
+    reduxArrivalLatLng: arrivalLatLng => dispatch(arrivalSave(arrivalLatLng))
   };
 };
-export default connect(mapDispatchToProps)(OrderDepartureAddress);
+export default withNavigation(
+  connect(mapStateToProps, mapDispatchToProps)(OrderArrivalAddress)
+);

@@ -1,6 +1,7 @@
 // Initial State
 const initialState = {
   departure: null,
+  departureAddress: null,
   arrival: null
 };
 
@@ -14,6 +15,7 @@ const orderPositionReducer = (state = initialState, action) => {
         ...state,
         // Redux Store
         departure: action.departure,
+        departureAddress: action.departureAddress,
         arrival: action.arrival
       };
     }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, Alert, TouchableOpacity } from "react-native";
+import { Platform, Alert, View, TouchableOpacity } from "react-native";
 import { Icon } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -13,7 +13,7 @@ import ListScreen from "../screens/Tabs/Home/ListScreen";
 import HomeScreen from "../screens/Tabs/Home/HomeScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import { createStackNavigator } from "react-navigation-stack";
-import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
+import OrderDetailScreen from "../screens/Tabs/Order/OrderDetail";
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
 import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
 import { stackStyles } from "./config";
@@ -66,6 +66,33 @@ const BottomNavigation = createBottomTabNavigator(
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
           <AntDesign name="form" size={24} style={{ color: tintColor }} />
+        ),
+        tabBarOnPress: ({ navigation }) => {
+          return Alert.alert(
+            null,
+            "가입 또는 로그인이 필요합니다. 회원가입 및 로그인을 하시겠어요?",
+            [
+              {
+                text: "회원가입",
+                onPress: () => navigation.navigate("VerifyPhone")
+              },
+              {
+                text: "취소",
+                style: "cancel"
+              },
+              { text: "로그인", onPress: () => navigation.navigate("Login") }
+            ],
+            { cancelable: false }
+          );
+        }
+      }
+    },
+    Add: {
+      screen: View,
+      navigationOptions: {
+        title: "글쓰기",
+        tabBarIcon: ({ focused, tintColor }) => (
+          <AntDesign name="form" size={26} style={{ color: tintColor }} />
         ),
         tabBarOnPress: ({ navigation }) => {
           return Alert.alert(

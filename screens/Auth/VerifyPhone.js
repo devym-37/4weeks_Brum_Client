@@ -20,6 +20,7 @@ import { toastApi, serverApi } from "../../components/API";
 // Imports: Redux Actions
 import { otpSaver, otpMaker } from "../../redux/actions/otpActions";
 import { phoneSaver } from "../../redux/actions/phoneActions";
+import { withNavigation } from "react-navigation";
 
 const View = styled.View`
   justify-content: center;
@@ -46,21 +47,17 @@ const VerifyPhone = props => {
 
       const verifyId = await serverApi.verifyPhoneNumber(value);
       props.reduxPhone(value);
-      if (verifyId.data.isSuccess) {
+      if (verifyId.data.isSuccess || props.navigation.getParam("reset")) {
         const otp = props.otp;
 
         Alert.alert("인증번호가 문자로 전송됐습니다. (최대 20초 소요)");
         const requestSMS = await toastApi.postSMS(otp, value);
-        props.navigation.navigate("Confirm");
+        props.navigation.getParam("reset")
+          ? props.navigation.navigate("Confirm", { reset: true })
+          : props.navigation.navigate("Confirm");
       } else {
-        const selectedPage = await AsyncStorage.getItem("page");
-        // console.log("선택한 페이지", selectedPage);
-        if (selectedPage === "resetpw") {
-          props.navigation.navigate("ResetPw");
-        } else {
-          Alert.alert("이미 가입된 번호입니다");
-          props.navigation.navigate("Login");
-        }
+        Alert.alert("이미 가입된 번호입니다");
+        props.navigation.navigate("Login");
       }
     } catch (e) {
       console.log(`Cant' fetch toast api. error message: ${e} `);

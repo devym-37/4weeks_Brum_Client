@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, Alert, TouchableOpacity } from "react-native";
+import { Platform, Alert, TouchableOpacity, View } from "react-native";
 import { Icon } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -9,10 +9,10 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import ChatListScreen from "../screens/Tabs/Chats/ChatListScreen";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
+import OrderDetailScreen from "../screens/Tabs/Order/OrderDetail";
 import MyPageScreen from "../screens/Tabs/MyPageScreen";
 import ListScreen from "../screens/Tabs/Home/ListScreen";
 import HomeScreen from "../screens/Tabs/Home/HomeScreen";
-import OrderDetailScreen from "../screens/Tabs/Order/OrderDetailScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import ChatScreen from "../screens/Tabs/Chats/ChatScreen";
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
@@ -21,6 +21,7 @@ import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
 import ChatHeaderLink from "../components/HeaderLink/ChatHeaderLink";
 import ChatListHeaderLink from "../components/HeaderLink/ChatListHeaderLink";
 import CancelOrderLink from "../components/HeaderLink/CancelOrderlLink";
+import NewOrderLink from "../components/HeaderLink/NewOrderLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
 
@@ -41,12 +42,6 @@ const stackFactory = (initialRoute, customConfig) =>
           <CancelOrderLink orderId={navigation.getParam("orderId")} />
         )
       })
-    },
-    OrderDetailScreen: {
-      screen: OrderDetailScreen,
-      navigationOptions: {
-        title: "요청 상세보기"
-      }
     }
   });
 
@@ -55,26 +50,41 @@ const BottomNavigation = createBottomTabNavigator(
     Home: {
       screen: stackFactory(HomeScreen, {
         headerRight: <NotificationLink />,
-        headerLeft: <HomeTitleLink />
+        headerLeft: <HomeTitleLink />,
+        backgroundColor: "#f1f3f5"
       }),
       navigationOptions: {
         title: "홈",
+        backgroundColor: "#f1f3f5",
         tabBarIcon: ({ focused, tintColor }) => (
-          <AntDesign name="home" size={24} style={{ color: tintColor }} />
+          <AntDesign name="home" size={26} style={{ color: tintColor }} />
         )
       }
     },
     Order: {
       screen: stackFactory(OrderScreen, {
         title: "내 요청",
-        backgroundColor: "#f1f3f5"
+        backgroundColor: "#f1f3f5",
+        headerRight: <NewOrderLink />
       }),
       navigationOptions: {
         backgroundColor: "#f1f3f5",
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
-          <AntDesign name="form" size={24} style={{ color: tintColor }} />
+          <AntDesign name="profile" size={26} style={{ color: tintColor }} />
         )
+      }
+    },
+    Add: {
+      screen: View,
+      navigationOptions: {
+        title: "글쓰기",
+        tabBarIcon: ({ focused, tintColor }) => (
+          <AntDesign name="form" size={26} style={{ color: tintColor }} />
+        ),
+        tabBarOnPress: ({ navigation }) => {
+          navigation.navigate("NewOrderNavigation");
+        }
       }
     },
     Chats: {
@@ -85,7 +95,7 @@ const BottomNavigation = createBottomTabNavigator(
       navigationOptions: {
         title: "채팅",
         tabBarIcon: ({ focused, tintColor }) => (
-          <AntDesign name="message1" size={24} style={{ color: tintColor }} />
+          <AntDesign name="message1" size={26} style={{ color: tintColor }} />
         )
       }
     },
@@ -94,7 +104,7 @@ const BottomNavigation = createBottomTabNavigator(
       navigationOptions: {
         title: "마이페이지",
         tabBarIcon: ({ focused, tintColor }) => (
-          <AntDesign name="user" size={24} style={{ color: tintColor }} />
+          <AntDesign name="user" size={26} style={{ color: tintColor }} />
         )
       }
     }

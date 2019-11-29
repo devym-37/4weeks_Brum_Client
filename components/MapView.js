@@ -5,9 +5,10 @@ import {
   View,
   Dimensions,
   Platform,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { Container } from "native-base";
@@ -58,8 +59,6 @@ const MapScreen = props => {
     latitudeDelta: constants.LATITUDE_DELTA,
     longitudeDelta: constants.LONGITUDE_DELTA
   };
-  // props.reduxDeparturePosition(address[0]);
-
   const geoCode = async address => {
     const geo = await Location.geocodeAsync(address);
     return geo;
@@ -71,28 +70,17 @@ const MapScreen = props => {
   };
 
   const recordEvent = async regionChange => {
-    const address = await reverseGeocode(regionChange);
-    const geolatlng = await geoCode("한양대 사회과학관");
-    console.log("address", address[0]);
-    console.log("geolatlng", geolatlng);
-    setRegions(address[0]);
+    // const address = await reverseGeocode(regionChange);
+    const geolatlng = await geoCode(props.marker);
+    // console.log("address", address[0]);
+    console.log("geolatlng[123]", JSON.stringify(geolatlng));
+    setRegions(geolatlng);
+    // this.props.reduxDepartureAddress(address[0]);
   };
-  useEffect(() => {
-    recordEvent();
-  }, []);
 
-  //   <View style={[styles.bubble, styles.latlng]}>
-  //   <Text style={styles.centeredText}>
-  //     {regions.region}
-  //     {regions.street}
-  //     {regions.name}
-  //   </Text>
-  // </View>
   return (
     <>
       <Container>
-        <DestinationInput destination={regions} />
-        <DepartureInput />
         <MapView
           style={styles.mapStyle}
           provider="google"
@@ -111,16 +99,24 @@ const MapScreen = props => {
           showsScale={true}
           rotateEnabled={false}
           loadingEnabled={true}
-        />
+        ></MapView>
       </Container>
     </>
   );
 };
 
+// <Marker coordinate={props.position}>
+// <Image
+//   source={require("../assets/Delivery_arrival.png")}
+//   style={{ width: 45, height: 45 }}
+// />
+// </Marker>
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    loggedIn: state.authReducer.loggedIn
+    loggedIn: state.authReducer.loggedIn,
+    orderDestination: state.destinationReducer.destination,
+    departureLocation: state.destinationReducer.departureLocation
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -128,6 +124,8 @@ const mapDispatchToProps = dispatch => {
   return {
     // Login
     reduxDeparturePosition: departure => dispatch(departureSave(departure)),
+    reduxDepartureAddress: departureAddress =>
+      dispatch(departureAddressSave(departureAddress)),
     reduxArrivalPosition: arrival => dispatch(arrivalSave(arrival))
   };
 };

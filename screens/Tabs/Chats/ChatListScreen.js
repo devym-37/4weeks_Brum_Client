@@ -102,6 +102,7 @@ const ChatListScreen = ({ navigation }) => {
 
       fetchUserId();
       Fire.shared.observeAuth();
+      setUserId(requestChats.data.userId);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     } finally {
@@ -120,16 +121,17 @@ const ChatListScreen = ({ navigation }) => {
     <ScrollView
       style={{ backgroundColor: "#f1f3f5" }}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        <RefreshControl refreshing={refreshing} onRefresh={preLoad} />
       }
     >
       {loading ? (
         <Loader />
-      ) : chats && chats.deliverInfo ? (
+      ) : chats ? (
         chats.map((chat, i) => (
           <ChatCard
             key={i}
             onPress={() => handleClick(chat.deliverInfo.nickname, i)}
+            userId={userId}
             {...chat}
           ></ChatCard>
         ))

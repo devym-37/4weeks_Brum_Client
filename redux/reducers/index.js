@@ -9,8 +9,10 @@ import campusReducer from "./campusReducer";
 import orderReducer from "./orderReducer";
 import orderPositionReducer from "./orderPositionReducer";
 import destinationReducer from "./destinationReducer";
+import passwordErrorCountReducer from "./passwordErrorCountReducer";
 // Redux: Root Reducer
 const rootReducer = combineReducers({
+  passwordErrorCountReducer,
   authReducer,
   otpReducer,
   phoneReducer,

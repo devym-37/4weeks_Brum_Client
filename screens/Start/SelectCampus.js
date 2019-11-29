@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Picker, AsyncStorage } from "react-native";
+import { connect } from "react-redux";
 import { Header } from "react-native-elements";
 import findKey from "lodash.findkey";
 import MainButton from "../../components/Buttons/MainButton";
 import constants from "../../constants";
+import { campusSaver } from "../../redux/actions/campusActions";
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -16,7 +18,7 @@ const ButtonContainer = styled.TouchableOpacity``;
 const Button = styled.View``;
 const ButtonText = styled.Text``;
 
-export default ({ navigation }) => {
+const SelectCampus = ({ navigation, ...props }) => {
   const [campus, setCampus] = useState("한양대");
 
   const handleNextButton = async () => {
@@ -26,6 +28,7 @@ export default ({ navigation }) => {
         return obj.kor === campus;
       });
       // console.log(engCampus);
+      props.reduxCampus(engCampus);
       await AsyncStorage.setItem("campus", engCampus);
     }
     navigation.navigate("Home");
@@ -63,3 +66,12 @@ export default ({ navigation }) => {
     </>
   );
 };
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxCampus: campus => dispatch(campusSaver(campus))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(SelectCampus);

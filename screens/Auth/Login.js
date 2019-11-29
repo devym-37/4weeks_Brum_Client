@@ -19,6 +19,10 @@ import firebase from "firebase";
 // Imports: Redux Actions
 import { login } from "../../redux/actions/authActions";
 import { phoneSaver } from "../../redux/actions/phoneActions";
+import {
+  increaseCounter,
+  resetCounter
+} from "../../redux/actions/passwordErrorCountActions";
 
 const View = styled.View`
   justify-content: center;
@@ -32,7 +36,7 @@ const LogIn = props => {
   let Id = useInput(`${props.phone ? props.phone : ""}`);
   let Pw = useInput("");
   const [loading, setLoading] = useState(false);
-
+  const [errorCount, setErrorCount] = useState(0);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [passwordIcon, setPasswordIcon] = useState("ios-eye-off");
 
@@ -70,6 +74,10 @@ const LogIn = props => {
         props.navigation.navigate("VerifyPhone");
 
         // 유저일 경우, 로그인 프로세스 진행
+      } else if (props.errorCount === 5) {
+        Alert.alert(
+          `비밀번호 입력 가능 횟수를 초과했습니다. 비밀번호를 재설정해주세요.`
+        );
       } else {
         const requestLogin = await serverApi.logIn(value1, value2);
         console.log("아이디검증됨", requestLogin.data);
@@ -89,7 +97,15 @@ const LogIn = props => {
           await AsyncStorage.setItem("password", value2);
           ////
 
+          props.reduxResetErrorCount();
           props.navigation.navigate("MainNavigation");
+        } else {
+          props.reduxErrorCount();
+          // setErrorCount(errorCount + 1);
+          Alert.alert(
+            `비밀번호가 ${props.errorCount + 1}회 틀렸습니다. 남은횟수 : ${4 -
+              props.errorCount}회`
+          );
         }
       }
     } catch (error) {
@@ -144,7 +160,7 @@ const LogIn = props => {
 
       <GhostButton
         onPress={() => {
-          props.navigation.navigate("VerifyPhone");
+          props.navigation.navigate("VerifyPhone", { reset: true });
           handleSelectedPage();
         }}
         text="비밀번호 재설정"
@@ -157,14 +173,16 @@ const mapStateToProps = state => {
   // Redux Store --> Component
   return {
     loggedIn: state.authReducer.loggedIn,
-    phone: state.phoneReducer.phone
+    phone: state.phoneReducer.phone,
+    errorCount: state.passwordErrorCountReducer.errorCount
   };
 };
 
 const mapDispatchToProps = dispatch => {
   // Action
   return {
-    // Login
+    reduxErrorCount: () => dispatch(increaseCounter()),
+    reduxResetErrorCount: () => dispatch(resetCounter()),
     reduxLogin: trueFalse => dispatch(login(trueFalse)),
     reduxPhone: phone => dispatch(phoneSaver(phone))
   };
