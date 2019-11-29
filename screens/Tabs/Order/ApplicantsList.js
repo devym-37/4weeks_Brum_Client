@@ -18,7 +18,21 @@ const Container = styled.View`
   align-items: center;
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: ${props => props.theme.greyColor};
+  font-size: 15;
+  margin-bottom: 4px;
+`;
+
+const DefaultContainer = styled.View`
+  margin-top: -100px;
+  width: ${constants.width};
+  height: ${constants.height * 0.9};
+  background-color: white;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
 
 const ButtonText = styled.Text`
   color: ${styles.mainColor};
@@ -165,7 +179,9 @@ const ApplicantsList = ({ navigation }) => {
         {loading ? (
           <Loader />
         ) : applicantList && applicantList.length === 0 ? (
-          <Text>지원자가 없습니다</Text>
+          <DefaultContainer>
+            <Text>현재 지원자가 없습니다</Text>
+          </DefaultContainer>
         ) : (
           applicantList &&
           applicantList.map(applicant => (
