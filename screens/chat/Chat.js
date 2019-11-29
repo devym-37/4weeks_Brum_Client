@@ -1,6 +1,8 @@
 import React from "react";
 import { GiftedChat } from "react-native-gifted-chat"; // 0.3.0
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, View } from "react-native";
+import { Notifications } from "expo";
+import * as Permissions from "expo-permissions";
 
 import Fire from "./Fire";
 
@@ -15,7 +17,8 @@ class Chat extends React.Component {
       messages: [],
       Loading: false,
       orderId: null,
-      userId: null
+      userId: null,
+      notification: null
     };
   }
   get user() {
@@ -26,12 +29,48 @@ class Chat extends React.Component {
     };
   }
 
+  registerForPushNotificationsAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== "granted") {
+      return;
+    }
+    let token = await Notifications.getExpoPushTokenAsync();
+    // Defined in following steps
+    console.log("pushtoken", token);
+
+    return await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: {
+        to: token,
+        sound: "default",
+        title: "Vroom",
+        body: "메시지 간다 메시지 받아라"
+      }
+      /* 
+      this.notificationSubscription = Notifications.addListener(this.handleNotification);
+ */
+    }).catch(err => {
+      throw err;
+    });
+  };
+
+  handleNotification = notification => {
+    this.setState({ notification });
+  };
+
   render() {
     return (
       this.state.userId !== null && (
         <GiftedChat
           messages={this.state.messages}
-          onSend={Fire.shared.send}
+          onSend={() => {
+            this.registerForPushNotificationsAsync();
+            Fire.shared.send();
+          }}
           user={this.user}
         />
       )
@@ -57,6 +96,8 @@ class Chat extends React.Component {
   componentDidMount() {
     //const orderid= this.props.orderid
     console.log("propsprops", this.props);
+
+    this.registerForPushNotificationsAsync();
 
     this.getUserId();
 
