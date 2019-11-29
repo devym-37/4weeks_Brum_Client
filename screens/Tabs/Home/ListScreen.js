@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
-  View,
   Text,
   Alert,
   Platform,
@@ -11,6 +10,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Content } from "native-base";
+import styled from "styled-components";
 import AuthModal from "../../Auth/AuthModal";
 import { serverApi } from "../../../components/API";
 import ListCard from "../../../components/Cards/ListCard";
@@ -20,7 +20,13 @@ import { withNavigation } from "react-navigation";
 import { connect } from "react-redux";
 
 import { orderIdSaver } from "../../../redux/actions/orderActions";
+import DefaultOrder from "../../../components/DefaultOrder";
 
+const Container = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
 const ListScreen = props => {
   const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState(props.orders);
@@ -77,16 +83,27 @@ const ListScreen = props => {
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
       >
-        <Content>
-          {props.orders &&
+        {/* {props.orders &&
             props.orders.map((data, i) => (
               <OrderCard
-                {...data}
-                key={i}
-                onPress={() => handleClick(data.orderId)}
+              {...data}
+              key={i}
+              onPress={() => handleClick(data.orderId)}
               />
-            ))}
-        </Content>
+            ))} */}
+        {props.orders && props.orders.length > 0 ? (
+          props.orders.map((data, i) => (
+            <OrderCard
+              {...data}
+              key={i}
+              onPress={() => handleClick(data.orderId)}
+            />
+          ))
+        ) : (
+          <Container style={{ marginTop: -50 }}>
+            <DefaultOrder />
+          </Container>
+        )}
       </ScrollView>
     </>
   );
