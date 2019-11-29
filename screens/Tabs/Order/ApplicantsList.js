@@ -10,6 +10,8 @@ import ApplicantCard from "../../../components/Cards/ApplicantCard";
 import GhostButton from "../../../components/Buttons/GhostButton";
 import styles from "../../../styles";
 import constants from "../../../constants";
+import Fire from "../../chat/Fire";
+
 const Container = styled.View`
   flex: 1;
   justify-content: center;
@@ -58,6 +60,8 @@ const ApplicantsList = ({ navigation }) => {
         deliverId,
         userToken
       );
+      Fire.shared.appendChatrooms(userId, orderId, deliverId);
+
       console.log(`배달자 등록: `, request);
     } catch (e) {
       console.log(`Can't put selected deliverId on Server. Error: ${e}`);
@@ -66,8 +70,12 @@ const ApplicantsList = ({ navigation }) => {
       navigation.navigate("Chats");
     }
   };
-  const handleChoice = deliverId => {
+  const handleChoice = async deliverId => {
     // console.log(`event: `, deliverId);
+
+    //firebase
+    const userId = await AsyncStorage.getItem("userId");
+
     return Alert.alert(
       "러너 선택 확인",
       `확인을 누르면 선택취소가 불가능합니다. 
@@ -75,7 +83,9 @@ const ApplicantsList = ({ navigation }) => {
       [
         {
           text: "확인",
-          onPress: () => handleConfirm(deliverId)
+          onPress: () => {
+            handleConfirm(deliverId);
+          }
         },
         {
           text: "취소",

@@ -1,9 +1,10 @@
 // Imports: Dependencies
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import firebase from "firebase";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -20,7 +21,7 @@ import AuthInput from "../../components/Inputs/AuthInput";
 import useInput from "../../hooks/useInput";
 import MainButton from "../../components/Buttons/MainButton";
 import ErrorMessage from "../../components/ErrorMessage";
-
+import Fire from "../chat/Fire";
 // Imports: API
 import { serverApi } from "../../components/API";
 
@@ -90,6 +91,7 @@ const Signup = props => {
   );
   const [passwordIcon, setPasswordIcon] = useState("ios-eye-off");
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye-off");
+  const [pushtoken, setPushtoken] = useState(null);
 
   const handleSend = async values => {
     if (values.name.length === 0 || values.password.length === 0) {
@@ -105,14 +107,31 @@ const Signup = props => {
         values.password,
         values.name,
         values.age,
-        selectedCampus
+        selectedCampus,
+        pushtoken
       );
 
-      Alert.alert("회원가입 및 로그인이 완료되었습니다");
+      //Alert.alert("회원가입 및 로그인이 완료되었습니다");
 
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);
         props.reduxLogin(true);
+
+        //firebase///
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(
+            `${values.phone}@shoppossible.com`,
+            values.password
+          );
+
+        const mypage = await serverApi.user(signUp.data.token);
+        const { userId } = mypage.data.data;
+        await AsyncStorage.setItem("userId", userId.toString());
+
+        Fire.shared.appendUser(userId);
+
+        ////////
         Alert.alert("회원가입 및 로그인이 완료되었습니다");
 
         props.navigation.navigate("BottomNavigation");
@@ -126,6 +145,22 @@ const Signup = props => {
       console.log(`Can't signup. error : ${e}`);
     }
   };
+
+  registerForPushNotificationsAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== "granted") {
+      return;
+    }
+    let token = await Notifications.getExpoPushTokenAsync();
+    // Defined in following steps
+    console.log("pushtoken", token);
+    setPushtoken(token);
+  };
+
+  useEffect(() => {
+    // Create an scoped async function in the hook
+    registerForPushNotificationsAsync();
+  }, []);
 
   const handlePasswordVisibility = () => {
     if (passwordIcon === "ios-eye") {
