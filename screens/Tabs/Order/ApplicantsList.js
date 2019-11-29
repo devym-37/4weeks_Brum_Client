@@ -7,6 +7,7 @@ import { serverApi } from "../../../components/API";
 import { ScrollView } from "react-native-gesture-handler";
 import Loader from "../../../components/Loader";
 import ApplicantCard from "../../../components/Cards/ApplicantCard";
+import MyOrderDetail from "../../../screens/Tabs/Order/MyOrderDetail";
 import GhostButton from "../../../components/Buttons/GhostButton";
 import styles from "../../../styles";
 import constants from "../../../constants";
@@ -209,7 +210,7 @@ const ApplicantsList = ({ navigation }) => {
       }
     >
       <Container>
-        <Text>내요청상세</Text>
+        <MyOrderDetail id={orderId} />
       </Container>
     </ScrollView>
   );
