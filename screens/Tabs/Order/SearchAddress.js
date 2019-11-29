@@ -4,7 +4,8 @@ import {
   Dimensions,
   Text,
   Image,
-  SafeAreaView
+  SafeAreaView,
+  AsyncStorage
 } from "react-native";
 import styled from "styled-components";
 
@@ -39,8 +40,6 @@ const CenterPoint = styled.View`
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
-const LATITUDE_DELTA = 0.006;
-const LONGITUDE_DELTA = 0.001;
 
 const styles = StyleSheet.create({
   center: {
@@ -52,8 +51,23 @@ const styles = StyleSheet.create({
 });
 
 const SearchAddress = ({ navigation, ...props }) => {
+  const [region, setRegion] = useState({});
   const [currentLocation, setCurrentLocation] = useState({});
   const [position, setPosition] = useState({});
+
+  const getDefaultCampusMap = async () => {
+    const selectedCampus = await AsyncStorage.getItem("campus");
+    const campusRegion = constants.campus[selectedCampus].position;
+
+    const _region = {
+      latitude: campusRegion.latitude,
+      longitude: campusRegion.longitude,
+      latitudeDelta: constants.LATITUDE_DELTA,
+      longitudeDelta: constants.LONGITUDE_DELTA
+    };
+    setRegion(_region);
+    this.map.animateToRegion(_region);
+  };
 
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -92,6 +106,7 @@ const SearchAddress = ({ navigation, ...props }) => {
   useEffect(() => {
     (async () => {
       await getLocation();
+      await getDefaultCampusMap();
     })();
   }, []);
   //   <Image
@@ -112,8 +127,8 @@ const SearchAddress = ({ navigation, ...props }) => {
             destination={props.arrivalLocation}
           />
           <MapScreen
-            latitude={currentLocation.latitude}
-            longitude={currentLocation.longitude}
+            latitude={region.latitude || currentLocation.latitude}
+            longitude={region.longitude || currentLocation.longitude}
             showLocation={false}
             marker={props.departureLocation}
           >
