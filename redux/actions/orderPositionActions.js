@@ -1,9 +1,9 @@
-export const departurePositionSave = departure => ({
-  type: "departureSAVE",
-  departure: departure
+export const departurePositionSave = departurePosition => ({
+  type: "departurePositionSave",
+  departurePosition: departurePosition
 });
 
-export const arrivalPositionSave = arrival => ({
-  type: "arrivalSAVE",
-  arrival: arrival
+export const arrivalPositionSave = arrivalPosition => ({
+  type: "arrivalPositionSave",
+  arrivalPosition: arrivalPosition
 });

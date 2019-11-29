@@ -1,5 +1,5 @@
-import React from "react";
 import { connect } from "react-redux";
+import * as Location from "expo-location";
 import {
   departurePositionSave,
   arrivalPositionSave
@@ -11,14 +11,12 @@ const AddressToLatLng = async props => {
     return geo;
   };
   if (props.arrivalPosition) {
-    const geolatlng = await geoCode(props);
+    const geolatlng = await geoCode(props.arrivalPosition);
     this.props.reduxArrivalPosition(geolatlng);
   } else if (props.departurePosition) {
-    const geolatlng = await geoCode(props);
+    const geolatlng = await geoCode(props.departurePosition);
     this.props.reduxDeparturePosition(geolatlng);
   }
-
-  return geolatlng;
 };
 
 const mapStateToProps = state => {

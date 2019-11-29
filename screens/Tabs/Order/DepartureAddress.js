@@ -21,7 +21,8 @@ import { withNavigation } from "react-navigation";
 import { Container } from "native-base";
 import { connect } from "react-redux";
 import { departureLocationSave } from "../../../redux/actions/destinationAction";
-import AddressToLatLng from "../../../components/AddressToLatLng";
+import { departurePositionSave } from "../../../redux/actions/orderPositionActions";
+import * as Location from "expo-location";
 
 //Show map... select location to go to
 //Get location route with Google Location API
@@ -119,9 +120,14 @@ class OrderDepartureAddress extends Component {
     });
     Keyboard;
   }
-  //   <AddressToLatLng
-  //   departurePosition={prediction.structured_formatting.main_text}
-  // />
+
+  async geoCode(address) {
+    console.log("geo12 : ", address);
+    const geo = await Location.geocodeAsync(address);
+    this.props.reduxDeparturePosition({ ...geo[0] });
+    console.log("geo1234 : ", geo[0]);
+  }
+
   render() {
     const { isFocused } = this.state;
     const locationPredictions = this.state.locationPredictions.map(
@@ -139,6 +145,7 @@ class OrderDepartureAddress extends Component {
               this.props.reduxDepartureLocation(
                 prediction.structured_formatting.main_text
               );
+              this.geoCode(prediction.structured_formatting.main_text);
               this.props.navigation.goBack(null);
             }}
             key={prediction.id}
@@ -198,7 +205,9 @@ const mapDispatchToProps = dispatch => {
   return {
     // Login
     reduxDepartureLocation: departureLocation =>
-      dispatch(departureLocationSave(departureLocation))
+      dispatch(departureLocationSave(departureLocation)),
+    reduxDeparturePosition: departurePosition =>
+      dispatch(departurePositionSave(departurePosition))
   };
 };
 export default withNavigation(

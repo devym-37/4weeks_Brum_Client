@@ -116,8 +116,9 @@ const SearchAddress = ({ navigation, ...props }) => {
             longitude={currentLocation.longitude}
             showLocation={false}
             marker={props.departureLocation}
-          ></MapScreen>
-          <Text style={styles.center}>{props.departurePosition}</Text>
+          >
+            <Text style={styles.center}>{props.arrivalPosition}</Text>
+          </MapScreen>
           <CurrentLocationButton
             callback={() => {
               userCurrentLocation();
