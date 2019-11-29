@@ -29,6 +29,12 @@ import { campusSaver } from "../../../redux/actions/campusActions";
 const View = styled.View`
   /* background-color: #f1f3f5; */
 `;
+// const ListScreenContainer = styled.View`
+//   align-items: center;
+//   background-color: #f1f3f5;
+//   flex: 1;
+// `;
+
 const Container = styled.View`
   align-items: center;
   margin-top: 12;
@@ -219,8 +225,7 @@ const HomeScreen = ({ navigation, ...props }) => {
                 </Touchable>
               </ButtonContainer>
             </Container>
-
-            {rightClicked && <ListScreen orders={orders} />}
+            {rightClicked && orders && <ListScreen orders={orders} />}
           </>
         )}
       </View>
