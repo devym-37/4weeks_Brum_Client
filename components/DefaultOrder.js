@@ -21,7 +21,6 @@ const Text = styled.Text`
 `;
 
 DefaultOrder = ({ navigation }) => {
-  //   console.log(`order nav: `, navigation);
   return (
     <Container>
       <Text>현재 진행중인 요청이 없어요.</Text>

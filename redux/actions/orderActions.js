@@ -1,36 +1,51 @@
 export const categorySaver = category => ({
-  type: "CREATE",
+  type: "CREATE_CATEGORY",
   category: category
 });
 
-export const titleSaver = title => ({
-  type: "CREATE",
-  title: title
+export const departureSaver = departures => ({
+  type: "CREATE_DEPARTURES",
+  departures: departures
+});
+
+export const arrivalSaver = arrivals => ({
+  type: "CREATE_ARRIVALS",
+  arrivals: arrivals
 });
 
 export const timeSaver = time => ({
-  type: "CREATE",
+  type: "CREATE_DESIRED_ARRIVAL",
   desiredArrival: time
 });
 
-export const checkedSaver = cheked => ({
-  type: "CREATE",
-  isPrice: cheked
+export const priceSaver = price => ({
+  type: "CREATE_PRICE",
+  price: price
+});
+
+export const detailsSaver = details => ({
+  type: "CREATE_DETAILS",
+  details: details
+});
+
+export const titleSaver = title => ({
+  type: "CREATE_TITLE",
+  title: title
+});
+
+export const isPriceSaver = isPrice => ({
+  type: "CREATE_ISPRICE",
+  isPrice: isPrice
 });
 
 export const imagesSaver = images => ({
-  type: "CREATE",
+  type: "CREATE_IMAGES",
   images: images
 });
 
 export const orderIdSaver = orderId => ({
-  type: "CREATE",
+  type: "SAVE_ORDERID",
   orderId: orderId
-});
-
-export const isPriceSaver = isPrice => ({
-  type: "CREATE",
-  orderId: isPrice
 });
 
 export const photoRemover = () => ({

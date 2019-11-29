@@ -4,7 +4,11 @@
     "slug": "Brum-client",
     "privacy": "public",
     "sdkVersion": "35.0.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,14 +20,18 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "package": "com.Brum.Brum",
       "config": {
-        "googleMaps": { "apiKey": "AIzaSyB_wEQ8hDQnVHqYdUfqNJxtngA-xmvbTcg" }
+        "googleMaps": {
+          "apiKey": "AIzaSyB_wEQ8hDQnVHqYdUfqNJxtngA-xmvbTcg"
+        }
       },
       "permissions": [
         "ACCESS_COARSE_LOCATION",
@@ -52,6 +60,7 @@
         "com.sec.android.provider.badge.permission.WRITE",
         "com.sonyericsson.home.permission.BROADCAST_BADGE"
       ]
-    }
+    },
+    "description": ""
   }
 }

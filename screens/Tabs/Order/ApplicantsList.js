@@ -7,6 +7,7 @@ import { serverApi } from "../../../components/API";
 import { ScrollView } from "react-native-gesture-handler";
 import Loader from "../../../components/Loader";
 import ApplicantCard from "../../../components/Cards/ApplicantCard";
+import MyOrderDetail from "../../../screens/Tabs/Order/MyOrderDetail";
 import GhostButton from "../../../components/Buttons/GhostButton";
 import styles from "../../../styles";
 import constants from "../../../constants";
@@ -18,7 +19,21 @@ const Container = styled.View`
   align-items: center;
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: ${props => props.theme.greyColor};
+  font-size: 15;
+  margin-bottom: 4px;
+`;
+
+const DefaultContainer = styled.View`
+  margin-top: -100px;
+  width: ${constants.width};
+  height: ${constants.height * 0.9};
+  background-color: white;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
 
 const ButtonText = styled.Text`
   color: ${styles.mainColor};
@@ -55,12 +70,16 @@ const ApplicantsList = ({ navigation }) => {
     try {
       setLoading(true);
       const userToken = await AsyncStorage.getItem("userToken");
+
+      const userId = await AsyncStorage.getItem("userId");
+      console.log(`유저오더딜리버아이디`, userId, orderId, deliverId);
+      Fire.shared.appendChatrooms(userId, orderId, deliverId);
+
       const request = await serverApi.choiceDeliver(
         orderId,
         deliverId,
         userToken
       );
-      Fire.shared.appendChatrooms(userId, orderId, deliverId);
 
       console.log(`배달자 등록: `, request);
     } catch (e) {
@@ -165,7 +184,9 @@ const ApplicantsList = ({ navigation }) => {
         {loading ? (
           <Loader />
         ) : applicantList && applicantList.length === 0 ? (
-          <Text>지원자가 없습니다</Text>
+          <DefaultContainer>
+            <Text>현재 지원자가 없습니다</Text>
+          </DefaultContainer>
         ) : (
           applicantList &&
           applicantList.map(applicant => (
@@ -189,7 +210,7 @@ const ApplicantsList = ({ navigation }) => {
       }
     >
       <Container>
-        <Text>내요청상세</Text>
+        <MyOrderDetail id={orderId} />
       </Container>
     </ScrollView>
   );

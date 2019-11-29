@@ -67,10 +67,7 @@ class Chat extends React.Component {
       this.state.userId !== null && (
         <GiftedChat
           messages={this.state.messages}
-          onSend={() => {
-            this.registerForPushNotificationsAsync();
-            Fire.shared.send();
-          }}
+          onSend={Fire.shared.send}
           user={this.user}
         />
       )
