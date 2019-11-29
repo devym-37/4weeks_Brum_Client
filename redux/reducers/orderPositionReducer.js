@@ -15,8 +15,8 @@ const orderPositionReducer = (state = initialState, action) => {
         // Redux Store
         arrival: action.arrival
       };
-    },
-    case "departurePositionSAVE" : {
+    }
+    case "departurePositionSAVE": {
       return {
         // State
         ...state,

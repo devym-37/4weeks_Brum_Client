@@ -121,16 +121,16 @@ class OrderArrivalAddress extends Component {
     Keyboard;
   }
 
-  async getData(address) {
-    Geocoder.setApiKey(API);
+  // async getData(address) {
+  //   Geocoder.setApiKey(API);
 
-    Geocoder.from(address)
-      .then(json => {
-        const location = json.results[0].geometry.location;
-        console.log("location", location);
-      })
-      .catch(error => console.log(error));
-  }
+  //   Geocoder.from(address)
+  //     .then(json => {
+  //       const location = json.results[0].geometry.location;
+  //       console.log("location", location);
+  //     })
+  //     .catch(error => console.log(error));
+  // }
 
   render() {
     const { isFocused } = this.state;
@@ -149,7 +149,6 @@ class OrderArrivalAddress extends Component {
               this.props.reduxArrivalLocation(
                 prediction.structured_formatting.main_text
               );
-              this.getData(prediction.structured_formatting.main_text);
               this.props.navigation.goBack(null);
             }}
             key={prediction.id}
@@ -200,8 +199,7 @@ class OrderArrivalAddress extends Component {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    arrivalLocation: state.destinationReducer.arrivalLocation,
-    arrivalLatLng: state.orderPositionReducer.arrivalLatLng
+    arrivalLocation: state.destinationReducer.arrivalLocation
   };
 };
 
@@ -210,8 +208,7 @@ const mapDispatchToProps = dispatch => {
   return {
     // Login
     reduxArrivalLocation: arrivalLocation =>
-      dispatch(arrivalLocationSave(arrivalLocation)),
-    reduxArrivalLatLng: arrivalLatLng => dispatch(arrivalSave(arrivalLatLng))
+      dispatch(arrivalLocationSave(arrivalLocation))
   };
 };
 export default withNavigation(
