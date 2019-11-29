@@ -8,12 +8,20 @@ const initialState = {
 const destinationReducer = (state = initialState, action) => {
   switch (action.type) {
     // Login
-    case "SAVE": {
+    case "arrivalLocationSave": {
       return {
         // State
         ...state,
         // Redux Store
-        arrivalLocation: action.arrivalLocation,
+        arrivalLocation: action.arrivalLocation
+      };
+    }
+    case "departureLocationSave": {
+      return {
+        // State
+        ...state,
+        // Redux Store
+
         departureLocation: action.departureLocation
       };
     }

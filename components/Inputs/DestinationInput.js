@@ -40,7 +40,7 @@ export const DestinationInput = function(props) {
       </View>
       <View style={styles.centerCol}>
         <Text style={{ fontSize: 16, color: "#545454" }}>
-          {props.destination ? props.destination : "currentUser"}
+          {props.destination ? props.destination : "도착지 설정"}
         </Text>
       </View>
     </TouchableOpacity>

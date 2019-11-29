@@ -130,7 +130,7 @@ class OrderDepartureAddress extends Component {
           <TouchableHighlight
             style={styles.containers}
             onPress={() => {
-              this.props.reduxDestination(
+              this.props.reduxDepartureLocation(
                 prediction.structured_formatting.main_text
               );
               this.props.navigation.goBack(null);

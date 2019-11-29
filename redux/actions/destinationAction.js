@@ -1,9 +1,9 @@
 export const arrivalLocationSave = arrivalLocation => ({
-  type: "SAVE",
+  type: "arrivalLocationSave",
   arrivalLocation: arrivalLocation
 });
 
 export const departureLocationSave = departureLocation => ({
-  type: "SAVE",
+  type: "departureLocationSave",
   departureLocation: departureLocation
 });
