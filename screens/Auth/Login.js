@@ -14,6 +14,7 @@ import MainButton from "../../components/Buttons/MainButton";
 import GhostButton from "../../components/Buttons/GhostButton";
 import { connect } from "react-redux";
 import { serverApi } from "../../components/API";
+import firebase from "firebase";
 
 // Imports: Redux Actions
 import { login } from "../../redux/actions/authActions";
@@ -78,6 +79,16 @@ const LogIn = props => {
           Alert.alert("로그인되었습니다.");
           await AsyncStorage.setItem("userToken", requestLogin.data.token);
           props.reduxLogin(true);
+
+          firebase
+            .auth()
+            .signInWithEmailAndPassword(`${value1}@shoppossible.com`, value2);
+
+          ////redux/////
+          await AsyncStorage.setItem("email", `${value1}@shoppossible.com`);
+          await AsyncStorage.setItem("password", value2);
+          ////
+
           props.navigation.navigate("MainNavigation");
         }
       }

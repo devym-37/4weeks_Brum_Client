@@ -86,7 +86,7 @@ class ChatRooms extends React.Component {
                 userId={this.state.userId}
                 title="채팅으로"
                 onPress={() => {
-                  saveClicked(data);
+                  this.saveClicked(data);
                   navigation.navigate("Chat");
                 }}
               >
@@ -160,13 +160,14 @@ class ChatRooms extends React.Component {
 
   componentDidMount() {
     this.fetchUserId();
+    Fire.shared.observeAuth();
     console.log("useridin////", this.state.userId);
 
     //console.log(this.props);
   }
 
   componentWillUnmount() {
-    Fire.shared.off();
+    Fire.shared.off(); ///
   }
 }
 /* 

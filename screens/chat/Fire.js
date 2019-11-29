@@ -3,7 +3,7 @@ import { AsyncStorage } from "react-native";
 class Fire {
   constructor() {
     this.init();
-    this.observeAuth();
+    //  this.observeAuth();
   }
   orderId = null;
   init = () => {
@@ -26,14 +26,17 @@ class Fire {
       });
     }
   };
-
+  //__
   observeAuth = () =>
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
 
-  onAuthStateChanged = user => {
+  onAuthStateChanged = async user => {
+    //
+    const email = AsyncStorage.getItem("email");
+    const password = AsyncStorage.getItem("password");
     if (!user) {
       try {
-        firebase.auth().signInAnonymously();
+        firebase.auth().signInWithEmailAndPassword(email, password);
       } catch ({ message }) {
         alert(message);
       }
@@ -131,7 +134,7 @@ class Fire {
           .set(true)
       );
 
-  appendUser = (userId, orderId) =>
+  appendUser = userId =>
     firebase
       .database()
       .ref(`users/${userId}/name`)

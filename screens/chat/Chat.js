@@ -32,7 +32,7 @@ class Chat extends React.Component {
         <GiftedChat
           messages={this.state.messages}
           onSend={Fire.shared.send}
-          user={5}
+          user={this.user}
         />
       )
     );

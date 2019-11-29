@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import firebase from "firebase";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -20,7 +21,7 @@ import AuthInput from "../../components/Inputs/AuthInput";
 import useInput from "../../hooks/useInput";
 import MainButton from "../../components/Buttons/MainButton";
 import ErrorMessage from "../../components/ErrorMessage";
-
+import Fire from "../chat/Fire";
 // Imports: API
 import { serverApi } from "../../components/API";
 
@@ -107,11 +108,27 @@ const Signup = props => {
         selectedCampus
       );
 
-      Alert.alert("회원가입 및 로그인이 완료되었습니다");
+      //Alert.alert("회원가입 및 로그인이 완료되었습니다");
 
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);
         props.reduxLogin(true);
+
+        //firebase///
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(
+            `${values.phone}@shoppossible.com`,
+            values.password
+          );
+
+        const mypage = await serverApi.user(signUp.data.token);
+        const { userId } = mypage.data.data;
+        await AsyncStorage.setItem("userId", userId.toString());
+
+        Fire.shared.appendUser(userId);
+
+        ////////
         Alert.alert("회원가입 및 로그인이 완료되었습니다");
         setTimeout(() => {
           props.navigation.navigate("BottomNavigation");

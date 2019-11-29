@@ -34,7 +34,7 @@ DefaultOrder = ({ navigation }) => {
       <Button
         title="다음페이지"
         onPress={() => {
-          navigation.navigate("Main");
+          navigation.navigate("ChatRooms");
         }}
       >
         <Text>다음페이지</Text>
