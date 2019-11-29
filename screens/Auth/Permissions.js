@@ -60,13 +60,19 @@ export default PermissionApp = props => {
         navigation.dispatch(resetAction);
       } else {
         alert("Hey! You have not enabled selected permissions");
+        ///설정으로 이동해야함
         const { status, expires, permissions } = await Permissions.askAsync(
           Permissions.NOTIFICATIONS,
           Permissions.CONTACTS,
           Permissions.LOCATION,
           Permissions.CAMERA
         );
+        if (status !== "granted") {
+          return;
+        }
       }
+
+      const token = await Notifications.getExpoPushTokenAsync();
     } catch (e) {
       console.log(e);
     } finally {

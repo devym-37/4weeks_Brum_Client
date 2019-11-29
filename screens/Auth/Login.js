@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   TouchableWithoutFeedback,
@@ -14,6 +14,9 @@ import MainButton from "../../components/Buttons/MainButton";
 import GhostButton from "../../components/Buttons/GhostButton";
 import { connect } from "react-redux";
 import { serverApi } from "../../components/API";
+import firebase from "firebase";
+import * as Permissions from "expo-permissions";
+import { Notifications } from "expo";
 
 // Imports: Redux Actions
 import { login } from "../../redux/actions/authActions";
@@ -38,6 +41,7 @@ const LogIn = props => {
   const [errorCount, setErrorCount] = useState(0);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [passwordIcon, setPasswordIcon] = useState("ios-eye-off");
+  const [pushtoken, setPushtoken] = useState(null);
 
   const handlePasswordVisibility = () => {
     if (passwordIcon === "ios-eye") {
@@ -78,7 +82,28 @@ const LogIn = props => {
           `비밀번호 입력 가능 횟수를 초과했습니다. 비밀번호를 재설정해주세요.`
         );
       } else {
-        const requestLogin = await serverApi.logIn(value1, value2);
+        const requestLogin = await serverApi.logIn(value1, value2, pushtoken);
+
+        //////////////
+        /*  return await fetch("https://exp.host/--/api/v2/push/send", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: {
+            to: token,
+            sound: "default",
+            title: "Vroom",
+            body: "메시지 간다 메시지 받아라"
+          }
+          
+          this.notificationSubscription = Notifications.addListener(this.handleNotification);
+     
+        }).catch(err => {
+          throw err;
+        }); */
+
         console.log("아이디검증됨", requestLogin.data);
 
         if (requestLogin.data.token !== false) {
@@ -86,6 +111,16 @@ const LogIn = props => {
           Alert.alert("로그인되었습니다.");
           await AsyncStorage.setItem("userToken", requestLogin.data.token);
           props.reduxLogin(true);
+
+          firebase
+            .auth()
+            .signInWithEmailAndPassword(`${value1}@shoppossible.com`, value2);
+
+          ////redux/////
+          await AsyncStorage.setItem("email", `${value1}@shoppossible.com`);
+          await AsyncStorage.setItem("password", value2);
+          ////
+
           props.reduxResetErrorCount();
           props.navigation.navigate("MainNavigation");
         } else {
@@ -108,6 +143,23 @@ const LogIn = props => {
     // console.log("handle");
     return await AsyncStorage.setItem("page", "resetpw");
   };
+
+  useEffect(() => {
+    // Create an scoped async function in the hook
+    registerForPushNotificationsAsync();
+  }, []);
+
+  registerForPushNotificationsAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== "granted") {
+      return;
+    }
+    let token = await Notifications.getExpoPushTokenAsync();
+    // Defined in following steps
+    console.log("pushtoken", token);
+    setPushtoken(token);
+  };
+
   return (
     <View>
       <AuthInput

@@ -54,10 +54,11 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
-  logIn: (id, ps) =>
+  logIn: (id, ps, pushtoken) =>
     sApi.post("login", {
       phone: id,
-      password: ps
+      password: ps,
+      pushToken: pushtoken
     }),
   register: (
     phone,
@@ -66,7 +67,8 @@ export const serverApi = {
     age,
     campus,
     sex = "male",
-    agreementAd = false
+    agreementAd = false,
+    pushtoken
   ) =>
     sApi.post("register", {
       phone,
@@ -75,7 +77,8 @@ export const serverApi = {
       age,
       campus,
       sex,
-      agreementAd
+      agreementAd,
+      pushtoken
     }),
   user: userToken =>
     sApi.get("user/mypage", {

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import GhostButton from "../components/Buttons/GhostButton";
 import { withNavigation } from "react-navigation";
 import constants from "../constants";
+import { Button } from "react-native";
 
 const Container = styled.View`
   margin-top: -80px;
@@ -30,6 +31,14 @@ DefaultOrder = ({ navigation }) => {
         width={200}
         onPress={() => navigation.navigate("NewOrderNavigation")}
       />
+      <Button
+        title="다음페이지"
+        onPress={() => {
+          navigation.navigate("ChatRooms");
+        }}
+      >
+        <Text>다음페이지</Text>
+      </Button>
     </Container>
   );
 };
