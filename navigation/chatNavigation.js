@@ -1,19 +1,20 @@
-import { createAppContainer } from "react-navigation";
-
-// Import the screens
-import Main from "../screens/chat/Main";
-import Chat from "../screens/chat/Chat";
-import ChatRooms from "../screens/chat/ChatRooms";
-import ChatListScreen from "../screens/Tabs/Chats/ChatListScreen";
-// Import React Navigation
+import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
-
-// Create the navigator
-const ChatNavigation = createStackNavigator({
-  ChatListScreen,
-  ChatRooms,
-  Chat
+import ChatScreen from "../screens/Tabs/Chats/ChatScreen";
+import { stackStyles } from "./config";
+import BackLink from "../components/HeaderLink/BackLink";
+import ChatHeaderLink from "../components/HeaderLink/ChatHeaderLink";
+export default createStackNavigator({
+  ChatScreen: {
+    screen: ChatScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        ...stackStyles
+      },
+      title: navigation.getParam("username"),
+      backgroundColor: "#f1f3f5",
+      headerLeft: <BackLink />,
+      headerRight: <ChatHeaderLink />
+    })
+  }
 });
-
-// Export it as the root component
-export default createAppContainer(ChatNavigation);
