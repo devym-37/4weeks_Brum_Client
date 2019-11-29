@@ -35,7 +35,7 @@ const ChatListScreen = ({ navigation }) => {
     console.log(`username: `, username);
     await AsyncStorage.setItem("orderid", threads[i]);
 
-    navigation.navigate("Chat", { username: username });
+    navigation.navigate("Chat");
   };
 
   const onList = userId => {

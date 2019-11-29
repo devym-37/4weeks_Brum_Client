@@ -69,12 +69,16 @@ const ApplicantsList = ({ navigation }) => {
     try {
       setLoading(true);
       const userToken = await AsyncStorage.getItem("userToken");
+
+      const userId = await AsyncStorage.getItem("userId");
+      console.log(`유저오더딜리버아이디`, userId, orderId, deliverId);
+      Fire.shared.appendChatrooms(userId, orderId, deliverId);
+
       const request = await serverApi.choiceDeliver(
         orderId,
         deliverId,
         userToken
       );
-      Fire.shared.appendChatrooms(userId, orderId, deliverId);
 
       console.log(`배달자 등록: `, request);
     } catch (e) {

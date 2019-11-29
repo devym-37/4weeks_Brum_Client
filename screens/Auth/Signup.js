@@ -15,7 +15,8 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
+import * as Permissions from "expo-permissions";
+import { Notifications } from "expo";
 // Imports: Custom components
 import AuthInput from "../../components/Inputs/AuthInput";
 import useInput from "../../hooks/useInput";
@@ -102,12 +103,15 @@ const Signup = props => {
       // const selectedCampus = await AsyncStorage.getItem("campus");
       const selectedCampus = props.campus ? props.campus : "hanyang";
       // console.log(`회원가입 캠퍼스: `, selectedCampus);
+      console.log("푸쉬토큰", pushtoken);
       const signUp = await serverApi.register(
         values.phone,
         values.password,
         values.name,
         values.age,
         selectedCampus,
+        (sex = "male"),
+        (agreementAd = false),
         pushtoken
       );
 

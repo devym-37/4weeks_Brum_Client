@@ -78,7 +78,7 @@ export const serverApi = {
       campus,
       sex,
       agreementAd,
-      pushtoken
+      pushToken: pushtoken
     }),
   user: userToken =>
     sApi.get("user/mypage", {

@@ -339,12 +339,14 @@ const OrderDetailScreen = ({ navigation }) => {
   const handleApplyButton = async () => {
     if (isPrice) {
       // Alert.alert("백드롭열림");
+      //const request = await serverApi.apply(null, null, //userToken, orderId);
       setVisible(true);
     } else {
       try {
         setLoading(true);
         // const orderId = navigation.getParam("orderId");
         const request = await serverApi.apply(null, null, userToken, orderId);
+        //console.log("지원했습니다", request);
       } catch (e) {
         console.log(`Can't post data of applying on server. Error : `, e);
       } finally {
