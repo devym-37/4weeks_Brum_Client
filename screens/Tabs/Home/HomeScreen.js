@@ -101,6 +101,7 @@ const HomeScreen = ({ navigation, ...props }) => {
   const [isopenLoginModal, setIsopenLoginModal] = useState(false);
   const [marker, setMarker] = useState(null);
   const [campus, setCampus] = useState();
+
   const getDefaultCampusMap = campus => {
     const campusRegion = constants.campus[campus].position;
 
@@ -129,7 +130,8 @@ const HomeScreen = ({ navigation, ...props }) => {
       orderPosition.data.data.orders[0].departures
     );
     const testOrder = orderPosition.data.data.orders[0].departures;
-    const geolatlng = await geoCode("한양대학교 대학원");
+    console.log("{props.arrvalLocation} : ", props.arrivalLocation);
+    const geolatlng = await geoCode(props.arrivalLocation);
     console.log("{geolatlng} : ", geolatlng[0]);
     setMarker(geolatlng[0]);
   };
@@ -236,7 +238,8 @@ const HomeScreen = ({ navigation, ...props }) => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    campus: state.campusReducer.campus
+    campus: state.campusReducer.campus,
+    arrivalLocation: state.orderPositionReducer.arrival
   };
 };
 

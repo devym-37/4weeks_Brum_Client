@@ -116,8 +116,9 @@ const SearchAddress = ({ navigation, ...props }) => {
             longitude={currentLocation.longitude}
             showLocation={false}
             marker={props.departureLocation}
-          ></MapScreen>
-          <Text style={styles.center}></Text>
+          >
+            <Text style={styles.center}>{props.arrivalPosition}</Text>
+          </MapScreen>
           <CurrentLocationButton
             callback={() => {
               userCurrentLocation();
@@ -134,7 +135,8 @@ const mapStateToProps = state => {
   // Redux Store --> Component
   return {
     arrivalLocation: state.destinationReducer.arrivalLocation,
-    departureLocation: state.destinationReducer.departureLocation
+    departureLocation: state.destinationReducer.departureLocation,
+    arrivalPosition: state.orderPositionReducer.arrivalPosition
   };
 };
 

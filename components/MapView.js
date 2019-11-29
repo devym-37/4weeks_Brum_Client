@@ -78,6 +78,26 @@ const MapScreen = props => {
     // this.props.reduxDepartureAddress(address[0]);
   };
 
+  const changeToAddress = async props => {
+    console.log("props : ", props);
+    // if (props.arrivalLocation) {
+    //   const geolatlng = await geoCode(props.arrivalLocation);
+    //   this.props.reduxArrivalPosition(geolatlng);
+    // }
+    // if (props.departureLocation) {
+    //   const geolatlng = await geoCode(props.departureLocation);
+    //   this.props.reduxDeparturePosition(geolatlng);
+    // }
+  };
+
+  useEffect(() => {
+    changeToAddress();
+  }, [props.arrivalLocation]);
+
+  useEffect(() => {
+    changeToAddress();
+  }, [props.departureLocation]);
+
   return (
     <>
       <Container>
@@ -115,7 +135,7 @@ const mapStateToProps = state => {
   // Redux Store --> Component
   return {
     loggedIn: state.authReducer.loggedIn,
-    orderDestination: state.destinationReducer.destination,
+    arrivalLocation: state.destinationReducer.arrivalLocation,
     departureLocation: state.destinationReducer.departureLocation
   };
 };
@@ -124,8 +144,6 @@ const mapDispatchToProps = dispatch => {
   return {
     // Login
     reduxDeparturePosition: departure => dispatch(departureSave(departure)),
-    reduxDepartureAddress: departureAddress =>
-      dispatch(departureAddressSave(departureAddress)),
     reduxArrivalPosition: arrival => dispatch(arrivalSave(arrival))
   };
 };
