@@ -21,7 +21,7 @@ import StartNavigation from "./navigation/StartNavigation";
 import MainNavigation from "./navigation/MainNavigation";
 import LoggedOutMainNavigation from "./navigation/LoggedOutMainNavigation";
 
-import ChatNavigation from "./navigation/ChatNavigation";
+// import ChatNavigation from "./navigation/ChatNavigation";
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
