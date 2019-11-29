@@ -8,8 +8,8 @@ const HEIGHT = Dimensions.get("window").height;
 
 export const MapLocationButton = function(props) {
   //if props.cb is passed, use it. if not, console.log() when cb() is called.
-  const cb = props.cb
-    ? props.cb
+  const callback = props.callback
+    ? props.callback
     : () => console.log("callback function not passed to MapLocationButton");
   // if props.bottom is passed, use it. if not, set bottom to 110
   const Bottom = props.bottom ? props.bottom : 240;
@@ -30,7 +30,7 @@ export const MapLocationButton = function(props) {
         color="#24282C"
         size={25}
         onPress={() => {
-          cb();
+          callback();
         }}
       />
     </View>
