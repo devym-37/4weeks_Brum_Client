@@ -1,7 +1,6 @@
 // Initial State
 const initialState = {
   departure: null,
-  departureAddress: null,
   arrival: null
 };
 
@@ -9,14 +8,20 @@ const initialState = {
 const orderPositionReducer = (state = initialState, action) => {
   switch (action.type) {
     // Login
-    case "SAVE": {
+    case "arrivalPositionSAVE": {
       return {
         // State
         ...state,
         // Redux Store
-        departure: action.departure,
-        departureAddress: action.departureAddress,
         arrival: action.arrival
+      };
+    },
+    case "departurePositionSAVE" : {
+      return {
+        // State
+        ...state,
+        // Redux Store
+        departure: action.departure
       };
     }
     // Default
