@@ -88,8 +88,8 @@ const SearchAddress = ({ navigation, ...props }) => {
     const _userRegion = {
       latitude: latitude,
       longitude: longitude,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA
+      latitudeDelta: constants.LATITUDE_DELTA,
+      longitudeDelta: constants.LONGITUDE_DELTA
     };
 
     this.map.animateToRegion(_userRegion);

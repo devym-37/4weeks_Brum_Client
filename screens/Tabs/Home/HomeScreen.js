@@ -102,9 +102,9 @@ const HomeScreen = ({ navigation, ...props }) => {
   const [marker, setMarker] = useState(null);
   const [campus, setCampus] = useState();
 
-  const getDefaultCampusMap = campus => {
-    const campusRegion = constants.campus[campus].position;
-
+  const getDefaultCampusMap = () => {
+    const campusRegion = constants.campus[props.campus].position;
+    console.log("campusRegion :", campusRegion);
     const _region = {
       latitude: campusRegion.latitude,
       longitude: campusRegion.longitude,
@@ -136,6 +136,35 @@ const HomeScreen = ({ navigation, ...props }) => {
     setMarker(geolatlng[0]);
   };
 
+  const getLocation = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
+
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng
+      };
+      setCurrentLocation({ ...currentRegion });
+    });
+  };
+
+  const userCurrentLocation = props => {
+    const {
+      latitude = constants.LATITUDE,
+      longitude = constants.LONGITUDE
+    } = currentLocation;
+
+    const _userRegion = {
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: constants.LATITUDE_DELTA,
+      longitudeDelta: constants.LONGITUDE_DELTA
+    };
+
+    this.map.animateToRegion(_userRegion);
+  };
+
   const preLoad = async () => {
     try {
       setLoading(true);
@@ -165,8 +194,12 @@ const HomeScreen = ({ navigation, ...props }) => {
   }, []);
 
   useEffect(() => {
-    preLoad();
-    markerPosition();
+    (async () => {
+      await preLoad();
+      await markerPosition();
+      await getLocation();
+      await getDefaultCampusMap();
+    })();
   }, [props.campus]);
 
   // position: { latitude: 37.55737, longitude: 127.047132 }
@@ -182,12 +215,12 @@ const HomeScreen = ({ navigation, ...props }) => {
             {leftClicked && region && (
               <>
                 <MapLocationButton
-                  cb={() => {
+                  callback={() => {
                     getDefaultCampusMap();
                   }}
                 />
                 <CurrentLocationButton
-                  cb={() => {
+                  callback={() => {
                     userCurrentLocation();
                   }}
                 />
