@@ -37,7 +37,7 @@ import { login } from "../../../redux/actions/authActions";
 import {
   timeSaver,
   titleSaver,
-  checkedSaver,
+  isPriceSaver,
   photoRemover
 } from "../../../redux/actions/orderActions";
 const validationSchema = Yup.object().shape({
@@ -331,7 +331,7 @@ const mapDispatchToProps = dispatch => {
     reduxLogin: trueFalse => dispatch(login(trueFalse)),
     reduxTitle: title => dispatch(titleSaver(title)),
     reduxTime: time => dispatch(timeSaver(time)),
-    reduxChecked: checked => dispatch(checkedSaver(checked))
+    reduxChecked: checked => dispatch(isPriceSaver(checked))
   };
 };
 
