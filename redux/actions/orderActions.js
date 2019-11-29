@@ -32,3 +32,7 @@ export const isPriceSaver = isPrice => ({
   type: "CREATE",
   orderId: isPrice
 });
+
+export const photoRemover = () => ({
+  type: "DELETE_IMAGES"
+});

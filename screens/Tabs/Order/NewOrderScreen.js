@@ -17,7 +17,7 @@ import * as Yup from "yup";
 import Checkbox from "react-native-modest-checkbox";
 
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 
 // Imports: Custom components
@@ -37,7 +37,8 @@ import { login } from "../../../redux/actions/authActions";
 import {
   timeSaver,
   titleSaver,
-  checkedSaver
+  checkedSaver,
+  photoRemover
 } from "../../../redux/actions/orderActions";
 const validationSchema = Yup.object().shape({
   title: Yup.string()
@@ -67,7 +68,7 @@ const ImageContainer = styled.View`
   flex-direction: row;
   align-items: flex-start;
 `;
-
+const ImageHolder = styled.View``;
 const NewOrderScreen = props => {
   const [category, setCategory] = useState("카테고리 선택");
   const [departure, setDeparture] = useState("출발지(선택사항)");
@@ -103,6 +104,9 @@ const NewOrderScreen = props => {
     hideDateTimePicker();
   };
 
+  const handleDeletePhoto = () => {
+    props.reduxDeleteImages();
+  };
   const handleCategoryFilter = () => {
     props.navigation.navigate("CategoryFilter");
   };
@@ -267,13 +271,32 @@ const NewOrderScreen = props => {
                 ></FormInput>
                 {props.images && props.images.length > 0 && (
                   <ImageContainer>
-                    <Image
-                      source={{ uri: props.images[0].uri }}
-                      style={{
-                        width: constants.width / 4,
-                        height: constants.height / 8
-                      }}
-                    />
+                    <ImageHolder>
+                      <Image
+                        source={{ uri: props.images[0].uri }}
+                        style={{
+                          width: constants.width / 4,
+                          height: constants.height / 8
+                        }}
+                      />
+                      <TouchableOpacity
+                        style={{
+                          position: "absolute",
+                          right: -6,
+                          top: -6,
+                          zIndex: 3
+                        }}
+                        onPress={handleDeletePhoto}
+                      >
+                        <AntDesign
+                          name="closecircle"
+                          size={24}
+                          style={{
+                            color: "#f3f3f3"
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </ImageHolder>
                   </ImageContainer>
                 )}
                 <ErrorMessage />
@@ -304,6 +327,7 @@ const mapDispatchToProps = dispatch => {
   // Action
   return {
     // Login
+    reduxDeleteImages: () => dispatch(photoRemover()),
     reduxLogin: trueFalse => dispatch(login(trueFalse)),
     reduxTitle: title => dispatch(titleSaver(title)),
     reduxTime: time => dispatch(timeSaver(time)),

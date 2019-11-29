@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, Alert, TouchableOpacity } from "react-native";
+import { Platform, Alert, TouchableOpacity, View } from "react-native";
 import { Icon } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -43,12 +43,6 @@ const stackFactory = (initialRoute, customConfig) =>
         )
       })
     }
-    // OrderDetailScreen: {
-    //   screen: OrderDetailScreen,
-    //   navigationOptions: {
-    //     title: "요청 상세보기"
-    //   }
-    // }
   });
 
 const BottomNavigation = createBottomTabNavigator(
@@ -56,12 +50,14 @@ const BottomNavigation = createBottomTabNavigator(
     Home: {
       screen: stackFactory(HomeScreen, {
         headerRight: <NotificationLink />,
-        headerLeft: <HomeTitleLink />
+        headerLeft: <HomeTitleLink />,
+        backgroundColor: "#f1f3f5"
       }),
       navigationOptions: {
         title: "홈",
+        backgroundColor: "#f1f3f5",
         tabBarIcon: ({ focused, tintColor }) => (
-          <AntDesign name="home" size={24} style={{ color: tintColor }} />
+          <AntDesign name="home" size={26} style={{ color: tintColor }} />
         )
       }
     },
@@ -75,8 +71,20 @@ const BottomNavigation = createBottomTabNavigator(
         backgroundColor: "#f1f3f5",
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
-          <AntDesign name="form" size={24} style={{ color: tintColor }} />
+          <AntDesign name="profile" size={26} style={{ color: tintColor }} />
         )
+      }
+    },
+    Add: {
+      screen: View,
+      navigationOptions: {
+        title: "글쓰기",
+        tabBarIcon: ({ focused, tintColor }) => (
+          <AntDesign name="form" size={26} style={{ color: tintColor }} />
+        ),
+        tabBarOnPress: ({ navigation }) => {
+          navigation.navigate("NewOrderNavigation");
+        }
       }
     },
     Chats: {
@@ -87,7 +95,7 @@ const BottomNavigation = createBottomTabNavigator(
       navigationOptions: {
         title: "채팅",
         tabBarIcon: ({ focused, tintColor }) => (
-          <AntDesign name="message1" size={24} style={{ color: tintColor }} />
+          <AntDesign name="message1" size={26} style={{ color: tintColor }} />
         )
       }
     },
@@ -96,7 +104,7 @@ const BottomNavigation = createBottomTabNavigator(
       navigationOptions: {
         title: "마이페이지",
         tabBarIcon: ({ focused, tintColor }) => (
-          <AntDesign name="user" size={24} style={{ color: tintColor }} />
+          <AntDesign name="user" size={26} style={{ color: tintColor }} />
         )
       }
     }

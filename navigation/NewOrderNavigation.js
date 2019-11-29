@@ -59,7 +59,7 @@ const bottomTabFactory = (initialRoute, customConfig) =>
                 },
                 {
                   text: "카메라 촬영",
-                  onPress: () => console.log("OK Pressed")
+                  onPress: () => navigation.navigate("TakePhoto")
                 }
               ],
               { cancelable: false }

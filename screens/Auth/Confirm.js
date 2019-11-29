@@ -32,6 +32,7 @@ const TourLinkText = styled.Text`
 `;
 
 const Confirm = props => {
+  // console.log(`Confirm props: `, props.navigation.getParam("reset"));
   const otpInput = useInput("");
   const [loading, setLoading] = useState(false);
 
@@ -45,7 +46,13 @@ const Confirm = props => {
       return Alert.alert("인증번호가 일치하지 않습니다");
     }
     // console.log("인증번호 일치");
-    props.navigation.navigate("Signup");
+    // const selectedPage = await AsyncStorage.getItem("page");
+    // console.log("선택한 페이지", selectedPage);
+    if (props.navigation.getParam("reset")) {
+      props.navigation.navigate("ResetPw");
+    } else {
+      props.navigation.navigate("Signup");
+    }
   };
 
   const handleResend = async () => {

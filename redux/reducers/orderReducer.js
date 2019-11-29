@@ -29,6 +29,12 @@ const orderReducer = (state = initialState, action) => {
         orderId: action.orderId
       };
     }
+
+    case "DELETE_IMAGES": {
+      return {
+        images: state.images.pop()
+      };
+    }
     // Default
     default: {
       return state;
