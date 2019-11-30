@@ -99,7 +99,6 @@ const HomeScreen = ({ navigation, ...props }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isopenLoginModal, setIsopenLoginModal] = useState(false);
-  const [marker, setMarker] = useState(null);
   const [campus, setCampus] = useState();
 
   const getDefaultCampusMap = () => {
@@ -118,22 +117,6 @@ const HomeScreen = ({ navigation, ...props }) => {
   const geoCode = async address => {
     const geo = await Location.geocodeAsync(address);
     return geo;
-  };
-
-  const markerPosition = async () => {
-    // const selectedCampus = await AsyncStorage.getItem("campus");
-    const selectedCampus = props.campus;
-
-    const orderPosition = await serverApi.getCampusOrders("snu");
-    console.log(
-      "orderPosition : ",
-      orderPosition.data.data.orders[0].departures
-    );
-    const testOrder = orderPosition.data.data.orders[0].departures;
-    console.log("{props.arrvalLocation} : ", props.arrivalLocation);
-    const geolatlng = await geoCode(props.arrivalLocation);
-    console.log("{geolatlng} : ", geolatlng[0]);
-    setMarker(geolatlng[0]);
   };
 
   const getLocation = () => {
@@ -190,7 +173,6 @@ const HomeScreen = ({ navigation, ...props }) => {
 
   useEffect(() => {
     preLoad();
-    markerPosition();
   }, []);
 
   useEffect(() => {
@@ -228,7 +210,8 @@ const HomeScreen = ({ navigation, ...props }) => {
                   latitude={region.latitude}
                   longitude={region.longitude}
                   orders={orders}
-                  position={marker}
+                  HomeScreen={true}
+                  showLocation={false}
                 ></MapScreen>
               </>
             )}

@@ -1,9 +1,9 @@
 {
-  "expoServerNgrokUrl": "https://9n-9if.leeyoungmin.brum-client.exp.direct",
-  "packagerNgrokUrl": "https://packager.9n-9if.leeyoungmin.brum-client.exp.direct",
-  "ngrokPid": 27324,
+  "expoServerNgrokUrl": "https://ui-wi9.leeyoungmin.brum-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.ui-wi9.leeyoungmin.brum-client.exp.direct",
+  "ngrokPid": 16460,
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 22232
+  "packagerPid": 16396
 }

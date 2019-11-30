@@ -88,6 +88,10 @@ const App = () => {
   // <HomeNavigation />
   //<MainNavigation />
   // <SearchAddress />
+  // {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
+  {
+    /* {isLoggedIn ? <OrderDetailScreen /> : <LoggedOutMainNavigation />} */
+  }
   return loaded && isLoggedIn !== null ? (
     // Redux: Global Store
     <Provider store={store}>
