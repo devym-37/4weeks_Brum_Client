@@ -22,7 +22,6 @@ import {
 } from "../redux/actions/orderPositionActions";
 import constants from "../constants";
 import MapViewDirections from "react-native-maps-directions";
-import color from "../styles";
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
@@ -190,12 +189,12 @@ const MapScreen = props => {
           props.departurePosition !== null ? (
             <MapViewDirections
               origin={{
-                latitude: props.arrivalPosition.latitude,
-                longitude: props.arrivalPosition.longitude
+                latitude: props.arrivalPosition.lat,
+                longitude: props.arrivalPosition.lng
               }}
               destination={{
-                latitude: props.departurePosition.latitude,
-                longitude: props.departurePosition.longitude
+                latitude: props.departurePosition.lat,
+                longitude: props.departurePosition.lng
               }}
               apikey={API}
               strokeWidth={5}
