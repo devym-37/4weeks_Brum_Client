@@ -126,7 +126,7 @@ class Fire {
       const message = {
         text,
         user,
-        timestamp: this.timestamp
+        createdAt: firebase.database.ServerValue.TIMESTAMP
       };
       this.append(message);
 

@@ -72,14 +72,7 @@ export default {
     else return `${createdAt.hour}:${createdAt.min}`;
   },
   transferOrderStatus: num => {
-    const status = [
-      "매칭대기",
-      "매칭완료",
-      "배송대기",
-      "배송시작",
-      "배송완료",
-      "정산완료"
-    ];
+    const status = ["매칭대기", "매칭완료", "배송시작", "배송완료", "정산완료"];
 
     return status[num];
   },

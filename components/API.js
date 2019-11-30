@@ -151,6 +151,15 @@ export const serverApi = {
       }
     });
   },
+  getChat: (orderId, userToken) => {
+    return sApi.get(`user/chat/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    });
+  },
   orderdetail: (orderId, userToken) =>
     sApi.get(`order/${orderId}`, {
       headers: {
