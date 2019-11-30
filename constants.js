@@ -16,7 +16,7 @@ const campus = {
   hanyang: {
     kor: "한양대",
     eng: "hanyang",
-    position: { latitude: 37.55737, longitude: 127.047132 }
+    position: { latitude: 37.556126, longitude: 127.047124 }
   },
   snu: {
     kor: "서울대",

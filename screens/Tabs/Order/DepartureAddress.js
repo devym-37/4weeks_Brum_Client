@@ -74,6 +74,7 @@ class OrderDepartureAddress extends Component {
       latitude: 0,
       longitude: 0,
       locationPredictions: [],
+      geoDeparture: [],
       isFocused: false
     };
     this.onChangeDestinationDebounced = _.debounce(
@@ -97,8 +98,6 @@ class OrderDepartureAddress extends Component {
   };
 
   async onChangeDestination(destination) {
-    // console.log("destination [1] :", destination);
-    // console.log("destination [2] :", { destination });
     this.setState({ destination });
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API}&input={${destination}}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
     const result = await fetch(apiUrl);
@@ -121,11 +120,18 @@ class OrderDepartureAddress extends Component {
     Keyboard;
   }
 
-  async geoCode(address) {
-    console.log("geo12 : ", address);
-    const geo = await Location.geocodeAsync(address);
-    this.props.reduxDeparturePosition({ ...geo[0] });
-    console.log("geo1234 : ", geo[0]);
+  async geoDestination(placeId) {
+    this.setState({ placeId });
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,rating,formatted_phone_number,geometry&key=${API}`;
+    const result = await fetch(apiUrl);
+    const jsonResult = await result.json();
+    this.setState({
+      geoDeparture: jsonResult
+    });
+    console.log("place_id test result", jsonResult.result.geometry.location);
+    this.props.reduxDeparturePosition({
+      ...jsonResult.result.geometry.location
+    });
   }
 
   render() {
@@ -145,7 +151,7 @@ class OrderDepartureAddress extends Component {
               this.props.reduxDepartureLocation(
                 prediction.structured_formatting.main_text
               );
-              this.geoCode(prediction.structured_formatting.main_text);
+              this.geoDestination(prediction.place_id);
               this.props.navigation.goBack(null);
             }}
             key={prediction.id}
