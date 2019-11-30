@@ -242,7 +242,7 @@ export const serverApi = {
       },
       {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
           "Access-Control-Allow-Headers": "x-access-token",
           "x-access-token": userToken
         }
