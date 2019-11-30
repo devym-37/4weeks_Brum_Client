@@ -30,16 +30,22 @@ import Picker from "../../../components/Pickers/RoutePicker";
 import { serverApi } from "../../../components/API";
 
 import constants from "../../../constants";
+import utils from "../../../utils";
 import checkedBox from "../../../assets/checkedBox.png";
 import uncheckedBox from "../../../assets/uncheckedBox.png";
 // Imports: Redux Actions
 import { login } from "../../../redux/actions/authActions";
 import {
+  isPriceSaver,
+  priceSaver,
   timeSaver,
   titleSaver,
-  isPriceSaver,
+  detailsSaver,
   photoRemover
 } from "../../../redux/actions/orderActions";
+// import { timeSaver } from "../../../redux/actions/orderTimeActions";
+// import { isPriceSaver } from "../../../redux/actions/orderIsPriceActions";
+// import {cate} from "../../../redux/actions/orderCategoryActions";
 const validationSchema = Yup.object().shape({
   title: Yup.string()
     .label("Title")
@@ -73,9 +79,10 @@ const NewOrderScreen = props => {
   const [category, setCategory] = useState("카테고리 선택");
   const [departure, setDeparture] = useState("출발지(선택사항)");
   const [arrival, setArrival] = useState("도착지");
-
+  const [title, setTitle] = useState();
+  const [price, setPrice] = useState();
   // const [checked, setChecked] = useState(false);
-  // const [time, setTime] = useState(null);
+
   const [timeText, setTimeText] = useState("희망 도착시간(선택)");
 
   const [timeTextColor, setTimeTextColor] = useState("#d5dae0");
@@ -89,10 +96,28 @@ const NewOrderScreen = props => {
     setIsDateTimePickerVisible(false);
   };
 
+  const handleChangeTitle = value => {
+    props.reduxTitle(value);
+    // setTitle(value);
+    // console.log(`value: `, value);
+  };
+
+  const handleChangePrice = value => {
+    // console.log(`price: `, value);
+    let priceWithComma = utils.numberWithCommas(value);
+    setPrice(priceWithComma);
+    props.reduxPrice(value);
+  };
+
+  const handleChangeMessage = value => {
+    console.log(`message: `, value);
+    props.reduxDetails(value);
+  };
+
   const handleDatePicked = date => {
     let hours = date.getHours();
     let minutes = date.getMinutes();
-    // setTime(String(date));
+
     if (hours > 12) {
       setTimeText(`오후 ${hours - 12}시 ${minutes}분 도착희망`);
     } else {
@@ -100,7 +125,7 @@ const NewOrderScreen = props => {
     }
 
     setTimeTextColor("#1D2025");
-    props.reduxTime(String(date));
+    props.reduxTime(utils.formatDate(date));
     hideDateTimePicker();
   };
 
@@ -177,10 +202,10 @@ const NewOrderScreen = props => {
               <>
                 <FormInput
                   placeholder={"글 제목"}
-                  onChange={handleChange("title")}
+                  onChange={value => handleChangeTitle(value)}
                   keyboardType="default"
                   returnKeyType="next"
-                  value={values.title}
+                  value={props.title}
                   onBlur={handleBlur("title")}
                 />
                 <ErrorMessage />
@@ -235,9 +260,10 @@ const NewOrderScreen = props => {
                   placeholder={"₩ 배달금액(선택사항)"}
                   keyboardType="numeric"
                   returnKeyType="next"
-                  value={values.price}
+                  value={price}
                   onBlur={handleBlur("price")}
-                  onChange={handleChange("price")}
+                  onChange={value => handleChangePrice(value)}
+                  maxLength={7}
                 >
                   <Checkbox
                     label="가격제안 받기"
@@ -265,9 +291,9 @@ const NewOrderScreen = props => {
                   keyboardType="default"
                   returnKeyType="next"
                   isUnderline={false}
-                  value={values.price}
+                  value={props.details}
                   onBlur={handleBlur("message")}
-                  onChange={handleChange("message")}
+                  onChange={e => handleChangeMessage(e)}
                 ></FormInput>
                 {props.images && props.images.length > 0 && (
                   <ImageContainer>
@@ -314,9 +340,10 @@ const mapStateToProps = state => {
   return {
     phone: state.phoneReducer.phone,
     title: state.orderReducer.title,
-    time: state.orderReducer.desiredArrival,
-    isPrice: state.orderReducer.isPrice,
     category: state.orderReducer.category,
+    time: state.orderReducer.desiredArrivalTime,
+    isPrice: state.orderReducer.isPrice,
+    message: state.orderReducer.details,
     images: state.orderReducer.images,
     arrivalLocation: state.destinationReducer.arrivalLocation,
     departureLocation: state.destinationReducer.departureLocation
@@ -331,7 +358,9 @@ const mapDispatchToProps = dispatch => {
     reduxLogin: trueFalse => dispatch(login(trueFalse)),
     reduxTitle: title => dispatch(titleSaver(title)),
     reduxTime: time => dispatch(timeSaver(time)),
-    reduxChecked: checked => dispatch(isPriceSaver(checked))
+    reduxPrice: price => dispatch(priceSaver(price)),
+    reduxChecked: () => dispatch(isPriceSaver()),
+    reduxDetails: message => dispatch(detailsSaver(message))
   };
 };
 

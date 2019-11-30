@@ -345,13 +345,46 @@ const OrderDetailScreen = ({ navigation }) => {
       try {
         setLoading(true);
         // const orderId = navigation.getParam("orderId");
-        const request = await serverApi.apply(null, null, userToken, orderId);
-        //console.log("지원했습니다", request);
+        let request = await serverApi.apply(null, null, userToken, orderId);
+        if (request.data.isSuccess) {
+          Alert.alert("지원이 완료 되었습니다. 요청자의 선택을 기다려주세요");
+          // navigation.goBack(null);
+        } else {
+          Alert.alert("이미 지원한 요청입니다");
+        }
+        console.log("가격불가 지원했습니다", request.data);
       } catch (e) {
+        Alert.alert("현재 지원이 불가능한 요청입니다");
         console.log(`Can't post data of applying on server. Error : `, e);
       } finally {
         setLoading(false);
       }
+    }
+  };
+
+  const handleApplyButtonWithPrice = async () => {
+    try {
+      setLoading(true);
+      // const orderId = navigation.getParam("orderId");
+      let request = await serverApi.apply(
+        bidPrice,
+        runnerMessage,
+        userToken,
+        orderId
+      );
+      if (request.data.isSuccess) {
+        Alert.alert("지원이 완료 되었습니다. 요청자의 선택을 기다려주세요");
+        setVisible(false);
+      } else {
+        Alert.alert("이미 지원한 요청입니다");
+      }
+      console.log("가격협의 지원했습니다", request);
+    } catch (e) {
+      Alert.alert("현재 지원이 불가능한 요청입니다");
+      console.log(`Can't post data of applying on server. Error : `, e);
+    } finally {
+      setLoading(false);
+      // navigation.goBack(null);
     }
   };
 
@@ -379,6 +412,16 @@ const OrderDetailScreen = ({ navigation }) => {
 
   const handleEdit = () => {
     Alert.alert("Edit!");
+  };
+
+  const handleChangeMessage = value => {
+    console.log(`Message : `, value);
+    setRunnerMessage(value);
+  };
+
+  const handleChangePrice = value => {
+    console.log(`bidPrice: `, value);
+    setBidPrice(value);
   };
 
   const preLoad = async () => {
@@ -617,7 +660,9 @@ const OrderDetailScreen = ({ navigation }) => {
                 <FormInput
                   placeholder={"₩ 희망 배달금액(선택사항)"}
                   width={140}
+                  value={bidPrice}
                   isUnderline={false}
+                  onChange={e => handleChangePrice(e)}
                 >
                   <Checkbox
                     label="희망비용 수락"
@@ -639,6 +684,8 @@ const OrderDetailScreen = ({ navigation }) => {
                 <FormInput
                   placeholder={"메세지(선택사항)"}
                   width={50}
+                  value={runnerMessage}
+                  onChange={e => handleChangeMessage(e)}
                   isUnderline={false}
                 />
                 <Divider />
@@ -668,7 +715,7 @@ const OrderDetailScreen = ({ navigation }) => {
                         {isPrice ? "가격제안 가능" : "가격제안 불가"}
                       </PriceOption>
                     </PriceContainer>
-                    <Touchable onPress={handleApplyButton}>
+                    <Touchable onPress={handleApplyButtonWithPrice}>
                       <ApplyButton width={250}>
                         <ButtonText>러너 지원하기</ButtonText>
                       </ApplyButton>

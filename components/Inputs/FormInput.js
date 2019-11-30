@@ -36,6 +36,7 @@ const FormInput = ({
   dividerWidth = 30,
   placeholder,
   children,
+  onChange,
   isUnderline = true,
   ...rest
 }) => {
@@ -46,6 +47,7 @@ const FormInput = ({
           width={width}
           placeholderTextColor="#d5dae0"
           placeholder={placeholder}
+          onChangeText={onChange}
           {...rest}
         />
         {children}

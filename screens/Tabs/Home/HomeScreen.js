@@ -159,7 +159,7 @@ const HomeScreen = ({ navigation, ...props }) => {
       // const selectedCampus = await AsyncStorage.getItem("campus");
       const selectedCampus = props.campus ? props.campus : "hanyang";
       let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
-
+      // let filteredOrders = getCampusOrders.data.data.orders ? getCampusOrders.data.data.orders.filter(obj=>obj.orderStatus === 0)
       setOrders([...getCampusOrders.data.data.orders]);
 
       getDefaultCampusMap(selectedCampus);

@@ -1,10 +1,19 @@
 import React from "react";
-import { GiftedChat } from "react-native-gifted-chat"; // 0.3.0
-import { AsyncStorage, View } from "react-native";
+import { GiftedChat, Bubble } from "react-native-gifted-chat"; // 0.3.0
+import {
+  AsyncStorage,
+  View,
+  KeyboardAvoidingView,
+  Text,
+  Button
+} from "react-native";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
 
+import utils from "../../utils";
+
 import Fire from "./Fire";
+import { serverApi } from "../../components/API";
 
 class Chat extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -18,18 +27,26 @@ class Chat extends React.Component {
       Loading: false,
       orderId: null,
       userId: null,
-      notification: null
+      notification: null,
+      username: null,
+      avatar: null,
+      usertoken: null,
+      orderstatus: null,
+      position: null,
+      deliverId: null
     };
   }
   get user() {
     //const user = redux
     return {
       //  name: this.props.navigation.state.params.name,
-      _id: Fire.shared.uid
+      _id: Fire.shared.uid,
+      name: this.state.username,
+      avatar: this.state.avatar
     };
   }
 
-  registerForPushNotificationsAsync = async () => {
+  /*   registerForPushNotificationsAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
     if (status !== "granted") {
       return;
@@ -50,29 +67,80 @@ class Chat extends React.Component {
         title: "Vroom",
         body: "메시지 간다 메시지 받아라"
       }
-      /* 
+      
       this.notificationSubscription = Notifications.addListener(this.handleNotification);
- */
+ 
     }).catch(err => {
       throw err;
     });
-  };
-
-  handleNotification = notification => {
-    this.setState({ notification });
-  };
-
+  }; */
+  renderBubble(props) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: "#F13564"
+          }
+        }}
+      />
+    );
+  }
   render() {
     return (
       this.state.userId !== null && (
-        <GiftedChat
-          messages={this.state.messages}
-          onSend={Fire.shared.send}
-          user={this.user}
-        />
+        <View style={{ flex: 1 }}>
+          {this.state.orderStatus !== null && (
+            <View
+              style={{
+                height: 100,
+                marginTop: 30,
+                backgroundColor: "rgb(230,230,230)"
+              }}
+            >
+              {this.statusbar()}
+            </View>
+          )}
+          <GiftedChat
+            messages={this.state.messages}
+            onSend={Fire.shared.send}
+            user={this.user}
+            renderBubble={this.renderBubble}
+          />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "android" ? "padding" : null}
+            keyboardVerticalOffset={8}
+          />
+        </View>
       )
     );
   }
+
+  statusbar = () => {
+    return (
+      <View style={{ alignSelf: "center", marginTop: 15 }}>
+        <Text
+          style={{
+            fontSize: 25,
+            textAlign: "center",
+            textAlignVertical: "center"
+          }}
+        >
+          {utils.transferOrderStatus(this.state.orderstatus)} 되었습니다!
+        </Text>
+        {this.state.position === "deliver" ? (
+          <Button
+            title={utils.transferOrderStatus(this.state.orderstatus + 1)}
+            style={{ marginTop: 5 }}
+          />
+        ) : (
+          <Button
+            title={utils.transferOrderStatus(this.state.orderstatus + 1)}
+          />
+        )}
+      </View>
+    );
+  };
 
   onChats = orderid =>
     firebase
@@ -94,7 +162,7 @@ class Chat extends React.Component {
     //const orderid= this.props.orderid
     console.log("propsprops", this.props);
 
-    this.registerForPushNotificationsAsync();
+    //this.registerForPushNotificationsAsync();
 
     this.getUserId();
 
@@ -103,18 +171,70 @@ class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, message)
       }));
     });
+
+    this.notificationSubscription = Notifications.addListener(
+      this.handleNotification
+    );
+    console.log(this.state.orderstatus);
+    //this.handleStatus();
   }
+
+  handleNotification = notification => {
+    console.log("notinoiti");
+    this.setState({ notification });
+    this.handleStatus();
+  };
+
+  handleStatus = async () => {
+    const getstatus = await serverApi.getChat(orderid, usertoken);
+    const { orderStatus } = getstatus.data.data.chatDetail;
+
+    this.setState({
+      orderstatus: orderStatus
+    });
+  };
+
   componentWillUnmount() {
     Fire.shared.off();
   }
 
+  ///
   async getUserId() {
     const userid = await AsyncStorage.getItem("userId");
-    const orderid = await AsyncStorage.getItem("orderid");
-    console.log("유저아이디", userid);
+    const orderid = await AsyncStorage.getItem("orderid"); ///필요한가ㅇㅇ
+    const usertoken = await AsyncStorage.getItem("userToken");
+
+    const getstatus = await serverApi.getChat(orderid, usertoken);
+    const mypage = await serverApi.user(usertoken);
+
+    const { orderStatus, hostId, deliverId } = getstatus.data.data.chatDetail;
+
+    const orderstatustext = utils.transferOrderStatus(orderStatus);
+
+    console.log(orderstatustext);
+
+    const avatar = mypage.data.data.image;
+    const name = mypage.data.data.nickname;
+
+    console.log("유저아이디", userid, orderStatus);
+
+    let whoami = "";
+
+    if (hostId === userid) {
+      whoami = "host";
+    } else {
+      whoami = "deliver";
+    }
+
     this.setState({
+      avatar: avatar,
       userId: userid,
-      orderId: orderid
+      orderId: orderid,
+      username: name,
+      usertoken: usertoken,
+      orderstatus: orderStatus,
+      position: whoami,
+      deliverId: deliverId
     });
   }
 }

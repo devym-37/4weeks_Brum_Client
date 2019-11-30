@@ -10,14 +10,16 @@ import { createStackNavigator } from "react-navigation-stack";
 import ChatListScreen from "../screens/Tabs/Chats/ChatListScreen";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import OrderDetailScreen from "../screens/Tabs/Order/OrderDetail";
-import MyPageScreen from "../screens/Tabs/MyPageScreen";
+import MyPageScreen from "../screens/Tabs/MyPage/MyPageScreen";
 import ListScreen from "../screens/Tabs/Home/ListScreen";
 import HomeScreen from "../screens/Tabs/Home/HomeScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
 import ChatScreen from "../screens/Tabs/Chats/ChatScreen";
+import UserProfileScreen from "../screens/Tabs/MyPage/UserProfile";
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
 import BackLink from "../components/HeaderLink/BackLink";
 import HomeTitleLink from "../components/HeaderLink/HomeTitleLink";
+import SettingLink from "../components/HeaderLink/SettingsLink";
 import ChatHeaderLink from "../components/HeaderLink/ChatHeaderLink";
 import ChatListHeaderLink from "../components/HeaderLink/ChatListHeaderLink";
 import CancelOrderLink from "../components/HeaderLink/CancelOrderlLink";
@@ -42,6 +44,13 @@ const stackFactory = (initialRoute, customConfig) =>
           <CancelOrderLink orderId={navigation.getParam("orderId")} />
         )
       })
+    },
+    UserProfileScreen: {
+      screen: UserProfileScreen,
+      navigationOptions: {
+        title: "프로필",
+        headerLeft: <BackLink />
+      }
     }
   });
 
@@ -100,7 +109,10 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Mypage: {
-      screen: stackFactory(MyPageScreen, { title: "마이페이지" }),
+      screen: stackFactory(MyPageScreen, {
+        title: "마이페이지",
+        headerRight: <SettingLink />
+      }),
       navigationOptions: {
         title: "마이페이지",
         tabBarIcon: ({ focused, tintColor }) => (
