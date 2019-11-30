@@ -23,10 +23,18 @@ import { MapLocationButton } from "../../../components/Buttons/MapLocationBtn";
 import { NavigationEvents } from "react-navigation";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
+import { connect } from "react-redux";
+import { campusSaver } from "../../../redux/actions/campusActions";
 
 const View = styled.View`
   /* background-color: #f1f3f5; */
 `;
+// const ListScreenContainer = styled.View`
+//   align-items: center;
+//   background-color: #f1f3f5;
+//   flex: 1;
+// `;
+
 const Container = styled.View`
   align-items: center;
   margin-top: 12;
@@ -82,7 +90,7 @@ const RightToggleText = styled.Text`
   color: ${props => (props.clicked ? "#fff" : styles.mainColor)};
   font-size: 13;
 `;
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, ...props }) => {
   // console.log(`Home Nav: `, navigation.getParam("campus"));
   const [leftClicked, setLeftClicked] = useState(false);
   const [rightClicked, setRightClicked] = useState(true);
@@ -93,9 +101,10 @@ const HomeScreen = ({ navigation }) => {
   const [isopenLoginModal, setIsopenLoginModal] = useState(false);
   const [marker, setMarker] = useState(null);
   const [campus, setCampus] = useState();
-  const getDefaultCampusMap = campus => {
-    const campusRegion = constants.campus[campus].position;
 
+  const getDefaultCampusMap = () => {
+    const campusRegion = constants.campus[props.campus].position;
+    console.log("campusRegion :", campusRegion);
     const _region = {
       latitude: campusRegion.latitude,
       longitude: campusRegion.longitude,
@@ -112,16 +121,48 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const markerPosition = async () => {
-    const selectedCampus = await AsyncStorage.getItem("campus");
+    // const selectedCampus = await AsyncStorage.getItem("campus");
+    const selectedCampus = props.campus;
+
     const orderPosition = await serverApi.getCampusOrders("snu");
     console.log(
       "orderPosition : ",
       orderPosition.data.data.orders[0].departures
     );
     const testOrder = orderPosition.data.data.orders[0].departures;
-    const geolatlng = await geoCode("한양대학교 대학원");
+    console.log("{props.arrvalLocation} : ", props.arrivalLocation);
+    const geolatlng = await geoCode(props.arrivalLocation);
     console.log("{geolatlng} : ", geolatlng[0]);
     setMarker(geolatlng[0]);
+  };
+
+  const getLocation = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
+
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng
+      };
+      setCurrentLocation({ ...currentRegion });
+    });
+  };
+
+  const userCurrentLocation = props => {
+    const {
+      latitude = constants.LATITUDE,
+      longitude = constants.LONGITUDE
+    } = currentLocation;
+
+    const _userRegion = {
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: constants.LATITUDE_DELTA,
+      longitudeDelta: constants.LONGITUDE_DELTA
+    };
+
+    this.map.animateToRegion(_userRegion);
   };
 
   const preLoad = async () => {
@@ -132,9 +173,10 @@ const HomeScreen = ({ navigation }) => {
         setIsopenLoginModal(true);
       }
 
-      const selectedCampus = await AsyncStorage.getItem("campus");
+      // const selectedCampus = await AsyncStorage.getItem("campus");
+      const selectedCampus = props.campus ? props.campus : "hanyang";
       let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
-
+      // let filteredOrders = getCampusOrders.data.data.orders ? getCampusOrders.data.data.orders.filter(obj=>obj.orderStatus === 0)
       setOrders([...getCampusOrders.data.data.orders]);
 
       getDefaultCampusMap(selectedCampus);
@@ -150,6 +192,16 @@ const HomeScreen = ({ navigation }) => {
     preLoad();
     markerPosition();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      await preLoad();
+      await markerPosition();
+      await getLocation();
+      await getDefaultCampusMap();
+    })();
+  }, [props.campus]);
+
   // position: { latitude: 37.55737, longitude: 127.047132 }
   return (
     <>
@@ -163,12 +215,12 @@ const HomeScreen = ({ navigation }) => {
             {leftClicked && region && (
               <>
                 <MapLocationButton
-                  cb={() => {
+                  callback={() => {
                     getDefaultCampusMap();
                   }}
                 />
                 <CurrentLocationButton
-                  cb={() => {
+                  callback={() => {
                     userCurrentLocation();
                   }}
                 />
@@ -208,8 +260,7 @@ const HomeScreen = ({ navigation }) => {
                 </Touchable>
               </ButtonContainer>
             </Container>
-
-            {rightClicked && <ListScreen orders={orders} />}
+            {rightClicked && orders && <ListScreen orders={orders} />}
           </>
         )}
       </View>
@@ -217,4 +268,19 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-export default HomeScreen;
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    campus: state.campusReducer.campus,
+    arrivalLocation: state.orderPositionReducer.arrival
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxCampus: campus => dispatch(campusSaver(campus))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

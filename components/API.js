@@ -33,16 +33,16 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
-  userLikeOrder: async (orderId, userToken) => {
+  userLikeOrder: async (orderId, userToken) =>
     // console.log(`유저토큰: `, userToken);
-    return await sApi.put(`user/like/order/${orderId}`, {
+    await sApi.post(`user/like/order/${orderId}`, null, {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Headers": "x-access-token",
         "x-access-token": userToken
       }
-    });
-  },
+    }),
+
   verifyPhoneNumber: phone => sApi.post("register/phone", { phone }),
   getAllOrders: () => sApi.get("order"),
   getCampusOrders: campus => sApi.get(`order/campus/${campus}`),
@@ -54,10 +54,11 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
-  logIn: (id, ps) =>
+  logIn: (id, ps, pushtoken) =>
     sApi.post("login", {
       phone: id,
-      password: ps
+      password: ps,
+      pushToken: pushtoken
     }),
   register: (
     phone,
@@ -66,7 +67,8 @@ export const serverApi = {
     age,
     campus,
     sex = "male",
-    agreementAd = false
+    agreementAd = false,
+    pushtoken
   ) =>
     sApi.post("register", {
       phone,
@@ -75,7 +77,8 @@ export const serverApi = {
       age,
       campus,
       sex,
-      agreementAd
+      agreementAd,
+      pushToken: pushtoken
     }),
   user: userToken =>
     sApi.get("user/mypage", {
@@ -103,6 +106,64 @@ export const serverApi = {
       }
     });
   },
+  postOrder: async (userToken, obj, images, thumbnail) => {
+    const formData = new FormData();
+
+    // const data = JSON.stringify(obj);
+    // formData.append(`data`, data);
+    formData.append('formData["title"]', obj.title);
+    formData.append('formData["category"]', obj.category);
+    formData.append('formData["desiredArrivalTime"]', obj.desiredArrivaltime);
+    formData.append('formData["price"]', obj.price);
+    formData.append('formData["isPrice"]', obj.isPrice);
+    formData.append('formData["details"]', obj.details);
+    formData.append('formData["departures"]', obj.departures);
+    formData.append('formData["depLat"]', obj.depLat);
+    formData.append('formData["depLng"]', obj.depLng);
+    formData.append('formData["arrivals"]', obj.arrivals);
+    formData.append('formData["arrLat"]', obj.arrLat);
+    formData.append('formData["arrLng"]', obj.arrLng);
+
+    formData.append("thumbnail", {
+      name: "images",
+      uri: "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png",
+      type: "image/jpg"
+    });
+    formData.append("file", {
+      name: "file",
+      uri: images,
+      type: "image/jpg"
+    });
+    console.log(`formData:`, formData);
+
+    // const blob = new Blob([json], {
+    //   type: "application/json"
+    // });
+    // formData.append("title", blob);
+
+    return await fetch("http://13.209.17.154:3000/order", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+        // Accept: "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    });
+  },
+
+  // formData.append("category", obj.category);
+  // formData.append("desiredArrivalTime", obj.desiredArrivaltime);
+  // formData.append("price", obj.price);
+  // formData.append("isPrice", obj.isPrice);
+  // formData.append("details", obj.details);
+  // formData.append("departures", obj.departures);
+  // formData.append("depLat", obj.depLat);
+  // formData.append("depLng", obj.depLng);
+  // formData.append("arrivals", obj.arrivals);
+  // formData.append("arrLat", obj.arrLat);
+  // formData.append("arrLng", obj.arrLng);
   password: (phone, pw, userToken) =>
     sApi.put(
       "password",
@@ -148,6 +209,15 @@ export const serverApi = {
       }
     });
   },
+  getChat: (orderId, userToken) => {
+    return sApi.get(`user/chat/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    });
+  },
   orderdetail: (orderId, userToken) =>
     sApi.get(`order/${orderId}`, {
       headers: {
@@ -181,7 +251,7 @@ export const serverApi = {
       },
       {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
           "Access-Control-Allow-Headers": "x-access-token",
           "x-access-token": userToken
         }

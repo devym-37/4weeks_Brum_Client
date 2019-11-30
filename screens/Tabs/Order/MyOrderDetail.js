@@ -42,10 +42,11 @@ const Image = styled.Image`
 
 const UserContainer = styled.View`
   background-color: white;
-  margin-top: 12;
+  /* -top: 12; */
   flex-direction: row;
   justify-content: space-between;
-  padding: 0 15px;
+  padding: 20px 15px;
+  /* padding-top: 20; */
   align-items: center;
   width: ${constants.width};
   height: ${constants.height / 12};
@@ -273,8 +274,8 @@ const DropContainer = styled.View`
   padding-bottom: 30;
   height: 200;
 `;
-const OrderDetailScreen = ({ navigation }) => {
-  const [orderId, setorderId] = useState(navigation.getParam("orderId"));
+const OrderDetailScreen = ({ id }) => {
+  const [orderId, setorderId] = useState(id);
   const [userToken, setUserToken] = useState();
   const [isHost, setIsHost] = useState(false);
   const [isRunner, setIsRunner] = useState(false);
@@ -345,46 +346,13 @@ const OrderDetailScreen = ({ navigation }) => {
       try {
         setLoading(true);
         // const orderId = navigation.getParam("orderId");
-        let request = await serverApi.apply(null, null, userToken, orderId);
-        if (request.data.isSuccess) {
-          Alert.alert("지원이 완료 되었습니다. 요청자의 선택을 기다려주세요");
-          // navigation.goBack(null);
-        } else {
-          Alert.alert("이미 지원한 요청입니다");
-        }
-        console.log("가격불가 지원했습니다", request.data);
+        const request = await serverApi.apply(null, null, userToken, orderId);
+        //console.log("지원했습니다", request);
       } catch (e) {
-        Alert.alert("현재 지원이 불가능한 요청입니다");
         console.log(`Can't post data of applying on server. Error : `, e);
       } finally {
         setLoading(false);
       }
-    }
-  };
-
-  const handleApplyButtonWithPrice = async () => {
-    try {
-      setLoading(true);
-      // const orderId = navigation.getParam("orderId");
-      let request = await serverApi.apply(
-        bidPrice,
-        runnerMessage,
-        userToken,
-        orderId
-      );
-      if (request.data.isSuccess) {
-        Alert.alert("지원이 완료 되었습니다. 요청자의 선택을 기다려주세요");
-        setVisible(false);
-      } else {
-        Alert.alert("이미 지원한 요청입니다");
-      }
-      console.log("가격협의 지원했습니다", request);
-    } catch (e) {
-      Alert.alert("현재 지원이 불가능한 요청입니다");
-      console.log(`Can't post data of applying on server. Error : `, e);
-    } finally {
-      setLoading(false);
-      // navigation.goBack(null);
     }
   };
 
@@ -412,16 +380,6 @@ const OrderDetailScreen = ({ navigation }) => {
 
   const handleEdit = () => {
     Alert.alert("Edit!");
-  };
-
-  const handleChangeMessage = value => {
-    console.log(`Message : `, value);
-    setRunnerMessage(value);
-  };
-
-  const handleChangePrice = value => {
-    console.log(`bidPrice: `, value);
-    setBidPrice(value);
   };
 
   const preLoad = async () => {
@@ -539,193 +497,6 @@ const OrderDetailScreen = ({ navigation }) => {
             </OrderContentContainer>
           </Container>
         </ScrollView>
-        <BottomContainer>
-          <ContentContainer>
-            {isHost ? (
-              data.deliverId ? (
-                <>
-                  <IconContainer>
-                    <AntDesign
-                      name="hearto"
-                      size={26}
-                      style={{ color: styles.inActiveColor }}
-                    />
-                  </IconContainer>
-
-                  <VerticalDivider />
-                  <PriceContainer>
-                    <Price>{price}</Price>
-                    <PriceOption>
-                      {isPrice ? "가격제안 가능" : "가격제안 불가"}
-                    </PriceOption>
-                  </PriceContainer>
-                  <EditButtonContainer>
-                    <DeleteButton width={350} disabled={true}>
-                      <DeleteButtonText disabled={true}>삭제</DeleteButtonText>
-                    </DeleteButton>
-
-                    <EditButton disabled={true} width={350}>
-                      <ButtonText disabled={true}>수정</ButtonText>
-                    </EditButton>
-                  </EditButtonContainer>
-                </>
-              ) : (
-                <>
-                  <IconContainer>
-                    <AntDesign
-                      name="hearto"
-                      size={26}
-                      style={{ color: "#E8E2E4" }}
-                    />
-                  </IconContainer>
-
-                  <VerticalDivider />
-                  <PriceContainer>
-                    <Price>{price}</Price>
-                    <PriceOption>
-                      {isPrice ? "가격제안 가능" : "가격제안 불가"}
-                    </PriceOption>
-                  </PriceContainer>
-                  <EditButtonContainer>
-                    <Touchable onPress={handleDelete}>
-                      <DeleteButton width={350}>
-                        <DeleteButtonText>삭제</DeleteButtonText>
-                      </DeleteButton>
-                    </Touchable>
-                    <Touchable onPress={handleEdit}>
-                      <EditButton width={350}>
-                        <ButtonText>수정</ButtonText>
-                      </EditButton>
-                    </Touchable>
-                  </EditButtonContainer>
-                </>
-              )
-            ) : (
-              <>
-                <Touchable onPress={handleClickLikeButton}>
-                  <IconContainer>
-                    {isLiked ? (
-                      <AntDesign
-                        name="heart"
-                        size={26}
-                        style={{ color: styles.mainColor }}
-                      />
-                    ) : (
-                      <AntDesign
-                        name="hearto"
-                        size={26}
-                        style={{ color: styles.mainColor }}
-                      />
-                    )}
-                  </IconContainer>
-                </Touchable>
-                <VerticalDivider />
-                <PriceContainer>
-                  <Price>{price}</Price>
-                  <PriceOption>
-                    {isPrice ? "가격제안 가능" : "가격제안 불가"}
-                  </PriceOption>
-                </PriceContainer>
-                <Touchable onPress={handleApplyButton}>
-                  <ApplyButton width={250}>
-                    <ButtonText>러너 지원하기</ButtonText>
-                  </ApplyButton>
-                </Touchable>
-              </>
-            )}
-          </ContentContainer>
-        </BottomContainer>
-        <Backdrop
-          visible={visible}
-          handleOpen={handleOpen}
-          handleClose={handleClose}
-          onClose={() => {}}
-          swipeConfig={{
-            velocityThreshold: 0.3,
-            directionalOffsetThreshold: 80
-          }}
-          animationConfig={{
-            speed: 14,
-            bounciness: 4
-          }}
-          overlayColor="rgba(0,0,0,0.32)"
-          backdropStyle={{
-            backgroundColor: "#fff",
-            justifyContent: "flex-start"
-          }}
-        >
-          <DropContainer>
-            <>
-              <BottomContainer width={40}>
-                <FormInput
-                  placeholder={"₩ 희망 배달금액(선택사항)"}
-                  width={140}
-                  value={bidPrice}
-                  isUnderline={false}
-                  onChange={e => handleChangePrice(e)}
-                >
-                  <Checkbox
-                    label="희망비용 수락"
-                    checkboxStyle={{ height: 22, width: 22 }}
-                    labelStyle={{ color: "#1D2025", marginLeft: -4 }}
-                    checked={checked}
-                    containerStyle={{
-                      width: 110,
-                      marginLeft: -20
-                    }}
-                    checkedImage={checkedBox}
-                    uncheckedImage={uncheckedBox}
-                    onChange={() => {
-                      setChecked(!checked);
-                    }}
-                  />
-                </FormInput>
-                <Divider />
-                <FormInput
-                  placeholder={"메세지(선택사항)"}
-                  width={50}
-                  value={runnerMessage}
-                  onChange={e => handleChangeMessage(e)}
-                  isUnderline={false}
-                />
-                <Divider />
-                <MarginContentContainer>
-                  <>
-                    <Touchable onPress={() => setIsLiked(!isLiked)}>
-                      <IconContainer>
-                        {isLiked ? (
-                          <AntDesign
-                            name="heart"
-                            size={26}
-                            style={{ color: styles.mainColor }}
-                          />
-                        ) : (
-                          <AntDesign
-                            name="hearto"
-                            size={26}
-                            style={{ color: styles.mainColor }}
-                          />
-                        )}
-                      </IconContainer>
-                    </Touchable>
-                    <VerticalDivider />
-                    <PriceContainer>
-                      <Price>{price}</Price>
-                      <PriceOption>
-                        {isPrice ? "가격제안 가능" : "가격제안 불가"}
-                      </PriceOption>
-                    </PriceContainer>
-                    <Touchable onPress={handleApplyButtonWithPrice}>
-                      <ApplyButton width={250}>
-                        <ButtonText>러너 지원하기</ButtonText>
-                      </ApplyButton>
-                    </Touchable>
-                  </>
-                </MarginContentContainer>
-              </BottomContainer>
-            </>
-          </DropContainer>
-        </Backdrop>
       </SafeAreaView>
     </>
   );

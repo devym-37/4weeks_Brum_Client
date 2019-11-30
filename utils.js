@@ -1,12 +1,24 @@
 import { Linking, Alert, Platform } from "react-native";
 export default {
   numberWithCommas: x => {
-    // if (!x) return "비용 협의";
-    if (typeof x === "number")
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    else return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    let x2 = x.toString().replace(",", "");
+    return x2.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    // else return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   },
-
+  formatDate: format => {
+    var year = format.getFullYear();
+    var month = format.getMonth() + 1;
+    if (month < 10) month = "0" + month;
+    var date = format.getDate();
+    if (date < 10) date = "0" + date;
+    var hour = format.getHours();
+    if (hour < 10) hour = "0" + hour;
+    var min = format.getMinutes();
+    if (min < 10) min = "0" + min;
+    var sec = format.getSeconds();
+    if (sec < 10) sec = "0" + sec;
+    return year + "-" + month + "-" + date + " " + hour + ":" + min + ":" + sec;
+  },
   transferTime: time => {
     var nowTime = new Date();
     var now = {
@@ -72,14 +84,7 @@ export default {
     else return `${createdAt.hour}:${createdAt.min}`;
   },
   transferOrderStatus: num => {
-    const status = [
-      "매칭대기",
-      "매칭완료",
-      "배송대기",
-      "배송시작",
-      "배송완료",
-      "정산완료"
-    ];
+    const status = ["매칭대기", "매칭완료", "배송시작", "배송완료", "정산완료"];
 
     return status[num];
   },

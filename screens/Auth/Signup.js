@@ -1,9 +1,10 @@
 // Imports: Dependencies
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import firebase from "firebase";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -14,18 +15,20 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
+import * as Permissions from "expo-permissions";
+import { Notifications } from "expo";
 // Imports: Custom components
 import AuthInput from "../../components/Inputs/AuthInput";
 import useInput from "../../hooks/useInput";
 import MainButton from "../../components/Buttons/MainButton";
 import ErrorMessage from "../../components/ErrorMessage";
-
+import Fire from "../chat/Fire";
 // Imports: API
 import { serverApi } from "../../components/API";
 
 // Imports: Redux Actions
 import { login } from "../../redux/actions/authActions";
+import { campusSaver } from "../../redux/actions/campusActions";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -89,33 +92,60 @@ const Signup = props => {
   );
   const [passwordIcon, setPasswordIcon] = useState("ios-eye-off");
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState("ios-eye-off");
+  const [pushtoken, setPushtoken] = useState(null);
 
   const handleSend = async values => {
-    // console.log(`signup values: `, values);
     if (values.name.length === 0 || values.password.length === 0) {
       Alert.alert("입력이 올바르지 않습니다");
     }
 
     try {
-      const selectedCampus = await AsyncStorage.getItem("campus");
+      // const selectedCampus = await AsyncStorage.getItem("campus");
+      const selectedCampus = props.campus ? props.campus : "hanyang";
       // console.log(`회원가입 캠퍼스: `, selectedCampus);
+      console.log("푸쉬토큰", pushtoken);
       const signUp = await serverApi.register(
         values.phone,
         values.password,
         values.name,
         values.age,
-        selectedCampus
+        selectedCampus,
+        (sex = "male"),
+        (agreementAd = false),
+        pushtoken
       );
 
-      Alert.alert("회원가입 및 로그인이 완료되었습니다");
+      //Alert.alert("회원가입 및 로그인이 완료되었습니다");
 
       if (signUp.data.token !== false) {
         await AsyncStorage.setItem("userToken", signUp.data.token);
         props.reduxLogin(true);
+
+        //firebase///
+        Fire.shared.signup(values.phone, values.password);
+        /* firebase
+          .auth()
+          .createUserWithEmailAndPassword(
+            `${values.phone}@shoppossible.com`,
+            values.password
+          ); */
+        /////////////
+
+        const mypage = await serverApi.user(signUp.data.token);
+        const { userId } = mypage.data.data;
+        await AsyncStorage.setItem("userId", userId.toString());
+
+        Fire.shared.appendUser(userId);
+        Fire.shared.appendPushtoken(
+          userId,
+          pushtoken.slice(18, pushtoken.length - 1)
+        );
+
+        ////////
         Alert.alert("회원가입 및 로그인이 완료되었습니다");
-        setTimeout(() => {
-          props.navigation.navigate("BottomNavigation");
-        }, 200);
+
+        props.navigation.navigate("BottomNavigation");
+
         // setTimeout(() => {
         //   props.navigation.navigate("Userinfo");
         // }, 200);
@@ -125,6 +155,23 @@ const Signup = props => {
       console.log(`Can't signup. error : ${e}`);
     }
   };
+
+  registerForPushNotificationsAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== "granted") {
+      return;
+    }
+    let token = await Notifications.getExpoPushTokenAsync();
+    // Defined in following steps
+    console.log("pushtoken", token);
+    setPushtoken(token);
+    await AsyncStorage.setItem("pushToken", token);
+  };
+
+  useEffect(() => {
+    // Create an scoped async function in the hook
+    registerForPushNotificationsAsync();
+  }, []);
 
   const handlePasswordVisibility = () => {
     if (passwordIcon === "ios-eye") {
@@ -290,7 +337,8 @@ const Signup = props => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    phone: state.phoneReducer.phone
+    phone: state.phoneReducer.phone,
+    campus: state.campusReducer.campus
   };
 };
 

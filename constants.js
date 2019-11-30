@@ -2,16 +2,7 @@ import { Dimensions } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
 
-const orderCategory = [
-  "음식배달",
-  "마트",
-  "문구",
-  "사다주기",
-  "생활편의",
-  "편의점",
-  "간편배송",
-  "기타"
-];
+const orderCategory = ["음식배달", "마트", "문구", "사다주기", "생활편의", "편의점", "간편배송", "기타"];
 
 const campusList = {
   hanyang: { kor: "한양대", eng: "hanyang" },
@@ -46,8 +37,8 @@ const campus = {
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
-const LATITUDE_DELTA = 0.006;
-const LONGITUDE_DELTA = 0.001;
+const LATITUDE_DELTA = 0.009;
+const LONGITUDE_DELTA = 0.006;
 
 export default {
   width,

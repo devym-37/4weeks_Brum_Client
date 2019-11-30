@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { ScrollView, RefreshControl, AsyncStorage } from "react-native";
+import { ScrollView, RefreshControl, AsyncStorage, Button } from "react-native";
 
 import { withNavigation } from "react-navigation";
 import { serverApi } from "../../../components/API";
@@ -8,6 +8,9 @@ import { serverApi } from "../../../components/API";
 import DefaultOrder from "../../../components/DefaultOrder";
 import ChatCard from "../../../components/Cards/ChatCard";
 import Loader from "../../../components/Loader";
+
+import Fire from "../../chat/Fire";
+import firebase from "firebase";
 
 const Container = styled.View`
   flex: 1;
@@ -25,11 +28,57 @@ const ChatListScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [chats, setChats] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState();
+  const [userId, setUserId] = useState(null);
+  const [threads, setThreads] = useState(null);
 
-  const handleClick = username => {
+  const handleClick = async (username, orderId) => {
     console.log(`username: `, username);
-    navigation.navigate("ChatNavigation", { username: username });
+    ////////
+    await AsyncStorage.setItem("orderid", orderId.toString());
+
+    navigation.navigate("Chat");
+  };
+
+  ////이동해야함
+  const onList = userId => {
+    if (userId !== null) {
+      firebase
+        .database()
+        .ref(`users/${userId}/threads`)
+        .on("value", data => {
+          const newarr = [];
+          for (const key in data.val()) {
+            newarr.push(key);
+          }
+          console.log("arr", newarr);
+
+          setThreads(newarr);
+        });
+    }
+  };
+
+  const fetchUserId = async () => {
+    try {
+      const usertoken = await AsyncStorage.getItem("userToken");
+      const mypage = await serverApi.user(usertoken);
+      if (mypage.data.isSuccess) {
+        await AsyncStorage.setItem(
+          "userId",
+          mypage.data.data.userId.toString()
+        );
+        console.log("hi", mypage.data.data.userId);
+        //const { userId } = mypage.data.data;
+        //await AsyncStorage.setItem("userId", userId);
+        onList(mypage.data.data.userId);
+
+        setUserId(mypage.data.data.userId);
+
+        //this.props.reduxuserId(mypage.data.data.userId);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
   };
 
   const refresh = async () => {
@@ -38,6 +87,7 @@ const ChatListScreen = ({ navigation }) => {
       let userToken = await AsyncStorage.getItem("userToken");
       let requestChats = await serverApi.getAllChats(userToken);
       setChats([...requestChats.data]);
+      fetchUserId();
     } catch (e) {
       console.log(`Can't refresh data. error message: ${e}`);
     } finally {
@@ -51,6 +101,9 @@ const ChatListScreen = ({ navigation }) => {
       let requestChats = await serverApi.getAllChats(userToken);
       console.log(`chats: `, requestChats.data);
       setChats([...requestChats.data.data]);
+
+      fetchUserId();
+      Fire.shared.observeAuth();
       setUserId(requestChats.data.userId);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
@@ -61,6 +114,9 @@ const ChatListScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
+    return () => {
+      Fire.shared.off();
+    };
   }, []);
 
   return (
@@ -76,7 +132,7 @@ const ChatListScreen = ({ navigation }) => {
         chats.map((chat, i) => (
           <ChatCard
             key={i}
-            onPress={() => handleClick(chat.deliverInfo.nickname)}
+            onPress={() => handleClick(chat.deliverInfo.nickname, chat.orderId)}
             userId={userId}
             {...chat}
           ></ChatCard>

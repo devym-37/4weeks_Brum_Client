@@ -20,6 +20,8 @@ import {
 import StartNavigation from "./navigation/StartNavigation";
 import MainNavigation from "./navigation/MainNavigation";
 import LoggedOutMainNavigation from "./navigation/LoggedOutMainNavigation";
+
+// import ChatNavigation from "./navigation/ChatNavigation";
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
@@ -42,7 +44,7 @@ import SelectPhoto from "./screens/Photo/SelectPhoto";
 import OrderDetailScreen from "./screens/Tabs/Order/OrderDetail";
 
 import SearchAddress from "./screens/Tabs/Order/SearchAddress";
-import OrderAddress from "./screens/Tabs/Order/OrderAddress";
+import DepartureAddress from "./screens/Tabs/Order/DepartureAddress";
 
 // React Native: App
 const App = () => {

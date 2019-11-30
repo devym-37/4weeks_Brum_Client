@@ -1,31 +1,29 @@
 // Initial State
 const initialState = {
-  arrivalLocation: null,
-  departureLocation: null
+  errorCount: 0
 };
 
 // Reducers (Modifies The State And Returns A New State)
-const destinationReducer = (state = initialState, action) => {
+const passwordErrorCountReducer = (state = initialState, action) => {
   switch (action.type) {
     // Login
-    case "arrivalLocationSave": {
+    case "INCREASE_COUNTER": {
       return {
         // State
         ...state,
         // Redux Store
-        arrivalLocation: action.arrivalLocation
+        errorCount: state.errorCount + 1
       };
     }
-    case "departureLocationSave": {
+    case "RESET_COUNTER": {
       return {
         // State
         ...state,
         // Redux Store
+        errorCount: 0
+      };
+    }
 
-        departureLocation: action.departureLocation
-      };
-    }
-    // Default
     default: {
       return state;
     }
@@ -33,4 +31,4 @@ const destinationReducer = (state = initialState, action) => {
 };
 
 // Exports
-export default destinationReducer;
+export default passwordErrorCountReducer;

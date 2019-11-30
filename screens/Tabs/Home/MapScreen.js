@@ -40,8 +40,8 @@ const Home = props => {
   const [defaultCampus, setDefaultCampus] = useState({});
   const [isOpen, setIsOpen] = useState(false);
 
-  const getDefaultCampusMap = async () => {
-    const selectedCampus = await AsyncStorage.getItem("campus");
+  const getDefaultCampusMap = () => {
+    const selectedCampus = props.campus;
     const campusRegion = getCampusLatLng(selectedCampus);
 
     const _region = {
@@ -114,6 +114,7 @@ const Home = props => {
               userCurrentLocation();
             }}
           />
+
           {region.latitude !== null && (
             <MapView latitude={region.latitude} longitude={region.longitude} />
           )}
@@ -141,7 +142,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    departure: state.orderDepartureReducer.departure
+    departure: state.orderDepartureReducer.departure,
+    campus: state.campusReducer.campus
   };
 };
 

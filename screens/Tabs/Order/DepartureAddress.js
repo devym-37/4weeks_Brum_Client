@@ -14,13 +14,15 @@ import {
   Body
 } from "react-native";
 import MapView from "react-native-maps";
-import { API } from "../../../components/API";
+import { API } from "../../../APIS";
 import _ from "lodash";
 import constants from "../../../constants";
 import { withNavigation } from "react-navigation";
 import { Container } from "native-base";
 import { connect } from "react-redux";
-import { destinationSave } from "../../../redux/actions/destinationAction";
+import { departureLocationSave } from "../../../redux/actions/destinationAction";
+import { departurePositionSave } from "../../../redux/actions/orderPositionActions";
+import * as Location from "expo-location";
 
 //Show map... select location to go to
 //Get location route with Google Location API
@@ -95,8 +97,8 @@ class OrderDepartureAddress extends Component {
   };
 
   async onChangeDestination(destination) {
-    console.log("destination [1] :", destination);
-    console.log("destination [2] :", { destination });
+    // console.log("destination [1] :", destination);
+    // console.log("destination [2] :", { destination });
     this.setState({ destination });
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API}&input={${destination}}&location=${this.state.latitude},${this.state.longitude}&radius=2000`;
     const result = await fetch(apiUrl);
@@ -109,7 +111,7 @@ class OrderDepartureAddress extends Component {
 
   pressedPrediction(prediction) {
     // console.log("prediction [3] :", prediction);
-    this.props.reduxDestination(prediction);
+    this.props.reduxDepartureLocation(prediction);
     // console.log("OderAddress Test : ", this.props.orderDestination);
     Keyboard.dismiss();
     this.setState({
@@ -117,6 +119,13 @@ class OrderDepartureAddress extends Component {
       destination: prediction
     });
     Keyboard;
+  }
+
+  async geoCode(address) {
+    console.log("geo12 : ", address);
+    const geo = await Location.geocodeAsync(address);
+    this.props.reduxDeparturePosition({ ...geo[0] });
+    console.log("geo1234 : ", geo[0]);
   }
 
   render() {
@@ -130,9 +139,13 @@ class OrderDepartureAddress extends Component {
           <TouchableHighlight
             style={styles.containers}
             onPress={() => {
-              this.props.reduxDestination(
+              this.pressedPrediction(
                 prediction.structured_formatting.main_text
               );
+              this.props.reduxDepartureLocation(
+                prediction.structured_formatting.main_text
+              );
+              this.geoCode(prediction.structured_formatting.main_text);
               this.props.navigation.goBack(null);
             }}
             key={prediction.id}
@@ -183,7 +196,7 @@ class OrderDepartureAddress extends Component {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    orderDestination: state.destinationReducer.destination
+    departureLocation: state.destinationReducer.departureLocation
   };
 };
 
@@ -191,7 +204,10 @@ const mapDispatchToProps = dispatch => {
   // Action
   return {
     // Login
-    reduxDestination: destination => dispatch(destinationSave(destination))
+    reduxDepartureLocation: departureLocation =>
+      dispatch(departureLocationSave(departureLocation)),
+    reduxDeparturePosition: departurePosition =>
+      dispatch(departurePositionSave(departurePosition))
   };
 };
 export default withNavigation(

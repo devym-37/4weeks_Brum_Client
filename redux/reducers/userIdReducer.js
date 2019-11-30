@@ -1,10 +1,10 @@
 // Initial State
 const initialState = {
-  campus: "hanyang"
+  phone: null
 };
 
 // Reducers (Modifies The State And Returns A New State)
-const campusReducer = (state = initialState, action) => {
+const userIdReducer = (state = initialState, action) => {
   switch (action.type) {
     // Login
     case "SAVE": {
@@ -12,7 +12,7 @@ const campusReducer = (state = initialState, action) => {
         // State
         ...state,
         // Redux Store
-        campus: action.campus
+        phone: action.userId
       };
     }
     // Default
@@ -23,4 +23,4 @@ const campusReducer = (state = initialState, action) => {
 };
 
 // Exports
-export default campusReducer;
+export default userIdReducer;
