@@ -5,6 +5,7 @@ import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
 
 import Fire from "./Fire";
+import { serverApi } from "../../components/API";
 
 class Chat extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -18,18 +19,22 @@ class Chat extends React.Component {
       Loading: false,
       orderId: null,
       userId: null,
-      notification: null
+      notification: null,
+      username: null,
+      avatar: null
     };
   }
   get user() {
     //const user = redux
     return {
       //  name: this.props.navigation.state.params.name,
-      _id: Fire.shared.uid
+      _id: Fire.shared.uid,
+      name: this.state.username,
+      avatar: this.state.avatar
     };
   }
 
-  registerForPushNotificationsAsync = async () => {
+  /*   registerForPushNotificationsAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
     if (status !== "granted") {
       return;
@@ -50,17 +55,13 @@ class Chat extends React.Component {
         title: "Vroom",
         body: "메시지 간다 메시지 받아라"
       }
-      /* 
+      
       this.notificationSubscription = Notifications.addListener(this.handleNotification);
- */
+ 
     }).catch(err => {
       throw err;
     });
-  };
-
-  handleNotification = notification => {
-    this.setState({ notification });
-  };
+  }; */
 
   render() {
     return (
@@ -94,7 +95,7 @@ class Chat extends React.Component {
     //const orderid= this.props.orderid
     console.log("propsprops", this.props);
 
-    this.registerForPushNotificationsAsync();
+    //this.registerForPushNotificationsAsync();
 
     this.getUserId();
 
@@ -103,18 +104,38 @@ class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, message)
       }));
     });
+
+    this.notificationSubscription = Notifications.addListener(
+      this.handleNotification
+    );
   }
+
+  handleNotification = notification => {
+    this.setState({ notification });
+  };
+
   componentWillUnmount() {
     Fire.shared.off();
   }
 
+  ///
   async getUserId() {
     const userid = await AsyncStorage.getItem("userId");
     const orderid = await AsyncStorage.getItem("orderid");
+    const usertoken = await AsyncStorage.getItem("userToken");
+
+    const mypage = await serverApi.user(usertoken);
+
+    const avatar = mypage.data.data.image;
+    const name = mypage.data.data.nickname;
+
     console.log("유저아이디", userid);
+
     this.setState({
+      avatar: avatar,
       userId: userid,
-      orderId: orderid
+      orderId: orderid,
+      username: name
     });
   }
 }

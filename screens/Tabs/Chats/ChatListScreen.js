@@ -31,13 +31,15 @@ const ChatListScreen = ({ navigation }) => {
   const [userId, setUserId] = useState(null);
   const [threads, setThreads] = useState(null);
 
-  const handleClick = async (username, i) => {
+  const handleClick = async (username, orderId) => {
     console.log(`username: `, username);
-    await AsyncStorage.setItem("orderid", threads[i]);
+    ////////
+    await AsyncStorage.setItem("orderid", orderId.toString());
 
     navigation.navigate("Chat");
   };
 
+  ////이동해야함
   const onList = userId => {
     if (userId !== null) {
       firebase
@@ -130,7 +132,7 @@ const ChatListScreen = ({ navigation }) => {
         chats.map((chat, i) => (
           <ChatCard
             key={i}
-            onPress={() => handleClick(chat.deliverInfo.nickname, i)}
+            onPress={() => handleClick(chat.deliverInfo.nickname, chat.orderId)}
             userId={userId}
             {...chat}
           ></ChatCard>

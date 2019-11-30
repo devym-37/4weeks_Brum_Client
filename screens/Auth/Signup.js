@@ -122,18 +122,24 @@ const Signup = props => {
         props.reduxLogin(true);
 
         //firebase///
-        firebase
+        Fire.shared.signup(values.phone, values.password);
+        /* firebase
           .auth()
           .createUserWithEmailAndPassword(
             `${values.phone}@shoppossible.com`,
             values.password
-          );
+          ); */
+        /////////////
 
         const mypage = await serverApi.user(signUp.data.token);
         const { userId } = mypage.data.data;
         await AsyncStorage.setItem("userId", userId.toString());
 
         Fire.shared.appendUser(userId);
+        Fire.shared.appendPushtoken(
+          userId,
+          pushtoken.slice(18, pushtoken.length - 1)
+        );
 
         ////////
         Alert.alert("회원가입 및 로그인이 완료되었습니다");
@@ -159,6 +165,7 @@ const Signup = props => {
     // Defined in following steps
     console.log("pushtoken", token);
     setPushtoken(token);
+    await AsyncStorage.setItem("pushToken", token);
   };
 
   useEffect(() => {

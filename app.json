@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Brum-client",
-    "slug": "Brum-client",
+    "name": "Brum",
+    "slug": "Brum",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": ["ios", "android", "web"],
@@ -17,6 +17,13 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
+
+    "notification": {
+      "icon": "./assets/brum.png",
+      "color": "#D41422",
+      "androidMode": "default",
+      "androidCollapsedTitle": "n/a"
+    },
     "ios": {
       "supportsTablet": true
     },
