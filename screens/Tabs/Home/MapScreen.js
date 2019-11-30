@@ -114,6 +114,7 @@ const Home = props => {
               userCurrentLocation();
             }}
           />
+
           {region.latitude !== null && (
             <MapView latitude={region.latitude} longitude={region.longitude} />
           )}

@@ -30,7 +30,9 @@
     "android": {
       "package": "com.Brum.Brum",
       "config": {
-        "googleMaps": { "apiKey": "AIzaSyB_wEQ8hDQnVHqYdUfqNJxtngA-xmvbTcg" }
+        "googleMaps": {
+          "apiKey": "AIzaSyB_wEQ8hDQnVHqYdUfqNJxtngA-xmvbTcg"
+        }
       },
       "permissions": [
         "ACCESS_COARSE_LOCATION",
@@ -59,6 +61,7 @@
         "com.sec.android.provider.badge.permission.WRITE",
         "com.sonyericsson.home.permission.BROADCAST_BADGE"
       ]
-    }
+    },
+    "description": ""
   }
 }

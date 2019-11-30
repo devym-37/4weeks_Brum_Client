@@ -101,9 +101,10 @@ const HomeScreen = ({ navigation, ...props }) => {
   const [isopenLoginModal, setIsopenLoginModal] = useState(false);
   const [marker, setMarker] = useState(null);
   const [campus, setCampus] = useState();
-  const getDefaultCampusMap = campus => {
-    const campusRegion = constants.campus[campus].position;
 
+  const getDefaultCampusMap = () => {
+    const campusRegion = constants.campus[props.campus].position;
+    console.log("campusRegion :", campusRegion);
     const _region = {
       latitude: campusRegion.latitude,
       longitude: campusRegion.longitude,
@@ -129,9 +130,39 @@ const HomeScreen = ({ navigation, ...props }) => {
       orderPosition.data.data.orders[0].departures
     );
     const testOrder = orderPosition.data.data.orders[0].departures;
-    const geolatlng = await geoCode("한양대학교 대학원");
+    console.log("{props.arrvalLocation} : ", props.arrivalLocation);
+    const geolatlng = await geoCode(props.arrivalLocation);
     console.log("{geolatlng} : ", geolatlng[0]);
     setMarker(geolatlng[0]);
+  };
+
+  const getLocation = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
+
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng
+      };
+      setCurrentLocation({ ...currentRegion });
+    });
+  };
+
+  const userCurrentLocation = props => {
+    const {
+      latitude = constants.LATITUDE,
+      longitude = constants.LONGITUDE
+    } = currentLocation;
+
+    const _userRegion = {
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: constants.LATITUDE_DELTA,
+      longitudeDelta: constants.LONGITUDE_DELTA
+    };
+
+    this.map.animateToRegion(_userRegion);
   };
 
   const preLoad = async () => {
@@ -163,8 +194,12 @@ const HomeScreen = ({ navigation, ...props }) => {
   }, []);
 
   useEffect(() => {
-    preLoad();
-    markerPosition();
+    (async () => {
+      await preLoad();
+      await markerPosition();
+      await getLocation();
+      await getDefaultCampusMap();
+    })();
   }, [props.campus]);
 
   // position: { latitude: 37.55737, longitude: 127.047132 }
@@ -180,12 +215,12 @@ const HomeScreen = ({ navigation, ...props }) => {
             {leftClicked && region && (
               <>
                 <MapLocationButton
-                  cb={() => {
+                  callback={() => {
                     getDefaultCampusMap();
                   }}
                 />
                 <CurrentLocationButton
-                  cb={() => {
+                  callback={() => {
                     userCurrentLocation();
                   }}
                 />
@@ -236,7 +271,8 @@ const HomeScreen = ({ navigation, ...props }) => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
-    campus: state.campusReducer.campus
+    campus: state.campusReducer.campus,
+    arrivalLocation: state.orderPositionReducer.arrival
   };
 };
 
