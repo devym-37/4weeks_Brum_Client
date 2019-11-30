@@ -16,6 +16,7 @@ import { serverApi } from "../../components/API";
 import { store, persistor } from "../../redux/store/store";
 import * as Yup from "yup";
 import { resetCounter } from "../../redux/actions/passwordErrorCountActions";
+import Fire from "../../screens/chat/Fire";
 
 const validationSchema = Yup.object().shape({
   password: Yup.string()
@@ -59,12 +60,18 @@ const ResetPw = props => {
       );
     } else {
       try {
+        setLoading(true);
         const phone = await store.getState().phoneReducer.phone;
         const usertoken = await AsyncStorage.getItem("userToken");
-        console.log("리셋이 완료되었나", phone);
+        //console.log("리셋이 완료되었나", phone);
 
         if (phone) {
           const result = await serverApi.password(phone, value1, usertoken);
+
+          console.log("비밀번호 리셋", result);
+
+          //---firebase--///
+          //Fire.shared.resetPassword(phone,value1)
         }
         Alert.alert(
           "성공",
@@ -78,6 +85,8 @@ const ResetPw = props => {
         props.navigation.navigate("Login");
       } catch (error) {
         console.log("resetpwerror", error);
+      } finally {
+        setLoading(true);
       }
     }
   };

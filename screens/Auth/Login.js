@@ -17,7 +17,7 @@ import { serverApi } from "../../components/API";
 import firebase from "firebase";
 import * as Permissions from "expo-permissions";
 import { Notifications } from "expo";
-
+import Fire from "../../screens/chat/Fire";
 // Imports: Redux Actions
 import { login } from "../../redux/actions/authActions";
 import { phoneSaver } from "../../redux/actions/phoneActions";
@@ -111,15 +111,28 @@ const LogIn = props => {
           Alert.alert("로그인되었습니다.");
           await AsyncStorage.setItem("userToken", requestLogin.data.token);
           props.reduxLogin(true);
-
-          firebase
+          console.log("토큰", requestLogin.data.token);
+          /* firebase
             .auth()
             .signInWithEmailAndPassword(`${value1}@shoppossible.com`, value2);
+ */
+          Fire.shared.signin(value1, value2);
 
           ////redux/////
           await AsyncStorage.setItem("email", `${value1}@shoppossible.com`);
           await AsyncStorage.setItem("password", value2);
           ////
+
+          /////-------redux?------//////
+          const mypage = await serverApi.user(requestLogin.data.token);
+          const { userId } = mypage.data.data;
+          await AsyncStorage.setItem("userId", userId.toString());
+
+          Fire.shared.appendPushtoken(
+            userId,
+            pushtoken.slice(18, pushtoken.length - 1)
+          );
+          //////////////////////////////
 
           props.reduxResetErrorCount();
           props.navigation.navigate("MainNavigation");
@@ -141,6 +154,7 @@ const LogIn = props => {
 
   const handleSelectedPage = async () => {
     // console.log("handle");
+    //바꾸기
     return await AsyncStorage.setItem("page", "resetpw");
   };
 
@@ -158,6 +172,7 @@ const LogIn = props => {
     // Defined in following steps
     console.log("pushtoken", token);
     setPushtoken(token);
+    await AsyncStorage.setItem("pushToken", token);
   };
 
   return (

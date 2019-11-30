@@ -1,5 +1,8 @@
 import firebase from "firebase";
 import { AsyncStorage } from "react-native";
+import axios from "axios";
+import { serverApi } from "../../components/API";
+
 class Fire {
   constructor() {
     this.init();
@@ -86,8 +89,38 @@ class Fire {
     return firebase.database.ServerValue.TIMESTAMP;
   }
   // send the message to the Backend
-  send = messages => {
-    const orderid = 1;
+  send = async messages => {
+    const pushToken = await AsyncStorage.getItem("pushToken");
+    const userToken = await AsyncStorage.getItem("userToken");
+    const userid = await AsyncStorage.getItem("userId");
+    const orderid = await AsyncStorage.getItem("orderid");
+    const newarr = [];
+    const temp = [];
+
+    const getkey = await firebase
+      .database()
+      .ref(`threads/${orderid}/users`)
+      .once("value");
+    const keyvalue = getkey.val();
+    console.log("왜안돼", keyvalue);
+
+    for (const key in keyvalue) {
+      console.log("무슨키", key, key === userid);
+      if (key !== userid) {
+        temp.push(key);
+      }
+    }
+
+    for (const key in temp) {
+      console.log(temp[key]);
+      const gettoken = await firebase
+        .database()
+        .ref(`users/${temp[key]}/pushtoken`)
+        .once("value");
+      console.log("토큰들", gettoken.val());
+      newarr.push(gettoken.val());
+    }
+
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
       const message = {
@@ -96,7 +129,31 @@ class Fire {
         timestamp: this.timestamp
       };
       this.append(message);
+
+      console.log("my푸쉬토큰", pushToken);
     }
+
+    newarr.forEach(user => {
+      if (user !== null) {
+        console.log("마지막", user);
+        axios({
+          url: "https://exp.host/--/api/v2/push/send",
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          data: {
+            to: `ExponentPushToken[${user}]`,
+            sound: "default",
+            title: "Vroom",
+            body: `새로운 메세지가 도착했습니다.`
+          }
+        }).catch(err => {
+          throw err;
+        });
+      }
+    });
   };
 
   append = async message => {
@@ -147,6 +204,39 @@ class Fire {
             console.log(data);
           });
       });
+
+  appendPushtoken = (userId, pushToken) => {
+    firebase
+      .database()
+      .ref(`users/${userId}/pushtoken`)
+      .set(pushToken);
+  };
+
+  updatePushtoken = (userId, pushToken) => {
+    firebase
+      .database()
+      .ref(`users/${userId}/pushtoken`)
+      .update(pushToken);
+  };
+
+  signup = (id, pw) => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(`${id}@shoppossible.com`, pw);
+  };
+
+  signin = (id, pw) => {
+    firebase.auth().signInWithEmailAndPassword(`${id}@shoppossible.com`, pw);
+  };
+
+  ///
+  resetPassword = (phone, value1) => {
+    const user = `${phone}@@shoppossible.com`;
+
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(`${id}@shoppossible.com`, pw);
+  };
 
   // close the connection to the Backend
   off() {
