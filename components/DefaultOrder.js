@@ -30,14 +30,14 @@ DefaultOrder = ({ navigation }) => {
         width={200}
         onPress={() => navigation.navigate("NewOrderNavigation")}
       />
-      <Button
+      {/* <Button
         title="다음페이지"
         onPress={() => {
           navigation.navigate("ChatRooms");
         }}
       >
         <Text>다음페이지</Text>
-      </Button>
+      </Button> */}
     </Container>
   );
 };

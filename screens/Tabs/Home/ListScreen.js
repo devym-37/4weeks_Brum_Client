@@ -53,7 +53,8 @@ const ListScreen = props => {
 
     if (userToken) {
       props.reduxOrderId(orderId);
-      props.navigation.navigate("OrderNavigation", {
+      console.log(`orderId: `, orderId);
+      props.navigation.navigate("OrderDetailScreen", {
         orderId: orderId
       });
     } else {

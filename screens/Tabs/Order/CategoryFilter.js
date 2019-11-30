@@ -41,9 +41,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   // Action
   return {
-    reduxCategory: category => dispatch(categorySaver(category)),
-    reduxTime: time => dispatch(timeSaver(time)),
-    reduxChecked: checked => dispatch(checkedSaver(checked))
+    reduxCategory: category => dispatch(categorySaver(category))
   };
 };
 

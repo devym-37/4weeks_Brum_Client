@@ -8,7 +8,7 @@ import { createAppContainer } from "react-navigation";
 
 import ChatScreen from "../screens/Tabs/Chats/ChatListScreen";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
-import MyPageScreen from "../screens/Tabs/MyPageScreen";
+import MyPageScreen from "../screens/Tabs/MyPage/MyPageScreen";
 import ListScreen from "../screens/Tabs/Home/ListScreen";
 import HomeScreen from "../screens/Tabs/Home/HomeScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
