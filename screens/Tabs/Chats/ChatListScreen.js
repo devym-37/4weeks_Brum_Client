@@ -128,7 +128,7 @@ const ChatListScreen = ({ navigation }) => {
     >
       {loading ? (
         <Loader />
-      ) : chats ? (
+      ) : chats && chats.length > 0 ? (
         chats.map((chat, i) => (
           <ChatCard
             key={i}

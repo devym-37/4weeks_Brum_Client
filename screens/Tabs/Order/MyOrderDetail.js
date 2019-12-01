@@ -8,22 +8,15 @@ import {
   AsyncStorage,
   RefreshControl
 } from "react-native";
-import { Backdrop } from "react-native-backdrop";
-import Checkbox from "react-native-modest-checkbox";
-import checkedBox from "../../../assets/checkedBox.png";
-import uncheckedBox from "../../../assets/uncheckedBox.png";
-import {
-  withNavigation,
-  NavigationActions,
-  StackActions
-} from "react-navigation";
+
+import { NavigationActions, StackActions } from "react-navigation";
 import {
   AntDesign,
   FontAwesome,
   MaterialCommunityIcons
 } from "@expo/vector-icons";
 import find from "lodash.find";
-import FormInput from "../../../components/Inputs/FormInput";
+
 import constants from "../../../constants";
 import styles from "../../../styles";
 import utils from "../../../utils";
@@ -45,7 +38,8 @@ const UserContainer = styled.View`
   /* -top: 12; */
   flex-direction: row;
   justify-content: space-between;
-  padding: 20px 15px;
+  padding: 16px 15px;
+
   /* padding-top: 20; */
   align-items: center;
   width: ${constants.width};

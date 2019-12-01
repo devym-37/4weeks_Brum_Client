@@ -13,10 +13,10 @@ import MapScreen from "../../../components/MapView";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
-import { Marker } from "react-native-maps";
 import { DestinationInput } from "../../../components/Inputs/DestinationInput";
 import { DepartureInput } from "../../../components/Inputs/DepartureInput";
 import { connect } from "react-redux";
+import { Marker } from "react-native-maps";
 
 const Container = styled.View`
   flex: 1;
@@ -130,10 +130,8 @@ const SearchAddress = ({ navigation, ...props }) => {
             latitude={region.latitude || currentLocation.latitude}
             longitude={region.longitude || currentLocation.longitude}
             showLocation={false}
-            marker={props.departureLocation}
-          >
-            <Text style={styles.center}>{props.arrivalPosition}</Text>
-          </MapScreen>
+            SearchScreen={true}
+          />
           <CurrentLocationButton
             callback={() => {
               userCurrentLocation();
