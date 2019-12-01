@@ -51,7 +51,8 @@ const bottomTabFactory = (initialRoute, customConfig) =>
               [
                 {
                   text: "앨범에서 선택",
-                  onPress: () => navigation.navigate("SelectPhoto")
+                  onPress: () =>
+                    navigation.navigate("SelectPhoto", { userAvatar: false })
                 },
                 {
                   text: "닫기",

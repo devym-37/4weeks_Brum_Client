@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Image, ScrollView, TouchableOpacity } from "react-native";
+import {
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  AsyncStorage,
+  Alert
+} from "react-native";
 import styled from "styled-components";
 import * as Permissions from "expo-permissions";
 import * as MediaLibrary from "expo-media-library";
@@ -9,6 +15,9 @@ import styles from "../../styles";
 import { connect } from "react-redux";
 
 import { imagesSaver } from "../../redux/actions/orderActions";
+import { serverApi } from "../../components/API";
+import { StackActions, NavigationActions } from "react-navigation";
+import { avatarSaver } from "../../redux/actions/avatarActions";
 const View = styled.View`
   flex: 1;
 `;
@@ -33,6 +42,7 @@ const Text = styled.Text`
 `;
 
 const SelectPhoto = props => {
+  console.log(`셀렉트포토 param: `, props.navigation.getParam("userAvatar"));
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   const [selected, setSelected] = useState();
@@ -66,13 +76,33 @@ const SelectPhoto = props => {
       setHasPermission(false);
     }
   };
-  const handleSelected = () => {
-    props.reduxImages([selected]);
-    props.navigation.pop();
+  const handleSelected = async () => {
+    try {
+      // console.log(`getParam: `,// setLoading(true);``
+      if (props.navigation.getParam("userAvatar")) {
+        const userToken = await AsyncStorage.getItem("userToken");
+        const request = await serverApi.uploadimage(userToken, selected.uri);
+        console.log(`request: `, request);
+        props.reduxAvatar(selected.uri);
+        props.navigation.navigate("Mypage");
+        if (!request.ok) {
+          Alert.alert(`프로필 이미지 변경에 실패 했습니다. 다시 시도해주세요`);
+        }
+      } else {
+        props.reduxImages([selected]);
+        props.navigation.goBack(null);
+      }
+    } catch (e) {
+      console.log(`Can't put user's profile image on server. Error: ${e}`);
+    } finally {
+      // setLoading(false);
+    }
   };
+
   useEffect(() => {
     askPermission();
   }, []);
+
   return (
     <View>
       {loading ? (
@@ -152,7 +182,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   // Action
   return {
-    reduxImages: images => dispatch(imagesSaver(images))
+    reduxImages: images => dispatch(imagesSaver(images)),
+    reduxAvatar: image => dispatch(avatarSaver(image))
   };
 };
 

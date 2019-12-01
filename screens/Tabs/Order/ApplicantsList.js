@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { AsyncStorage, RefreshControl, Alert } from "react-native";
-import { withNavigation } from "react-navigation";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import styled from "styled-components";
 import { serverApi } from "../../../components/API";
@@ -8,7 +7,6 @@ import { ScrollView } from "react-native-gesture-handler";
 import Loader from "../../../components/Loader";
 import ApplicantCard from "../../../components/Cards/ApplicantCard";
 import MyOrderDetail from "../../../screens/Tabs/Order/MyOrderDetail";
-import GhostButton from "../../../components/Buttons/GhostButton";
 import styles from "../../../styles";
 import constants from "../../../constants";
 import Fire from "../../chat/Fire";
@@ -165,9 +163,9 @@ const ApplicantsList = ({ navigation }) => {
   const _renderTabBar = props => (
     <TabBar
       {...props}
-      activeColor="#333"
-      inactiveColor="#333"
-      indicatorStyle={{ backgroundColor: styles.mainColor }}
+      activeColor="#E2227"
+      inactiveColor="#ABB2BB"
+      indicatorStyle={{ backgroundColor: "#1E2227" }}
       style={{ backgroundColor: "white" }}
       labelStyle={{ fontSize: 16 }}
     />

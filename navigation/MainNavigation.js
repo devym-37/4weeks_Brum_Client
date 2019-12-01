@@ -14,13 +14,17 @@ import OrderNavigation from "./OrderNavigation";
 import ChatFilterNavigation from "./ChatFilterNavigation";
 import DepatureNavigation from "./DepatureNavigation";
 import ArrivalNavigation from "./ArrivalNavigation";
+import UserHistoryNavigation from "./UserHistoryNavigation";
+import VerifyCampusNavigation from "./VerifyCampusNavigtion";
 import { stackStyles } from "./config";
 
 const MainNavigation = createStackNavigator(
   {
     BottomNavigation,
-    LoggedOutBottomNavigation,
     AuthNavigation,
+    OrderNavigation,
+    UserHistoryNavigation,
+    VerifyCampusNavigation,
     FilterNavigation,
     NewOrderNavigation,
     PhotoNavigation,
@@ -29,7 +33,7 @@ const MainNavigation = createStackNavigator(
     NotificationNavigation,
     DepatureNavigation,
     ArrivalNavigation,
-    OrderNavigation
+    LoggedOutBottomNavigation
   },
   {
     navigationOptions: {

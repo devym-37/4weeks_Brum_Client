@@ -36,13 +36,13 @@ const CompleteLink = ({ navigation, ...props }) => {
       const requestPost = await serverApi.postOrder(
         userToken,
         orderContents,
-        props.images[0].uri
+        "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png"
       );
       console.log(`새요청 작성하기: `, requestPost);
     } catch (e) {
       console.log(`Can't post order form on server. Error : ${e}`);
     } finally {
-      navigation.navigate("Home");
+      navigation.navigate("BottomNavigation");
     }
   };
   return (

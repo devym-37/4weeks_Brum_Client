@@ -397,7 +397,9 @@ const OrderDetailScreen = ({ navigation }) => {
         const resetAction = StackActions.reset({
           key: null,
           index: 0,
-          actions: [NavigationActions.navigate({ routeName: "Home" })]
+          actions: [
+            NavigationActions.navigate({ routeName: "BottomNavigation" })
+          ]
         });
 
         navigation.dispatch(resetAction);
