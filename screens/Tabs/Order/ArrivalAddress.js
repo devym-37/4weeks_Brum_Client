@@ -74,6 +74,7 @@ class OrderArrivalAddress extends Component {
       latitude: 0,
       longitude: 0,
       locationPredictions: [],
+      getArrival: [],
       isFocused: false
     };
     this.onChangeDestinationDebounced = _.debounce(
@@ -121,9 +122,18 @@ class OrderArrivalAddress extends Component {
     Keyboard;
   }
 
-  async geoCode(address) {
-    const geo = await Location.geocodeAsync(address);
-    this.props.reduxArrivalPosition({ ...geo[0] });
+  async geoDestination(placeId) {
+    this.setState({ placeId });
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,rating,formatted_phone_number,geometry&key=${API}`;
+    const result = await fetch(apiUrl);
+    const jsonResult = await result.json();
+    this.setState({
+      getArrival: jsonResult
+    });
+    console.log("place_id test result", jsonResult.result.geometry.location);
+    this.props.reduxArrivalPosition({
+      ...jsonResult.result.geometry.location
+    });
   }
 
   render() {
@@ -143,7 +153,7 @@ class OrderArrivalAddress extends Component {
               this.props.reduxArrivalLocation(
                 prediction.structured_formatting.main_text
               );
-              this.geoCode(prediction.structured_formatting.main_text);
+              this.geoDestination(prediction.place_id);
               this.props.navigation.goBack(null);
             }}
             key={prediction.id}
