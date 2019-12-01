@@ -83,6 +83,7 @@ export default {
       return `${createdAt.month}월 ${createdAt.date}일`;
     else return `${createdAt.hour}:${createdAt.min}`;
   },
+
   transferOrderStatus: num => {
     const status = ["매칭대기", "매칭완료", "배송시작", "배송완료", "정산완료"];
 
