@@ -14,7 +14,7 @@ const InputContainer = styled.View`
   background-color: #fff;
 `;
 const Divider = styled.View`
-  width: ${props => constants.width - props.dividerWidth};
+  width: ${constants.width - 30};
 
   height: 1;
   background-color: ${props => props.theme.lightGreyColor};

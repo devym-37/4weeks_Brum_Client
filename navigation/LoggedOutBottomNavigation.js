@@ -65,7 +65,7 @@ const BottomNavigation = createBottomTabNavigator(
         backgroundColor: "#f1f3f5",
         title: "내요청",
         tabBarIcon: ({ focused, tintColor }) => (
-          <AntDesign name="form" size={24} style={{ color: tintColor }} />
+          <AntDesign name="profile" size={26} style={{ color: tintColor }} />
         ),
         tabBarOnPress: ({ navigation }) => {
           return Alert.alert(

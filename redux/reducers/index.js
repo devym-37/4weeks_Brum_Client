@@ -10,7 +10,7 @@ import orderReducer from "./orderReducer";
 import orderPositionReducer from "./orderPositionReducer";
 import destinationReducer from "./destinationReducer";
 import passwordErrorCountReducer from "./passwordErrorCountReducer";
-
+import avatarReducer from "./avatarReducer";
 // Redux: Root Reducer
 const rootReducer = combineReducers({
   passwordErrorCountReducer,
@@ -20,7 +20,8 @@ const rootReducer = combineReducers({
   campusReducer,
   orderReducer,
   orderPositionReducer,
-  destinationReducer
+  destinationReducer,
+  avatarReducer
 });
 
 // Exports

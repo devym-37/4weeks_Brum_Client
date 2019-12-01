@@ -19,8 +19,8 @@ const CardContainer = styled.View`
 
 const Thumbnail = styled.Image`
   flex: 1;
-  width: 108px;
-  height: 108px;
+  width: ${constants.width / 4};
+  height: ${constants.width / 4};
   border-radius: 8px;
 `;
 
@@ -84,6 +84,7 @@ const Container = styled.View`
 const StatusContainer = styled.View`
   background-color: #495057;
   border-radius: 4px;
+  width: 60;
   color: white;
   justify-content: center;
   align-items: center;
@@ -125,7 +126,7 @@ const OrderCard = ({
   applicants,
   onPress
 }) => {
-  const priceWithComma = price && utils.numberWithCommas(Number(price));
+  const priceWithComma = price && utils.numberWithCommas(price);
   const timeStamp = utils.transferTime(createdAt);
   const status = utils.transferOrderStatus(orderStatus);
   const shortTitle = utils.shortenText(title, 17);

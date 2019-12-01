@@ -40,7 +40,7 @@ import ListCard from "./components/Cards/ListCard";
 import PermissionApp from "./screens/Auth/Permissions";
 import Userinfo from "./screens/Auth/UserInfo";
 import SelectCampus from "./screens/Start/SelectCampus";
-import SelectPhoto from "./screens/Photo/SelectPhoto";
+
 import OrderDetailScreen from "./screens/Tabs/Order/OrderDetail";
 
 import SearchAddress from "./screens/Tabs/Order/SearchAddress";
@@ -65,6 +65,9 @@ const App = () => {
       await Asset.loadAsync([require("./assets/logo.png")]);
       await Asset.loadAsync([require("./assets/checkedBox.png")]);
       await Asset.loadAsync([require("./assets/uncheckedBox.png")]);
+      await Asset.loadAsync([require("./assets/LikeHistory.png")]);
+      await Asset.loadAsync([require("./assets/RunnerHistory.png")]);
+      await Asset.loadAsync([require("./assets/OrderHistory.png")]);
       //
       await AsyncStorage.setItem("permiSsions", "true");
       //빼기

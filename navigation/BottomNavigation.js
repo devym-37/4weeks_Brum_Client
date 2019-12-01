@@ -33,6 +33,7 @@ const stackFactory = (initialRoute, customConfig) =>
       screen: initialRoute,
       navigationOptions: {
         ...customConfig,
+        backgroundColor: "#f1f3f5",
         headerStyle: { ...stackStyles }
       }
     },
