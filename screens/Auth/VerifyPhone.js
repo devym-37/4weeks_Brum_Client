@@ -20,7 +20,6 @@ import { toastApi, serverApi } from "../../components/API";
 // Imports: Redux Actions
 import { otpSaver, otpMaker } from "../../redux/actions/otpActions";
 import { phoneSaver } from "../../redux/actions/phoneActions";
-import { withNavigation } from "react-navigation";
 
 const View = styled.View`
   justify-content: center;
@@ -28,10 +27,9 @@ const View = styled.View`
   flex: 1;
 `;
 
-const Text = styled.Text``;
-
 const VerifyPhone = props => {
-  const phoneNumberInput = useInput(`${props.phone ? props.phone : ""}`);
+  console.log(props.phone);
+  const phoneNumberInput = useInput(props.phone);
   const [loading, setLoading] = useState(false);
 
   const handleRequestSMS = async () => {

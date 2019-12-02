@@ -7,6 +7,8 @@ import {
   RefreshControl,
   AsyncStorage,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
   TouchableOpacity
 } from "react-native";
 import styled from "styled-components";
@@ -91,7 +93,7 @@ const RightToggleText = styled.Text`
   font-size: 13;
 `;
 const HomeScreen = ({ navigation, ...props }) => {
-  // console.log(`Home Nav: `, navigation.getParam("campus"));
+  // console.log(`Home Nav: `, navigation.getParam("newOrder"));
   const [leftClicked, setLeftClicked] = useState(false);
   const [rightClicked, setRightClicked] = useState(true);
   const [region, setRegion] = useState(null);
@@ -104,12 +106,14 @@ const HomeScreen = ({ navigation, ...props }) => {
   const getDefaultCampusMap = () => {
     const campusRegion = constants.campus[props.campus].position;
     console.log("campusRegion :", campusRegion);
+    console.log("클릭 확인");
     const _region = {
       latitude: campusRegion.latitude,
       longitude: campusRegion.longitude,
       latitudeDelta: constants.LATITUDE_DELTA,
       longitudeDelta: constants.LONGITUDE_DELTA
     };
+    console.log("_region", _region);
     setRegion(_region);
     this.map.animateToRegion(_region);
   };
@@ -165,8 +169,8 @@ const HomeScreen = ({ navigation, ...props }) => {
         "getCampusOrders.data.data.orders",
         getCampusOrders.data.data.orders
       );
-      getDefaultCampusMap(selectedCampus);
       getLocation();
+      getDefaultCampusMap(selectedCampus);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     } finally {
@@ -174,79 +178,79 @@ const HomeScreen = ({ navigation, ...props }) => {
     }
   };
 
-  useEffect(() => {
-    preLoad();
-  }, []);
+  // useEffect(() => {
+  //   preLoad();
+  // }, []);
 
   useEffect(() => {
-    (async () => {
-      await preLoad();
-    })();
-  }, [props.campus]);
+    preLoad();
+  }, [props.campus, props.refresh]);
 
   // position: { latitude: 37.55737, longitude: 127.047132 }
   return (
     <>
       {isopenLoginModal && <AuthModal />}
-      <View>
-        {loading ? (
-          <Loader />
-        ) : (
-          <>
-            {/* <NavigationEvents onDidFocus={() => Alert.alert("Refreshed")} /> */}
-            {leftClicked && region && (
-              <>
-                <MapLocationButton
-                  callback={() => {
-                    getDefaultCampusMap();
-                  }}
-                />
-                <CurrentLocationButton
-                  callback={() => {
-                    userCurrentLocation();
-                  }}
-                />
-                <MapScreen
-                  latitude={region.latitude}
-                  longitude={region.longitude}
-                  orders={orders}
-                  HomeScreen={true}
-                  showLocation={false}
-                ></MapScreen>
-              </>
-            )}
-            <Container>
-              <ButtonContainer>
-                <Touchable
-                  onPress={() => {
-                    setLeftClicked(!leftClicked);
-                    setRightClicked(leftClicked);
-                  }}
-                >
-                  <LeftToggleButton clicked={leftClicked}>
-                    <LeftToggleText clicked={leftClicked}>
-                      {"지도로 보기"}
-                    </LeftToggleText>
-                  </LeftToggleButton>
-                </Touchable>
-                <Touchable
-                  onPress={() => {
-                    setRightClicked(!rightClicked);
-                    setLeftClicked(rightClicked);
-                  }}
-                >
-                  <RightToggleButton clicked={rightClicked}>
-                    <RightToggleText clicked={rightClicked}>
-                      {"리스트로 보기"}
-                    </RightToggleText>
-                  </RightToggleButton>
-                </Touchable>
-              </ButtonContainer>
-            </Container>
-            {rightClicked && orders && <ListScreen orders={orders} />}
-          </>
-        )}
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View>
+          {loading ? (
+            <Loader />
+          ) : (
+            <>
+              {/* <NavigationEvents onDidFocus={() => Alert.alert("Refreshed")} /> */}
+              {leftClicked && region && (
+                <>
+                  <MapLocationButton
+                    callback={() => {
+                      getDefaultCampusMap();
+                    }}
+                  />
+                  <CurrentLocationButton
+                    callback={() => {
+                      userCurrentLocation();
+                    }}
+                  />
+                  <MapScreen
+                    latitude={region.latitude}
+                    longitude={region.longitude}
+                    orders={orders}
+                    HomeScreen={true}
+                    showLocation={false}
+                  ></MapScreen>
+                </>
+              )}
+              <Container>
+                <ButtonContainer>
+                  <Touchable
+                    onPress={() => {
+                      setLeftClicked(!leftClicked);
+                      setRightClicked(leftClicked);
+                    }}
+                  >
+                    <LeftToggleButton clicked={leftClicked}>
+                      <LeftToggleText clicked={leftClicked}>
+                        {"지도로 보기"}
+                      </LeftToggleText>
+                    </LeftToggleButton>
+                  </Touchable>
+                  <Touchable
+                    onPress={() => {
+                      setRightClicked(!rightClicked);
+                      setLeftClicked(rightClicked);
+                    }}
+                  >
+                    <RightToggleButton clicked={rightClicked}>
+                      <RightToggleText clicked={rightClicked}>
+                        {"리스트로 보기"}
+                      </RightToggleText>
+                    </RightToggleButton>
+                  </Touchable>
+                </ButtonContainer>
+              </Container>
+              {rightClicked && orders && <ListScreen orders={[...orders]} />}
+            </>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
     </>
   );
 };
@@ -255,7 +259,9 @@ const mapStateToProps = state => {
   // Redux Store --> Component
   return {
     campus: state.campusReducer.campus,
-    arrivalLocation: state.orderPositionReducer.arrival
+    arrivalLocation: state.orderPositionReducer.arrival,
+    title: state.orderReducer.title,
+    refresh: state.refreshReducer.refresh
   };
 };
 

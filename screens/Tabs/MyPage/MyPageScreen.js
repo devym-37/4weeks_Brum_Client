@@ -26,14 +26,11 @@ import RoutePicker from "../../../components/Pickers/RoutePicker";
 import { serverApi } from "../../../components/API";
 import constants from "../../../constants";
 
-// import LikeHistory from "../../../assets";
-// import OrderHistory from "../../../assets";
-// import RunnerHistory from "../../../assets";
+import VerifiedAccountBadge from "../../../components/VerifiedAccountBadge";
 
 const Container = styled.View`
   flex: 1;
   justify-content: center;
-  background-color: "#f1f3f5";
 `;
 const ProfileHeader = styled.View`
   padding: 20px;
@@ -76,7 +73,7 @@ const EditImageButton = styled.View`
   right: 2;
   width: 24;
   height: 24;
-  border-style: 1px solid;
+  border-style: solid;
   border-color: ${styles.lightGreyColor};
   border-radius: 16;
   justify-content: center;
@@ -119,14 +116,12 @@ const HistoryColumn = styled.View`
   padding: 0 24px;
   justify-content: center;
   align-items: center;
-
   /* background-color: grey; */
 `;
 
 const ButtonContainer = styled.View`
-  width: 88;
-  height: 88;
-  background-color: "#F3CDD7";
+  width: 92;
+  height: 92;
   justify-content: center;
   align-items: center;
   border-radius: 40;
@@ -151,6 +146,7 @@ const SubDivider = styled.View`
 `;
 
 const MyPageScreen = ({ navigation, ...props }) => {
+  // const [userToken, setUserToken] = useState();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -169,10 +165,12 @@ const MyPageScreen = ({ navigation, ...props }) => {
           console.log(`userProfile: `, userProfile.data.data);
           setLoggedIn(true);
           setButtonName("임시 로그아웃 버튼");
+
           setProfile({ ...userProfile.data.data });
         }
       } else {
         setButtonName("임시 로그인 버튼");
+
         // Alert.alert("로그인 해주세요");
       }
     } catch (e) {
@@ -187,20 +185,19 @@ const MyPageScreen = ({ navigation, ...props }) => {
   const handleLogout = async () => {
     if (buttonName === "임시 로그아웃 버튼") {
       const logout = await AsyncStorage.clear();
+      setButtonName("임시 로그인 버튼");
       Alert.alert("로그아웃 되었습니다");
-      preLoad();
+      navigation.navigate("StartNavigation");
+      // preLoad();
     } else {
       setButtonName("임시 로그아웃 버튼");
       navigation.navigate("Login");
     }
   };
-  useEffect(() => {
-    preLoad();
-  }, []);
 
   useEffect(() => {
     preLoad();
-  }, [props.avatar]);
+  }, [props.avatar, loggedIn]);
   return (
     <ScrollView>
       {loading ? (
@@ -232,9 +229,11 @@ const MyPageScreen = ({ navigation, ...props }) => {
                   <UserName>{profile.nickname}</UserName>
                 </UserNameContainer>
                 <UserUnivContainer>
-                  <UserUniv>
-                    {profile.university ? profile.university : "미인증 회원"}
-                  </UserUniv>
+                  {profile.university ? (
+                    <UserUniv>미인증 회원</UserUniv>
+                  ) : (
+                    <VerifiedAccountBadge />
+                  )}
                 </UserUnivContainer>
               </HeaderCenter>
               <HeaderRight>
@@ -307,6 +306,10 @@ const MyPageScreen = ({ navigation, ...props }) => {
               text="학교 인증하기"
               color="#22252A"
               onPress={() => navigation.navigate("VerifyCampusNavigation")}
+            />
+            <GhostButton
+              text={"리뷰남기기"}
+              onPress={() => navigation.navigate("ReviewScreen")}
             />
             <GhostButton text={buttonName} onPress={handleLogout} />
           </Container>

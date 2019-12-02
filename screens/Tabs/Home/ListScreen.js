@@ -34,19 +34,30 @@ const ListScreen = props => {
   const refresh = async () => {
     try {
       setRefreshing(true);
-      const selectedCampus = props.campus;
-      let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
-      // console.log(`refresh: `, getAllOrders);
-      setOrders([...getCampusOrders.data.data.orders]);
+      const loggedIn = await AsyncStorage.getItem("userToken");
+      if (!loggedIn) {
+        setIsopenLoginModal(true);
+      }
 
-      // console.log(`order: `, getCampusOrders);
+      // const selectedCampus = await AsyncStorage.getItem("campus");
+      const selectedCampus = props.campus ? props.campus : "hanyang";
+      let getCampusOrders = await serverApi.getCampusOrders(selectedCampus);
+      // let filteredOrders = getCampusOrders.data.data.orders ? getCampusOrders.data.data.orders.filter(obj=>obj.orderStatus === 0)
+      setOrders([...getCampusOrders.data.data.orders]);
+      console.log(
+        "getCampusOrders.data.data.orders",
+        getCampusOrders.data.data.orders
+      );
     } catch (e) {
-      console.log(`Can't refresh data. error message: ${e}`);
+      console.log(`Can't fetch data from server. error message: ${e}`);
     } finally {
       setRefreshing(false);
     }
   };
 
+  // useEffect(() => {
+  //   refresh();
+  // }, [orders]);
   const handleClick = async orderId => {
     // console.log(`orders: `, orders);
     const userToken = await AsyncStorage.getItem("userToken");
@@ -92,14 +103,17 @@ const ListScreen = props => {
               onPress={() => handleClick(data.orderId)}
               />
             ))} */}
-        {props.orders && props.orders.length > 0 ? (
-          props.orders.map((data, i) => (
-            <OrderCard
-              {...data}
-              key={i}
-              onPress={() => handleClick(data.orderId)}
-            />
-          ))
+        {orders && orders.length > 0 ? (
+          orders.map(
+            (data, i) =>
+              data.orderStatus <= 5 && (
+                <OrderCard
+                  {...data}
+                  key={i}
+                  onPress={() => handleClick(data.orderId)}
+                />
+              )
+          )
         ) : (
           <Container style={{ marginTop: -50 }}>
             <DefaultOrder />

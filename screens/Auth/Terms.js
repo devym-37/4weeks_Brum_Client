@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import {
   View,
   Text,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity
+  ScrollView
 } from "react-native";
 
 import constants from "../../constants";

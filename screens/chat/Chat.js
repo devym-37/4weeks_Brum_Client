@@ -7,7 +7,8 @@ import {
   Text,
   Button,
   Image,
-  Modal
+  Modal,
+  Platform
 } from "react-native";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";

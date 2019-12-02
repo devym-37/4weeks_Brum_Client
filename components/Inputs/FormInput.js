@@ -14,21 +14,22 @@ const InputContainer = styled.View`
   background-color: #fff;
 `;
 const Divider = styled.View`
-  width: ${constants.width - 30};
+  width: ${props => constants.width - props.dividerWidth};
 
   height: 1;
-  background-color: ${props => props.theme.lightGreyColor};
+  background-color: ${props =>
+    props.dividerColor ? props.dividerColor : props.theme.lightGreyColor};
 `;
 
 const TextInput = styled.TextInput`
   width: ${props => constants.width - props.width};
-  padding: 22px 0;
+  padding: 20px 0;
   background-color: white;
   font-size: 17;
 
-  ::placeholder {
+  /* ::placeholder {
     color: #d5dae0;
-  }
+  } */
 `;
 
 const FormInput = ({
@@ -38,6 +39,7 @@ const FormInput = ({
   children,
   onChange,
   isUnderline = true,
+  dividerColor,
   ...rest
 }) => {
   return (
@@ -52,9 +54,11 @@ const FormInput = ({
         />
         {children}
       </InputContainer>
-      {isUnderline && <Divider dividerWidth={width} />}
+      {isUnderline && (
+        <Divider dividerWidth={dividerWidth} deviderColor={dividerColor} />
+      )}
     </>
   );
 };
 
-export default withNavigation(FormInput);
+export default FormInput;

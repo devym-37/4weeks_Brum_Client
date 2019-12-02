@@ -7,6 +7,7 @@ import {
   AsyncStorage,
   TouchableOpacity
 } from "react-native";
+
 import { Ionicons } from "@expo/vector-icons";
 import AuthInput from "../../components/Inputs/AuthInput";
 import useInput from "../../hooks/useInput";
@@ -30,6 +31,10 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
+`;
+
+const ButtonContainer = styled.View`
+  padding: 12px 0;
 `;
 
 const Text = styled.Text``;
@@ -108,7 +113,7 @@ const LogIn = props => {
 
         if (requestLogin.data.token !== false) {
           // console.log(`requestLogin응답: `, requestLogin.data.token);
-          Alert.alert("로그인되었습니다.");
+          // Alert.alert("로그인되었습니다.");
           await AsyncStorage.setItem("userToken", requestLogin.data.token);
           props.reduxLogin(true);
           console.log("토큰", requestLogin.data.token);
@@ -130,14 +135,14 @@ const LogIn = props => {
           const { userId } = mypage.data.data;
           await AsyncStorage.setItem("userId", userId.toString());
 
-          Fire.shared.appendPushtoken(
-            userId.toString(),
+          await Fire.shared.appendPushtoken(
+            userId,
             pushtoken.slice(18, pushtoken.length - 1)
           );
           //////////////////////////////
 
           props.reduxResetErrorCount();
-          props.navigation.navigate("MainNavigation");
+          props.navigation.navigate("BottomNavigation");
         } else {
           props.reduxErrorCount();
           // setErrorCount(errorCount + 1);
@@ -178,52 +183,56 @@ const LogIn = props => {
   };
 
   return (
-    <View>
-      <AuthInput
-        {...Id}
-        placeholder="휴대폰 번호(-없이 숫자만 입력)"
-        keyboardType="numeric"
-        returnKeyType="next"
-      />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View>
+        <AuthInput
+          {...Id}
+          placeholder="휴대폰 번호(-없이 숫자만 입력)"
+          keyboardType="numeric"
+          returnKeyType="next"
+        />
 
-      <AuthInput
-        {...Pw}
-        secureTextEntry={passwordVisibility}
-        placeholder="비밀번호 입력"
-        keyboardType="default"
-        returnKeyType="send"
-      >
-        <TouchableOpacity onPress={handlePasswordVisibility}>
-          <Ionicons
-            style={{ marginLeft: -34 }}
-            name={passwordIcon}
-            size={22}
-            color="rgb(230, 230, 230)"
+        <AuthInput
+          {...Pw}
+          secureTextEntry={passwordVisibility}
+          placeholder="비밀번호 입력"
+          keyboardType="default"
+          returnKeyType="send"
+          onSubmitEditing={Keyboard.dismiss}
+        >
+          <TouchableOpacity onPress={handlePasswordVisibility}>
+            <Ionicons
+              style={{ marginLeft: -34 }}
+              name={passwordIcon}
+              size={22}
+              color="rgb(230, 230, 230)"
+            />
+          </TouchableOpacity>
+        </AuthInput>
+        {/* {console.log("sdfsdfafsdf", props.navigation)} */}
+        <MainButton
+          onPress={() => {
+            handleFetchApi(Id, Pw);
+          }}
+          text="로그인"
+        />
+        <ButtonContainer>
+          <GhostButton
+            onPress={() => {
+              props.navigation.navigate("VerifyPhone");
+            }}
+            text="회원가입"
           />
-        </TouchableOpacity>
-      </AuthInput>
-      {/* {console.log("sdfsdfafsdf", props.navigation)} */}
-      <MainButton
-        onPress={() => {
-          handleFetchApi(Id, Pw);
-        }}
-        text="로그인"
-      />
-      <GhostButton
-        onPress={() => {
-          props.navigation.navigate("VerifyPhone");
-        }}
-        text="회원가입"
-      />
-
-      <GhostButton
-        onPress={() => {
-          props.navigation.navigate("VerifyPhone", { reset: true });
-          handleSelectedPage();
-        }}
-        text="비밀번호 재설정"
-      />
-    </View>
+        </ButtonContainer>
+        <GhostButton
+          onPress={() => {
+            props.navigation.navigate("VerifyPhone", { reset: true });
+            handleSelectedPage();
+          }}
+          text="비밀번호 재설정"
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

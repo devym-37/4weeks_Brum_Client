@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { AntDesign } from "@expo/vector-icons";
-import { Share, Button } from "react-native";
+import { Share, Button, Alert } from "react-native";
 const Container = styled.TouchableOpacity``;
 
 const Text = styled.Text`
@@ -13,18 +13,31 @@ const Text = styled.Text`
 export default withNavigation(({ navigation }) => {
   const handleShare = async () => {
     try {
-      const result = await Share.share({
-        message: "주변 친구에게 링크를 공유하세요"
-      });
+      const result = await Share.share(
+        {
+          title: "공유하기",
+          message: "이거 어때 쌉가능?"
+        },
+        {
+          excludedActivityTypes: [
+            "com.apple.UIKit.activity.AirDrop",
+            "com.apple.UIKit.activity.AddToReadingList",
+            "com.apple.reminders.RemindersEditorExtension",
+            "com.apple.mobilenotes.SharingExtension"
+          ]
+        }
+      );
       console.log(`link: `, result);
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
-          // shared with activity type of result.activityType
+          Alert.alert("shared with" + result.activityType);
         } else {
           // shared
+          Alert.alert("shared but not sure how");
         }
       } else if (result.action === Share.dismissedAction) {
         // dismissed
+        Alert.alert("dismissed");
       }
     } catch (error) {
       alert(error.message);

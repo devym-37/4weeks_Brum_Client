@@ -1,10 +1,10 @@
 // Initial State
 const initialState = {
-  phone: ""
+  refresh: false
 };
 
 // Reducers (Modifies The State And Returns A New State)
-const phoneReducer = (state = initialState, action) => {
+const refreshReducer = (state = initialState, action) => {
   switch (action.type) {
     // Login
     case "SAVE": {
@@ -12,7 +12,7 @@ const phoneReducer = (state = initialState, action) => {
         // State
         ...state,
         // Redux Store
-        phone: action.phone
+        refresh: !state.refresh
       };
     }
     // Default
@@ -23,4 +23,4 @@ const phoneReducer = (state = initialState, action) => {
 };
 
 // Exports
-export default phoneReducer;
+export default refreshReducer;

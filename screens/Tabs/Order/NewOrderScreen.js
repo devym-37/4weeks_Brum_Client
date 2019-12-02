@@ -8,7 +8,8 @@ import {
   AsyncStorage,
   StyleSheet,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  KeyboardAvoidingView
 } from "react-native";
 import styled from "styled-components";
 import { connect } from "react-redux";
@@ -46,22 +47,6 @@ import {
 // import { timeSaver } from "../../../redux/actions/orderTimeActions";
 // import { isPriceSaver } from "../../../redux/actions/orderIsPriceActions";
 // import {cate} from "../../../redux/actions/orderCategoryActions";
-const validationSchema = Yup.object().shape({
-  title: Yup.string()
-    .label("Title")
-    .required("글 제목을 입력해주세요")
-    .min(4, "글 제목은 최소 4자 이상 최대 25자 이내로 입력해주세요")
-    .max(25, "글 제목은 최소 4자 이상 최대 25자 이내로 입력해주세요"),
-  category: Yup.string()
-    .label("Category")
-    .required("카테고리를 선택해주세요"),
-  departure: Yup.string().label("Departure"),
-
-  arrival: Yup.string()
-    .required("도착지를 입력해주세요")
-    .min(4, "도착지는 최소 4글자 이상 입력해주세요"),
-  check: Yup.boolean()
-});
 
 const View = styled.View`
   justify-content: flex-start;
@@ -77,7 +62,7 @@ const ImageContainer = styled.View`
 const ImageHolder = styled.View``;
 const NewOrderScreen = props => {
   const [category, setCategory] = useState("카테고리 선택");
-  const [departure, setDeparture] = useState("출발지(선택사항)");
+  const [departure, setDeparture] = useState("출발지･도착지 선택");
   const [arrival, setArrival] = useState("도착지");
   const [title, setTitle] = useState();
   const [price, setPrice] = useState();
@@ -139,198 +124,144 @@ const NewOrderScreen = props => {
     props.navigation.navigate("SearchAddress");
   };
 
-  const handleSend = async values => {
-    // console.log(`signup values: `, values);
-    if (values.name.length === 0 || values.password.length === 0) {
-      Alert.alert("입력이 올바르지 않습니다");
-    }
-
-    try {
-      const signUp = await serverApi.register(
-        values.phone,
-        values.password,
-        values.name,
-        values.age
-      );
-
-      Alert.alert("작성이 완료되었습니다");
-
-      if (signUp.data.token !== false) {
-        await AsyncStorage.setItem("userToken", signUp.data.token);
-        props.reduxLogin(true);
-        Alert.alert("회원가입 및 로그인이 완료되었습니다");
-        setTimeout(() => {
-          props.navigation.navigate("BottomNavigation");
-        }, 200);
-      } ///err
-    } catch (e) {
-      Alert.alert("회원가입에 실패했습니다");
-      console.log(`Can't signup. error : ${e}`);
-    }
-  };
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView>
-        <View>
-          <Formik
-            initialValues={{
-              title: "",
-              category: "",
-              departure: "",
-              arrival: "",
-              desiredArrivalTime: "",
-              price: null,
-              message: ""
-            }}
-            onSubmit={values => {
-              handleSend(values);
-            }}
-            validationSchema={validationSchema}
-          >
-            {({
-              handleChange,
-              values,
-              handleSubmit,
-              errors,
-              isValid,
-              touched,
-              handleBlur,
-              isSubmitting,
-              setFieldValue
-            }) => (
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        enabled
+        behavior="padding"
+        keyboardVerticalOffset={90}
+      >
+        <ScrollView>
+          <View>
+            <>
+              <FormInput
+                placeholder={"글 제목"}
+                onChange={value => handleChangeTitle(value)}
+                keyboardType="default"
+                returnKeyType="next"
+                value={props.title}
+              />
+              <ErrorMessage />
+
+              <Picker
+                text={props.category ? props.category : "카테고리 선택"}
+                onPress={handleCategoryFilter}
+                color="#1D2025"
+              />
+
+              <ErrorMessage />
+              <Picker
+                text={
+                  props.arrivalLocation
+                    ? props.departureLocation
+                      ? `${props.departureLocation} → ${props.arrivalLocation}`
+                      : `${props.arrivalLocation}`
+                    : departure
+                }
+                onPress={handleAddressButton}
+                color="#1D2025"
+              />
+              <ErrorMessage />
+              {/* <Picker
+                    text={arrival}
+                    onPress={handleAddressButton}
+                    color="#1D2025"
+                  /> */}
+
+              {/* <ErrorMessage
+                    errorValue={touched.arrival && errors.arrival}
+                  /> */}
+
+              <Picker
+                text={timeText}
+                onPress={showDateTimePicker}
+                isRightArrow={false}
+                color={timeTextColor}
+              />
+
               <>
-                <FormInput
-                  placeholder={"글 제목"}
-                  onChange={value => handleChangeTitle(value)}
-                  keyboardType="default"
-                  returnKeyType="next"
-                  value={props.title}
-                  onBlur={handleBlur("title")}
+                <DateTimePicker
+                  mode="time"
+                  isVisible={isDateTimePickerVisible}
+                  onConfirm={handleDatePicked}
+                  onCancel={hideDateTimePicker}
                 />
-                <ErrorMessage />
-
-                <Picker
-                  text={props.category ? props.category : "카테고리 선택"}
-                  onPress={handleCategoryFilter}
-                  color="#1D2025"
+              </>
+              <ErrorMessage />
+              <FormInput
+                width={140}
+                placeholder={"₩ 배달금액(선택사항)"}
+                keyboardType="numeric"
+                returnKeyType="next"
+                value={price}
+                onChange={value => handleChangePrice(value)}
+                maxLength={7}
+              >
+                <Checkbox
+                  label="가격제안 받기"
+                  checkboxStyle={{ height: 22, width: 22 }}
+                  labelStyle={{ color: "#1D2025", marginLeft: -4 }}
+                  checked={props.isPrice}
+                  containerStyle={{
+                    width: 110,
+                    marginLeft: -4
+                  }}
+                  checkedImage={checkedBox}
+                  uncheckedImage={uncheckedBox}
+                  onChange={() => {
+                    props.reduxChecked(!props.isPrice);
+                  }}
                 />
+              </FormInput>
 
-                <ErrorMessage
-                  errorValue={touched.category && errors.category}
-                />
-                <Picker
-                  text={
-                    props.arrivalLocation
-                      ? props.departureLocation
-                        ? `${props.departureLocation} → ${props.arrivalLocation}`
-                        : `${props.arrivalLocation}`
-                      : departure
-                  }
-                  onPress={handleAddressButton}
-                  color="#1D2025"
-                />
-                <ErrorMessage />
-                <Picker
-                  text={arrival}
-                  onPress={handleAddressButton}
-                  color="#1D2025"
-                />
-
-                <ErrorMessage errorValue={touched.arrival && errors.arrival} />
-
-                <Picker
-                  text={timeText}
-                  onPress={showDateTimePicker}
-                  isRightArrow={false}
-                  color={timeTextColor}
-                />
-
-                <>
-                  <DateTimePicker
-                    mode="time"
-                    isVisible={isDateTimePickerVisible}
-                    onConfirm={handleDatePicked}
-                    onCancel={hideDateTimePicker}
-                  />
-                </>
-                <ErrorMessage />
-                <FormInput
-                  width={140}
-                  placeholder={"₩ 배달금액(선택사항)"}
-                  keyboardType="numeric"
-                  returnKeyType="next"
-                  value={price}
-                  onBlur={handleBlur("price")}
-                  onChange={value => handleChangePrice(value)}
-                  maxLength={7}
-                >
-                  <Checkbox
-                    label="가격제안 받기"
-                    checkboxStyle={{ height: 22, width: 22 }}
-                    labelStyle={{ color: "#1D2025", marginLeft: -4 }}
-                    checked={props.isPrice}
-                    containerStyle={{
-                      width: 110,
-                      marginLeft: -4
-                    }}
-                    checkedImage={checkedBox}
-                    uncheckedImage={uncheckedBox}
-                    onChange={() => {
-                      props.reduxChecked(!props.isPrice);
-                    }}
-                  />
-                </FormInput>
-
-                <FormInput
-                  placeholder={
-                    "요청에 대한 상세 내용을 작성해주세요. (불법적인 요청은 게시가 제한 될 수 있어요.)"
-                  }
-                  multiline={true}
-                  numberOfLines={20}
-                  keyboardType="default"
-                  returnKeyType="next"
-                  isUnderline={false}
-                  value={props.details}
-                  onBlur={handleBlur("message")}
-                  onChange={e => handleChangeMessage(e)}
-                ></FormInput>
-                {props.images && props.images.length > 0 && (
-                  <ImageContainer>
-                    <ImageHolder>
-                      <Image
-                        source={{ uri: props.images[0].uri }}
+              <FormInput
+                placeholder={
+                  "요청에 대한 상세 내용을 작성해주세요. (불법적인 요청은 게시가 제한 될 수 있어요.)"
+                }
+                multiline={true}
+                numberOfLines={20}
+                keyboardType="default"
+                returnKeyType="next"
+                isUnderline={false}
+                value={props.details}
+                onChange={e => handleChangeMessage(e)}
+              ></FormInput>
+              {props.images && props.images.length > 0 && (
+                <ImageContainer>
+                  <ImageHolder>
+                    <Image
+                      source={{ uri: props.images[0].uri }}
+                      style={{
+                        width: constants.width / 4,
+                        height: constants.height / 8
+                      }}
+                    />
+                    <TouchableOpacity
+                      style={{
+                        position: "absolute",
+                        right: -6,
+                        top: -6,
+                        zIndex: 3
+                      }}
+                      onPress={handleDeletePhoto}
+                    >
+                      <AntDesign
+                        name="closecircle"
+                        size={24}
                         style={{
-                          width: constants.width / 4,
-                          height: constants.height / 8
+                          color: "#f3f3f3"
                         }}
                       />
-                      <TouchableOpacity
-                        style={{
-                          position: "absolute",
-                          right: -6,
-                          top: -6,
-                          zIndex: 3
-                        }}
-                        onPress={handleDeletePhoto}
-                      >
-                        <AntDesign
-                          name="closecircle"
-                          size={24}
-                          style={{
-                            color: "#f3f3f3"
-                          }}
-                        />
-                      </TouchableOpacity>
-                    </ImageHolder>
-                  </ImageContainer>
-                )}
-                <ErrorMessage />
-              </>
-            )}
-          </Formik>
-        </View>
-      </ScrollView>
+                    </TouchableOpacity>
+                  </ImageHolder>
+                </ImageContainer>
+              )}
+              <ErrorMessage />
+            </>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 };
