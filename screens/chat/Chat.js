@@ -17,9 +17,10 @@ import utils from "../../utils";
 import constants from "../../constants";
 import Fire from "./Fire";
 import { serverApi } from "../../components/API";
+import { Ionicons } from "@expo/vector-icons";
 
 const CardContainer = styled.View`
-  width: ${constants.width};
+  width: ${constants.width - 30};
 
   padding: 0 12px;
   justify-content: flex-start;
@@ -184,12 +185,28 @@ class Chat extends React.Component {
   }
 
   statusbar = () => {
+    const handleBack = () => {
+      this.props.navigation.navigate("BottomNavigation");
+      //this.props.navigation.goBack();
+    };
     return (
-      <View style={{ alignSelf: "center", marginTop: 15 }}>
-        {this.state.position === "deliver"
-          ? this.deliverView()
-          : this.hostView()}
-      </View>
+      <ContentContainer>
+        <View style={{ alignSelf: "center", marginTop: 15 }}>
+          {this.state.position === "deliver"
+            ? this.deliverView()
+            : this.hostView()}
+        </View>
+        <Ionicons
+          onPress={handleBack}
+          name="md-arrow-round-back"
+          style={{
+            marginRight: 30,
+            marginTop: 32,
+            fontSize: 25,
+            alignSelf: "flex-top"
+          }}
+        />
+      </ContentContainer>
     );
   };
 
@@ -321,9 +338,26 @@ class Chat extends React.Component {
         break;
       case 4:
         return (
-          <View>
-            <Text>거래가 완료되었습니다</Text>
-          </View>
+          <>
+            {this.setModalVisible()}
+            <CardContainer>
+              <ContentContainer>
+                <Thumbnail
+                  source={{
+                    uri: this.state.deliverinfo.image
+                  }}
+                />
+                <TextContainer>
+                  <Title> 거래가 완료되었습니다! </Title>
+                  <HeaderButtonContainer>
+                    <HeaderButton style={{ fontSize: 15 }}>
+                      문의하기
+                    </HeaderButton>
+                  </HeaderButtonContainer>
+                </TextContainer>
+              </ContentContainer>
+            </CardContainer>
+          </>
         );
         break;
     }
