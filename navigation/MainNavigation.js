@@ -16,6 +16,7 @@ import DepatureNavigation from "./DepatureNavigation";
 import ArrivalNavigation from "./ArrivalNavigation";
 import UserHistoryNavigation from "./UserHistoryNavigation";
 import VerifyCampusNavigation from "./VerifyCampusNavigtion";
+import PostReviewNavigation from "./PostReviewNavigation";
 import { stackStyles } from "./config";
 
 const MainNavigation = createStackNavigator(
@@ -29,6 +30,7 @@ const MainNavigation = createStackNavigator(
     NewOrderNavigation,
     PhotoNavigation,
     ChatNavigation,
+    PostReviewNavigation,
     ChatFilterNavigation,
     NotificationNavigation,
     DepatureNavigation,

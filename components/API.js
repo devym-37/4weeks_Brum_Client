@@ -161,12 +161,6 @@ export const serverApi = {
       uri: images,
       type: "image/jpg"
     });
-    console.log(`formData:`, formData);
-
-    // const blob = new Blob([json], {
-    //   type: "application/json"
-    // });
-    // formData.append("title", blob);
 
     return await fetch("http://13.209.17.154:3000/order", {
       method: "POST",
@@ -179,18 +173,35 @@ export const serverApi = {
       }
     });
   },
+  postReview: (orderId, userToken, score, userReview) =>
+    sApi.post(
+      `user/review/${orderId}`,
+      { score, userReview },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": userToken
+        }
+      }
+    ),
 
-  // formData.append("category", obj.category);
-  // formData.append("desiredArrivalTime", obj.desiredArrivaltime);
-  // formData.append("price", obj.price);
-  // formData.append("isPrice", obj.isPrice);
-  // formData.append("details", obj.details);
-  // formData.append("departures", obj.departures);
-  // formData.append("depLat", obj.depLat);
-  // formData.append("depLng", obj.depLng);
-  // formData.append("arrivals", obj.arrivals);
-  // formData.append("arrLat", obj.arrLat);
-  // formData.append("arrLng", obj.arrLng);
+  putReview: (orderId, userToken) =>
+    sApi.put(`user/review/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
+  deleteReview: (orderId, userToken) =>
+    sApi.delete(`user/review/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   password: (phone, pw, userToken) =>
     sApi.put(
       "password",

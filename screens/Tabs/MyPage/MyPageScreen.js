@@ -307,6 +307,10 @@ const MyPageScreen = ({ navigation, ...props }) => {
               color="#22252A"
               onPress={() => navigation.navigate("VerifyCampusNavigation")}
             />
+            <GhostButton
+              text={"리뷰남기기"}
+              onPress={() => navigation.navigate("ReviewScreen")}
+            />
             <GhostButton text={buttonName} onPress={handleLogout} />
           </Container>
         )
