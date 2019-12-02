@@ -92,11 +92,13 @@ class Chat extends React.Component {
             </View>
           )}
           <GiftedChat
+            inverted={true}
             messages={this.state.messages}
             onSend={Fire.shared.send}
             user={this.user}
             renderBubble={this.renderBubble}
             renderTime={this.renderTime}
+            scrollToBottom={true}
             timeTextStyle={{
               left: { color: "red" },
               right: { color: "yellow" }
@@ -146,7 +148,7 @@ class Chat extends React.Component {
         pushtoken
       );
       console.log(result);
-      this.handleStatus();
+      this.getUserId();
     };
     switch (orderstatus) {
       case 1:
@@ -157,7 +159,7 @@ class Chat extends React.Component {
               title={utils.transferOrderStatus(this.state.orderstatus + 1)}
               style={{ marginTop: 5 }}
               onPress={() => {
-                changestatus(orderstatus + 1);
+                changestatus(2);
               }}
             />
             <Button
@@ -177,7 +179,7 @@ class Chat extends React.Component {
               title={utils.transferOrderStatus(this.state.orderstatus + 1)}
               style={{ marginTop: 5 }}
               onPress={() => {
-                changestatus();
+                changestatus(3);
               }}
             />
           </View>
@@ -212,7 +214,7 @@ class Chat extends React.Component {
         pushtoken
       );
       console.log(result);
-      this.handleStatus();
+      this.getUserId();
     };
     switch (orderstatus) {
       case 1:

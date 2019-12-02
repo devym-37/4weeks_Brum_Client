@@ -139,7 +139,7 @@ const Signup = props => {
 
         Fire.shared.appendUser(userId);
         Fire.shared.appendPushtoken(
-          userId,
+          userId.toString(),
           pushtoken.slice(18, pushtoken.length - 1)
         );
 
