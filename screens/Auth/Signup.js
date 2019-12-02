@@ -122,7 +122,9 @@ const Signup = props => {
         props.reduxLogin(true);
 
         //firebase///
-        Fire.shared.signup(values.phone, values.password);
+        Fire.shared.signup(`${values.phone}@shoppossible.com`, values.password);
+        await AsyncStorage.setItem("email", `${values.phone}@shoppossible.com`);
+        await AsyncStorage.setItem("password", values.password);
         /* firebase
           .auth()
           .createUserWithEmailAndPassword(
@@ -137,7 +139,7 @@ const Signup = props => {
 
         Fire.shared.appendUser(userId);
         Fire.shared.appendPushtoken(
-          userId,
+          userId.toString(),
           pushtoken.slice(18, pushtoken.length - 1)
         );
 

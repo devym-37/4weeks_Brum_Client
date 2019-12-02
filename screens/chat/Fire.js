@@ -35,8 +35,9 @@ class Fire {
 
   onAuthStateChanged = async user => {
     //
-    const email = AsyncStorage.getItem("email");
-    const password = AsyncStorage.getItem("password");
+    const email = await AsyncStorage.getItem("email");
+    const password = await AsyncStorage.getItem("password");
+    // console.log("채팅 로그인이 안됨", email, password);
     if (!user) {
       try {
         firebase.auth().signInWithEmailAndPassword(email, password);
@@ -102,7 +103,7 @@ class Fire {
       .ref(`threads/${orderid}/users`)
       .once("value");
     const keyvalue = getkey.val();
-    console.log("왜안돼", keyvalue);
+    //console.log("왜안돼", keyvalue);
 
     for (const key in keyvalue) {
       console.log("무슨키", key, key === userid);
@@ -123,10 +124,11 @@ class Fire {
 
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
+      const time = new Date(Date.UTC(2016, 5, 11, 17, 20, 0));
       const message = {
         text,
         user,
-        createdAt: firebase.database.ServerValue.TIMESTAMP
+        createdAt: this.timestamp
       };
       this.append(message);
 
@@ -220,13 +222,12 @@ class Fire {
   };
 
   signup = (id, pw) => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(`${id}@shoppossible.com`, pw);
+    firebase.auth().createUserWithEmailAndPassword(id, pw);
   };
 
   signin = (id, pw) => {
-    firebase.auth().signInWithEmailAndPassword(`${id}@shoppossible.com`, pw);
+    console.log("왜 문자열이 아닌가", id, typeof id);
+    firebase.auth().signInWithEmailAndPassword(id, pw);
   };
 
   ///
