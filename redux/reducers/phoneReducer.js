@@ -1,6 +1,6 @@
 // Initial State
 const initialState = {
-  phone: null
+  phone: ""
 };
 
 // Reducers (Modifies The State And Returns A New State)

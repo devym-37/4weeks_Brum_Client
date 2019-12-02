@@ -81,19 +81,6 @@ const ChatListScreen = ({ navigation }) => {
     }
   };
 
-  const refresh = async () => {
-    try {
-      setRefreshing(true);
-      let userToken = await AsyncStorage.getItem("userToken");
-      let requestChats = await serverApi.getAllChats(userToken);
-      setChats([...requestChats.data]);
-      fetchUserId();
-    } catch (e) {
-      console.log(`Can't refresh data. error message: ${e}`);
-    } finally {
-      setRefreshing(false);
-    }
-  };
   const preLoad = async () => {
     try {
       setLoading(true);

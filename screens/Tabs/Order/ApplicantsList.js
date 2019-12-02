@@ -19,7 +19,7 @@ const Container = styled.View`
 
 const Text = styled.Text`
   color: ${props => props.theme.greyColor};
-  font-size: 15;
+  font-size: 17;
   margin-bottom: 4px;
 `;
 

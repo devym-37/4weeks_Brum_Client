@@ -81,10 +81,10 @@ const SelectPhoto = props => {
       // console.log(`getParam: `,// setLoading(true);``
       if (props.navigation.getParam("userAvatar")) {
         const userToken = await AsyncStorage.getItem("userToken");
-        const request = await serverApi.uploadimage(userToken, selected.uri);
-        console.log(`request: `, request);
         props.reduxAvatar(selected.uri);
         props.navigation.navigate("Mypage");
+        const request = await serverApi.uploadimage(userToken, selected.uri);
+        console.log(`request: `, request);
         if (!request.ok) {
           Alert.alert(`프로필 이미지 변경에 실패 했습니다. 다시 시도해주세요`);
         }

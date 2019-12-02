@@ -119,13 +119,12 @@ const HistoryColumn = styled.View`
   padding: 0 24px;
   justify-content: center;
   align-items: center;
-
   /* background-color: grey; */
 `;
 
 const ButtonContainer = styled.View`
-  width: 88;
-  height: 88;
+  width: 92;
+  height: 92;
   background-color: "#F3CDD7";
   justify-content: center;
   align-items: center;
@@ -151,6 +150,7 @@ const SubDivider = styled.View`
 `;
 
 const MyPageScreen = ({ navigation, ...props }) => {
+  // const [userToken, setUserToken] = useState();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -169,10 +169,12 @@ const MyPageScreen = ({ navigation, ...props }) => {
           console.log(`userProfile: `, userProfile.data.data);
           setLoggedIn(true);
           setButtonName("임시 로그아웃 버튼");
+
           setProfile({ ...userProfile.data.data });
         }
       } else {
         setButtonName("임시 로그인 버튼");
+
         // Alert.alert("로그인 해주세요");
       }
     } catch (e) {
@@ -187,20 +189,19 @@ const MyPageScreen = ({ navigation, ...props }) => {
   const handleLogout = async () => {
     if (buttonName === "임시 로그아웃 버튼") {
       const logout = await AsyncStorage.clear();
+      setButtonName("임시 로그인 버튼");
       Alert.alert("로그아웃 되었습니다");
-      preLoad();
+      navigation.navigate("StartNavigation");
+      // preLoad();
     } else {
       setButtonName("임시 로그아웃 버튼");
       navigation.navigate("Login");
     }
   };
-  useEffect(() => {
-    preLoad();
-  }, []);
 
   useEffect(() => {
     preLoad();
-  }, [props.avatar]);
+  }, [props.avatar, loggedIn]);
   return (
     <ScrollView>
       {loading ? (

@@ -6,7 +6,7 @@ const initialState = {
   // arrivals: null,
   desiredArrivalTime: null,
   price: null,
-  details: null,
+  details: "",
   images: null,
   isPrice: false,
   orderId: null
