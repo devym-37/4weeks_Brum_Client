@@ -136,9 +136,10 @@ const MapScreen = ({ navigation, ...props }) => {
           {props.HomeScreen === true &&
             props.orders.map(marker => (
               <Marker
+                key={marker.orderId}
                 coordinate={{
-                  latitude: Number(marker.arrLat),
-                  longitude: Number(marker.arrLng)
+                  latitude: Number(marker.arrLat) || 0,
+                  longitude: Number(marker.arrLng) || 0
                 }}
                 image={require("../assets/Delivery_arrival.png")}
                 calloutOffset={{ x: -8, y: 28 }}
