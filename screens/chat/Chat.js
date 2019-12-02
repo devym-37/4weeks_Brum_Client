@@ -10,11 +10,91 @@ import {
 } from "react-native";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
-
+import styled from "styled-components";
+import GhostButton from "../../components/Buttons/GhostButton";
+import styles from "../../styles";
 import utils from "../../utils";
-
+import constants from "../../constants";
 import Fire from "./Fire";
 import { serverApi } from "../../components/API";
+
+const CardContainer = styled.View`
+  width: ${constants.width};
+
+  padding: 0 12px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: white;
+  /* border-bottom-color: "#47315a"*/
+`;
+
+const Thumbnail = styled.Image`
+  width: 67;
+  height: 67;
+  border-radius: 16;
+  margin-right: 6;
+`;
+const ChatColumn = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  aling-self: center;
+`;
+const Title = styled.Text`
+  font-size: 18;
+  font-weight: 600;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  justify-content: center;
+  align-items: center;
+`;
+const Nickname = styled.Text`
+  font-size: 11;
+  font-weight: 400;
+  margin-bottom: 8px;
+`;
+
+const ContentContainer = styled.View`
+  padding: 16px 12px;
+  flex-direction: row;
+  justify-content: center;
+`;
+
+const HeaderButton = styled.Text`
+  color: white;
+  font-size: 18;
+  line-height: 0;
+  font-weight: 500;
+`;
+const HeaderButtonContainer = styled.View`
+  background-color: ${styles.mainColor};
+  width: 100;
+  border-radius: 4px;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  margin-left: 3px;
+  margin-right: 3px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  padding: 6px 8px;
+`;
+
+const TextContainer = styled.View`
+  flex: 2.6;
+  /* padding: 4px 0; */
+  padding-left: 14px;
+
+  justify-content: center;
+  align-items: flex-start;
+`;
+const Divider = styled.View`
+  width: ${constants.width};
+  /* margin-left: -20px; */
+  height: 1px;
+  background-color: ${props => props.theme.lightGreyColor};
+`;
 
 class Chat extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -80,17 +160,7 @@ class Chat extends React.Component {
     return (
       this.state.userId !== null && (
         <View style={{ flex: 1 }}>
-          {this.state.orderStatus !== null && (
-            <View
-              style={{
-                height: 100,
-                marginTop: 30,
-                backgroundColor: "rgb(230,230,230)"
-              }}
-            >
-              {this.statusbar()}
-            </View>
-          )}
+          {this.state.orderStatus !== null && this.statusbar()}
           <GiftedChat
             inverted={true}
             messages={this.state.messages}
@@ -116,19 +186,6 @@ class Chat extends React.Component {
   statusbar = () => {
     return (
       <View style={{ alignSelf: "center", marginTop: 15 }}>
-        <View>
-          {this.state.position === "host" ? (
-            <Image
-              style={{ height: 20, width: 20, borderRadius: 10 }}
-              source={{ uri: this.state.deliverinfo.image }}
-            />
-          ) : (
-            <Image
-              style={{ height: 20, width: 20, borderRadius: 20 }}
-              source={{ uri: this.state.hostinfo.image }}
-            />
-          )}
-        </View>
         {this.state.position === "deliver"
           ? this.deliverView()
           : this.hostView()}
@@ -141,6 +198,9 @@ class Chat extends React.Component {
     console.log("배송상태확인하기", this.state);
     const changestatus = async orderstat => {
       const pushtoken = await AsyncStorage.getItem("pushToken");
+      if (orderstat === 99) {
+        navigation.navigate("ChatListScreen");
+      }
       const result = await serverApi.orderstatus(
         this.state.orderId,
         orderstat,
@@ -153,43 +213,110 @@ class Chat extends React.Component {
     switch (orderstatus) {
       case 1:
         return (
-          <View>
-            <Text>배송시작하기</Text>
-            <Button
-              title={utils.transferOrderStatus(this.state.orderstatus + 1)}
-              style={{ marginTop: 5 }}
-              onPress={() => {
-                changestatus(2);
-              }}
-            />
-            <Button
-              title="러너취소하기"
-              style={{ marginTop: 5 }}
-              onPress={() => {
-                changestatus(99);
-              }}
-            />
-          </View>
+          <>
+            <CardContainer>
+              <ContentContainer>
+                <Thumbnail
+                  source={{
+                    uri: this.state.deliverinfo.image
+                  }}
+                />
+                <TextContainer>
+                  <Title>심부름을 시작해주세요! </Title>
+                  <ChatColumn>
+                    <HeaderButtonContainer>
+                      <HeaderButton
+                        onPress={() => {
+                          changestatus(2);
+                        }}
+                        style={{ fontSize: 15 }}
+                      >
+                        심부름시작
+                      </HeaderButton>
+                    </HeaderButtonContainer>
+                    <HeaderButtonContainer>
+                      <HeaderButton
+                        onPress={() => {
+                          changestatus(99);
+                        }}
+                        style={{ fontSize: 15 }}
+                      >
+                        러너 취소하기
+                      </HeaderButton>
+                    </HeaderButtonContainer>
+                  </ChatColumn>
+                </TextContainer>
+              </ContentContainer>
+            </CardContainer>
+          </>
         );
         break;
       case 2:
         return (
-          <View>
-            <Button
-              title={utils.transferOrderStatus(this.state.orderstatus + 1)}
-              style={{ marginTop: 5 }}
-              onPress={() => {
-                changestatus(3);
-              }}
-            />
-          </View>
+          <>
+            <CardContainer>
+              <ContentContainer>
+                <Thumbnail
+                  source={{
+                    uri: this.state.deliverinfo.image
+                  }}
+                />
+                <TextContainer>
+                  <Title>심부름 중입니다! </Title>
+                  <ChatColumn>
+                    <HeaderButtonContainer>
+                      <HeaderButton
+                        onPress={() => {
+                          changestatus(1);
+                        }}
+                        style={{ fontSize: 15 }}
+                      >
+                        심부름 대기
+                      </HeaderButton>
+                    </HeaderButtonContainer>
+                    <HeaderButtonContainer>
+                      <HeaderButton
+                        onPress={() => {
+                          changestatus(3);
+                        }}
+                        style={{ fontSize: 15 }}
+                      >
+                        심부름완료
+                      </HeaderButton>
+                    </HeaderButtonContainer>
+                  </ChatColumn>
+                </TextContainer>
+              </ContentContainer>
+            </CardContainer>
+          </>
         );
         break;
       case 3:
         return (
-          <View>
-            <Text>결제를 기다리는 중입니다</Text>
-          </View>
+          <>
+            <CardContainer>
+              <ContentContainer>
+                <Thumbnail
+                  source={{
+                    uri: this.state.deliverinfo.image
+                  }}
+                />
+                <TextContainer>
+                  <Title>결제를 기다리는 중입니다! </Title>
+                  <HeaderButtonContainer>
+                    <HeaderButton
+                      onPress={() => {
+                        changestatus(2);
+                      }}
+                      style={{ fontSize: 15 }}
+                    >
+                      배송완료취소
+                    </HeaderButton>
+                  </HeaderButtonContainer>
+                </TextContainer>
+              </ContentContainer>
+            </CardContainer>
+          </>
         );
         break;
       case 4:
@@ -219,29 +346,75 @@ class Chat extends React.Component {
     switch (orderstatus) {
       case 1:
         return (
-          <View>
-            <Text>러너가 배송을 준비중입니다!</Text>
-            <Button
-              title="요청취소"
-              onPress={changestatus}
-              style={{ marginTop: 5 }}
-            />
-          </View>
+          <>
+            <CardContainer>
+              <ContentContainer>
+                <Thumbnail
+                  source={{
+                    uri: this.state.deliverinfo.image
+                  }}
+                />
+                <TextContainer>
+                  <Title>러너가 심부름을 준비 중입니다! </Title>
+                  <HeaderButtonContainer>
+                    <HeaderButton
+                      onPress={() => {
+                        changestatus(88);
+                      }}
+                    >
+                      요청 취소하기
+                    </HeaderButton>
+                  </HeaderButtonContainer>
+                </TextContainer>
+              </ContentContainer>
+            </CardContainer>
+          </>
         );
         break;
       case 2:
         return (
-          <View>
-            <Text>러너가 심부름 중입니다!</Text>
-          </View>
+          <>
+            <CardContainer>
+              <ContentContainer>
+                <Thumbnail
+                  source={{
+                    uri: this.state.deliverinfo.image
+                  }}
+                />
+                <TextContainer>
+                  <Title>러너가 심부름 중입니다! </Title>
+                </TextContainer>
+              </ContentContainer>
+            </CardContainer>
+          </>
         );
+
         break;
       case 3:
         return (
-          <View>
-            <Text>러너가 심부름을 완료했습니다</Text>
-            <Button title="확인하고 결제하기" style={{ marginTop: 5 }} />
-          </View>
+          <>
+            <CardContainer>
+              <ContentContainer>
+                <Thumbnail
+                  source={{
+                    uri: this.state.deliverinfo.image
+                  }}
+                />
+                <TextContainer>
+                  <Title>러너가 심부름을 완료했습니다! </Title>
+                  <HeaderButtonContainer>
+                    <HeaderButton
+                      onPress={() => {
+                        changestatus(88);
+                      }}
+                    >
+                      결제하기
+                    </HeaderButton>
+                  </HeaderButtonContainer>
+                </TextContainer>
+              </ContentContainer>
+            </CardContainer>
+          </>
         );
         break;
       case 4:
@@ -285,7 +458,7 @@ class Chat extends React.Component {
     });
 
     this.notificationSubscription = Notifications.addListener(
-      this.handleNotification
+      this.handleNotification()
     );
     console.log(this.state.orderstatus);
     //this.handleStatus();
@@ -294,7 +467,7 @@ class Chat extends React.Component {
   handleNotification = notification => {
     console.log("notinoiti", notification);
     this.setState({ notification });
-    this.handleStatus();
+    this.getUserId();
   };
 
   handleStatus = async () => {
