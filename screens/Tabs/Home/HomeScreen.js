@@ -93,7 +93,7 @@ const RightToggleText = styled.Text`
   font-size: 13;
 `;
 const HomeScreen = ({ navigation, ...props }) => {
-  // console.log(`Home Nav: `, navigation.getParam("campus"));
+  // console.log(`Home Nav: `, navigation.getParam("newOrder"));
   const [leftClicked, setLeftClicked] = useState(false);
   const [rightClicked, setRightClicked] = useState(true);
   const [region, setRegion] = useState(null);
@@ -183,10 +183,8 @@ const HomeScreen = ({ navigation, ...props }) => {
   // }, []);
 
   useEffect(() => {
-    (async () => {
-      await preLoad();
-    })();
-  }, [props.campus]);
+    preLoad();
+  }, [props.campus, props.refresh]);
 
   // position: { latitude: 37.55737, longitude: 127.047132 }
   return (
@@ -248,7 +246,7 @@ const HomeScreen = ({ navigation, ...props }) => {
                   </Touchable>
                 </ButtonContainer>
               </Container>
-              {rightClicked && orders && <ListScreen orders={orders} />}
+              {rightClicked && orders && <ListScreen orders={[...orders]} />}
             </>
           )}
         </View>
@@ -261,7 +259,9 @@ const mapStateToProps = state => {
   // Redux Store --> Component
   return {
     campus: state.campusReducer.campus,
-    arrivalLocation: state.orderPositionReducer.arrival
+    arrivalLocation: state.orderPositionReducer.arrival,
+    title: state.orderReducer.title,
+    refresh: state.refreshReducer.refresh
   };
 };
 

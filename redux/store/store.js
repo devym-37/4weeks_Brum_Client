@@ -25,7 +25,8 @@ const persistConfig = {
     "phoneReducer",
     "orderReducer",
     "orderPostionReducer",
-    "destinationReducer"
+    "destinationReducer",
+    "refreshReducer"
   ]
 };
 

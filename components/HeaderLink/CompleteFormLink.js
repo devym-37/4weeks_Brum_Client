@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { AsyncStorage, Alert } from "react-native";
 import { serverApi } from "../API";
+import { refreshMaker } from "../../redux/actions/refreshActions";
 
 const Container = styled.TouchableOpacity``;
 
@@ -26,6 +27,7 @@ const CompleteLink = ({ navigation, ...props }) => {
       } else if (!props.arrivalLocation) {
         Alert.alert("도착지를 입력해주세요");
       } else {
+        props.reduxRefresh();
         const orderContents = {
           title: props.title,
           category: props.category,
@@ -47,7 +49,7 @@ const CompleteLink = ({ navigation, ...props }) => {
           "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png"
         );
         console.log(`새요청 작성하기: `, requestPost);
-        navigation.navigate("BottomNavigation");
+        navigation.navigate("BottomNavigation", { newOrder: true });
       }
     } catch (e) {
       console.log(`Can't post order form on server. Error : ${e}`);
@@ -78,5 +80,12 @@ const mapStateToProps = state => {
     departurePosition: state.orderPositionReducer.departurePosition
   };
 };
+const mapDispatchToProps = dispatch => {
+  return {
+    reduxRefresh: () => dispatch(refreshMaker())
+  };
+};
 
-export default withNavigation(connect(mapStateToProps, null)(CompleteLink));
+export default withNavigation(
+  connect(mapStateToProps, mapDispatchToProps)(CompleteLink)
+);
