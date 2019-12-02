@@ -12,22 +12,21 @@ import MapView, { Marker, Callout, CalloutSubview } from "react-native-maps";
 import CustomCallout from "./CustomCallout";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-// import { API } from "../APIS";
+import { API } from "../APIS";
 import { Container } from "native-base";
-import { DestinationInput } from "./Inputs/DestinationInput";
-import { DepartureInput } from "./Inputs/DepartureInput";
 import { connect } from "react-redux";
 import {
   departureSave,
   arrivalSave
 } from "../redux/actions/orderPositionActions";
+import { withNavigation } from "react-navigation";
 import constants from "../constants";
 import MapViewDirections from "react-native-maps-directions";
 import Polyline from "@mapbox/polyline";
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
-const API = "AIzaSyB_wEQ8hDQnVHqYdUfqNJxtngA-xmvbTcg";
+// const API = "AIzaSyB_wEQ8hDQnVHqYdUfqNJxtngA-xmvbTcg";
 
 const styles = StyleSheet.create({
   mapStyle: {
@@ -148,7 +147,11 @@ const MapScreen = ({ navigation, ...props }) => {
                 <Callout
                   alphaHitTest
                   tooltip
-                  onPress={() => console.log("click")}
+                  onPress={() =>
+                    navigation.navigate("OrderDetailScreen", {
+                      orderId: marker.orderId
+                    })
+                  }
                 >
                   <CustomCallout
                     title={marker.title}
@@ -292,4 +295,6 @@ const mapDispatchToProps = dispatch => {
     reduxArrivalPosition: arrival => dispatch(arrivalSave(arrival))
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
+export default withNavigation(
+  connect(mapStateToProps, mapDispatchToProps)(MapScreen)
+);
