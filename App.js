@@ -21,7 +21,7 @@ import StartNavigation from "./navigation/StartNavigation";
 import MainNavigation from "./navigation/MainNavigation";
 import LoggedOutMainNavigation from "./navigation/LoggedOutMainNavigation";
 
-// import ChatNavigation from "./navigation/ChatNavigation";
+import ReviewScreen from "./screens/chat/ReviewScreen";
 // Imports: Screens
 
 import Signup from "./screens/Auth/Signup";
@@ -102,7 +102,7 @@ const App = () => {
       <ThemeProvider theme={styles}>
         <PersistGate loading={null} persistor={persistor}>
           {isLoggedIn ? <MainNavigation /> : <LoggedOutMainNavigation />}
-          {/* {isLoggedIn ? <OrderDetailScreen /> : <LoggedOutMainNavigation />} */}
+          {/* {isLoggedIn ? <ReviewScreen /> : <LoggedOutMainNavigation />} */}
         </PersistGate>
       </ThemeProvider>
     </Provider>
