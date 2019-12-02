@@ -131,7 +131,7 @@ const LogIn = props => {
           await AsyncStorage.setItem("userId", userId.toString());
 
           Fire.shared.appendPushtoken(
-            userId,
+            userId.toString(),
             pushtoken.slice(18, pushtoken.length - 1)
           );
           //////////////////////////////

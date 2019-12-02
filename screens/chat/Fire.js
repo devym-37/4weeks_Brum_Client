@@ -222,14 +222,12 @@ class Fire {
   };
 
   signup = (id, pw) => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(`${id}@shoppossible.com`, pw);
+    firebase.auth().createUserWithEmailAndPassword(id, pw);
   };
 
   signin = (id, pw) => {
     console.log("왜 문자열이 아닌가", id, typeof id);
-    firebase.auth().signInWithEmailAndPassword(`${id}@shoppossible.com`, pw);
+    firebase.auth().signInWithEmailAndPassword(id, pw);
   };
 
   ///
