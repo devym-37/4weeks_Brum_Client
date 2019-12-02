@@ -22,6 +22,7 @@ import {
 } from "../redux/actions/orderPositionActions";
 import constants from "../constants";
 import MapViewDirections from "react-native-maps-directions";
+import Polyline from "@mapbox/polyline";
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
@@ -54,6 +55,7 @@ const styles = StyleSheet.create({
 const MapScreen = props => {
   const { latitude = LATITUDE, longitude = LONGITUDE } = props;
   const [regions, setRegions] = useState({});
+  const [coords, setCoords] = useState([]);
 
   const region = {
     latitude,
@@ -80,6 +82,29 @@ const MapScreen = props => {
     // this.props.reduxDepartureAddress(address[0]);
   };
 
+  // const getDirections = async (departure, arrival) => {
+  //   try {
+  //     let resp = await fetch(
+  //       `https://maps.googleapis.com/maps/api/directions/json?origin=${departure}&destination=${arrival}`
+  //     );
+  //     let respJson = await resp.json();
+  //     let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+  //     let coords = points.map((point, index) => {
+  //       return {
+  //         latitude: point[0],
+  //         longitude: point[1]
+  //       };
+  //     });
+  //     setCoords(coords);
+  //     this.setState({ coords: coords });
+  //     console.log("coords", coords);
+  //     return coords;
+  //   } catch (error) {
+  //     console.log("masuk fungsi");
+  //     return error;
+  //   }
+  // };
+
   return (
     <>
       <Container>
@@ -102,43 +127,6 @@ const MapScreen = props => {
           rotateEnabled={false}
           loadingEnabled={true}
         >
-          <Marker
-            coordinate={{
-              latitude: 37.556279,
-              longitude: 127.046422
-            }}
-          >
-            <Image
-              source={require("../assets/Delivery_arrival.png")}
-              style={{ width: 45, height: 45 }}
-            />
-          </Marker>
-          <Marker
-            coordinate={{
-              latitude: 37.559184,
-              longitude: 127.044512
-            }}
-          >
-            <Image
-              source={require("../assets/Delivery_departure.png")}
-              style={{ width: 45, height: 45 }}
-            />
-          </Marker>
-          <MapViewDirections
-            origin={{
-              latitude: 37.556279,
-              longitude: 127.046422
-            }}
-            destination={{
-              latitude: 37.559184,
-              longitude: 127.044512
-            }}
-            apikey={API}
-            strokeWidth={5}
-            strokeColor="hotpink"
-            mode="WALKING"
-            precision="low"
-          />
           {props.HomeScreen === true &&
             props.orders.map(marker => (
               <Marker
@@ -187,29 +175,62 @@ const MapScreen = props => {
           {props.SearchScreen === true &&
           props.arrivalPosition !== null &&
           props.departurePosition !== null ? (
-            <MapViewDirections
-              origin={{
-                latitude: props.arrivalPosition.lat,
-                longitude: props.arrivalPosition.lng
-              }}
-              destination={{
-                latitude: props.departurePosition.lat,
-                longitude: props.departurePosition.lng
-              }}
-              apikey={API}
-              strokeWidth={5}
-              strokeColor="hotpink"
-              mode="WALKING"
-              precision="low"
-            />
+            <Text>이건가</Text>
           ) : (
             <Text>이건가</Text>
           )}
+          <Text>{JSON.stringify(props.oders)}</Text>
         </MapView>
       </Container>
     </>
   );
 };
+
+// {props.SearchScreen === true &&
+//   props.arrivalPosition !== null &&
+//   props.departurePosition !== null ? (
+//     <Text>테스트중 ㄷ</Text>
+//   ) : (
+//     <Text>이건가</Text>
+//   )}
+
+// <Marker
+// coordinate={{
+//   latitude: 37.556279,
+//   longitude: 127.046422
+// }}
+// >
+// <Image
+//   source={require("../assets/Delivery_arrival.png")}
+//   style={{ width: 45, height: 45 }}
+// />
+// </Marker>
+// <Marker
+// coordinate={{
+//   latitude: 37.559184,
+//   longitude: 127.044512
+// }}
+// >
+// <Image
+//   source={require("../assets/Delivery_departure.png")}
+//   style={{ width: 45, height: 45 }}
+// />
+// </Marker>
+// <MapViewDirections
+// origin={{
+//   latitude: 37.556279,
+//   longitude: 127.046422
+// }}
+// destination={{
+//   latitude: 37.559184,
+//   longitude: 127.044512
+// }}
+// apikey={API}
+// strokeWidth={5}
+// strokeColor="hotpink"
+// mode="WALKING"
+// precision="low"
+// />
 // <Marker
 //             coordinate={{
 //               latitude: props.orders[0].arrLat,

@@ -26,11 +26,11 @@ const CompleteLink = ({ navigation, ...props }) => {
         isPrice: props.isPrice,
         details: props.message,
         departures: props.departureLocation,
-        depLat: props.departurePosition.latitude,
-        depLng: props.departurePosition.longitude,
+        depLat: props.departurePosition.lat,
+        depLng: props.departurePosition.lng,
         arrivals: props.arrivalLocation,
-        arrLat: props.arrivalPosition.latitude,
-        arrLng: props.arrivalPosition.longitude
+        arrLat: props.arrivalPosition.lat,
+        arrLng: props.arrivalPosition.lng
       };
       console.log(`orderContents:`, orderContents);
       const requestPost = await serverApi.postOrder(
