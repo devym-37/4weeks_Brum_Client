@@ -6,7 +6,10 @@ import {
   ActivityIndicator,
   Alert,
   AsyncStorage,
-  RefreshControl
+  RefreshControl,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard
 } from "react-native";
 import { Backdrop } from "react-native-backdrop";
 import Checkbox from "react-native-modest-checkbox";
@@ -28,6 +31,7 @@ import constants from "../../../constants";
 import styles from "../../../styles";
 import utils from "../../../utils";
 import { serverApi } from "../../../components/API";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const Container = styled.View`
   flex: 1;
@@ -151,6 +155,7 @@ const OrderContentContainer = styled.View`
 const Divider = styled.View`
   width: ${constants.width - 30};
   height: 1px;
+  z-index: 999;
   color: ${styles.lightGreyColor};
 `;
 
@@ -294,19 +299,21 @@ const OrderDetailScreen = ({ navigation }) => {
   const score = data && utils.avgOfScores(data.hostInfo.getScore);
   const color = utils.scoreColorPicker(score);
   const price =
-    data &&
-    (data.price ? utils.numberWithCommas(data.price) + "원" : "비용협의");
+    data && data.price !== "null"
+      ? utils.numberWithCommas(data.price) + "원"
+      : "비용협의";
 
   const isPrice = data && data.isPrice;
   const mapScreen =
     "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png";
   const title = data && data.title;
   const timeStamp = data && utils.transferTime(data.createdAt);
-  const message = data && data.details;
-  const numOfApplicants = data && utils.numOfScores(data.hostInfo.getScore);
+  const message = data && data.detais !== "null" ? data.details : "";
+  const numOfApplicants = data && utils.numOfScores(data.applicants);
   const likes = 0;
   const views = data && data.views;
-  const departure = data && (data.departures ? data.departures : "없음");
+  const departure =
+    data && data.departures !== "null" ? data.departures : "없음";
   const arrival = data && (data.arrivals ? data.arrivals : "없음");
 
   const handleClickLikeButton = async () => {
@@ -333,13 +340,12 @@ const OrderDetailScreen = ({ navigation }) => {
   };
 
   const handleClose = () => {
+    // Keyboard.dismiss();
     setVisible(false);
   };
 
   const handleApplyButton = async () => {
     if (isPrice) {
-      // Alert.alert("백드롭열림");
-      //const request = await serverApi.apply(null, null, //userToken, orderId);
       setVisible(true);
     } else {
       try {
@@ -513,7 +519,11 @@ const OrderDetailScreen = ({ navigation }) => {
                 <FontAwesome
                   name="dot-circle-o"
                   size={22}
-                  style={{ color: "#D0D6DC", paddingLeft: 2, paddingRight: 4 }}
+                  style={{
+                    color: "#D0D6DC",
+                    paddingLeft: 2,
+                    paddingRight: 4
+                  }}
                 />
                 <Address>{`출발지 : ${departure}`}</Address>
               </DepartureContainer>
@@ -562,11 +572,11 @@ const OrderDetailScreen = ({ navigation }) => {
                     </PriceOption>
                   </PriceContainer>
                   <EditButtonContainer>
-                    <DeleteButton width={350} disabled={true}>
+                    <DeleteButton width={300} disabled={true}>
                       <DeleteButtonText disabled={true}>삭제</DeleteButtonText>
                     </DeleteButton>
 
-                    <EditButton disabled={true} width={350}>
+                    <EditButton disabled={true} width={300}>
                       <ButtonText disabled={true}>수정</ButtonText>
                     </EditButton>
                   </EditButtonContainer>
@@ -590,12 +600,12 @@ const OrderDetailScreen = ({ navigation }) => {
                   </PriceContainer>
                   <EditButtonContainer>
                     <Touchable onPress={handleDelete}>
-                      <DeleteButton width={350}>
+                      <DeleteButton width={300}>
                         <DeleteButtonText>삭제</DeleteButtonText>
                       </DeleteButton>
                     </Touchable>
                     <Touchable onPress={handleEdit}>
-                      <EditButton width={350}>
+                      <EditButton width={300}>
                         <ButtonText>수정</ButtonText>
                       </EditButton>
                     </Touchable>
@@ -637,11 +647,12 @@ const OrderDetailScreen = ({ navigation }) => {
             )}
           </ContentContainer>
         </BottomContainer>
+
         <Backdrop
           visible={visible}
           handleOpen={handleOpen}
           handleClose={handleClose}
-          onClose={() => {}}
+          onClose={Keyboard.dismiss}
           swipeConfig={{
             velocityThreshold: 0.3,
             directionalOffsetThreshold: 80
@@ -656,77 +667,92 @@ const OrderDetailScreen = ({ navigation }) => {
             justifyContent: "flex-start"
           }}
         >
-          <DropContainer>
-            <>
-              <BottomContainer width={40}>
-                <FormInput
-                  placeholder={"₩ 희망 배달금액(선택사항)"}
-                  width={140}
-                  value={bidPrice}
-                  isUnderline={false}
-                  onChange={e => handleChangePrice(e)}
-                >
-                  <Checkbox
-                    label="희망비용 수락"
-                    checkboxStyle={{ height: 22, width: 22 }}
-                    labelStyle={{ color: "#1D2025", marginLeft: -4 }}
-                    checked={checked}
-                    containerStyle={{
-                      width: 110,
-                      marginLeft: -20
-                    }}
-                    checkedImage={checkedBox}
-                    uncheckedImage={uncheckedBox}
-                    onChange={() => {
-                      setChecked(!checked);
-                    }}
-                  />
-                </FormInput>
-                <Divider />
-                <FormInput
-                  placeholder={"메세지(선택사항)"}
-                  width={50}
-                  value={runnerMessage}
-                  onChange={e => handleChangeMessage(e)}
-                  isUnderline={false}
-                />
-                <Divider />
-                <MarginContentContainer>
-                  <>
-                    <Touchable onPress={() => setIsLiked(!isLiked)}>
-                      <IconContainer>
-                        {isLiked ? (
-                          <AntDesign
-                            name="heart"
-                            size={26}
-                            style={{ color: styles.mainColor }}
-                          />
-                        ) : (
-                          <AntDesign
-                            name="hearto"
-                            size={26}
-                            style={{ color: styles.mainColor }}
-                          />
-                        )}
-                      </IconContainer>
-                    </Touchable>
-                    <VerticalDivider />
-                    <PriceContainer>
-                      <Price>{price}</Price>
-                      <PriceOption>
-                        {isPrice ? "가격제안 가능" : "가격제안 불가"}
-                      </PriceOption>
-                    </PriceContainer>
-                    <Touchable onPress={handleApplyButtonWithPrice}>
-                      <ApplyButton width={250}>
-                        <ButtonText>러너 지원하기</ButtonText>
-                      </ApplyButton>
-                    </Touchable>
-                  </>
-                </MarginContentContainer>
-              </BottomContainer>
-            </>
-          </DropContainer>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAvoidingView
+              // style={{ flex: 1 }}
+              enabled
+              behavior="padding"
+              keyboardVerticalOffset={600}
+            >
+              <DropContainer>
+                <>
+                  <BottomContainer width={40}>
+                    <FormInput
+                      onSubmitEditing={Keyboard.dismiss}
+                      placeholder={"₩ 희망 배달금액(선택사항)"}
+                      width={140}
+                      dividerWidth={40}
+                      dividerColor={"#e8ecef"}
+                      value={bidPrice}
+                      isUnderline={true}
+                      onChange={e => handleChangePrice(e)}
+                    >
+                      <Checkbox
+                        label="희망비용 수락"
+                        checkboxStyle={{ height: 22, width: 22 }}
+                        labelStyle={{ color: "#1D2025", marginLeft: -4 }}
+                        checked={checked}
+                        containerStyle={{
+                          width: 110,
+                          marginLeft: -8
+                        }}
+                        checkedImage={checkedBox}
+                        uncheckedImage={uncheckedBox}
+                        onChange={() => {
+                          setChecked(!checked);
+                        }}
+                      />
+                    </FormInput>
+                    <Divider />
+                    <FormInput
+                      onSubmitEditing={Keyboard.dismiss}
+                      placeholder={"메세지(선택사항)"}
+                      dividerColor={"#e8ecef"}
+                      width={50}
+                      dividerWidth={40}
+                      value={runnerMessage}
+                      onChange={e => handleChangeMessage(e)}
+                      isUnderline={true}
+                    />
+                    <Divider />
+                    <MarginContentContainer>
+                      <>
+                        <Touchable onPress={() => setIsLiked(!isLiked)}>
+                          <IconContainer>
+                            {isLiked ? (
+                              <AntDesign
+                                name="heart"
+                                size={26}
+                                style={{ color: styles.mainColor }}
+                              />
+                            ) : (
+                              <AntDesign
+                                name="hearto"
+                                size={26}
+                                style={{ color: styles.mainColor }}
+                              />
+                            )}
+                          </IconContainer>
+                        </Touchable>
+                        <VerticalDivider />
+                        <PriceContainer>
+                          <Price>{price}</Price>
+                          <PriceOption>
+                            {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                          </PriceOption>
+                        </PriceContainer>
+                        <Touchable onPress={handleApplyButtonWithPrice}>
+                          <ApplyButton width={250}>
+                            <ButtonText>러너 지원하기</ButtonText>
+                          </ApplyButton>
+                        </Touchable>
+                      </>
+                    </MarginContentContainer>
+                  </BottomContainer>
+                </>
+              </DropContainer>
+            </KeyboardAvoidingView>
+          </TouchableWithoutFeedback>
         </Backdrop>
       </SafeAreaView>
     </>

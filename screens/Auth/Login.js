@@ -33,6 +33,10 @@ const View = styled.View`
   flex: 1;
 `;
 
+const ButtonContainer = styled.View`
+  padding: 12px 0;
+`;
+
 const Text = styled.Text``;
 
 const LogIn = props => {
@@ -212,13 +216,14 @@ const LogIn = props => {
           }}
           text="로그인"
         />
-        <GhostButton
-          onPress={() => {
-            props.navigation.navigate("VerifyPhone");
-          }}
-          text="회원가입"
-        />
-
+        <ButtonContainer>
+          <GhostButton
+            onPress={() => {
+              props.navigation.navigate("VerifyPhone");
+            }}
+            text="회원가입"
+          />
+        </ButtonContainer>
         <GhostButton
           onPress={() => {
             props.navigation.navigate("VerifyPhone", { reset: true });
