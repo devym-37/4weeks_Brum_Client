@@ -26,14 +26,11 @@ import RoutePicker from "../../../components/Pickers/RoutePicker";
 import { serverApi } from "../../../components/API";
 import constants from "../../../constants";
 
-// import LikeHistory from "../../../assets";
-// import OrderHistory from "../../../assets";
-// import RunnerHistory from "../../../assets";
+import VerifiedAccountBadge from "../../../components/VerifiedAccountBadge";
 
 const Container = styled.View`
   flex: 1;
   justify-content: center;
-  background-color: "#f1f3f5";
 `;
 const ProfileHeader = styled.View`
   padding: 20px;
@@ -76,7 +73,7 @@ const EditImageButton = styled.View`
   right: 2;
   width: 24;
   height: 24;
-  border-style: 1px solid;
+  border-style: solid;
   border-color: ${styles.lightGreyColor};
   border-radius: 16;
   justify-content: center;
@@ -125,7 +122,6 @@ const HistoryColumn = styled.View`
 const ButtonContainer = styled.View`
   width: 92;
   height: 92;
-  background-color: "#F3CDD7";
   justify-content: center;
   align-items: center;
   border-radius: 40;
@@ -233,9 +229,11 @@ const MyPageScreen = ({ navigation, ...props }) => {
                   <UserName>{profile.nickname}</UserName>
                 </UserNameContainer>
                 <UserUnivContainer>
-                  <UserUniv>
-                    {profile.university ? profile.university : "미인증 회원"}
-                  </UserUniv>
+                  {profile.university ? (
+                    <UserUniv>미인증 회원</UserUniv>
+                  ) : (
+                    <VerifiedAccountBadge />
+                  )}
                 </UserUnivContainer>
               </HeaderCenter>
               <HeaderRight>

@@ -6,7 +6,8 @@ import {
   KeyboardAvoidingView,
   Text,
   Button,
-  Image
+  Image,
+  Platform
 } from "react-native";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";

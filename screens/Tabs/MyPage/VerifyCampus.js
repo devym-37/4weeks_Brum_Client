@@ -61,7 +61,7 @@ const VerifyCampusScreen = () => {
           setEmail(value);
         }}
         autoCapitalize="none"
-        returnKeyType="sent"
+        returnKeyType="send"
         keyboardType="email-address"
       />
       <ButtonContainer>
