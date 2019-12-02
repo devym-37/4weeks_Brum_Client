@@ -6,7 +6,8 @@ import {
   KeyboardAvoidingView,
   Text,
   Button,
-  Image
+  Image,
+  Modal
 } from "react-native";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
@@ -339,7 +340,7 @@ class Chat extends React.Component {
       case 4:
         return (
           <>
-            {this.setModalVisible()}
+            {/*  {this.setModalVisible(true)} */}
             <CardContainer>
               <ContentContainer>
                 <Thumbnail
