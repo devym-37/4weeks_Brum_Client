@@ -181,9 +181,6 @@ const HomeScreen = ({ navigation, ...props }) => {
   useEffect(() => {
     (async () => {
       await preLoad();
-      await markerPosition();
-      await getLocation();
-      await getDefaultCampusMap();
     })();
   }, [props.campus]);
 

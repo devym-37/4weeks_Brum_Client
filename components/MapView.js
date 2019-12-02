@@ -8,7 +8,8 @@ import {
   AsyncStorage,
   Image
 } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Callout, CalloutSubview } from "react-native-maps";
+import CustomCallout from "./CustomCallout";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 // import { API } from "../APIS";
@@ -38,21 +39,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flex: 1
   },
-  bubble: {
-    backgroundColor: "rgba(255,255,255,0.5)",
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 20,
-    marginTop: 100
-  },
   latlng: {
     width: 200,
     alignItems: "stretch"
   },
-  centeredText: { textAlign: "center" }
+  centeredText: { textAlign: "center" },
+  bubbles: {
+    width: 140,
+    // flexDirection: "row",
+    alignSelf: "flex-start",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 6
+  }
 });
 
-const MapScreen = props => {
+const MapScreen = ({ navigation, ...props }) => {
   const { latitude = LATITUDE, longitude = LONGITUDE } = props;
   const [regions, setRegions] = useState({});
   const [coords, setCoords] = useState([]);
@@ -105,6 +107,11 @@ const MapScreen = props => {
   //   }
   // };
 
+  // <Image
+  //                 source={require("../assets/Delivery_arrival.png")}
+  //                 style={{ width: 45, height: 45 }}
+  //               />
+
   return (
     <>
       <Container>
@@ -134,12 +141,21 @@ const MapScreen = props => {
                   latitude: Number(marker.arrLat),
                   longitude: Number(marker.arrLng)
                 }}
-                title={marker.title}
+                image={require("../assets/Delivery_arrival.png")}
+                calloutOffset={{ x: -8, y: 28 }}
+                calloutAnchor={{ x: 0.5, y: 0.3 }}
               >
-                <Image
-                  source={require("../assets/Delivery_arrival.png")}
-                  style={{ width: 45, height: 45 }}
-                />
+                <Callout
+                  alphaHitTest
+                  tooltip
+                  onPress={() => console.log("click")}
+                >
+                  <CustomCallout
+                    title={marker.title}
+                    departures={marker.departures}
+                    price={marker.price}
+                  ></CustomCallout>
+                </Callout>
               </Marker>
             ))}
           {props.SearchScreen === true && props.departurePosition !== null ? (

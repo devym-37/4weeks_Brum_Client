@@ -1,12 +1,31 @@
 import React from "react";
 
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 
-const CustomCallout = () => {
+const CustomCallout = ({ title, departures, price }) => {
   return (
-    <View style={[styles.container, this.props.style]}>
+    <View style={styles.container}>
       <View style={styles.bubble}>
-        <View style={styles.amount}>{this.props.children}</View>
+        <View style={styles.amount}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: 500,
+              height: 18,
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 3
+            }}
+          >
+            {title}
+          </Text>
+          <Text note style={{ height: 12, marginBottom: 3 }}>
+            가격 : {price ? price : "가격협의"}
+          </Text>
+          <Text note style={{ height: 12 }}>
+            도착지 : {departures}
+          </Text>
+        </View>
       </View>
       <View style={styles.arrowBorder} />
       <View style={styles.arrow} />
@@ -23,11 +42,11 @@ const styles = StyleSheet.create({
     width: 140,
     flexDirection: "row",
     alignSelf: "flex-start",
-    backgroundColor: "#4da2ab",
+    backgroundColor: "rgba(255,255,255,0.8)",
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 6,
-    borderColor: "#007a87",
+    borderColor: "rgba(255,255,255,0.8)",
     borderWidth: 0.5
   },
   amount: {
@@ -37,7 +56,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 16,
     borderColor: "transparent",
-    borderTopColor: "#4da2ab",
+    borderTopColor: "#rgba(255,255,255,0.8)",
     alignSelf: "center",
     marginTop: -32
   },
@@ -45,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 16,
     borderColor: "transparent",
-    borderTopColor: "#007a87",
+    borderTopColor: "rgba(255,255,255,0.8)",
     alignSelf: "center",
     marginTop: -0.5
   }
