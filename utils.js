@@ -6,8 +6,14 @@ export default {
       let x2 = x.toString().replace(",", "");
       return x2.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
-
-    // else return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  },
+  verifyEmailAddress: email => {
+    return /^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?(hanyang|snu|yonsei|ehwa)\.ac.kr$/g.test(
+      email
+    );
+  },
+  validateEmailReg: email => {
+    return /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/.test(email);
   },
   formatDate: format => {
     var year = format.getFullYear();

@@ -119,7 +119,7 @@ const UserHistoryScreen = ({ navigation }) => {
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <Text style={{ fontSize: 17, color: "" }}>
-            아직 러너로 활동한 내역이 없습니다
+            아직 요청한 내역이 없습니다
           </Text>
         </DefaultContainer>
       )}
@@ -129,17 +129,14 @@ const UserHistoryScreen = ({ navigation }) => {
   const SecondRoute = () => (
     <ScrollView style={{ flex: 1 }}>
       {deliverHistory && deliverHistory.length > 0 ? (
-        deliverHistory.map(
-          (data, i) =>
-            data.order && (
-              <OrderCard
-                onPress={console.log("누름")}
-                key={i}
-                createdAt={data.createdAt}
-                {...data.order}
-              />
-            )
-        )
+        deliverHistory.map((data, i) => (
+          <OrderCard
+            onPress={console.log("누름")}
+            key={i}
+            createdAt={data.createdAt}
+            {...data}
+          />
+        ))
       ) : (
         <DefaultContainer
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}

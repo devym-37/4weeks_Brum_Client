@@ -271,8 +271,8 @@ const OrderDetailScreen = props => {
         }
 
         // console.log(campusList);
-        console.log("listcampus", constants.campusList[hostInfo.campus]);
-        setCampus(constants.campusList[hostInfo.campus].kor); //campus
+        console.log("listcampus", constants.campus[hostInfo.campus]);
+        setCampus(constants.campus[hostInfo.campus].kor); //campus
         //numberwithcommas
         if (price === null) {
           setPrice("협의");
