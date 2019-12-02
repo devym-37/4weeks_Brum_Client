@@ -117,20 +117,27 @@ const LogIn = props => {
             .auth()
             .signInWithEmailAndPassword(`${value1}@shoppossible.com`, value2);
  */
-          Fire.shared.signin(value1, value2);
+          Fire.shared.signin(`${value1}@shoppossible.com`, value2);
 
           ////redux/////
           await AsyncStorage.setItem("email", `${value1}@shoppossible.com`);
           await AsyncStorage.setItem("password", value2);
           ////
 
+          const login = await AsyncStorage.getItem("email");
+          console.log("로그인했고 이메일 정보", login);
           /////-------redux?------//////
           const mypage = await serverApi.user(requestLogin.data.token);
           const { userId } = mypage.data.data;
           await AsyncStorage.setItem("userId", userId.toString());
 
+<<<<<<< HEAD
           await Fire.shared.appendPushtoken(
             userId,
+=======
+          Fire.shared.appendPushtoken(
+            userId.toString(),
+>>>>>>> 6087ea13c3b5f8880a3c92805e648daae2a59f44
             pushtoken.slice(18, pushtoken.length - 1)
           );
           //////////////////////////////

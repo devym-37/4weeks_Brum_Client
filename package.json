@@ -10,6 +10,7 @@
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.4.0",
     "@expo/vector-icons": "^10.0.6",
+    "@mapbox/polyline": "^1.1.0",
     "@react-native-community/async-storage": "^1.6.3",
     "@types/expo": "^33.0.1",
     "add": "^2.0.6",

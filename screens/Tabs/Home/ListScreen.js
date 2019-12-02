@@ -39,7 +39,7 @@ const ListScreen = props => {
       // console.log(`refresh: `, getAllOrders);
       setOrders([...getCampusOrders.data.data.orders]);
 
-      console.log(`order: `, getCampusOrders);
+      // console.log(`order: `, getCampusOrders);
     } catch (e) {
       console.log(`Can't refresh data. error message: ${e}`);
     } finally {
