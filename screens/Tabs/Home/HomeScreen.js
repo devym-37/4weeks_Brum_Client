@@ -7,6 +7,8 @@ import {
   RefreshControl,
   AsyncStorage,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
   TouchableOpacity
 } from "react-native";
 import styled from "styled-components";
@@ -171,9 +173,9 @@ const HomeScreen = ({ navigation, ...props }) => {
     }
   };
 
-  useEffect(() => {
-    preLoad();
-  }, []);
+  // useEffect(() => {
+  //   preLoad();
+  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -188,65 +190,67 @@ const HomeScreen = ({ navigation, ...props }) => {
   return (
     <>
       {isopenLoginModal && <AuthModal />}
-      <View>
-        {loading ? (
-          <Loader />
-        ) : (
-          <>
-            {/* <NavigationEvents onDidFocus={() => Alert.alert("Refreshed")} /> */}
-            {leftClicked && region && (
-              <>
-                <MapLocationButton
-                  callback={() => {
-                    getDefaultCampusMap();
-                  }}
-                />
-                <CurrentLocationButton
-                  callback={() => {
-                    userCurrentLocation();
-                  }}
-                />
-                <MapScreen
-                  latitude={region.latitude}
-                  longitude={region.longitude}
-                  orders={orders}
-                  HomeScreen={true}
-                  showLocation={false}
-                ></MapScreen>
-              </>
-            )}
-            <Container>
-              <ButtonContainer>
-                <Touchable
-                  onPress={() => {
-                    setLeftClicked(!leftClicked);
-                    setRightClicked(leftClicked);
-                  }}
-                >
-                  <LeftToggleButton clicked={leftClicked}>
-                    <LeftToggleText clicked={leftClicked}>
-                      {"지도로 보기"}
-                    </LeftToggleText>
-                  </LeftToggleButton>
-                </Touchable>
-                <Touchable
-                  onPress={() => {
-                    setRightClicked(!rightClicked);
-                    setLeftClicked(rightClicked);
-                  }}
-                >
-                  <RightToggleButton clicked={rightClicked}>
-                    <RightToggleText clicked={rightClicked}>
-                      {"리스트로 보기"}
-                    </RightToggleText>
-                  </RightToggleButton>
-                </Touchable>
-              </ButtonContainer>
-            </Container>
-            {rightClicked && orders && <ListScreen orders={orders} />}
-          </>
-        )}
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View>
+          {loading ? (
+            <Loader />
+          ) : (
+            <>
+              {/* <NavigationEvents onDidFocus={() => Alert.alert("Refreshed")} /> */}
+              {leftClicked && region && (
+                <>
+                  <MapLocationButton
+                    callback={() => {
+                      getDefaultCampusMap();
+                    }}
+                  />
+                  <CurrentLocationButton
+                    callback={() => {
+                      userCurrentLocation();
+                    }}
+                  />
+                  <MapScreen
+                    latitude={region.latitude}
+                    longitude={region.longitude}
+                    orders={orders}
+                    HomeScreen={true}
+                    showLocation={false}
+                  ></MapScreen>
+                </>
+              )}
+              <Container>
+                <ButtonContainer>
+                  <Touchable
+                    onPress={() => {
+                      setLeftClicked(!leftClicked);
+                      setRightClicked(leftClicked);
+                    }}
+                  >
+                    <LeftToggleButton clicked={leftClicked}>
+                      <LeftToggleText clicked={leftClicked}>
+                        {"지도로 보기"}
+                      </LeftToggleText>
+                    </LeftToggleButton>
+                  </Touchable>
+                  <Touchable
+                    onPress={() => {
+                      setRightClicked(!rightClicked);
+                      setLeftClicked(rightClicked);
+                    }}
+                  >
+                    <RightToggleButton clicked={rightClicked}>
+                      <RightToggleText clicked={rightClicked}>
+                        {"리스트로 보기"}
+                      </RightToggleText>
+                    </RightToggleButton>
+                  </Touchable>
+                </ButtonContainer>
+              </Container>
+              {rightClicked && orders && <ListScreen orders={orders} />}
+            </>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
     </>
   );
 };

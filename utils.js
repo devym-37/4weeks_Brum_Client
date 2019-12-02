@@ -1,8 +1,12 @@
 import { Linking, Alert, Platform } from "react-native";
 export default {
   numberWithCommas: x => {
-    let x2 = x.toString().replace(",", "");
-    return x2.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (x === "null") return undefined;
+    else {
+      let x2 = x.toString().replace(",", "");
+      return x2.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
     // else return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   },
   formatDate: format => {

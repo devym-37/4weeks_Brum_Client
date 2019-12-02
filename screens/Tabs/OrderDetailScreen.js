@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import GhostButton from "../../../components/Buttons/GhostButton";
+import GhostButton from "../../components/Buttons/GhostButton";
 
 import { withNavigation } from "react-navigation";
 import MapView from "react-native-maps";
-import constants from "../../../constants";
+import constants from "../../constants";
 import {
   ScrollView,
   Block,
@@ -36,13 +36,13 @@ import {
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import BottomSheet from "reanimated-bottom-sheet";
-import MainButton from "../../../components/Buttons/MainButton";
-import utils from "../../../utils";
-import MapScreen from "../../../components/MapView";
-import useInput from "../../../hooks/useInput";
-import FormInput from "../../../components/Inputs/FormInput";
+import MainButton from "../../components/Buttons/MainButton";
+import utils from "../../utils";
+import MapScreen from "../../components/MapView";
+import useInput from "../../hooks/useInput";
+import FormInput from "../../components/Inputs/FormInput";
 
-import { serverApi } from "../../../components/API";
+import { serverApi } from "../../components/API";
 import { StringDecoder } from "string_decoder";
 import { connect } from "react-redux";
 
@@ -53,7 +53,7 @@ import {
   titleSaver,
   categorySaver,
   isPriceSaver
-} from "../../../redux/actions/orderActions";
+} from "../../redux/actions/orderActions";
 
 const OrderDetailScreen = props => {
   //view 추가해야함

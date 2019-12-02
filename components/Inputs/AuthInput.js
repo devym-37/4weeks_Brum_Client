@@ -33,6 +33,7 @@ const AuthInput = ({
   secureTextEntry = false,
   editable = true,
   onBlur = () => null,
+  // onSubmitEditing = () => null,
   ...rest
 }) => (
   <Container>
@@ -49,6 +50,7 @@ const AuthInput = ({
         secureTextEntry={secureTextEntry}
         value={value}
         secureTextEntry={secureTextEntry}
+        // onSubmitEditing={onSubmitEditing}
         onBlur={onBlur}
       />
 

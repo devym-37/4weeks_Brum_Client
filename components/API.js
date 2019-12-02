@@ -88,6 +88,33 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
+  getLikeHistory: userToken =>
+    sApi.get("user/like/order", {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
+
+  getOrderHistory: userToken =>
+    sApi.get("user/order/host", {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
+
+  getDeliverHistory: userToken =>
+    sApi.get("user/order/deliver", {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
+
   uploadimage: async (userToken, imgfile) => {
     const formData = new FormData();
     formData.append("file", {

@@ -123,15 +123,15 @@ const OrderCard = ({
   orderStatus,
   createdAt,
   views,
-  applicants,
+  applicants = [],
   onPress
 }) => {
   const priceWithComma = price && utils.numberWithCommas(price);
   const timeStamp = utils.transferTime(createdAt);
   const status = utils.transferOrderStatus(orderStatus);
   const shortTitle = utils.shortenText(title, 17);
-  const shortArrivals = utils.shortenText(arrivals, 7);
-  const shortDeparture = utils.shortenText(departures, 7);
+  const shortArrivals = utils.shortenText(arrivals, 5);
+  const shortDeparture = utils.shortenText(departures, 5);
   return (
     <>
       <Touchable onPress={onPress}>
