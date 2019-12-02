@@ -18,7 +18,7 @@ const Container = styled.View`
 `;
 
 const Text = styled.Text`
-  color: ${props => props.theme.greyColor};
+  color: ${styles.lightGreyColor};
   font-size: 17;
   margin-bottom: 4px;
 `;
@@ -158,13 +158,16 @@ const ApplicantsList = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
+    return () => {
+      Fire.shared.off();
+    };
   }, []);
 
   const _renderTabBar = props => (
     <TabBar
       {...props}
-      activeColor="#E2227"
-      inactiveColor="#ABB2BB"
+      activeColor={"#1E2227"}
+      inactiveColor={"#ABB2BB"}
       indicatorStyle={{ backgroundColor: "#1E2227" }}
       style={{ backgroundColor: "white" }}
       labelStyle={{ fontSize: 16 }}

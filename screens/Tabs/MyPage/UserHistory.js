@@ -90,16 +90,18 @@ const UserHistoryScreen = ({ navigation }) => {
   useEffect(() => {
     preLoad();
   }, []);
+
   const _renderTabBar = props => (
     <TabBar
       {...props}
-      activeColor="#E2227"
+      activeColor={"#1E2227"}
       inactiveColor="#ABB2BB"
       indicatorStyle={{ backgroundColor: "#1E2227" }}
       style={{ backgroundColor: "white" }}
       labelStyle={{ fontSize: 16 }}
     />
   );
+
   const FirstRoute = () => (
     <ScrollView style={{ flex: 1 }}>
       {orderHistory && orderHistory.length > 0 ? (
@@ -118,7 +120,7 @@ const UserHistoryScreen = ({ navigation }) => {
         <DefaultContainer
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <Text style={{ fontSize: 17, color: "" }}>
+          <Text style={{ fontSize: 17, color: "#22252a" }}>
             아직 요청한 내역이 없습니다
           </Text>
         </DefaultContainer>
@@ -141,7 +143,7 @@ const UserHistoryScreen = ({ navigation }) => {
         <DefaultContainer
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <Text style={{ fontSize: 17, color: "" }}>
+          <Text style={{ fontSize: 17, color: "#22252a" }}>
             아직 러너로 활동한 내역이 없습니다
           </Text>
         </DefaultContainer>
@@ -167,7 +169,7 @@ const UserHistoryScreen = ({ navigation }) => {
         <DefaultContainer
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <Text style={{ fontSize: 17, color: "" }}>
+          <Text style={{ fontSize: 17, color: "#22252a" }}>
             현재 관심목록이 없습니다
           </Text>
         </DefaultContainer>
