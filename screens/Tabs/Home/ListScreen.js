@@ -93,13 +93,16 @@ const ListScreen = props => {
               />
             ))} */}
         {props.orders && props.orders.length > 0 ? (
-          props.orders.map((data, i) => (
-            <OrderCard
-              {...data}
-              key={i}
-              onPress={() => handleClick(data.orderId)}
-            />
-          ))
+          props.orders.map(
+            (data, i) =>
+              data.orderStatus <= 5 && (
+                <OrderCard
+                  {...data}
+                  key={i}
+                  onPress={() => handleClick(data.orderId)}
+                />
+              )
+          )
         ) : (
           <Container style={{ marginTop: -50 }}>
             <DefaultOrder />

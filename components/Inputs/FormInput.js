@@ -17,7 +17,8 @@ const Divider = styled.View`
   width: ${props => constants.width - props.dividerWidth};
 
   height: 1;
-  background-color: ${props => props.theme.lightGreyColor};
+  background-color: ${props =>
+    props.dividerColor ? props.dividerColor : props.theme.lightGreyColor};
 `;
 
 const TextInput = styled.TextInput`
@@ -38,6 +39,7 @@ const FormInput = ({
   children,
   onChange,
   isUnderline = true,
+  dividerColor,
   ...rest
 }) => {
   return (
@@ -52,7 +54,9 @@ const FormInput = ({
         />
         {children}
       </InputContainer>
-      {isUnderline && <Divider dividerWidth={dividerWidth} />}
+      {isUnderline && (
+        <Divider dividerWidth={dividerWidth} deviderColor={dividerColor} />
+      )}
     </>
   );
 };

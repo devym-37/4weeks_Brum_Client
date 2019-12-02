@@ -34,13 +34,13 @@ export const DepartureInput = function(props) {
           style={{ width: 30, height: 28 }}
           source={require("../../assets/Delivery_departure.png")}
         />
-        <Text note style={{ fontSize: 12, color: "#545454", paddingTop: 3 }}>
+        {/* <Text note style={{ fontSize: 12, color: "#545454", paddingTop: 3 }}>
           출발지
-        </Text>
+        </Text> */}
       </View>
       <View style={styles.centerCol}>
-        <Text style={{ fontSize: 16, color: "#545454" }}>
-          {props.departure ? props.departure : "출발지 선택"}
+        <Text style={{ fontSize: 16, color: "#858e96" }}>
+          {props.departure ? props.departure : "출발지 입력(선택사항)"}
         </Text>
       </View>
     </TouchableOpacity>
@@ -55,13 +55,13 @@ const styles = StyleSheet.create({
     width: WIDTH - 35,
     height: 50,
     left: 20,
-    borderRadius: 10,
+    borderRadius: 4,
     backgroundColor: "white",
     alignItems: "center",
     shadowColor: "#000000",
     elevation: 7,
-    shadowRadius: 5,
-    shadowOpacity: 0.2
+    shadowRadius: 4,
+    shadowOpacity: 0.1
   },
   leftCol: {
     flex: 1,
