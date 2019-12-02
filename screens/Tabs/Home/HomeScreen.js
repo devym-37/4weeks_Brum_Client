@@ -106,12 +106,14 @@ const HomeScreen = ({ navigation, ...props }) => {
   const getDefaultCampusMap = () => {
     const campusRegion = constants.campus[props.campus].position;
     console.log("campusRegion :", campusRegion);
+    console.log("클릭 확인");
     const _region = {
       latitude: campusRegion.latitude,
       longitude: campusRegion.longitude,
       latitudeDelta: constants.LATITUDE_DELTA,
       longitudeDelta: constants.LONGITUDE_DELTA
     };
+    console.log("_region", _region);
     setRegion(_region);
     this.map.animateToRegion(_region);
   };
@@ -167,8 +169,8 @@ const HomeScreen = ({ navigation, ...props }) => {
         "getCampusOrders.data.data.orders",
         getCampusOrders.data.data.orders
       );
-      getDefaultCampusMap(selectedCampus);
       getLocation();
+      getDefaultCampusMap(selectedCampus);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     } finally {
