@@ -36,7 +36,7 @@ const ChatListScreen = ({ navigation }) => {
     ////////
     await AsyncStorage.setItem("orderid", orderId.toString());
 
-    navigation.navigate("Chat");
+    navigation.navigate("Chat", { username });
   };
 
   ////이동해야함
