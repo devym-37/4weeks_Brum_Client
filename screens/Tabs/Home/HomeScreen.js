@@ -115,7 +115,10 @@ const HomeScreen = ({ navigation, ...props }) => {
     };
     console.log("_region", _region);
     setRegion(_region);
-    this.map.animateToRegion(_region);
+  };
+
+  const moveCampusMap = () => {
+    this.map.animateToRegion(region);
   };
 
   const geoCode = async address => {
@@ -169,8 +172,8 @@ const HomeScreen = ({ navigation, ...props }) => {
         "getCampusOrders.data.data.orders",
         getCampusOrders.data.data.orders
       );
-      getLocation();
-      getDefaultCampusMap(selectedCampus);
+      await getLocation();
+      await getDefaultCampusMap(selectedCampus);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
     } finally {
@@ -203,7 +206,7 @@ const HomeScreen = ({ navigation, ...props }) => {
                 <>
                   <MapLocationButton
                     callback={() => {
-                      getDefaultCampusMap();
+                      moveCampusMap();
                     }}
                   />
                   <CurrentLocationButton

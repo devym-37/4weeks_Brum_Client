@@ -10,7 +10,7 @@ const CustomCallout = ({ title, departures, price }) => {
           <Text
             style={{
               fontSize: 18,
-              fontWeight: 500,
+              fontWeight: "500",
               height: 18,
               alignItems: "center",
               justifyContent: "center",
