@@ -26,9 +26,7 @@ import RoutePicker from "../../../components/Pickers/RoutePicker";
 import { serverApi } from "../../../components/API";
 import constants from "../../../constants";
 
-// import LikeHistory from "../../../assets";
-// import OrderHistory from "../../../assets";
-// import RunnerHistory from "../../../assets";
+import VerifiedAccountBadge from "../../../components/VerifiedAccountBadge";
 
 const Container = styled.View`
   flex: 1;
@@ -233,9 +231,11 @@ const MyPageScreen = ({ navigation, ...props }) => {
                   <UserName>{profile.nickname}</UserName>
                 </UserNameContainer>
                 <UserUnivContainer>
-                  <UserUniv>
-                    {profile.university ? profile.university : "미인증 회원"}
-                  </UserUniv>
+                  {profile.university ? (
+                    <UserUniv>미인증 회원</UserUniv>
+                  ) : (
+                    <VerifiedAccountBadge />
+                  )}
                 </UserUnivContainer>
               </HeaderCenter>
               <HeaderRight>
