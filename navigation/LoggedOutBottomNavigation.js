@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createAppContainer } from "react-navigation";
 
 import ChatScreen from "../screens/Tabs/Chats/ChatListScreen";
+import Chat from "../screens/chat/Chat";
 import OrderScreen from "../screens/Tabs/Order/DefaultOrderScreen";
 import MyPageScreen from "../screens/Tabs/MyPage/MyPageScreen";
 import ListScreen from "../screens/Tabs/Home/ListScreen";
@@ -115,7 +116,7 @@ const BottomNavigation = createBottomTabNavigator(
       }
     },
     Chats: {
-      screen: stackFactory(ChatScreen, { title: "채팅" }),
+      screen: stackFactory(Chat, { title: "채팅" }),
       navigationOptions: {
         title: "채팅",
         tabBarIcon: ({ focused, tintColor }) => (

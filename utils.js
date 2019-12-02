@@ -95,8 +95,11 @@ export default {
   },
 
   transferOrderStatus: num => {
-    const status = ["매칭대기", "매칭완료", "배송시작", "배송완료", "정산완료"];
+    if (num === 88) return "요청취소";
 
+    if (num === 99) return "배송취소";
+
+    const status = ["매칭대기", "매칭완료", "배송시작", "배송완료", "정산완료"];
     return status[num];
   },
 

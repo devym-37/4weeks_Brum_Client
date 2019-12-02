@@ -11,6 +11,7 @@ import orderPositionReducer from "./orderPositionReducer";
 import destinationReducer from "./destinationReducer";
 import passwordErrorCountReducer from "./passwordErrorCountReducer";
 import avatarReducer from "./avatarReducer";
+import refreshReducer from "./refreshReducer";
 // Redux: Root Reducer
 const rootReducer = combineReducers({
   passwordErrorCountReducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   orderReducer,
   orderPositionReducer,
   destinationReducer,
+  refreshReducer,
   avatarReducer
 });
 

@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { connect } from "react-redux";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, Alert } from "react-native";
 import { serverApi } from "../API";
+import { refreshMaker } from "../../redux/actions/refreshActions";
 
 const Container = styled.TouchableOpacity``;
 
@@ -18,31 +19,41 @@ const CompleteLink = ({ navigation, ...props }) => {
   const handleSubmit = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      const orderContents = {
-        title: props.title,
-        category: props.category,
-        desiredArrivalTime: props.time,
-        price: props.price,
-        isPrice: props.isPrice,
-        details: props.message,
-        departures: props.departureLocation,
-        depLat: props.departurePosition.lat,
-        depLng: props.departurePosition.lng,
-        arrivals: props.arrivalLocation,
-        arrLat: props.arrivalPosition.lat,
-        arrLng: props.arrivalPosition.lng
-      };
-      console.log(`orderContents:`, orderContents);
-      const requestPost = await serverApi.postOrder(
-        userToken,
-        orderContents,
-        "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png"
-      );
-      console.log(`새요청 작성하기: `, requestPost);
+
+      if (!props.title) {
+        Alert.alert("제목을 입력해주세요");
+      } else if (!props.category) {
+        Alert.alert("카테고리를 선택해주세요");
+      } else if (!props.arrivalLocation) {
+        Alert.alert("도착지를 입력해주세요");
+      } else {
+        props.reduxRefresh();
+        const orderContents = {
+          title: props.title,
+          category: props.category,
+          desiredArrivalTime: props.time,
+          price: props.price,
+          isPrice: props.isPrice,
+          details: props.message,
+          departures: props.departureLocation,
+          depLat: props.departurePosition && props.departurePosition.lat,
+          depLng: props.departurePosition && props.departurePosition.lng,
+          arrivals: props.arrivalLocation,
+          arrLat: props.arrivalPosition && props.arrivalPosition.lat,
+          arrLng: props.arrivalPosition && props.arrivalPosition.lng
+        };
+        console.log(`orderContents:`, orderContents);
+        const requestPost = await serverApi.postOrder(
+          userToken,
+          orderContents,
+          "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png"
+        );
+        console.log(`새요청 작성하기: `, requestPost);
+        navigation.navigate("BottomNavigation", { newOrder: true });
+      }
     } catch (e) {
       console.log(`Can't post order form on server. Error : ${e}`);
     } finally {
-      navigation.navigate("BottomNavigation");
     }
   };
   return (
@@ -69,5 +80,12 @@ const mapStateToProps = state => {
     departurePosition: state.orderPositionReducer.departurePosition
   };
 };
+const mapDispatchToProps = dispatch => {
+  return {
+    reduxRefresh: () => dispatch(refreshMaker())
+  };
+};
 
-export default withNavigation(connect(mapStateToProps, null)(CompleteLink));
+export default withNavigation(
+  connect(mapStateToProps, mapDispatchToProps)(CompleteLink)
+);

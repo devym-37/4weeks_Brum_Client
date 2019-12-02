@@ -24,6 +24,10 @@ const Container = styled.View`
   background-color: white;
 `;
 
+const ButtonContainer = styled.View`
+  padding: 12px 0;
+`;
+
 const ContentTitle = styled.Text`
   font-size: 20;
   margin-bottom: 20px;
@@ -75,11 +79,14 @@ const AuthModal = ({ navigation }) => {
             source={require("../../assets/brand_symbol.png")}
           />
           <ContentTitle>지금 가입하면 무엇이든 쌉가능</ContentTitle>
-          <MainButton
-            width={90}
-            text={"가입하고 구경하기"}
-            onPress={handleSignupBtn}
-          />
+          <ButtonContainer>
+            <MainButton
+              width={90}
+              text={"가입하고 구경하기"}
+              onPress={handleSignupBtn}
+            />
+          </ButtonContainer>
+
           <GhostButton
             width={90}
             text={"로그인 하기"}
