@@ -69,6 +69,8 @@ const App = () => {
       await Asset.loadAsync([require("./assets/RunnerHistory.png")]);
       await Asset.loadAsync([require("./assets/OrderHistory.png")]);
       await Asset.loadAsync([require("./assets/verified-account.png")]);
+      await Asset.loadAsync([require("./assets/Delivery_arrival.png")]);
+      await Asset.loadAsync([require("./assets/Delivery_departure.png")]);
       //
       await AsyncStorage.setItem("permiSsions", "true");
       //빼기

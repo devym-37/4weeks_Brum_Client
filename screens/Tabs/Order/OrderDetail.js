@@ -32,6 +32,7 @@ import styles from "../../../styles";
 import utils from "../../../utils";
 import { serverApi } from "../../../components/API";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import VerifiedAccountBadge from "../../../components/VerifiedAccountBadge";
 
 const Container = styled.View`
   flex: 1;
@@ -497,7 +498,18 @@ const OrderDetailScreen = ({ navigation }) => {
                 <Avatar source={{ uri: avatar }} />
                 <UserInfoContainer>
                   <UserName>{username}</UserName>
-                  <University>{university}</University>
+                  {/* <University>{university}</University> */}
+                  {data &&
+                    (data.hostInfo.university ? (
+                      <VerifiedAccountBadge
+                        fontSize={13}
+                        color={"#737b84"}
+                        iconSize={10}
+                        campus={data.hostInfo.university}
+                      />
+                    ) : (
+                      <University>미인증 회원</University>
+                    ))}
                 </UserInfoContainer>
               </ProfileContainer>
               <ScoreContainer>

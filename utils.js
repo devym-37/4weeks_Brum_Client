@@ -12,6 +12,35 @@ export default {
       email
     );
   },
+  formatUniversity: email => {
+    if (
+      /^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?hanyang.ac.kr$/g.test(
+        email
+      )
+    ) {
+      return "한양대";
+    } else if (
+      /^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?snu.ac.kr$/g.test(
+        email
+      )
+    ) {
+      return "서울대";
+    } else if (
+      /^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?yonsei.ac.kr$/g.test(
+        email
+      )
+    ) {
+      return "연세대";
+    } else if (
+      /^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?ehwa.ac.kr$/g.test(
+        email
+      )
+    ) {
+      return "이화여대";
+    } else {
+      return;
+    }
+  },
   validateEmailReg: email => {
     return /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/.test(email);
   },

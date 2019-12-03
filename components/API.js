@@ -256,6 +256,31 @@ export const serverApi = {
       }
     });
   },
+  verifyEmail: (email, userToken) =>
+    sApi.put(
+      `user/email`,
+      { email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": userToken
+        }
+      }
+    ),
+
+  confirmEmail: (authCode, university, userToken) =>
+    sApi.put(
+      `user/email/authentication`,
+      { authCode, university },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": userToken
+        }
+      }
+    ),
   orderdetail: (orderId, userToken) =>
     sApi.get(`order/${orderId}`, {
       headers: {

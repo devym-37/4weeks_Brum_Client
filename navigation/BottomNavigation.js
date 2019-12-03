@@ -14,7 +14,6 @@ import MyPageScreen from "../screens/Tabs/MyPage/MyPageScreen";
 import ListScreen from "../screens/Tabs/Home/ListScreen";
 import HomeScreen from "../screens/Tabs/Home/HomeScreen";
 import ApplicantsList from "../screens/Tabs/Order/ApplicantsList";
-import ChatScreen from "../screens/Tabs/Chats/ChatScreen";
 import UserProfileScreen from "../screens/Tabs/MyPage/UserProfile";
 import NotificationLink from "../components/HeaderLink/HomeHeaderLink";
 import BackLink from "../components/HeaderLink/BackLink";
