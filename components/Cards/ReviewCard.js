@@ -37,7 +37,13 @@ const ReviewCard = ({
 }) => {
   const handleClickReview = () => {
     if (isReadable) {
-      navigation.navigate("ReviewDetailScreen");
+      navigation.navigate("ReviewDetailScreen", {
+        orderId,
+        nickname,
+        avatar,
+        university,
+        isDeliver
+      });
     } else {
       navigation.navigate("ReviewScreen", {
         orderId,

@@ -27,7 +27,7 @@ const MainButton = ({
   className = "",
   color = "main",
   text,
-  width = 150,
+  width = 50,
   onPress,
   loading = false
 }) => (
