@@ -16,14 +16,14 @@ const InputContainer = styled.View`
 
 const TextInput = styled.TextInput`
   width: ${props => constants.width - props.width};
-  padding: 10px 10px;
+  padding: 12px 10px;
   background-color: white;
   border: 1px solid ${props => props.theme.darkGreyColor};
   border-radius: 2px;
 `;
 
 const AuthInput = ({
-  width = 150,
+  width = 50,
   children = null,
   placeholder,
   value,

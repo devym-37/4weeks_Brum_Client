@@ -17,6 +17,7 @@ import ArrivalNavigation from "./ArrivalNavigation";
 import UserHistoryNavigation from "./UserHistoryNavigation";
 import VerifyCampusNavigation from "./VerifyCampusNavigtion";
 import PostReviewNavigation from "./PostReviewNavigation";
+import ReviewDetailNavigation from "./ReviewDetailNavigation";
 import { stackStyles } from "./config";
 
 const MainNavigation = createStackNavigator(
@@ -25,6 +26,7 @@ const MainNavigation = createStackNavigator(
     AuthNavigation,
     OrderNavigation,
     UserHistoryNavigation,
+    ReviewDetailNavigation,
     VerifyCampusNavigation,
     FilterNavigation,
     NewOrderNavigation,

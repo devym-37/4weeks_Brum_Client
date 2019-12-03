@@ -10,12 +10,17 @@ const Text = styled.Text`
   color: ${props => (props.color ? props.color : "#858e96")};
   font-size: ${props => (props.fontSize ? props.fontSize : 15)};
 `;
-const VerifiedAccountBadge = ({ campus = "한양대", fontSize, color }) => {
+const VerifiedAccountBadge = ({
+  campus = "한양대",
+  iconSize = 18,
+  fontSize,
+  color
+}) => {
   return (
     <Container>
       <Image
         source={require("../assets/verified-account.png")}
-        style={{ width: 18, height: 18, marginRight: 4 }}
+        style={{ width: iconSize, height: iconSize, marginRight: 4 }}
       />
       <Text fontSize={fontSize} color={color}>{`${campus}`}</Text>
     </Container>

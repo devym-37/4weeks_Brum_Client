@@ -276,11 +276,14 @@ const Touchable = styled.TouchableOpacity``;
 const DropContainer = styled.View`
   width: 200;
   justify-content: center;
-  padding-bottom: 30;
+  /* padding-bottom: 300; */
+  margin-bottom: ${props => (props.onFocused ? 300 : 30)};
   height: 200;
 `;
 const OrderDetailScreen = ({ navigation }) => {
+  const [fetchData, setFetchData] = useState(false);
   const [orderId, setorderId] = useState(navigation.getParam("orderId"));
+  const [onFocus, setOnFocus] = useState(false);
   const [userToken, setUserToken] = useState();
   const [isHost, setIsHost] = useState(false);
   const [isRunner, setIsRunner] = useState(false);
@@ -311,7 +314,7 @@ const OrderDetailScreen = ({ navigation }) => {
   const timeStamp = data && utils.transferTime(data.createdAt);
   const message = data && data.detais !== "null" ? data.details : "";
   const numOfApplicants = data && utils.numOfScores(data.applicants);
-  const likes = 0;
+  const likes = data && data.userLikeOrders.length;
   const views = data && data.views;
   const departure =
     data && data.departures !== "null" ? data.departures : "없음";
@@ -319,22 +322,27 @@ const OrderDetailScreen = ({ navigation }) => {
 
   const handleClickLikeButton = async () => {
     setIsLiked(!isLiked);
-    console.log(`userToken: `, userToken);
+    // console.log(`userToken: `, userToken);
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       if (!isLiked) {
         const postRequest = await serverApi.userLikeOrder(orderId, userToken);
-        console.log(`라이크 서버요청: `, postRequest);
+        // console.log(`라이크 서버요청: `, postRequest);
       } else {
         const postDislikeRequest = await serverApi.userDislikeOrder(
           orderId,
           userToken
         );
-        console.log(`라이크 취소 서버요청: `, postDislikeRequest);
+        // console.log(`라이크 취소 서버요청: `, postDislikeRequest);
       }
     } catch (e) {
       console.log(`Can't post data of userLikeOrder on server. Error: ${e}`);
     }
+  };
+
+  const handleOnFocus = () => {
+    // console.log(`포커스 됐다`);
+    !onFocus && setOnFocus(true);
   };
   const handleOpen = () => {
     setVisible(true);
@@ -343,6 +351,7 @@ const OrderDetailScreen = ({ navigation }) => {
   const handleClose = () => {
     // Keyboard.dismiss();
     setVisible(false);
+    setOnFocus(false);
   };
 
   const handleApplyButton = async () => {
@@ -359,12 +368,13 @@ const OrderDetailScreen = ({ navigation }) => {
         } else {
           Alert.alert("이미 지원한 요청입니다");
         }
-        console.log("가격불가 지원했습니다", request.data);
+        // console.log("가격불가 지원했습니다", request.data);
       } catch (e) {
         Alert.alert("현재 지원이 불가능한 요청입니다");
         console.log(`Can't post data of applying on server. Error : `, e);
       } finally {
         setLoading(false);
+        setFetchData(true);
       }
     }
   };
@@ -385,31 +395,41 @@ const OrderDetailScreen = ({ navigation }) => {
       } else {
         Alert.alert("이미 지원한 요청입니다");
       }
-      console.log("가격협의 지원했습니다", request);
+      // console.log("가격협의 지원했습니다", request);
     } catch (e) {
       Alert.alert("현재 지원이 불가능한 요청입니다");
       console.log(`Can't post data of applying on server. Error : `, e);
     } finally {
       setLoading(false);
+      setFetchData(true);
       // navigation.goBack(null);
     }
   };
 
+  const handleCancelApplyButton = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem("userToken");
+      const request = await serverApi.cancelApply(orderId, userToken);
+      // console.log(`요청 취소! request: `, request);
+      if (request.data.isSuccess) {
+        Alert.alert("요청이 취소되었습니다");
+      } else {
+        Alert.alert("실패했습니다. 다시 시도해 주세요");
+      }
+    } catch (e) {
+      console.log(`Can't cancel apply. Error: ${e}`);
+    } finally {
+      setIsRunner(false);
+      setFetchData(true);
+    }
+  };
   const handleDelete = async () => {
     try {
       const result = await serverApi.cancelMyOrder(orderId, userToken);
-      console.log(`delete : `, result);
+      // console.log(`delete : `, result);
 
       if (result.data.isSuccess) {
-        const resetAction = StackActions.reset({
-          key: null,
-          index: 0,
-          actions: [
-            NavigationActions.navigate({ routeName: "BottomNavigation" })
-          ]
-        });
-
-        navigation.dispatch(resetAction);
+        navigation.navigate("Home", { fetchData: true });
       } else {
         Alert.alert("실패했습니다. 다시 시도해 주세요");
       }
@@ -424,13 +444,13 @@ const OrderDetailScreen = ({ navigation }) => {
   };
 
   const handleChangeMessage = value => {
-    console.log(`Message : `, value);
+    // console.log(`Message : `, value);
     setRunnerMessage(value);
   };
 
   const handleChangePrice = value => {
-    console.log(`bidPrice: `, value);
-    setBidPrice(value);
+    // console.log(`bidPrice: `, value);
+    setBidPrice(utils.numberWithCommas(value));
   };
 
   const preLoad = async () => {
@@ -438,13 +458,14 @@ const OrderDetailScreen = ({ navigation }) => {
     setUserToken(userToken);
     const data = await serverApi.orderdetail(orderId, userToken);
     setData({ ...data.data.data.order });
-    console.log(
-      `data.data.data.order.userLikeOrders: `,
-      data.data.data.order.userLikeOrders
-    );
+    // console.log(`data.data.data.order : `, data.data.data.order);
+    // console.log(
+    //   `data.data.data.order.userLikeOrders: `,
+    //   data.data.data.order.userLikeOrders
+    // );
 
     const userId = data.data.data.userId;
-    console.log(userId);
+    // console.log(`userId: `, userId);
     const userLikeOrderList = data.data.data.order.userLikeOrders;
     if (
       userLikeOrderList.length === 0 ||
@@ -458,10 +479,7 @@ const OrderDetailScreen = ({ navigation }) => {
     if (userId === data.data.data.order.hostId) {
       setIsHost(true);
     } else if (
-      find(
-        data.data.data.order.applicants,
-        obj => obj.userId === data.data.data.userId
-      )
+      find(data.data.data.order.applicants, obj => obj.userId === userId)
     ) {
       setIsRunner(true);
     }
@@ -481,7 +499,7 @@ const OrderDetailScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
-  }, []);
+  }, [fetchData]);
 
   return (
     <>
@@ -624,6 +642,38 @@ const OrderDetailScreen = ({ navigation }) => {
                   </EditButtonContainer>
                 </>
               )
+            ) : isRunner ? (
+              <>
+                <Touchable onPress={handleClickLikeButton}>
+                  <IconContainer>
+                    {isLiked ? (
+                      <AntDesign
+                        name="heart"
+                        size={26}
+                        style={{ color: styles.mainColor }}
+                      />
+                    ) : (
+                      <AntDesign
+                        name="hearto"
+                        size={26}
+                        style={{ color: styles.mainColor }}
+                      />
+                    )}
+                  </IconContainer>
+                </Touchable>
+                <VerticalDivider />
+                <PriceContainer>
+                  <Price>{price}</Price>
+                  <PriceOption>
+                    {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                  </PriceOption>
+                </PriceContainer>
+                <Touchable onPress={handleCancelApplyButton}>
+                  <DeleteButton width={250}>
+                    <DeleteButtonText>러너 지원취소</DeleteButtonText>
+                  </DeleteButton>
+                </Touchable>
+              </>
             ) : (
               <>
                 <Touchable onPress={handleClickLikeButton}>
@@ -664,13 +714,13 @@ const OrderDetailScreen = ({ navigation }) => {
           visible={visible}
           handleOpen={handleOpen}
           handleClose={handleClose}
-          onClose={Keyboard.dismiss}
+          // onClose={Keyboard.dismiss}
           swipeConfig={{
             velocityThreshold: 0.3,
-            directionalOffsetThreshold: 80
+            directionalOffsetThreshold: 30
           }}
           animationConfig={{
-            speed: 14,
+            speed: 6,
             bounciness: 4
           }}
           overlayColor="rgba(0,0,0,0.32)"
@@ -679,92 +729,88 @@ const OrderDetailScreen = ({ navigation }) => {
             justifyContent: "flex-start"
           }}
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <KeyboardAvoidingView
-              // style={{ flex: 1 }}
-              enabled
-              behavior="padding"
-              keyboardVerticalOffset={600}
-            >
-              <DropContainer>
-                <>
-                  <BottomContainer width={40}>
-                    <FormInput
-                      onSubmitEditing={Keyboard.dismiss}
-                      placeholder={"₩ 희망 배달금액(선택사항)"}
-                      width={140}
-                      dividerWidth={40}
-                      dividerColor={"#e8ecef"}
-                      value={bidPrice}
-                      isUnderline={true}
-                      onChange={e => handleChangePrice(e)}
-                    >
-                      <Checkbox
-                        label="희망비용 수락"
-                        checkboxStyle={{ height: 22, width: 22 }}
-                        labelStyle={{ color: "#1D2025", marginLeft: -4 }}
-                        checked={checked}
-                        containerStyle={{
-                          width: 110,
-                          marginLeft: -8
-                        }}
-                        checkedImage={checkedBox}
-                        uncheckedImage={uncheckedBox}
-                        onChange={() => {
-                          setChecked(!checked);
-                        }}
-                      />
-                    </FormInput>
-                    <Divider />
-                    <FormInput
-                      onSubmitEditing={Keyboard.dismiss}
-                      placeholder={"메세지(선택사항)"}
-                      dividerColor={"#e8ecef"}
-                      width={50}
-                      dividerWidth={40}
-                      value={runnerMessage}
-                      onChange={e => handleChangeMessage(e)}
-                      isUnderline={true}
-                    />
-                    <Divider />
-                    <MarginContentContainer>
-                      <>
-                        <Touchable onPress={() => setIsLiked(!isLiked)}>
-                          <IconContainer>
-                            {isLiked ? (
-                              <AntDesign
-                                name="heart"
-                                size={26}
-                                style={{ color: styles.mainColor }}
-                              />
-                            ) : (
-                              <AntDesign
-                                name="hearto"
-                                size={26}
-                                style={{ color: styles.mainColor }}
-                              />
-                            )}
-                          </IconContainer>
-                        </Touchable>
-                        <VerticalDivider />
-                        <PriceContainer>
-                          <Price>{price}</Price>
-                          <PriceOption>
-                            {isPrice ? "가격제안 가능" : "가격제안 불가"}
-                          </PriceOption>
-                        </PriceContainer>
-                        <Touchable onPress={handleApplyButtonWithPrice}>
-                          <ApplyButton width={250}>
-                            <ButtonText>러너 지원하기</ButtonText>
-                          </ApplyButton>
-                        </Touchable>
-                      </>
-                    </MarginContentContainer>
-                  </BottomContainer>
-                </>
-              </DropContainer>
-            </KeyboardAvoidingView>
-          </TouchableWithoutFeedback>
+          <DropContainer onFocused={onFocus}>
+            <>
+              <BottomContainer width={40}>
+                <FormInput
+                  onFocus={handleOnFocus}
+                  placeholder={"₩ 희망 배달금액(선택사항)"}
+                  width={140}
+                  dividerWidth={40}
+                  dividerColor={"#e8ecef"}
+                  value={bidPrice}
+                  isUnderline={true}
+                  onChange={e => handleChangePrice(e)}
+                  keyboardType="numeric"
+                  maxLength={7}
+                >
+                  <Checkbox
+                    label="희망비용 수락"
+                    checkboxStyle={{ height: 22, width: 22 }}
+                    labelStyle={{ color: "#1D2025", marginLeft: -4 }}
+                    checked={checked}
+                    containerStyle={{
+                      width: 110,
+                      marginLeft: -8
+                    }}
+                    checkedImage={checkedBox}
+                    uncheckedImage={uncheckedBox}
+                    onChange={() => {
+                      setChecked(!checked);
+                    }}
+                  />
+                </FormInput>
+                <Divider />
+                <FormInput
+                  onFocus={handleOnFocus}
+                  // onSubmitEditing={Keyboard.dismiss}
+                  placeholder={"메세지(선택사항)"}
+                  dividerColor={"#e8ecef"}
+                  width={50}
+                  dividerWidth={40}
+                  value={runnerMessage}
+                  onChange={e => handleChangeMessage(e)}
+                  isUnderline={true}
+                />
+                <Divider />
+                <MarginContentContainer>
+                  <>
+                    <Touchable onPress={() => setIsLiked(!isLiked)}>
+                      <IconContainer>
+                        {isLiked ? (
+                          <AntDesign
+                            name="heart"
+                            size={26}
+                            style={{ color: styles.mainColor }}
+                          />
+                        ) : (
+                          <AntDesign
+                            name="hearto"
+                            size={26}
+                            style={{ color: styles.mainColor }}
+                          />
+                        )}
+                      </IconContainer>
+                    </Touchable>
+                    <VerticalDivider />
+                    <PriceContainer>
+                      <Price>{price}</Price>
+                      <PriceOption>
+                        {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                      </PriceOption>
+                    </PriceContainer>
+                    <Touchable onPress={handleApplyButtonWithPrice}>
+                      <ApplyButton width={250}>
+                        <ButtonText>러너 지원하기</ButtonText>
+                      </ApplyButton>
+                    </Touchable>
+                  </>
+                </MarginContentContainer>
+              </BottomContainer>
+            </>
+          </DropContainer>
+          {/* </KeyboardAvoidingView> */}
+          {/* </TouchableWithoutFeedback> */}
         </Backdrop>
       </SafeAreaView>
     </>

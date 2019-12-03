@@ -1,4 +1,6 @@
 // Imports: Dependencies
+import React from "react";
+
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 
@@ -13,7 +15,7 @@ import ResetPw from "../screens/Auth/ResetPw";
 import Term from "../screens/Auth/Terms";
 import Privacy from "../screens/Auth/Privacy";
 import { stackStyles } from "./config";
-
+import AuthCloseLink from "../components/HeaderLink/AuthCloseLink";
 const AuthNavigation = createStackNavigator(
   {
     // AuthModal: {
@@ -25,13 +27,16 @@ const AuthNavigation = createStackNavigator(
     VerifyPhone: {
       screen: VerifyPhone,
       navigationOptions: {
-        headerShown: false
+        title: "휴대폰번호 인증",
+        headerLeft: <AuthCloseLink />
       }
     },
     Signup: {
       screen: Signup,
       navigationOptions: {
-        headerShown: false
+        // headerShown: false
+        title: "회원가입",
+        headerLeft: <AuthCloseLink />
       }
     },
     Term: {
@@ -63,19 +68,25 @@ const AuthNavigation = createStackNavigator(
     Login: {
       screen: Login,
       navigationOptions: {
-        headerShown: false
+        // headerShown: false
+        title: "로그인",
+        headerLeft: <AuthCloseLink />
       }
     },
     Confirm: {
       screen: Confirm,
       navigationOptions: {
-        headerShown: false
+        // headerShown: false
+        title: "인증번호 입력",
+        headerLeft: <AuthCloseLink />
       }
     },
     ResetPw: {
       screen: ResetPw,
       navigationOptions: {
-        headerShown: false
+        // headerShown: false
+        title: "비밀번호 재설정",
+        headerLeft: <AuthCloseLink />
       }
     }
   },

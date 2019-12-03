@@ -145,7 +145,7 @@ const Signup = props => {
         );
 
         ////////
-        Alert.alert("회원가입 및 로그인이 완료되었습니다");
+        // Alert.alert("회원가입 및 로그인이 완료되었습니다");
 
         props.navigation.navigate("BottomNavigation");
 
