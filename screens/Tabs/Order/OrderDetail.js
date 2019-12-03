@@ -277,11 +277,12 @@ const DropContainer = styled.View`
   width: 200;
   justify-content: center;
   /* padding-bottom: 300; */
-  margin-bottom: 350;
+  margin-bottom: ${props => (props.onFocused ? 350 : 30)};
   height: 200;
 `;
 const OrderDetailScreen = ({ navigation }) => {
   const [orderId, setorderId] = useState(navigation.getParam("orderId"));
+  const [onFocus, setOnFocus] = useState(false);
   const [userToken, setUserToken] = useState();
   const [isHost, setIsHost] = useState(false);
   const [isRunner, setIsRunner] = useState(false);
@@ -337,6 +338,11 @@ const OrderDetailScreen = ({ navigation }) => {
       console.log(`Can't post data of userLikeOrder on server. Error: ${e}`);
     }
   };
+
+  const handleOnFocus = () => {
+    console.log(`포커스 됐다`);
+    !onFocus && setOnFocus(true);
+  };
   const handleOpen = () => {
     setVisible(true);
   };
@@ -344,6 +350,7 @@ const OrderDetailScreen = ({ navigation }) => {
   const handleClose = () => {
     // Keyboard.dismiss();
     setVisible(false);
+    setOnFocus(false);
   };
 
   const handleApplyButton = async () => {
@@ -668,10 +675,10 @@ const OrderDetailScreen = ({ navigation }) => {
           // onClose={Keyboard.dismiss}
           swipeConfig={{
             velocityThreshold: 0.3,
-            directionalOffsetThreshold: 80
+            directionalOffsetThreshold: 30
           }}
           animationConfig={{
-            speed: 14,
+            speed: 6,
             bounciness: 4
           }}
           overlayColor="rgba(0,0,0,0.32)"
@@ -687,12 +694,11 @@ const OrderDetailScreen = ({ navigation }) => {
             behavior="padding"
             keyboardVerticalOffset={600}
           > */}
-          <DropContainer>
+          <DropContainer onFocused={onFocus}>
             <>
               <BottomContainer width={40}>
                 <FormInput
-                  // onSubmitEditing={Keyboard.dismiss}
-
+                  onFocus={handleOnFocus}
                   placeholder={"₩ 희망 배달금액(선택사항)"}
                   width={140}
                   dividerWidth={40}
@@ -719,6 +725,7 @@ const OrderDetailScreen = ({ navigation }) => {
                 </FormInput>
                 <Divider />
                 <FormInput
+                  onFocus={handleOnFocus}
                   // onSubmitEditing={Keyboard.dismiss}
                   placeholder={"메세지(선택사항)"}
                   dividerColor={"#e8ecef"}

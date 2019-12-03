@@ -158,7 +158,7 @@ const UserHistoryScreen = ({ navigation }) => {
     <ScrollView style={{ flex: 1, backgroundColor: "#f1f3f5" }}>
       {orderHistory && orderHistory.length > 0 ? (
         orderHistory.map((data, i) => {
-          console.log(`data: `, data);
+          console.log(`요청목록 개별 data: `, data);
           return (
             !data.deletedAt && (
               <View key={i}>
