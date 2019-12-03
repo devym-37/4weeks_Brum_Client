@@ -17,7 +17,9 @@ const Image = styled.Image`
 
 const ButtonContainer = styled.TouchableOpacity``;
 const Button = styled.View``;
-const ButtonText = styled.Text``;
+const ButtonText = styled.Text`
+  font-size: 17;
+`;
 
 export default ({ navigation }) => {
   const handleSelectSignUp = async () => {

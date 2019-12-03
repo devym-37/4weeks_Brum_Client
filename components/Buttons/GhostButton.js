@@ -19,7 +19,7 @@ const Text = styled.Text`
   font-weight: 600;
 `;
 
-const GhostButton = ({ text, width = 150, color, onPress }) => (
+const GhostButton = ({ text, width = 50, color, onPress }) => (
   <Touchable onPress={onPress}>
     <Container width={width} color={color}>
       <Text color={color}>{text}</Text>
