@@ -41,7 +41,7 @@ const ChatColumn = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  aling-self: center;
+  /* aling-self: center; */
 `;
 const Title = styled.Text`
   font-size: 18;
