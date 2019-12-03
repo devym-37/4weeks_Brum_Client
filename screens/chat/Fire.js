@@ -6,7 +6,7 @@ import { serverApi } from "../../components/API";
 class Fire {
   constructor() {
     this.init();
-    //  this.observeAuth();
+    this.observeAuth();
   }
   orderId = null;
   init = () => {
@@ -35,12 +35,12 @@ class Fire {
 
   onAuthStateChanged = async user => {
     //
-    const email = await AsyncStorage.getItem("email");
-    const password = await AsyncStorage.getItem("password");
+   //const email = await AsyncStorage.getItem("email");
+    //const password = await AsyncStorage.getItem("password");
     // console.log("채팅 로그인이 안됨", email, password);
     if (!user) {
       try {
-        firebase.auth().signInWithEmailAndPassword(email, password);
+        firebase.auth().signInAnonymously();
       } catch ({ message }) {
         alert(message);
       }
@@ -80,6 +80,15 @@ class Fire {
       .limitToLast(20)
       .on("child_added", snapshot => callback(this.parse(snapshot)));
   };
+
+  getlastone = async (orderId)  => { 
+    firebase
+      .database()
+      .ref(`threads/${orderId}/messages`)
+      .limitToLast(1)
+      .on("child_added", snapshot => this.parse(snapshot));
+  };
+
 
   getorderid = async () => {
     const orderid = await AsyncStorage.getItem("orderid");
@@ -227,9 +236,9 @@ class Fire {
     firebase.auth().createUserWithEmailAndPassword(id, pw);
   };
 
-  signin = (id, pw) => {
+  signin = () => {
     console.log("왜 문자열이 아닌가", id, typeof id);
-    firebase.auth().signInWithEmailAndPassword(id, pw);
+    firebase.auth().signInAnonymously();
   };
 
   ///

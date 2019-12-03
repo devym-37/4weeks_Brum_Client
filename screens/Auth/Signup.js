@@ -123,9 +123,9 @@ const Signup = props => {
         props.reduxLogin(true);
 
         //firebase///
-        Fire.shared.signup(`${values.phone}@shoppossible.com`, values.password);
-        await AsyncStorage.setItem("email", `${values.phone}@shoppossible.com`);
-        await AsyncStorage.setItem("password", values.password);
+        Fire.shared.signin();
+        //await AsyncStorage.setItem("email", `${values.phone}@shoppossible.com`);
+        //await AsyncStorage.setItem("password", values.password);
         /* firebase
           .auth()
           .createUserWithEmailAndPassword(
