@@ -3,7 +3,8 @@ import styled from "styled-components";
 import MainButton from "../../../components/Buttons/MainButton";
 import AuthInput from "../../../components/Inputs/AuthInput";
 import utils from "../../../utils";
-import { Alert } from "react-native";
+import { Alert, AsyncStorage } from "react-native";
+import { serverApi } from "../../../components/API";
 const Container = styled.View`
   flex: 1;
   justify-content: center;
@@ -25,10 +26,11 @@ const SubText = styled.Text`
 const ButtonContainer = styled.View`
   padding: 6px 0;
 `;
-const VerifyCampusScreen = () => {
+const VerifyCampusScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const userToken = await AsyncStorage.getItem("userToken");
     console.log(`email: `, email);
     if (!utils.validateEmailReg(email)) {
       Alert.alert(
@@ -42,11 +44,17 @@ const VerifyCampusScreen = () => {
       );
     } else {
       //메일 발송
-      Alert.alert(
-        "인증메일 전송완료",
-        "입력하신 메일주소의 메일함을 확인해주세요"
-      );
-      //   console.log(`올바른 메일 입려`);
+      const request = await serverApi.verifyEmail(email, userToken);
+      if (request.data.isSuccess) {
+        console.log(`email request : `, request);
+        Alert.alert(
+          "인증메일 전송완료",
+          "입력하신 메일주소의 메일함을 확인해주세요"
+        );
+        navigation.navigate("ConfirmEmailScreen", { email: email });
+      } else {
+        Alert.alert("일시 오류", "죄송합니다. 잠시후 다시 시도해주세요");
+      }
     }
   };
   return (

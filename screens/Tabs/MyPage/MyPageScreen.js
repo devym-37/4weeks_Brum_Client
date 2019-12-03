@@ -148,6 +148,9 @@ const SubDivider = styled.View`
 const MyPageScreen = ({ navigation, ...props }) => {
   // const [userToken, setUserToken] = useState();
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState(
+    navigation.getParam("university") ? navigation.getParam("university") : ""
+  );
   const [profile, setProfile] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [buttonName, setButtonName] = useState(null);
@@ -230,9 +233,13 @@ const MyPageScreen = ({ navigation, ...props }) => {
                 </UserNameContainer>
                 <UserUnivContainer>
                   {profile.university ? (
-                    <UserUniv>미인증 회원</UserUniv>
+                    <VerifiedAccountBadge campus={profile.university} />
+                  ) : navigation.getParam("university") ? (
+                    <VerifiedAccountBadge
+                      campus={navigation.getParam("university")}
+                    />
                   ) : (
-                    <VerifiedAccountBadge />
+                    <UserUniv>미인증 회원</UserUniv>
                   )}
                 </UserUnivContainer>
               </HeaderCenter>
