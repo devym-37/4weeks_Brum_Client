@@ -1,5 +1,10 @@
 import React from "react";
-import { GiftedChat, Bubble, Time } from "react-native-gifted-chat"; // 0.3.0
+import {
+  GiftedChat,
+  Bubble,
+  Time,
+  MessageImage
+} from "react-native-gifted-chat"; // 0.3.0
 import {
   AsyncStorage,
   View,
@@ -23,7 +28,7 @@ import { serverApi } from "../../components/API";
 import { Ionicons } from "@expo/vector-icons";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
-
+import firebase from "firebase";
 const CardContainer = styled.View`
   width: ${constants.width};
 
@@ -177,7 +182,8 @@ class Chat extends React.Component {
             }}
             user={this.user}
             renderBubble={this.renderBubble}
-            renderTime={this.renderTime}
+            /*      renderTime={this.renderTime}
+            renderMessageImage={this.renderMessageImage} */
             scrollToBottom={true}
             timeTextStyle={{
               left: { color: "red" },
@@ -193,6 +199,10 @@ class Chat extends React.Component {
       )
     );
   }
+  /*  renderMessageImage = image => {
+    console.log("실행도안된다");
+    return <Image source={image} />;
+  }; */
 
   renderActions = () => {
     const takePicture = async () => {
@@ -202,7 +212,7 @@ class Chat extends React.Component {
           Permissions.CAMERA_ROLL,
           Permissions.CAMERA
         );
-        console.log("상태", status);
+
         // console.log(ImagePicker);
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -212,11 +222,20 @@ class Chat extends React.Component {
         });
 
         if (!result.cancelled) {
-          const response = await fetch(uri);
+          const response = await fetch(result.uri);
           const blob = await response.blob();
-          console.log("상태dfsd", blob);
+
+          var storageRef = firebase.storage().ref("images");
+
+          let ref = storageRef.child(`${blob.data.name}`);
+
+          await ref.put(blob);
+          const url = await ref.getDownloadURL();
+
+          console.log("블롭파일입니다", url);
+
           this.setState({
-            image: result.uri
+            image: url
           });
           //setImageadded(result.uri);
         }

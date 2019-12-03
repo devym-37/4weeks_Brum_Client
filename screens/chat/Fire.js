@@ -16,7 +16,7 @@ class Fire {
         authDomain: "shoppossible-104cf.firebaseapp.com",
         databaseURL: "https://shoppossible-104cf.firebaseio.com",
         projectId: "shoppossible-104cf",
-        storageBucket: "",
+        storageBucket: "gs://shoppossible-104cf.appspot.com",
         messagingSenderId: "468776437417"
         /*  appId: "1:468776437417:web:d2f6566987375050cc8bb8",
         measurementId: "G-2YJ8J64DSL" */
@@ -56,14 +56,15 @@ class Fire {
   }
 
   parse = snapshot => {
-    const { timestamp: numberStamp, text, user } = snapshot.val();
+    const { createdAt, text, user, image } = snapshot.val();
     const { key: _id } = snapshot;
-    const timestamp = new Date(numberStamp);
+    //const timestamp = new Date(numberStamp);
     const message = {
       _id,
-      timestamp,
+      createdAt,
       text,
-      user
+      user,
+      image
     };
     return message;
   };
@@ -124,7 +125,7 @@ class Fire {
 
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
-      const time = new Date(Date.UTC(2016, 5, 11, 17, 20, 0));
+      const time = new Date();
       const message = {
         text,
         user,
