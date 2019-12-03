@@ -277,10 +277,11 @@ const DropContainer = styled.View`
   width: 200;
   justify-content: center;
   /* padding-bottom: 300; */
-  margin-bottom: ${props => (props.onFocused ? 350 : 30)};
+  margin-bottom: ${props => (props.onFocused ? 300 : 30)};
   height: 200;
 `;
 const OrderDetailScreen = ({ navigation }) => {
+  const [fetchData, setFetchData] = useState(false);
   const [orderId, setorderId] = useState(navigation.getParam("orderId"));
   const [onFocus, setOnFocus] = useState(false);
   const [userToken, setUserToken] = useState();
@@ -321,18 +322,18 @@ const OrderDetailScreen = ({ navigation }) => {
 
   const handleClickLikeButton = async () => {
     setIsLiked(!isLiked);
-    console.log(`userToken: `, userToken);
+    // console.log(`userToken: `, userToken);
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       if (!isLiked) {
         const postRequest = await serverApi.userLikeOrder(orderId, userToken);
-        console.log(`라이크 서버요청: `, postRequest);
+        // console.log(`라이크 서버요청: `, postRequest);
       } else {
         const postDislikeRequest = await serverApi.userDislikeOrder(
           orderId,
           userToken
         );
-        console.log(`라이크 취소 서버요청: `, postDislikeRequest);
+        // console.log(`라이크 취소 서버요청: `, postDislikeRequest);
       }
     } catch (e) {
       console.log(`Can't post data of userLikeOrder on server. Error: ${e}`);
@@ -340,7 +341,7 @@ const OrderDetailScreen = ({ navigation }) => {
   };
 
   const handleOnFocus = () => {
-    console.log(`포커스 됐다`);
+    // console.log(`포커스 됐다`);
     !onFocus && setOnFocus(true);
   };
   const handleOpen = () => {
@@ -367,12 +368,13 @@ const OrderDetailScreen = ({ navigation }) => {
         } else {
           Alert.alert("이미 지원한 요청입니다");
         }
-        console.log("가격불가 지원했습니다", request.data);
+        // console.log("가격불가 지원했습니다", request.data);
       } catch (e) {
         Alert.alert("현재 지원이 불가능한 요청입니다");
         console.log(`Can't post data of applying on server. Error : `, e);
       } finally {
         setLoading(false);
+        setFetchData(true);
       }
     }
   };
@@ -393,31 +395,41 @@ const OrderDetailScreen = ({ navigation }) => {
       } else {
         Alert.alert("이미 지원한 요청입니다");
       }
-      console.log("가격협의 지원했습니다", request);
+      // console.log("가격협의 지원했습니다", request);
     } catch (e) {
       Alert.alert("현재 지원이 불가능한 요청입니다");
       console.log(`Can't post data of applying on server. Error : `, e);
     } finally {
       setLoading(false);
+      setFetchData(true);
       // navigation.goBack(null);
     }
   };
 
+  const handleCancelApplyButton = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem("userToken");
+      const request = await serverApi.cancelApply(orderId, userToken);
+      // console.log(`요청 취소! request: `, request);
+      if (request.data.isSuccess) {
+        Alert.alert("요청이 취소되었습니다");
+      } else {
+        Alert.alert("실패했습니다. 다시 시도해 주세요");
+      }
+    } catch (e) {
+      console.log(`Can't cancel apply. Error: ${e}`);
+    } finally {
+      setIsRunner(false);
+      setFetchData(true);
+    }
+  };
   const handleDelete = async () => {
     try {
       const result = await serverApi.cancelMyOrder(orderId, userToken);
-      console.log(`delete : `, result);
+      // console.log(`delete : `, result);
 
       if (result.data.isSuccess) {
-        const resetAction = StackActions.reset({
-          key: null,
-          index: 0,
-          actions: [
-            NavigationActions.navigate({ routeName: "BottomNavigation" })
-          ]
-        });
-
-        navigation.dispatch(resetAction);
+        navigation.navigate("Home", { fetchData: true });
       } else {
         Alert.alert("실패했습니다. 다시 시도해 주세요");
       }
@@ -432,13 +444,13 @@ const OrderDetailScreen = ({ navigation }) => {
   };
 
   const handleChangeMessage = value => {
-    console.log(`Message : `, value);
+    // console.log(`Message : `, value);
     setRunnerMessage(value);
   };
 
   const handleChangePrice = value => {
-    console.log(`bidPrice: `, value);
-    setBidPrice(value);
+    // console.log(`bidPrice: `, value);
+    setBidPrice(utils.numberWithCommas(value));
   };
 
   const preLoad = async () => {
@@ -446,13 +458,14 @@ const OrderDetailScreen = ({ navigation }) => {
     setUserToken(userToken);
     const data = await serverApi.orderdetail(orderId, userToken);
     setData({ ...data.data.data.order });
-    console.log(
-      `data.data.data.order.userLikeOrders: `,
-      data.data.data.order.userLikeOrders
-    );
+    // console.log(`data.data.data.order : `, data.data.data.order);
+    // console.log(
+    //   `data.data.data.order.userLikeOrders: `,
+    //   data.data.data.order.userLikeOrders
+    // );
 
     const userId = data.data.data.userId;
-    console.log(userId);
+    // console.log(`userId: `, userId);
     const userLikeOrderList = data.data.data.order.userLikeOrders;
     if (
       userLikeOrderList.length === 0 ||
@@ -466,10 +479,7 @@ const OrderDetailScreen = ({ navigation }) => {
     if (userId === data.data.data.order.hostId) {
       setIsHost(true);
     } else if (
-      find(
-        data.data.data.order.applicants,
-        obj => obj.userId === data.data.data.userId
-      )
+      find(data.data.data.order.applicants, obj => obj.userId === userId)
     ) {
       setIsRunner(true);
     }
@@ -489,7 +499,7 @@ const OrderDetailScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
-  }, []);
+  }, [fetchData]);
 
   return (
     <>
@@ -632,6 +642,38 @@ const OrderDetailScreen = ({ navigation }) => {
                   </EditButtonContainer>
                 </>
               )
+            ) : isRunner ? (
+              <>
+                <Touchable onPress={handleClickLikeButton}>
+                  <IconContainer>
+                    {isLiked ? (
+                      <AntDesign
+                        name="heart"
+                        size={26}
+                        style={{ color: styles.mainColor }}
+                      />
+                    ) : (
+                      <AntDesign
+                        name="hearto"
+                        size={26}
+                        style={{ color: styles.mainColor }}
+                      />
+                    )}
+                  </IconContainer>
+                </Touchable>
+                <VerticalDivider />
+                <PriceContainer>
+                  <Price>{price}</Price>
+                  <PriceOption>
+                    {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                  </PriceOption>
+                </PriceContainer>
+                <Touchable onPress={handleCancelApplyButton}>
+                  <DeleteButton width={250}>
+                    <DeleteButtonText>러너 지원취소</DeleteButtonText>
+                  </DeleteButton>
+                </Touchable>
+              </>
             ) : (
               <>
                 <Touchable onPress={handleClickLikeButton}>
@@ -687,13 +729,6 @@ const OrderDetailScreen = ({ navigation }) => {
             justifyContent: "flex-start"
           }}
         >
-          {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
-          {/* <KeyboardAvoidingView
-            // style={{ flex: 1 }}
-            enabled
-            behavior="padding"
-            keyboardVerticalOffset={600}
-          > */}
           <DropContainer onFocused={onFocus}>
             <>
               <BottomContainer width={40}>
@@ -706,6 +741,8 @@ const OrderDetailScreen = ({ navigation }) => {
                   value={bidPrice}
                   isUnderline={true}
                   onChange={e => handleChangePrice(e)}
+                  keyboardType="numeric"
+                  maxLength={7}
                 >
                   <Checkbox
                     label="희망비용 수락"
