@@ -90,7 +90,7 @@ class Fire {
     return firebase.database.ServerValue.TIMESTAMP;
   }
   // send the message to the Backend
-  send = async messages => {
+  send = async (messages, image) => {
     const pushToken = await AsyncStorage.getItem("pushToken");
     const userToken = await AsyncStorage.getItem("userToken");
     const userid = await AsyncStorage.getItem("userId");
@@ -128,11 +128,12 @@ class Fire {
       const message = {
         text,
         user,
+        image,
         createdAt: this.timestamp
       };
       this.append(message);
 
-      console.log("my푸쉬토큰", pushToken);
+      console.log("my푸쉬토큰", image);
     }
 
     newarr.forEach(user => {
