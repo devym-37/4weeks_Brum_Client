@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { ScrollView, AsyncStorage, Alert, SafeAreaView } from "react-native";
 import styled from "styled-components";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { AntDesign } from "@expo/vector-icons";
 import constants from "../../../constants";
+import styles from "../../../styles";
 import OrderCard from "../../../components/Cards/OrderCard";
 import { serverApi } from "../../../components/API";
 import Loader from "../../../components/Loader";
@@ -21,6 +23,13 @@ const DefaultContainer = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
+`;
+
+const IconContainer = styled.Text`
+  position: relative;
+  right: -2;
+  top: 3;
+  /* padding-right: 12px; */
 `;
 
 const View = styled.View``;
@@ -55,7 +64,7 @@ const UserHistoryScreen = ({ navigation }) => {
   const [likeHistory, setLikeHistory] = useState(null);
   const [orderHistory, setOrderHistory] = useState(null);
   const [deliverHistory, setDeliverHistory] = useState(null);
-
+  const [isLiked, setIsLiked] = useState(true);
   const title = navigation.getParam("title");
   const [index, setIndex] = useState(obj[title]);
 
@@ -64,6 +73,21 @@ const UserHistoryScreen = ({ navigation }) => {
     { key: "second", title: "러너내역" },
     { key: "third", title: "관심목록" }
   ]);
+
+  const handleClickLikeButton = async orderId => {
+    setIsLiked(!isLiked);
+    const userToken = await AsyncStorage.getItem("userToken");
+    // console.log(`userToken: `, userToken);
+    try {
+      const postDislikeRequest = await serverApi.userDislikeOrder(
+        orderId,
+        userToken
+      );
+      console.log(`라이크 취소 서버요청: `, postDislikeRequest);
+    } catch (e) {
+      console.log(`Can't post data of userLikeOrder on server. Error: ${e}`);
+    }
+  };
 
   const handleClick = data =>
     data.deletedAt
@@ -117,7 +141,7 @@ const UserHistoryScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
-  }, []);
+  }, [isLiked]);
 
   const _renderTabBar = props => (
     <TabBar
@@ -219,7 +243,17 @@ const UserHistoryScreen = ({ navigation }) => {
                 key={i}
                 createdAt={data.createdAt}
                 {...data.order}
-              />
+              >
+                <Touchable onPress={() => handleClickLikeButton(data.orderId)}>
+                  <IconContainer>
+                    <AntDesign
+                      name="heart"
+                      size={26}
+                      style={{ color: styles.mainColor }}
+                    />
+                  </IconContainer>
+                </Touchable>
+              </OrderCard>
             )
         )
       ) : (

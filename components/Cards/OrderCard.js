@@ -124,7 +124,8 @@ const OrderCard = ({
   createdAt,
   views,
   applicants = [],
-  onPress
+  onPress,
+  children
 }) => {
   const priceWithComma = price && utils.numberWithCommas(price);
   const timeStamp = utils.transferTime(createdAt);
@@ -185,6 +186,7 @@ const OrderCard = ({
                 </Container>
               </CountContainer>
             </TextContainer>
+            {children}
           </ContentContainer>
         </CardContainer>
         <Divider />
