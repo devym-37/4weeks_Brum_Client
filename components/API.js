@@ -289,6 +289,14 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
+  myOrderDetail: (orderId, userToken) =>
+    sApi.get(`user/order/${orderId}`, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   cancelMyOrder: (orderId, userToken) =>
     sApi.delete(`/user/order/${orderId}`, {
       headers: {

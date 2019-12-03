@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  AsyncStorage,
-  Alert,
-  View,
-  SafeAreaView
-} from "react-native";
+import { ScrollView, AsyncStorage, Alert, SafeAreaView } from "react-native";
 import styled from "styled-components";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { AntDesign } from "@expo/vector-icons";
 import constants from "../../../constants";
+import styles from "../../../styles";
 import OrderCard from "../../../components/Cards/OrderCard";
 import { serverApi } from "../../../components/API";
 import Loader from "../../../components/Loader";
-
+import ReviewCard from "../../../components/Cards/ReviewCard";
 const Text = styled.Text`
   color: ${props => props.theme.greyColor};
   font-size: 17;
@@ -30,6 +25,37 @@ const DefaultContainer = styled.View`
   align-items: center;
 `;
 
+const IconContainer = styled.Text`
+  position: relative;
+  right: -2;
+  top: 3;
+  /* padding-right: 12px; */
+`;
+
+const View = styled.View``;
+const Touchable = styled.TouchableOpacity``;
+const ReviewContainer = styled.View`
+  width: ${constants.width};
+
+  padding: 14px 12px;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  /* border-bottom-color: "#47315a"*/
+`;
+
+const ReviewButtonText = styled.Text`
+  font-size: 13;
+  font-weight: 600;
+`;
+
+const Divider = styled.View`
+  width: ${constants.width};
+  /* margin-left: -20px; */
+  height: 1px;
+  background-color: ${props => props.theme.lightGreyColor};
+`;
+
 const UserHistoryScreen = ({ navigation }) => {
   //   const getUserToken = await AsyncStorage.getItem("userToken");
   const obj = { 요청내역: 0, 러너내역: 1, 관심목록: 2 };
@@ -38,7 +64,7 @@ const UserHistoryScreen = ({ navigation }) => {
   const [likeHistory, setLikeHistory] = useState(null);
   const [orderHistory, setOrderHistory] = useState(null);
   const [deliverHistory, setDeliverHistory] = useState(null);
-
+  const [isLiked, setIsLiked] = useState(true);
   const title = navigation.getParam("title");
   const [index, setIndex] = useState(obj[title]);
 
@@ -48,10 +74,36 @@ const UserHistoryScreen = ({ navigation }) => {
     { key: "third", title: "관심목록" }
   ]);
 
+  const handleClickLikeButton = async orderId => {
+    setIsLiked(!isLiked);
+    const userToken = await AsyncStorage.getItem("userToken");
+    // console.log(`userToken: `, userToken);
+    try {
+      const postDislikeRequest = await serverApi.userDislikeOrder(
+        orderId,
+        userToken
+      );
+      console.log(`라이크 취소 서버요청: `, postDislikeRequest);
+    } catch (e) {
+      console.log(`Can't post data of userLikeOrder on server. Error: ${e}`);
+    }
+  };
+
   const handleClick = data =>
     data.deletedAt
       ? Alert.alert("삭제된 게시글입니다")
       : navigation.navigate("OrderDetailScreen", { orderId: data.orderId });
+
+  // const handleClickReview = () =>
+  // if(){
+  // navigation.navigate("ReviewScreen", {
+  //   orderId: data.orderId,
+  //   nickname: data.deliverInfo.nickname,
+  //   avatar: data.deliverInfo.image,
+  //   university: data.deliverInfo.university,
+  //   isDeliver: true
+  // });
+  //}
 
   const preLoad = async () => {
     const userToken = await AsyncStorage.getItem("userToken");
@@ -89,7 +141,7 @@ const UserHistoryScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
-  }, []);
+  }, [isLiked]);
 
   const _renderTabBar = props => (
     <TabBar
@@ -103,19 +155,32 @@ const UserHistoryScreen = ({ navigation }) => {
   );
 
   const FirstRoute = () => (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#f1f3f5" }}>
       {orderHistory && orderHistory.length > 0 ? (
-        orderHistory.map(
-          (data, i) =>
+        orderHistory.map((data, i) => {
+          console.log(`data: `, data);
+          return (
             !data.deletedAt && (
-              <OrderCard
-                onPress={() => handleClick(data)}
-                key={i}
-                createdAt={data.createdAt}
-                {...data}
-              />
+              <View key={i}>
+                <OrderCard
+                  onPress={() => handleClick(data)}
+                  createdAt={data.createdAt}
+                  {...data}
+                />
+                {data.orderStatus > 0 && (
+                  <ReviewCard
+                    isReadable={data.reviews && data.reviews.length > 0}
+                    orderId={data.orderId}
+                    nickname={data.deliverInfo.nickname}
+                    avatar={data.deliverInfo.image}
+                    university={data.deliverInfo.university}
+                    isDeliver={true}
+                  />
+                )}
+              </View>
             )
-        )
+          );
+        })
       ) : (
         <DefaultContainer
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -131,14 +196,30 @@ const UserHistoryScreen = ({ navigation }) => {
   const SecondRoute = () => (
     <ScrollView style={{ flex: 1 }}>
       {deliverHistory && deliverHistory.length > 0 ? (
-        deliverHistory.map((data, i) => (
-          <OrderCard
-            onPress={console.log("누름")}
-            key={i}
-            createdAt={data.createdAt}
-            {...data}
-          />
-        ))
+        deliverHistory.map((data, i) => {
+          console.log(`data: `, data);
+          return (
+            !data.deletedAt && (
+              <View key={i}>
+                <OrderCard
+                  onPress={() => handleClick(data)}
+                  createdAt={data.createdAt}
+                  {...data}
+                />
+                {data.orderStatus > 0 && (
+                  <ReviewCard
+                    isReadable={data.reviews && data.reviews.length > 0}
+                    orderId={data.orderId}
+                    nickname={data.hostInfo.nickname}
+                    avatar={data.hostInfo.image}
+                    university={data.hostInfo.university}
+                    isDeliver={false}
+                  />
+                )}
+              </View>
+            )
+          );
+        })
       ) : (
         <DefaultContainer
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -162,7 +243,17 @@ const UserHistoryScreen = ({ navigation }) => {
                 key={i}
                 createdAt={data.createdAt}
                 {...data.order}
-              />
+              >
+                <Touchable onPress={() => handleClickLikeButton(data.orderId)}>
+                  <IconContainer>
+                    <AntDesign
+                      name="heart"
+                      size={26}
+                      style={{ color: styles.mainColor }}
+                    />
+                  </IconContainer>
+                </Touchable>
+              </OrderCard>
             )
         )
       ) : (

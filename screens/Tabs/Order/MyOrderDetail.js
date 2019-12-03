@@ -379,7 +379,7 @@ const OrderDetailScreen = ({ id }) => {
   const preLoad = async () => {
     const userToken = await AsyncStorage.getItem("userToken");
     setUserToken(userToken);
-    const data = await serverApi.orderdetail(orderId, userToken);
+    const data = await serverApi.myOrderDetail(orderId, userToken);
     setData({ ...data.data.data.order });
     console.log(
       `data.data.data.order.userLikeOrders: `,
