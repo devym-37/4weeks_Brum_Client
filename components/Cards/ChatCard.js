@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useState, useEffect} from "react";
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
@@ -6,6 +6,7 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 import utils from "../../utils";
 import constants from "../../constants";
 import styles from "../../styles";
+import Fire from "../../screens/chat/Fire"
 
 const Touchable = styled.TouchableOpacity``;
 
@@ -87,12 +88,12 @@ const UserBadge = styled.Text`
   font-weight: 800;
 `;
 const ChatCard = ({ onPress, ...props }) => {
-  const { chats, deliverInfo, title, createdAt, hostId, deliverId } = props;
+  const { chats, deliverInfo,orderId, title, createdAt, hostId, deliverId } = props;
   const username = deliverInfo.nickname;
   const avatar = deliverInfo.image;
   const shortenTitle = utils.shortenText(title, 20);
   const isHost = hostId !== deliverId;
-  const orderTimeStamp = `[19.11.26] `;
+  const orderTimeStamp = `[19.11.26]`;
   // const orderTimeStamp = orderTim
   const latestChat = chats && chats.length > 0 ? chats[0] : null;
   const timeStamp =
@@ -103,6 +104,25 @@ const ChatCard = ({ onPress, ...props }) => {
   const chatPreview = latestChat
     ? latestChat.chatDetail
     : "러너와 대화를 시작하세요:)";
+  const [lastchat,setLastchat] = useState("")
+
+  
+  const getlastchat = async () =>{
+    
+    const result = await Fire.getlastone(orderId)
+
+    setLastchat(result)
+  }
+  
+  useEffect(()=>{
+    let isCancelled = false;
+
+    getlastchat()
+
+    return () => {
+      isCancelled = true;
+    };
+  },[])
 
   return (
     <Touchable onPress={onPress}>
@@ -120,7 +140,7 @@ const ChatCard = ({ onPress, ...props }) => {
             <Image source={{ uri: avatar }} />
             <ChatContent>
               <ChatUsername>{username}</ChatUsername>
-              <ChatPreview>{chatPreview}</ChatPreview>
+              <ChatPreview>{lastchat.text}</ChatPreview>
             </ChatContent>
           </ChatColumn>
           <ChatColumn>

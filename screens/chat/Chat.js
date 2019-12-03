@@ -190,6 +190,7 @@ class Chat extends React.Component {
               right: { color: "yellow" }
             }}
             renderActions={this.renderActions}
+            renderAccessory={this.renderAccessory}
           />
           <KeyboardAvoidingView
             behavior={Platform.OS === "android" ? "padding" : null}
@@ -203,6 +204,22 @@ class Chat extends React.Component {
     console.log("실행도안된다");
     return <Image source={image} />;
   }; */
+
+  renderAccessory =() =>{
+    return(
+      <View>
+        {this.state.image && (
+          <Image 
+          style={{
+            width: constants.width,
+            height: 200
+          }}
+          source={{ uri: this.state.image }}
+          />
+        )}
+      </View>
+    )
+  }
 
   renderActions = () => {
     const takePicture = async () => {

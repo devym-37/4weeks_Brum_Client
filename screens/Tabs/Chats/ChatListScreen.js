@@ -122,6 +122,7 @@ const ChatListScreen = ({ navigation }) => {
             onPress={() => handleClick(chat.deliverInfo.nickname, chat.orderId)}
             userId={userId}
             {...chat}
+            orderId={chat.orderId}
           ></ChatCard>
         ))
       ) : (
