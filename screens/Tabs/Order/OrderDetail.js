@@ -276,7 +276,8 @@ const Touchable = styled.TouchableOpacity``;
 const DropContainer = styled.View`
   width: 200;
   justify-content: center;
-  padding-bottom: 30;
+  /* padding-bottom: 300; */
+  margin-bottom: 350;
   height: 200;
 `;
 const OrderDetailScreen = ({ navigation }) => {
@@ -311,7 +312,7 @@ const OrderDetailScreen = ({ navigation }) => {
   const timeStamp = data && utils.transferTime(data.createdAt);
   const message = data && data.detais !== "null" ? data.details : "";
   const numOfApplicants = data && utils.numOfScores(data.applicants);
-  const likes = 0;
+  const likes = data && data.userLikeOrders.length;
   const views = data && data.views;
   const departure =
     data && data.departures !== "null" ? data.departures : "없음";
@@ -664,7 +665,7 @@ const OrderDetailScreen = ({ navigation }) => {
           visible={visible}
           handleOpen={handleOpen}
           handleClose={handleClose}
-          onClose={Keyboard.dismiss}
+          // onClose={Keyboard.dismiss}
           swipeConfig={{
             velocityThreshold: 0.3,
             directionalOffsetThreshold: 80
@@ -679,92 +680,93 @@ const OrderDetailScreen = ({ navigation }) => {
             justifyContent: "flex-start"
           }}
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <KeyboardAvoidingView
-              // style={{ flex: 1 }}
-              enabled
-              behavior="padding"
-              keyboardVerticalOffset={600}
-            >
-              <DropContainer>
-                <>
-                  <BottomContainer width={40}>
-                    <FormInput
-                      onSubmitEditing={Keyboard.dismiss}
-                      placeholder={"₩ 희망 배달금액(선택사항)"}
-                      width={140}
-                      dividerWidth={40}
-                      dividerColor={"#e8ecef"}
-                      value={bidPrice}
-                      isUnderline={true}
-                      onChange={e => handleChangePrice(e)}
-                    >
-                      <Checkbox
-                        label="희망비용 수락"
-                        checkboxStyle={{ height: 22, width: 22 }}
-                        labelStyle={{ color: "#1D2025", marginLeft: -4 }}
-                        checked={checked}
-                        containerStyle={{
-                          width: 110,
-                          marginLeft: -8
-                        }}
-                        checkedImage={checkedBox}
-                        uncheckedImage={uncheckedBox}
-                        onChange={() => {
-                          setChecked(!checked);
-                        }}
-                      />
-                    </FormInput>
-                    <Divider />
-                    <FormInput
-                      onSubmitEditing={Keyboard.dismiss}
-                      placeholder={"메세지(선택사항)"}
-                      dividerColor={"#e8ecef"}
-                      width={50}
-                      dividerWidth={40}
-                      value={runnerMessage}
-                      onChange={e => handleChangeMessage(e)}
-                      isUnderline={true}
-                    />
-                    <Divider />
-                    <MarginContentContainer>
-                      <>
-                        <Touchable onPress={() => setIsLiked(!isLiked)}>
-                          <IconContainer>
-                            {isLiked ? (
-                              <AntDesign
-                                name="heart"
-                                size={26}
-                                style={{ color: styles.mainColor }}
-                              />
-                            ) : (
-                              <AntDesign
-                                name="hearto"
-                                size={26}
-                                style={{ color: styles.mainColor }}
-                              />
-                            )}
-                          </IconContainer>
-                        </Touchable>
-                        <VerticalDivider />
-                        <PriceContainer>
-                          <Price>{price}</Price>
-                          <PriceOption>
-                            {isPrice ? "가격제안 가능" : "가격제안 불가"}
-                          </PriceOption>
-                        </PriceContainer>
-                        <Touchable onPress={handleApplyButtonWithPrice}>
-                          <ApplyButton width={250}>
-                            <ButtonText>러너 지원하기</ButtonText>
-                          </ApplyButton>
-                        </Touchable>
-                      </>
-                    </MarginContentContainer>
-                  </BottomContainer>
-                </>
-              </DropContainer>
-            </KeyboardAvoidingView>
-          </TouchableWithoutFeedback>
+          {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+          {/* <KeyboardAvoidingView
+            // style={{ flex: 1 }}
+            enabled
+            behavior="padding"
+            keyboardVerticalOffset={600}
+          > */}
+          <DropContainer>
+            <>
+              <BottomContainer width={40}>
+                <FormInput
+                  // onSubmitEditing={Keyboard.dismiss}
+
+                  placeholder={"₩ 희망 배달금액(선택사항)"}
+                  width={140}
+                  dividerWidth={40}
+                  dividerColor={"#e8ecef"}
+                  value={bidPrice}
+                  isUnderline={true}
+                  onChange={e => handleChangePrice(e)}
+                >
+                  <Checkbox
+                    label="희망비용 수락"
+                    checkboxStyle={{ height: 22, width: 22 }}
+                    labelStyle={{ color: "#1D2025", marginLeft: -4 }}
+                    checked={checked}
+                    containerStyle={{
+                      width: 110,
+                      marginLeft: -8
+                    }}
+                    checkedImage={checkedBox}
+                    uncheckedImage={uncheckedBox}
+                    onChange={() => {
+                      setChecked(!checked);
+                    }}
+                  />
+                </FormInput>
+                <Divider />
+                <FormInput
+                  // onSubmitEditing={Keyboard.dismiss}
+                  placeholder={"메세지(선택사항)"}
+                  dividerColor={"#e8ecef"}
+                  width={50}
+                  dividerWidth={40}
+                  value={runnerMessage}
+                  onChange={e => handleChangeMessage(e)}
+                  isUnderline={true}
+                />
+                <Divider />
+                <MarginContentContainer>
+                  <>
+                    <Touchable onPress={() => setIsLiked(!isLiked)}>
+                      <IconContainer>
+                        {isLiked ? (
+                          <AntDesign
+                            name="heart"
+                            size={26}
+                            style={{ color: styles.mainColor }}
+                          />
+                        ) : (
+                          <AntDesign
+                            name="hearto"
+                            size={26}
+                            style={{ color: styles.mainColor }}
+                          />
+                        )}
+                      </IconContainer>
+                    </Touchable>
+                    <VerticalDivider />
+                    <PriceContainer>
+                      <Price>{price}</Price>
+                      <PriceOption>
+                        {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                      </PriceOption>
+                    </PriceContainer>
+                    <Touchable onPress={handleApplyButtonWithPrice}>
+                      <ApplyButton width={250}>
+                        <ButtonText>러너 지원하기</ButtonText>
+                      </ApplyButton>
+                    </Touchable>
+                  </>
+                </MarginContentContainer>
+              </BottomContainer>
+            </>
+          </DropContainer>
+          {/* </KeyboardAvoidingView> */}
+          {/* </TouchableWithoutFeedback> */}
         </Backdrop>
       </SafeAreaView>
     </>

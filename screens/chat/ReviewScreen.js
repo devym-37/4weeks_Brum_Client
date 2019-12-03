@@ -6,6 +6,7 @@ import styles from "../../styles";
 import constants from "../../constants";
 import MainButton from "../../components/Buttons/MainButton";
 import FormInput from "../../components/Inputs/FormInput";
+import ReviewCard from "../../components/Cards/ReviewCard";
 import {
   Image,
   SafeAreaView,
@@ -74,17 +75,23 @@ const ReviewScreen = ({ navigation }) => {
   };
 
   //상대방의 프로필 이미지
-  const avatar =
-    "https://www.bsn.eu/wp-content/uploads/2016/12/user-icon-image-placeholder-300-grey.jpg";
+  const avatar = navigation.getParam("avatar")
+    ? navigation.getParam("avatar")
+    : "흑흑안뜸";
+  // "https://www.bsn.eu/wp-content/uploads/2016/12/user-icon-image-placeholder-300-grey.jpg";
 
   //상대방의 닉네임
-  const nickname = "김조은";
+  const nickname = navigation.getParam("nickname")
+    ? navigation.getParam("nickname")
+    : "흑흑안뜸";
 
   // 상대방이 러너인지 요청자인지
-  const userStatus = "요청자";
+  const userStatus = navigation.getParam("isDeliver") ? "러너" : "요청자";
 
   // 주문 번호
-  const orderId = 2;
+  const orderId = navigation.getParam("orderId")
+    ? navigation.getParam("orderId")
+    : "흑흑안뜸";
 
   const handleChange = value => {
     console.log(`value: `, value);
