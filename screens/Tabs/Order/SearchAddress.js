@@ -79,17 +79,17 @@ const SearchAddress = ({ navigation, ...props }) => {
     };
   };
 
-  const getLocation = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    let currentRegion = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude
-    };
-    setCurrentLocation({ ...currentRegion });
+  const getLocation = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
+
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng
+      };
+      setCurrentLocation({ ...currentRegion });
+    });
   };
 
   const _getLocationAsync = async () => {

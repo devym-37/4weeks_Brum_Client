@@ -64,17 +64,26 @@ const MapScreen = ({ navigation, ...props }) => {
     longitudeDelta: constants.LONGITUDE_DELTA
   };
 
-  const getCurrent = async () => {
-    console.log("region", region);
-    console.log("props.", props.currentRegion);
-    const _region = {
-      latitude: props.currentRegion.latitude,
-      longitude: props.currentRegion.longitude,
-      latitudeDelta: constants.LATITUDE_DELTA,
-      longitudeDelta: constants.LONGITUDE_DELTA
-    };
+  // const getCurrent = async () => {
+  //   console.log("region", region);
+  //   console.log("props.", props.currentRegion);
+  //   const _region = {
+  //     latitude: props.currentRegion.latitude,
+  //     longitude: props.currentRegion.longitude,
+  //     latitudeDelta: constants.LATITUDE_DELTA,
+  //     longitudeDelta: constants.LONGITUDE_DELTA
+  //   };
 
-    setRegions(_region);
+  //   setRegions(_region);
+  // };
+
+  const _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      console.log("Permission to access location was denied");
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    console.log("location", location);
   };
 
   // const recordEvent = async regionChange => {
@@ -130,8 +139,9 @@ const MapScreen = ({ navigation, ...props }) => {
   // };
 
   useEffect(() => {
-    getCurrent();
+    // getCurrent();
     getDirections();
+    _getLocationAsync();
   }, [props.departurePosition, props.arrivalPosition, props.currentRegion]);
 
   return (
@@ -157,7 +167,6 @@ const MapScreen = ({ navigation, ...props }) => {
             rotateEnabled={false}
             loadingEnabled={true}
           >
-            <Text>테스트 화면</Text>
             {props.SearchScreen === true && props.departurePosition !== null ? (
               <Marker
                 coordinate={{
@@ -171,7 +180,7 @@ const MapScreen = ({ navigation, ...props }) => {
                 />
               </Marker>
             ) : (
-              <Text>region1234{JSON.stringify(typeof region.latitude)}</Text>
+              <Text></Text>
             )}
             {props.SearchScreen === true && props.arrivalPosition !== null ? (
               <Marker
