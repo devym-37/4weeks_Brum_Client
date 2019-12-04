@@ -237,7 +237,7 @@ class Fire {
   };
 
   signin = () => {
-    console.log("왜 문자열이 아닌가", id, typeof id);
+    //console.log("왜 문자열이 아닌가", id, typeof id);
     firebase.auth().signInAnonymously();
   };
 

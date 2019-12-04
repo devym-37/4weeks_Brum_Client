@@ -109,7 +109,7 @@ const ChatCard = ({ onPress, ...props }) => {
   
   const getlastchat = async () =>{
     
-    const result = await Fire.getlastone(orderId)
+    const result = await Fire.shared.getlastone(orderId)
 
     setLastchat(result)
   }
