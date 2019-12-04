@@ -58,15 +58,23 @@ const SearchAddress = ({ navigation, ...props }) => {
   const getDefaultCampusMap = async () => {
     const selectedCampus = await AsyncStorage.getItem("campus");
     const campusRegion = constants.campus[selectedCampus].position;
-
     const _region = {
-      latitude: campusRegion.latitude,
-      longitude: campusRegion.longitude,
+      latitude: campusRegion.latitude || LATITUDE,
+      longitude: campusRegion.longitude || LONGITUDE,
       latitudeDelta: constants.LATITUDE_DELTA,
       longitudeDelta: constants.LONGITUDE_DELTA
     };
     setRegion(_region);
     this.map.animateToRegion(_region);
+  };
+
+  const moveToMarkerPosition = async () => {
+    const markerPosition = {
+      latitude: campusRegion.latitude || 0,
+      longitude: campusRegion.longitude || 0,
+      latitudeDelta: constants.LATITUDE_DELTA,
+      longitudeDelta: constants.LONGITUDE_DELTA
+    };
   };
 
   const getLocation = () => {
@@ -109,11 +117,7 @@ const SearchAddress = ({ navigation, ...props }) => {
       await getDefaultCampusMap();
     })();
   }, []);
-  //   <Image
-  //   style={{ width: 40, height: 40 }}
-  //   source={require("../../../assets/Delivery_arrival.png")}
-  // />
-  // <Text>props.departureLocation : {JSON.stringify(position)}</Text>
+
   return (
     <>
       <SafeAreaView style={{ flex: 1 }}>
@@ -149,7 +153,8 @@ const mapStateToProps = state => {
   return {
     arrivalLocation: state.destinationReducer.arrivalLocation,
     departureLocation: state.destinationReducer.departureLocation,
-    arrivalPosition: state.orderPositionReducer.arrivalPosition
+    arrivalPosition: state.orderPositionReducer.arrivalPosition,
+    departurePosition: state.orderPositionReducer.departureLocation
   };
 };
 

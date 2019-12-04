@@ -105,25 +105,20 @@ const HomeScreen = ({ navigation, ...props }) => {
 
   const getDefaultCampusMap = () => {
     const campusRegion = constants.campus[props.campus].position;
-    console.log("campusRegion :", campusRegion);
-    console.log("클릭 확인");
+    // console.log("campusRegion :", campusRegion);
+    // console.log("클릭 확인");
     const _region = {
       latitude: campusRegion.latitude,
       longitude: campusRegion.longitude,
       latitudeDelta: constants.LATITUDE_DELTA,
       longitudeDelta: constants.LONGITUDE_DELTA
     };
-    console.log("_region", _region);
+    // console.log("_region", _region);
     setRegion(_region);
   };
 
   const moveCampusMap = () => {
     this.map.animateToRegion(region);
-  };
-
-  const geoCode = async address => {
-    const geo = await Location.geocodeAsync(address);
-    return geo;
   };
 
   const getLocation = () => {

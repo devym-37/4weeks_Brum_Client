@@ -66,6 +66,9 @@ const styles = StyleSheet.create({
   }
 });
 
+const LATITUDE = 37.565687;
+const LONGITUDE = 126.978045;
+
 class OrderDepartureAddress extends Component {
   constructor(props) {
     super(props);
@@ -75,6 +78,7 @@ class OrderDepartureAddress extends Component {
       longitude: 0,
       locationPredictions: [],
       geoDeparture: [],
+      currentLocation: null,
       isFocused: false
     };
     this.onChangeDestinationDebounced = _.debounce(
@@ -152,6 +156,7 @@ class OrderDepartureAddress extends Component {
                 prediction.structured_formatting.main_text
               );
               this.geoDestination(prediction.place_id);
+              // this.moveToMarkerPosition();
               this.props.navigation.goBack(null);
             }}
             key={prediction.id}

@@ -12,7 +12,7 @@ import MapView, { Marker, Callout, CalloutSubview } from "react-native-maps";
 import CustomCallout from "./CustomCallout";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-import { API } from "../APIS";
+// import { API } from "../APIS";
 import { Container } from "native-base";
 import { connect } from "react-redux";
 import {
@@ -26,7 +26,7 @@ import Polyline from "@mapbox/polyline";
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
-// const API = "AIzaSyB_wEQ8hDQnVHqYdUfqNJxtngA-xmvbTcg";
+const API = "AIzaSyB_wEQ8hDQnVHqYdUfqNJxtngA-xmvbTcg";
 
 const styles = StyleSheet.create({
   mapStyle: {
@@ -64,52 +64,61 @@ const MapScreen = ({ navigation, ...props }) => {
     latitudeDelta: constants.LATITUDE_DELTA,
     longitudeDelta: constants.LONGITUDE_DELTA
   };
-  const geoCode = async address => {
-    const geo = await Location.geocodeAsync(address);
-    return geo;
-  };
 
-  const reverseGeocode = async location => {
-    const reverseGeo = await Location.reverseGeocodeAsync(location);
-    return reverseGeo;
-  };
-
-  const recordEvent = async regionChange => {
-    // const address = await reverseGeocode(regionChange);
-    const geolatlng = await geoCode(props.marker);
-    // console.log("address", address[0]);
-    // console.log("geolatlng[123]", JSON.stringify(geolatlng));
-    setRegions(geolatlng);
-    // this.props.reduxDepartureAddress(address[0]);
-  };
-
-  // const getDirections = async (departure, arrival) => {
-  //   try {
-  //     let resp = await fetch(
-  //       `https://maps.googleapis.com/maps/api/directions/json?origin=${departure}&destination=${arrival}`
-  //     );
-  //     let respJson = await resp.json();
-  //     let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
-  //     let coords = points.map((point, index) => {
-  //       return {
-  //         latitude: point[0],
-  //         longitude: point[1]
-  //       };
-  //     });
-  //     setCoords(coords);
-  //     this.setState({ coords: coords });
-  //     console.log("coords", coords);
-  //     return coords;
-  //   } catch (error) {
-  //     console.log("masuk fungsi");
-  //     return error;
-  //   }
+  // const recordEvent = async regionChange => {
+  //   // const address = await reverseGeocode(regionChange);
+  //   const geolatlng = await geoCode(props.marker);
+  //   // console.log("address", address[0]);
+  //   // console.log("geolatlng[123]", JSON.stringify(geolatlng));
+  //   setRegions(geolatlng);
+  //   // this.props.reduxDepartureAddress(address[0]);
   // };
 
-  // <Image
-  //                 source={require("../assets/Delivery_arrival.png")}
-  //                 style={{ width: 45, height: 45 }}
-  //               />
+  const getDirections = async () => {
+    console.log("props.departurePosition.lat", props);
+    console.log("ㅁㅁㅁㅁㅁㅁㅁㅁ");
+    if (props.departurePosition !== null && props.arrivalPosition !== null) {
+      // const DEPARTURE = `ChIJlaxrQKakfDURwM3kL1L3lBk`;
+      // const ARRIVAL = `ChIJx54O7aOkfDURml1ULDrn5PY`;
+
+      const DEPARTURE = `${props.departurePosition.lat},${props.departurePosition.lng}`;
+      const ARRIVAL = `${props.arrivalPosition.lat},${props.arrivalPosition.lng}`;
+
+      console.log("DEPARTURE", DEPARTURE);
+
+      console.log("step1");
+      let resp = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${DEPARTURE}&destination=${ARRIVAL}&mode=transit&departure_time=now&key=${API}`
+      );
+
+      console.log("resp", resp);
+      let respJson = await resp.json();
+      console.log("respJson", respJson);
+      console.log("respJson.routes", respJson.routes);
+      let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+      let coords = points.map((point, index) => {
+        return {
+          latitude: point[0],
+          longitude: point[1]
+        };
+      });
+      console.log("step2");
+      setCoords(coords);
+      console.log("coords", coords);
+      console.log("step3");
+    }
+  };
+
+  // fitTwoMarkers = (regions, coords) => {
+  //   this.map.fitToCoordinates([regions, coords], {
+  //     edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
+  //     animated: true
+  //   });
+  // };
+
+  useEffect(() => {
+    getDirections();
+  }, [props.departurePosition, props.arrivalPosition]);
 
   return (
     <>
@@ -122,7 +131,7 @@ const MapScreen = ({ navigation, ...props }) => {
           }}
           initialRegion={region}
           onRegionChange={this.onRegionChange}
-          onRegionChangeComplete={regionChange => recordEvent(regionChange)}
+          // onRegionChangeComplete={regionChange => recordEvent(regionChange)}
           showsCompass={true}
           showsUserLocation={props.showLocation === false ? false : true}
           showsMyLocationButton={false}
@@ -137,6 +146,9 @@ const MapScreen = ({ navigation, ...props }) => {
             props.orders.map(marker => (
               <Marker
                 key={marker.orderId}
+                ref={marker => {
+                  this.marker = marker;
+                }}
                 coordinate={{
                   latitude: Number(marker.arrLat) || 0,
                   longitude: Number(marker.arrLng) || 0
@@ -192,92 +204,23 @@ const MapScreen = ({ navigation, ...props }) => {
           ) : (
             <Text></Text>
           )}
-          {props.SearchScreen === true &&
+          {/*{props.SearchScreen === true &&
           props.arrivalPosition !== null &&
           props.departurePosition !== null ? (
-            <Text>이건가</Text>
+            <MapView.Polyline
+              coordinates={coords}
+              strokeWidth={3}
+              strokeColor="red"
+            />
           ) : (
             <Text>이건가</Text>
-          )}
-          <Text>{JSON.stringify(props.oders)}</Text>
+          )}*/}
         </MapView>
       </Container>
     </>
   );
 };
 
-// {props.SearchScreen === true &&
-//   props.arrivalPosition !== null &&
-//   props.departurePosition !== null ? (
-//     <Text>테스트중 ㄷ</Text>
-//   ) : (
-//     <Text>이건가</Text>
-//   )}
-
-// <Marker
-// coordinate={{
-//   latitude: 37.556279,
-//   longitude: 127.046422
-// }}
-// >
-// <Image
-//   source={require("../assets/Delivery_arrival.png")}
-//   style={{ width: 45, height: 45 }}
-// />
-// </Marker>
-// <Marker
-// coordinate={{
-//   latitude: 37.559184,
-//   longitude: 127.044512
-// }}
-// >
-// <Image
-//   source={require("../assets/Delivery_departure.png")}
-//   style={{ width: 45, height: 45 }}
-// />
-// </Marker>
-// <MapViewDirections
-// origin={{
-//   latitude: 37.556279,
-//   longitude: 127.046422
-// }}
-// destination={{
-//   latitude: 37.559184,
-//   longitude: 127.044512
-// }}
-// apikey={API}
-// strokeWidth={5}
-// strokeColor="hotpink"
-// mode="WALKING"
-// precision="low"
-// />
-// <Marker
-//             coordinate={{
-//               latitude: props.orders[0].arrLat,
-//               longitude: props.orders[0].arrLng
-//             }}
-//           />
-
-// {props.orders.map(marker => (
-//   <Marker
-//     coordinate={{ latitude: marker.arrLat, longitude: marker.arrLng }}
-//   />
-// ))}
-
-// {props.HomeScreen === true &&
-//   props.orders.map(order => {
-//     <Marker
-//       coordinate={{ latitude: order.arrLat, longitude: order.arrLng }}
-//       title={order.arrivals}
-//     />;
-//   })}
-// <Text>{JSON.stringify(props.orders)}</Text>
-// <Marker coordinate={props.position}>
-// <Image
-//   source={require("../assets/Delivery_arrival.png")}
-//   style={{ width: 45, height: 45 }}
-// />
-// </Marker>
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
