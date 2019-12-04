@@ -365,7 +365,8 @@ const OrderDetailScreen = ({ navigation }) => {
   const arrival = data && (data.arrivals ? data.arrivals : "없음");
   const desiredArrivalTime =
     data &&
-    (data.desiredArrivalTime.substr(0, 1) !== "0"
+    (data.desiredArrivalTime !== "null" &&
+    data.desiredArrivalTime.substr(0, 1) !== "0"
       ? utils.transferDesiredArrivalTime(data.desiredArrivalTime)
       : "시간 상관없음");
   const handleClickLikeButton = async () => {
@@ -507,7 +508,7 @@ const OrderDetailScreen = ({ navigation }) => {
     setUserToken(userToken);
     const data = await serverApi.orderdetail(orderId, userToken);
     setData({ ...data.data.data.order });
-    // console.log(`data.data.data.order : `, data.data.data.order);
+    console.log(`data.data.data.order : `, data.data.data.order);
     // console.log(
     //   `data.data.data.order.userLikeOrders: `,
     //   data.data.data.order.userLikeOrders
