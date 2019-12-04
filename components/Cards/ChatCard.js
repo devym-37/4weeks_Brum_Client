@@ -94,6 +94,8 @@ const ChatCard = ({ onPress, ...props }) => {
   const avatar = deliverInfo.image;
   const shortenTitle = utils.shortenText(title, 20);
   const isHost = hostId !== deliverId;
+  console.log("주인인가",isHost)
+
   const orderTimeStamp = `[19.11.26]`;
   // const orderTimeStamp = orderTim
   const latestChat = chats && chats.length > 0 ? chats[0] : null;
@@ -156,7 +158,7 @@ const ChatCard = ({ onPress, ...props }) => {
           <ChatColumn>
             
               
-            <TimeStamp>{timeStamp}</TimeStamp>
+            <TimeStamp>{utils.timeConverter(lastchat.createdAt)}</TimeStamp>
           </ChatColumn>
          
         </ChatContainer>
