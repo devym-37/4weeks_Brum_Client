@@ -28,7 +28,7 @@ const View = styled.View`
 `;
 
 const VerifyPhone = props => {
-  console.log(props.phone);
+  // console.log(props.phone);
   const phoneNumberInput = useInput(props.phone);
   const [loading, setLoading] = useState(false);
 

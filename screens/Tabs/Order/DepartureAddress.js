@@ -11,7 +11,8 @@ import {
   Image,
   CardItem,
   Left,
-  Body
+  Body,
+  ScrollView
 } from "react-native";
 import MapView from "react-native-maps";
 import { API } from "../../../APIS";

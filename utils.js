@@ -139,6 +139,8 @@ export default {
   },
 
   transferOrderStatus: num => {
+    if (num === 77) return "기간만료";
+
     if (num === 88) return "요청취소";
 
     if (num === 99) return "배송취소";
