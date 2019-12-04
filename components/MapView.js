@@ -12,7 +12,7 @@ import MapView, { Marker, Callout, CalloutSubview } from "react-native-maps";
 import CustomCallout from "./CustomCallout";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-// import { API } from "../APIS";
+import { API } from "../APIS";
 import { Container } from "native-base";
 import { connect } from "react-redux";
 import {
@@ -26,7 +26,6 @@ import Polyline from "@mapbox/polyline";
 
 const LATITUDE = 37.565687;
 const LONGITUDE = 126.978045;
-const API = "AIzaSyB_wEQ8hDQnVHqYdUfqNJxtngA-xmvbTcg";
 
 const styles = StyleSheet.create({
   mapStyle: {
