@@ -7,7 +7,7 @@ import utils from "../../utils";
 import constants from "../../constants";
 import styles from "../../styles";
 import Fire from "../../screens/chat/Fire"
-import firebase from "../../components/API"
+import firebase from "firebase"
 
 const Touchable = styled.TouchableOpacity``;
 
@@ -120,8 +120,8 @@ const ChatCard = ({ onPress, ...props }) => {
     .ref(`threads/${orderId}/messages`)
     .limitToLast(1)
     .on("child_added", snapshot =>{ 
-      console.log("파싱",this.parse(snapshot))
-      setLastchat(result)
+      console.log("파싱",Fire.shared.parse(snapshot))
+      setLastchat(Fire.shared.parse(snapshot))
     });
 
     return () => {
