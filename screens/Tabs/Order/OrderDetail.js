@@ -189,6 +189,7 @@ const DepartureContainer = styled.View`
   /* flex-wrap: wrap; */
   align-items: center;
 `;
+
 const ArrivalContainer = styled.View`
   flex-direction: row;
   /* flex-wrap: wrap; */
@@ -196,19 +197,13 @@ const ArrivalContainer = styled.View`
   margin-bottom: 16;
 `;
 
-// const DesiredArrivalTimeContainer = styled.View`
-//   flex-direction: row;
-//   /* flex-wrap: wrap; */
-//   align-items: center;
-//   margin-bottom: 24;
-// `;
-
 const Address = styled.Text`
   color: #737b84;
   font-size: 13;
   margin-left: 4;
   padding-left: 4;
 `;
+
 const Message = styled.Text`
   font-size: 16;
   color: #333;
@@ -257,7 +252,6 @@ const BottomContainer = styled.View`
 const ContentContainer = styled.View`
   flex-direction: row;
   padding: 0 20px;
-
   width: ${constants.width};
   align-items: center;
   justify-content: space-between;
@@ -783,7 +777,6 @@ const OrderDetailScreen = ({ navigation }) => {
           visible={visible}
           handleOpen={handleOpen}
           handleClose={handleClose}
-          // onClose={Keyboard.dismiss}
           swipeConfig={{
             velocityThreshold: 0.3,
             directionalOffsetThreshold: 30
@@ -832,7 +825,6 @@ const OrderDetailScreen = ({ navigation }) => {
                 <Divider />
                 <FormInput
                   onFocus={handleOnFocus}
-                  // onSubmitEditing={Keyboard.dismiss}
                   placeholder={"메세지(선택사항)"}
                   dividerColor={"#e8ecef"}
                   width={50}
@@ -878,8 +870,6 @@ const OrderDetailScreen = ({ navigation }) => {
               </BottomContainer>
             </>
           </DropContainer>
-          {/* </KeyboardAvoidingView> */}
-          {/* </TouchableWithoutFeedback> */}
         </Backdrop>
       </SafeAreaView>
     </>

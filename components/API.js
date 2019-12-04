@@ -171,6 +171,22 @@ export const serverApi = {
       }
     });
   },
+  getReview: (orderId, userToken) =>
+    sApi.get(`user/review/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
+  getMyAllReviews: userToken =>
+    sApi.get(`user/review`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   postReview: (orderId, userToken, score, userReview) =>
     sApi.post(
       `user/review/${orderId}`,
