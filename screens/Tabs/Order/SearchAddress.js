@@ -17,6 +17,8 @@ import { DestinationInput } from "../../../components/Inputs/DestinationInput";
 import { DepartureInput } from "../../../components/Inputs/DepartureInput";
 import { connect } from "react-redux";
 import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
 
 const Container = styled.View`
   flex: 1;
@@ -58,10 +60,9 @@ const SearchAddress = ({ navigation, ...props }) => {
   const getDefaultCampusMap = async () => {
     const selectedCampus = await AsyncStorage.getItem("campus");
     const campusRegion = constants.campus[selectedCampus].position;
-
     const _region = {
-      latitude: campusRegion.latitude,
-      longitude: campusRegion.longitude,
+      latitude: campusRegion.latitude || LATITUDE,
+      longitude: campusRegion.longitude || LONGITUDE,
       latitudeDelta: constants.LATITUDE_DELTA,
       longitudeDelta: constants.LONGITUDE_DELTA
     };
@@ -69,18 +70,48 @@ const SearchAddress = ({ navigation, ...props }) => {
     this.map.animateToRegion(_region);
   };
 
-  const getLocation = () => {
-    navigator.geolocation.getCurrentPosition(position => {
-      let currentLat = parseFloat(position.coords.latitude);
-      let currentLng = parseFloat(position.coords.longitude);
-
-      let currentRegion = {
-        latitude: currentLat,
-        longitude: currentLng
-      };
-      setCurrentLocation({ ...currentRegion });
-    });
+  const moveToMarkerPosition = async () => {
+    const markerPosition = {
+      latitude: campusRegion.latitude || 0,
+      longitude: campusRegion.longitude || 0,
+      latitudeDelta: constants.LATITUDE_DELTA,
+      longitudeDelta: constants.LONGITUDE_DELTA
+    };
   };
+
+  const getLocation = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      console.log("Permission to access location was denied");
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    let currentRegion = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude
+    };
+    setCurrentLocation({ ...currentRegion });
+    // navigator.geolocation.getCurrentPosition(position => {
+    //   let currentLat = parseFloat(position.coords.latitude);
+    //   let currentLng = parseFloat(position.coords.longitude);
+
+    //   let currentRegion = {
+    //     latitude: currentLat,
+    //     longitude: currentLng
+    //   };
+    //   setCurrentLocation({ ...currentRegion });
+    // });
+  };
+
+  const _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      console.log("Permission to access location was denied");
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    console.log("location", location);
+  };
+
+  const _getReverseGeocode = async () => {};
 
   const userCurrentLocation = props => {
     const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
@@ -107,13 +138,11 @@ const SearchAddress = ({ navigation, ...props }) => {
     (async () => {
       await getLocation();
       await getDefaultCampusMap();
+      await _getLocationAsync();
+      // await currentReverseCode();
     })();
   }, []);
-  //   <Image
-  //   style={{ width: 40, height: 40 }}
-  //   source={require("../../../assets/Delivery_arrival.png")}
-  // />
-  // <Text>props.departureLocation : {JSON.stringify(position)}</Text>
+
   return (
     <>
       <SafeAreaView style={{ flex: 1 }}>
@@ -127,10 +156,13 @@ const SearchAddress = ({ navigation, ...props }) => {
             destination={props.arrivalLocation}
           />
           <MapScreen
-            latitude={region.latitude || currentLocation.latitude}
-            longitude={region.longitude || currentLocation.longitude}
+            // latitude={region.latitude || currentLocation.latitude}
+            // longitude={region.longitude || currentLocation.longitude}
+            // latitude={currentLocation.latitude}
+            // longitude={currentLocation.longitude}
             showLocation={false}
             SearchScreen={true}
+            currentRegion={currentLocation}
           />
           <CurrentLocationButton
             callback={() => {
@@ -149,7 +181,8 @@ const mapStateToProps = state => {
   return {
     arrivalLocation: state.destinationReducer.arrivalLocation,
     departureLocation: state.destinationReducer.departureLocation,
-    arrivalPosition: state.orderPositionReducer.arrivalPosition
+    arrivalPosition: state.orderPositionReducer.arrivalPosition,
+    departurePosition: state.orderPositionReducer.departureLocation
   };
 };
 
