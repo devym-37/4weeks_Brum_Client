@@ -561,6 +561,7 @@ const OrderDetailScreen = ({ navigation }) => {
               arrLng={Number(arrLng)}
               depLat={Number(depLat)}
               depLng={Number(depLng)}
+              orderDetail={true}
             />
 
             <UserContainer>

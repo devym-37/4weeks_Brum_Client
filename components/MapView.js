@@ -267,18 +267,36 @@ const MapScreen = ({ navigation, ...props }) => {
                 </Marker>
               ))}
 
-            {/*{props.SearchScreen === true &&
-    props.arrivalPosition !== null &&
-    props.departurePosition !== null ? (
-      <MapView.Polyline
-        coordinates={coords}
-        strokeWidth={3}
-        strokeColor="red"
-      />
-    ) : (
-      <Text>이건가</Text>
-    )}*/}
-            <Text>여긴가요</Text>
+            {props.orderDetail === true && props.depLat !== null ? (
+              <Marker
+                coordinate={{
+                  latitude: props.depLat || 0,
+                  longitude: props.depLng || 0
+                }}
+              >
+                <Image
+                  source={require("../assets/Delivery_departure.png")}
+                  style={{ width: 45, height: 45 }}
+                />
+              </Marker>
+            ) : (
+              <Text></Text>
+            )}
+            {props.orderDetail === true && props.arrLat !== null ? (
+              <Marker
+                coordinate={{
+                  latitude: props.arrLat || 0,
+                  longitude: props.arrLng || 0
+                }}
+              >
+                <Image
+                  source={require("../assets/Delivery_arrival.png")}
+                  style={{ width: 45, height: 45 }}
+                />
+              </Marker>
+            ) : (
+              <Text></Text>
+            )}
           </MapView>
         )}
       </Container>
