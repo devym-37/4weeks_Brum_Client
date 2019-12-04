@@ -359,10 +359,10 @@ const OrderDetailScreen = ({ navigation }) => {
   const departure =
     data && data.departures !== "null" ? data.departures : "없음";
   const arrival = data && (data.arrivals ? data.arrivals : "없음");
-  const desiredArrivalTime =
-    data && data.desiredArrivalTime.substr(0, 1) !== "0"
-      ? utils.transferDesiredArrivalTime(data.desiredArrivalTime)
-      : "시간 상관없음";
+  // const desiredArrivalTime =
+  //   data && data.desiredArrivalTime.substr(0, 1) !== "0"
+  //     ? utils.transferDesiredArrivalTime(data.desiredArrivalTime)
+  //     : "시간 상관없음";
   const handleClickLikeButton = async () => {
     setIsLiked(!isLiked);
     // console.log(`userToken: `, userToken);
@@ -647,7 +647,7 @@ const OrderDetailScreen = ({ navigation }) => {
                     paddingRight: 2
                   }}
                 />
-                <Address>{`${desiredArrivalTime}`}</Address>
+                {/*<Address>{`${desiredArrivalTime}`}</Address>*/}
               </ArrivalContainer>
               <Message>{message}</Message>
               <CountContainer>
