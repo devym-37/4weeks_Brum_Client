@@ -57,18 +57,24 @@ const MapScreen = ({ navigation, ...props }) => {
   const [regions, setRegions] = useState({});
   const [coords, setCoords] = useState([]);
 
-  // const initialRegion = {
-  //   latitude: props.currentRegion.latitude || latitude,
-  //   longitude: props.currentRegion.longitude || longitude,
-  //   latitudeDelta: constants.LATITUDE_DELTA,
-  //   longitudeDelta: constants.LONGITUDE_DELTA
-  // };
-
   const region = {
     latitude: latitude,
     longitude: longitude,
     latitudeDelta: constants.LATITUDE_DELTA,
     longitudeDelta: constants.LONGITUDE_DELTA
+  };
+
+  const getCurrent = async () => {
+    console.log("region", region);
+    console.log("props.", props.currentRegion);
+    const _region = {
+      latitude: props.currentRegion.latitude,
+      longitude: props.currentRegion.longitude,
+      latitudeDelta: constants.LATITUDE_DELTA,
+      longitudeDelta: constants.LONGITUDE_DELTA
+    };
+
+    setRegions(_region);
   };
 
   // const recordEvent = async regionChange => {
@@ -124,32 +130,22 @@ const MapScreen = ({ navigation, ...props }) => {
   // };
 
   useEffect(() => {
+    getCurrent();
     getDirections();
   }, [props.departurePosition, props.arrivalPosition, props.currentRegion]);
 
   return (
     <>
       <Container>
-        {props.currentRegion !== undefined ? (
+        {props.currentRegion !== undefined && props.SearchScreen === true ? (
           <MapView
             style={styles.mapStyle}
             provider="google"
             ref={map => {
               this.map = map;
             }}
-            // initialRegion={{
-            //   latitude: props.currentRegion.latitude,
-            //   longitude: props.currentRegion.longitude,
-            //   latitudeDelta: constants.LATITUDE_DELTA,
-            //   longitudeDelta: constants.LONGITUDE_DELTA
-            // }}
-            region={{
-              latitude: props.currentRegion.latitude,
-              longitude: props.currentRegion.longitude,
-              latitudeDelta: constants.LATITUDE_DELTA,
-              longitudeDelta: constants.LONGITUDE_DELTA
-            }}
-            onRegionChange={this.onRegionChange}
+            region={region}
+            // onRegionChange={this.onRegionChange}
             // onRegionChangeComplete={regionChange => recordEvent(regionChange)}
             showsCompass={true}
             showsUserLocation={props.showLocation === false ? false : true}
@@ -175,7 +171,7 @@ const MapScreen = ({ navigation, ...props }) => {
                 />
               </Marker>
             ) : (
-              <Text>region1234{JSON.stringify(region)}</Text>
+              <Text>region1234{JSON.stringify(typeof region.latitude)}</Text>
             )}
             {props.SearchScreen === true && props.arrivalPosition !== null ? (
               <Marker
