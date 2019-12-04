@@ -169,11 +169,12 @@ const SearchAddress = ({ navigation, ...props }) => {
             SearchScreen={true}
             currentRegion={currentLocation}
           />
+
           <CurrentLocationButton
             callback={() => {
               userCurrentLocation();
             }}
-            bottom={140}
+            bottom={236}
           />
         </Container>
       </SafeAreaView>

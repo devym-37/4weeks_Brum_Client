@@ -65,12 +65,16 @@ const NewOrderScreen = props => {
   const [departure, setDeparture] = useState("출발지･도착지 선택");
   const [arrival, setArrival] = useState("도착지");
   const [title, setTitle] = useState();
-  const [price, setPrice] = useState();
+  const [price, setPrice] = useState(props.price);
   // const [checked, setChecked] = useState(false);
 
-  const [timeText, setTimeText] = useState("희망 도착시간(선택)");
+  const [timeText, setTimeText] = useState(
+    props.time ? props.time : "희망 도착시간(선택)"
+  );
 
-  const [timeTextColor, setTimeTextColor] = useState("#d5dae0");
+  const [timeTextColor, setTimeTextColor] = useState(
+    props.time ? "#1D2025" : "#d5dae0"
+  );
   const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false);
 
   const showDateTimePicker = () => {
@@ -276,6 +280,7 @@ const mapStateToProps = state => {
     isPrice: state.orderReducer.isPrice,
     message: state.orderReducer.details,
     images: state.orderReducer.images,
+    price: state.orderReducer.price,
     arrivalLocation: state.destinationReducer.arrivalLocation,
     departureLocation: state.destinationReducer.departureLocation
   };
