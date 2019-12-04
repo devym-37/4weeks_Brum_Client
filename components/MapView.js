@@ -197,8 +197,8 @@ const MapScreen = ({ navigation, ...props }) => {
             ) : (
               <Marker
                 coordinate={{
-                  latitude: props.currentRegion.latitude,
-                  longitude: props.currentRegion.longitude
+                  latitude: props.currentRegion.latitude || 0,
+                  longitude: props.currentRegion.longitude || 0
                 }}
               >
                 <Image

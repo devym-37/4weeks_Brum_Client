@@ -99,9 +99,18 @@ const SearchAddress = ({ navigation, ...props }) => {
     }
     let location = await Location.getCurrentPositionAsync({});
     console.log("location", location);
+    console.log("currentLocation", currentLocation);
   };
 
-  const _getReverseGeocode = async () => {};
+  const _getReverseGeocode = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      console.log("Permission to access location was denied");
+    }
+    console.log("currentLocation", currentLocation);
+    let reverseCode = await Location.reverseGeocodeAsync({ currentLocation });
+    console.log("reverseCode", reverseCode);
+  };
 
   const userCurrentLocation = props => {
     const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
@@ -127,9 +136,10 @@ const SearchAddress = ({ navigation, ...props }) => {
   useEffect(() => {
     (async () => {
       await getLocation();
-      await getDefaultCampusMap();
+      await _getReverseGeocode();
       await _getLocationAsync();
-      // await currentReverseCode();
+
+      await getDefaultCampusMap();
     })();
   }, []);
 
