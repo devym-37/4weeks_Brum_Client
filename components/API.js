@@ -19,7 +19,7 @@ export const toastApi = {
   postSMS: (otp, phoneNumber) =>
     tApi.post(`sms/v2.3/appKeys/${APPKEY}/sender/auth/sms`, {
       body: `[${otp}] 쌉가능의 인증번호입니다.`,
-      sendNo: "01094402182",
+      sendNo: "01028696789",
       recipientList: [{ recipientNo: `${phoneNumber}` }]
     })
 };

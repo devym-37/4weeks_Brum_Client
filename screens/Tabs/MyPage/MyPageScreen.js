@@ -323,11 +323,22 @@ const MyPageScreen = ({ navigation, ...props }) => {
               color="#22252A"
               onPress={() => navigation.navigate("VerifyCampusNavigation")}
             />
-            <GhostButton
+            <RoutePicker
+              text="내 리뷰 보기"
+              color="#22252A"
+              onPress={() => Alert.alert("리뷰")}
+            />
+            <RoutePicker
+              text="로그아웃"
+              color="#22252A"
+              onPress={handleLogout}
+            />
+
+            {/* <GhostButton
               text={"리뷰남기기"}
               onPress={() => navigation.navigate("ReviewScreen")}
-            />
-            <GhostButton text={buttonName} onPress={handleLogout} />
+            /> */}
+            {/* <GhostButton text={buttonName} onPress={handleLogout} /> */}
           </Container>
         )
       )}

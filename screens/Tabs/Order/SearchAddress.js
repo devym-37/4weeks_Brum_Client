@@ -137,14 +137,6 @@ const SearchAddress = ({ navigation, ...props }) => {
     <>
       <SafeAreaView style={{ flex: 1 }}>
         <Container>
-          <DepartureInput
-            onPress={handleClickDeparture}
-            departure={props.departureLocation}
-          />
-          <DestinationInput
-            onPress={handleClickArrival}
-            destination={props.arrivalLocation}
-          />
           <MapView
             // latitude={region.latitude || currentLocation.latitude}
             // longitude={region.longitude || currentLocation.longitude}
@@ -154,11 +146,20 @@ const SearchAddress = ({ navigation, ...props }) => {
             SearchScreen={true}
             currentRegion={currentLocation}
           />
+          <DepartureInput
+            onPress={handleClickDeparture}
+            departure={props.departureLocation}
+          />
+          <DestinationInput
+            onPress={handleClickArrival}
+            destination={props.arrivalLocation}
+          />
+
           <CurrentLocationButton
             callback={() => {
               userCurrentLocation();
             }}
-            bottom={140}
+            bottom={236}
           />
         </Container>
       </SafeAreaView>
