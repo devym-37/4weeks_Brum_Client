@@ -128,7 +128,8 @@ class Chat extends React.Component {
       deliverId: null,
       hostinfo: null,
       deliverinfo: null,
-      image: null
+      image: null,
+      accessoryOpen:false
     };
   }
   get user() {
@@ -173,7 +174,32 @@ class Chat extends React.Component {
       this.state.userId !== null && (
         <View style={{ flex: 1 }}>
           {this.state.orderStatus !== null && this.statusbar()}
-          {this.state.image ? (
+         
+          <GiftedChat
+            inverted={true}
+            image={this.state.image}
+            messages={this.state.messages}
+            onSend={(messages, image) => {
+              Fire.shared.send(messages, this.state.image);
+              this.setState({
+                image:null
+              })
+            }}
+            user={this.user}
+            renderBubble={this.renderBubble}
+            /*      renderTime={this.renderTime}
+            renderMessageImage={this.renderMessageImage}*/ 
+            scrollToBottom={true}
+            timeTextStyle={{
+              left: { color: "red" },
+              right: { color: "yellow" }
+            }}
+            alwaysShowSend = {true}
+            renderActions={this.renderActions}
+            //renderInputToolbar ={this.renderInputToolbar}
+           // minInputToolbarHeight={this.state.accessoryOpen ?400 : 50}
+          />
+         {/*   {this.state.image ? (
             <Image 
             style={{
               width: 80,
@@ -184,27 +210,7 @@ class Chat extends React.Component {
           ):(
             <>
             </>
-          )}
-          <GiftedChat
-            inverted={true}
-            image={this.state.image}
-            messages={this.state.messages}
-            onSend={(messages, image) => {
-              Fire.shared.send(messages, this.state.image);
-            }}
-            user={this.user}
-            renderBubble={this.renderBubble}
-            /*      renderTime={this.renderTime}
-            renderMessageImage={this.renderMessageImage} */
-            scrollToBottom={true}
-            timeTextStyle={{
-              left: { color: "red" },
-              right: { color: "yellow" }
-            }}
-            alwaysShowSend = {true}
-            renderActions={this.renderActions}
-            renderAccessory={this.renderAccessory}
-          />
+          )} */}
           <KeyboardAvoidingView
             behavior={Platform.OS === "android" ? "padding" : null}
             keyboardVerticalOffset={9}
@@ -213,12 +219,21 @@ class Chat extends React.Component {
       )
     );
   }
-  /*  renderMessageImage = image => {
+    renderMessageImage = image => {
     console.log("실행도안된다");
-    return <Image source={image} />;
-  }; */
-/* 
-  renderAccessory =() =>{
+    return (this.state.image && (
+      <Image 
+      style={{
+        width: 80,
+        height: 80
+      }}
+      source={{ uri: this.state.image }}
+      />)
+      
+      )
+  }; 
+
+  renderInputToolbar =() =>{
     return(
       <View>
         {this.state.image && (
@@ -230,17 +245,25 @@ class Chat extends React.Component {
           source={{ uri: this.state.image }}
           />
         )}
+        <View
+        style={{
+            width: constants.width,
+            height: 600
+          }}>
+
+        </View>
       </View>
     )
-  } */
+  } 
 
   renderActions = () => {
     const takePicture = async () => {
       try {
-        console.log("didicomein?");
+       // console.log("didicomein?");
         const { status } = await Permissions.askAsync(
           Permissions.CAMERA_ROLL,
           Permissions.CAMERA
+          
         );
 
         // console.log(ImagePicker);
@@ -250,6 +273,7 @@ class Chat extends React.Component {
           aspect: [4, 3],
           quality: 1
         });
+        
 
         if (!result.cancelled) {
           const response = await fetch(result.uri);
@@ -265,7 +289,8 @@ class Chat extends React.Component {
           console.log("블롭파일입니다", url);
 
           this.setState({
-            image: url
+            image: url,
+            accessoryOpen: true
           });
           //setImageadded(result.uri);
         }
@@ -292,10 +317,23 @@ class Chat extends React.Component {
 
     return (
       <TouchableOpacity onPress={takePicture}>
+        <ChatColumn>
+
         <Ionicons
           name="md-add-circle-outline"
-          style={{ alignSelf: "center", fontSize: 30 }}
+          style={{ alignSelf: "center", fontSize: 30,marginRight:5 }}
         />
+        
+                {this.state.image &&(
+         <Ionicons
+         delayLongPress={10} onLongPress={()=>{this.setState({image: null})}} 
+         name="md-image"
+         style={{ alignSelf: "center", fontSize: 30 }}
+       />
+        )}
+        </ChatColumn>
+        
+       
       </TouchableOpacity>
     );
   };
