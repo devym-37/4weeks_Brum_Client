@@ -123,10 +123,11 @@ const ChatCard = ({ onPress, ...props }) => {
       console.log("파싱",this.parse(snapshot))
       setLastchat(result)
     });
-    
+
     return () => {
       isCancelled = true;
     };
+
   },[])
 
   return (

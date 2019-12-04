@@ -235,8 +235,8 @@ class Fire {
       .update(pushToken);
   };
 
-  signup = (id, pw) => {
-    firebase.auth().createUserWithEmailAndPassword(id, pw);
+  signup = () => {
+    firebase.auth().signInAnonymously();
   };
 
   signin = () => {
