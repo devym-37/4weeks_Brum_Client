@@ -13,7 +13,7 @@ import MapView from "../../../components/MapView";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
-import { DestinationInput } from "../../../components/Inputs/DestinationInput";
+import DestinationInput from "../../../components/Inputs/DestinationInput";
 import { DepartureInput } from "../../../components/Inputs/DepartureInput";
 import { connect } from "react-redux";
 import { Marker } from "react-native-maps";
@@ -79,29 +79,40 @@ const SearchAddress = ({ navigation, ...props }) => {
     };
   };
 
-  const getLocation = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    let currentRegion = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude
-    };
-    setCurrentLocation({ ...currentRegion });
+  const getLocation = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      let currentLat = parseFloat(position.coords.latitude);
+      let currentLng = parseFloat(position.coords.longitude);
+
+      let currentRegion = {
+        latitude: currentLat,
+        longitude: currentLng,
+        latitudeDelta: constants.LATITUDE_DELTA,
+        longitudeDelta: constants.LONGITUDE_DELTA
+      };
+      setCurrentLocation({ ...currentRegion });
+    });
   };
 
-  const _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    console.log("location", location);
-  };
+  // const _getLocationAsync = async () => {
+  //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  //   if (status !== "granted") {
+  //     console.log("Permission to access location was denied");
+  //   }
+  //   let location = await Location.getCurrentPositionAsync({});
+  //   console.log("location", location);
+  //   console.log("currentLocation", currentLocation);
+  // };
 
-  const _getReverseGeocode = async () => {};
+  // const _getReverseGeocode = async () => {
+  //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  //   if (status !== "granted") {
+  //     console.log("Permission to access location was denied");
+  //   }
+  //   console.log("currentLocation", currentLocation);
+  //   let reverseCode = await Location.reverseGeocodeAsync({ currentLocation });
+  //   console.log("reverseCode", reverseCode);
+  // };
 
   const userCurrentLocation = props => {
     const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
@@ -127,9 +138,12 @@ const SearchAddress = ({ navigation, ...props }) => {
   useEffect(() => {
     (async () => {
       await getLocation();
+
+      // await recordEvent({ currentLocation });
+      // await _getReverseGeocode();
+      // await _getLocationAsync();
+
       await getDefaultCampusMap();
-      await _getLocationAsync();
-      // await currentReverseCode();
     })();
   }, []);
 
@@ -137,6 +151,15 @@ const SearchAddress = ({ navigation, ...props }) => {
     <>
       <SafeAreaView style={{ flex: 1 }}>
         <Container>
+          <DepartureInput
+            onPress={handleClickDeparture}
+            departure={props.departureLocation}
+          />
+          <DestinationInput
+            onPress={handleClickArrival}
+            destination={props.arrivalLocation}
+            currentPosition={currentLocation}
+          />
           <MapView
             // latitude={region.latitude || currentLocation.latitude}
             // longitude={region.longitude || currentLocation.longitude}
@@ -145,14 +168,6 @@ const SearchAddress = ({ navigation, ...props }) => {
             showLocation={false}
             SearchScreen={true}
             currentRegion={currentLocation}
-          />
-          <DepartureInput
-            onPress={handleClickDeparture}
-            departure={props.departureLocation}
-          />
-          <DestinationInput
-            onPress={handleClickArrival}
-            destination={props.arrivalLocation}
           />
 
           <CurrentLocationButton
