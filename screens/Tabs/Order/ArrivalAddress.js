@@ -36,12 +36,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     height: 40,
     width: constants.width - 100,
-    marginTop: 60,
-    marginLeft: 10,
+    marginTop: 20,
+    marginLeft: 20,
     marginRight: 10,
     marginBottom: 10,
     padding: 5,
-    paddingBottom: 10,
+    paddingBottom: 5,
     backgroundColor: "white"
   },
   locationSuggestion: {
@@ -50,13 +50,12 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   container: {
-    ...StyleSheet.absoluteFillObject
+    // ...StyleSheet.absoluteFillObject,
+    flex: 1
   },
   containers: {
-    flex: 1,
-    position: "absolute",
-    left: 20,
-    width: constants.width - 90,
+    height: 68,
+    width: constants.width - 50,
     borderRadius: 10,
     backgroundColor: "white",
     shadowColor: "#000000",
@@ -142,7 +141,13 @@ class OrderArrivalAddress extends Component {
       prediction => (
         <View
           key={prediction.id}
-          style={{ alignContent: "center", alignItems: "center", flex: 1 }}
+          style={{
+            alignContent: "center",
+            alignItems: "center",
+            backgroundColor: "white",
+            flex: 1,
+            justifyContent: "space-between"
+          }}
         >
           <TouchableHighlight
             style={styles.containers}
@@ -159,20 +164,37 @@ class OrderArrivalAddress extends Component {
             key={prediction.id}
           >
             <React.Fragment>
-              <View
-                style={{
-                  marginLeft: 10
-                }}
-              >
+              <View style={{ marginLeft: 10, flexDirection: "row" }}>
                 <Image
                   source={require("../../../assets/Delivery_departure.png")}
-                  style={{ height: 30, width: 30, marginTop: 10 }}
+                  style={{
+                    height: 30,
+                    width: 30,
+                    marginTop: 3,
+                    marginLeft: 5,
+                    backgroundColor: "white",
+                    flexDirection: "row"
+                  }}
                 />
-                <Text style={{ marginLeft: 40, flex: 1 }}>
+                <Text
+                  style={{
+                    marginTop: 10,
+                    marginLeft: 10,
+                    fontSize: 16,
+                    backgroundColor: "white"
+                  }}
+                >
                   {prediction.structured_formatting.main_text}
                 </Text>
               </View>
-              <Text note style={{ marginLeft: 20 }}>
+              <Text
+                note
+                style={{
+                  marginLeft: 20,
+                  padding: 1,
+                  backgroundColor: "white"
+                }}
+              >
                 상세주소 : {prediction.description.substring(5)}
               </Text>
             </React.Fragment>
@@ -196,6 +218,7 @@ class OrderArrivalAddress extends Component {
           value={this.state.destination}
         />
         {locationPredictions}
+        <View style={{ height: 40, flex: 1 }}></View>
       </Container>
     );
   }

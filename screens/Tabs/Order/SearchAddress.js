@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import styled from "styled-components";
 
-import MapScreen from "../../../components/MapView";
+import MapView from "../../../components/MapView";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
@@ -90,16 +90,6 @@ const SearchAddress = ({ navigation, ...props }) => {
       longitude: location.coords.longitude
     };
     setCurrentLocation({ ...currentRegion });
-    // navigator.geolocation.getCurrentPosition(position => {
-    //   let currentLat = parseFloat(position.coords.latitude);
-    //   let currentLng = parseFloat(position.coords.longitude);
-
-    //   let currentRegion = {
-    //     latitude: currentLat,
-    //     longitude: currentLng
-    //   };
-    //   setCurrentLocation({ ...currentRegion });
-    // });
   };
 
   const _getLocationAsync = async () => {
@@ -155,11 +145,11 @@ const SearchAddress = ({ navigation, ...props }) => {
             onPress={handleClickArrival}
             destination={props.arrivalLocation}
           />
-          <MapScreen
+          <MapView
             // latitude={region.latitude || currentLocation.latitude}
             // longitude={region.longitude || currentLocation.longitude}
-            // latitude={currentLocation.latitude}
-            // longitude={currentLocation.longitude}
+            latitude={currentLocation.latitude}
+            longitude={currentLocation.longitude}
             showLocation={false}
             SearchScreen={true}
             currentRegion={currentLocation}
