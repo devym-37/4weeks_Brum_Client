@@ -354,7 +354,7 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
   const numOfScore = data && utils.numOfScores(data.hostInfo.getScore);
   const color = utils.scoreColorPicker(score);
   const price =
-    data && data.price !== "null"
+    data && data.price !== "null" && data.price
       ? utils.numberWithCommas(data.price) + "원"
       : "비용협의";
 
@@ -715,7 +715,7 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
 
                   <VerticalDivider />
                   <PriceContainer>
-                    <Price>{price}</Price>
+                    <Price>{price ? price : 비용협의}</Price>
                     <PriceOption>
                       {isPrice ? "가격제안 가능" : "가격제안 불가"}
                     </PriceOption>
@@ -742,7 +742,7 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
 
                   <VerticalDivider />
                   <PriceContainer>
-                    <Price>{price}</Price>
+                    <Price>{price ? price : 비용협의}</Price>
                     <PriceOption>
                       {isPrice ? "가격제안 가능" : "가격제안 불가"}
                     </PriceOption>
@@ -782,7 +782,7 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                 </Touchable>
                 <VerticalDivider />
                 <PriceContainer>
-                  <Price>{price}</Price>
+                  <Price>{price ? price : 비용협의}</Price>
                   <PriceOption>
                     {isPrice ? "가격제안 가능" : "가격제안 불가"}
                   </PriceOption>
@@ -814,7 +814,7 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                 </Touchable>
                 <VerticalDivider />
                 <PriceContainer>
-                  <Price>{price}</Price>
+                  <Price>{price ? price : 비용협의}</Price>
                   <PriceOption>
                     {isPrice ? "가격제안 가능" : "가격제안 불가"}
                   </PriceOption>
@@ -911,7 +911,7 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                     </Touchable>
                     <VerticalDivider />
                     <PriceContainer>
-                      <Price>{price}</Price>
+                      <Price>{price ? price : 비용협의}</Price>
                       <PriceOption>
                         {isPrice ? "가격제안 가능" : "가격제안 불가"}
                       </PriceOption>
