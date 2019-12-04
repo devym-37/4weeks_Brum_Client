@@ -7,6 +7,7 @@ import utils from "../../utils";
 import constants from "../../constants";
 import styles from "../../styles";
 import Fire from "../../screens/chat/Fire"
+import firebase from "../../components/API"
 
 const Touchable = styled.TouchableOpacity``;
 
@@ -104,21 +105,25 @@ const ChatCard = ({ onPress, ...props }) => {
   const chatPreview = latestChat
     ? latestChat.chatDetail
     : "러너와 대화를 시작하세요:)";
-  const [lastchat,setLastchat] = useState("")
+  const [lastchat,setLastchat] = useState(null)
 
   
-  const getlastchat = async () =>{
-    
-    const result = await Fire.shared.getlastone(orderId)
-
-    setLastchat(result)
+  const getlastchat = () =>{
+       
   }
   
   useEffect(()=>{
     let isCancelled = false;
 
-    getlastchat()
-
+    firebase
+    .database()
+    .ref(`threads/${orderId}/messages`)
+    .limitToLast(1)
+    .on("child_added", snapshot =>{ 
+      console.log("파싱",this.parse(snapshot))
+      setLastchat(result)
+    });
+    
     return () => {
       isCancelled = true;
     };
@@ -134,19 +139,27 @@ const ChatCard = ({ onPress, ...props }) => {
           <OrderTitle>{orderTimeStamp}</OrderTitle>
           <OrderTitle>{shortenTitle}</OrderTitle>
         </OrderContainer>
-
+        {lastchat && 
         <ChatContainer>
+       
           <ChatColumn>
             <Image source={{ uri: avatar }} />
             <ChatContent>
               <ChatUsername>{username}</ChatUsername>
-              <ChatPreview>{lastchat.text}</ChatPreview>
+              
+                <ChatPreview>{lastchat.text}</ChatPreview>
+             
             </ChatContent>
           </ChatColumn>
+       
           <ChatColumn>
+            
+              
             <TimeStamp>{timeStamp}</TimeStamp>
           </ChatColumn>
+         
         </ChatContainer>
+             }
         <Divider />
       </Container>
     </Touchable>

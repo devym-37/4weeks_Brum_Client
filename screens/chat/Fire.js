@@ -81,12 +81,15 @@ class Fire {
       .on("child_added", snapshot => callback(this.parse(snapshot)));
   };
 
-  getlastone = async (orderId)  => { 
+  getlastone =  (orderId)  => { 
+    console.log( "주문번호",orderId)
     firebase
       .database()
       .ref(`threads/${orderId}/messages`)
       .limitToLast(1)
-      .on("child_added", snapshot => this.parse(snapshot));
+      .on("child_added", snapshot =>{ 
+        console.log("파싱",this.parse(snapshot))
+        return this.parse(snapshot)});
   };
 
 
