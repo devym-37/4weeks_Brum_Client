@@ -61,7 +61,7 @@ const orderReducer = (state = initialState, action) => {
     case "CREATE_ISPRICE": {
       return {
         ...state,
-        isPrice: !state.isPrice
+        isPrice: action.isPrice
       };
     }
 

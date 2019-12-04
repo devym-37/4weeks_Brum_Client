@@ -30,10 +30,30 @@ import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
 import styles from "../../../styles";
 import utils from "../../../utils";
+import { connect } from "react-redux";
 import { serverApi } from "../../../components/API";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import VerifiedAccountBadge from "../../../components/VerifiedAccountBadge";
 import MapView from "../../../components/DetailMap";
+import {
+  arrivalPositionSave,
+  departurePositionSave
+} from "../../../redux/actions/orderPositionActions";
+import {
+  departureLocationSave,
+  arrivalLocationSave
+} from "../../../redux/actions/destinationAction";
+
+import {
+  categorySaver,
+  isPriceSaver,
+  priceSaver,
+  timeSaver,
+  titleSaver,
+  detailsSaver,
+  photoRemover,
+  imagesSaver
+} from "../../../redux/actions/orderActions";
 
 const Container = styled.View`
   flex: 1;
@@ -310,7 +330,7 @@ const DropContainer = styled.View`
   margin-bottom: ${props => (props.onFocused ? 300 : 30)};
   height: 200;
 `;
-const OrderDetailScreen = ({ navigation }) => {
+const OrderDetailScreen = ({ navigation, ...props }) => {
   const [fetchData, setFetchData] = useState(false);
   const [orderId, setorderId] = useState(navigation.getParam("orderId"));
   const [onFocus, setOnFocus] = useState(false);
@@ -356,7 +376,7 @@ const OrderDetailScreen = ({ navigation }) => {
   const title = data && data.title;
   const category = data && data.category;
   const timeStamp = data && utils.transferTime(data.createdAt);
-  const message = data && data.detais !== "null" ? data.details : "";
+  const message = data && data.details !== "null" ? data.details : "";
   const numOfApplicants = data && utils.numOfScores(data.applicants);
   const likes = data && data.userLikeOrders.length;
   const views = data && data.views;
@@ -369,6 +389,7 @@ const OrderDetailScreen = ({ navigation }) => {
     data.desiredArrivalTime.substr(0, 1) !== "0"
       ? utils.transferDesiredArrivalTime(data.desiredArrivalTime)
       : "시간 상관없음");
+
   const handleClickLikeButton = async () => {
     setIsLiked(!isLiked);
     // console.log(`userToken: `, userToken);
@@ -424,7 +445,7 @@ const OrderDetailScreen = ({ navigation }) => {
         console.log(`Can't post data of applying on server. Error : `, e);
       } finally {
         setLoading(false);
-        setFetchData(true);
+        setFetchData(!fetchData);
       }
     }
   };
@@ -451,7 +472,7 @@ const OrderDetailScreen = ({ navigation }) => {
       console.log(`Can't post data of applying on server. Error : `, e);
     } finally {
       setLoading(false);
-      setFetchData(true);
+      setFetchData(!fetchData);
       // navigation.goBack(null);
     }
   };
@@ -462,7 +483,7 @@ const OrderDetailScreen = ({ navigation }) => {
       const request = await serverApi.cancelApply(orderId, userToken);
       // console.log(`요청 취소! request: `, request);
       if (request.data.isSuccess) {
-        Alert.alert("요청이 취소되었습니다");
+        Alert.alert("지원이 취소되었습니다");
       } else {
         Alert.alert("실패했습니다. 다시 시도해 주세요");
       }
@@ -470,7 +491,7 @@ const OrderDetailScreen = ({ navigation }) => {
       console.log(`Can't cancel apply. Error: ${e}`);
     } finally {
       setIsRunner(false);
-      setFetchData(true);
+      setFetchData(!fetchData);
     }
   };
   const handleDelete = async () => {
@@ -490,7 +511,19 @@ const OrderDetailScreen = ({ navigation }) => {
   };
 
   const handleEdit = () => {
-    Alert.alert("Edit!");
+    data && data.price !== "null" && props.reduxPrice(data.price);
+    props.reduxIsPrice(data.isPrice);
+    props.reduxCategory(data.category);
+    props.reduxDetails(data.details);
+    props.reduxTitle(data.title);
+    props.reduxTime(data.desiredArrivalTime);
+    data.departures && props.reduxDepartureLocation(data.departures);
+    console.log(`도착지!!:`, data.arrivals);
+    props.reduxArrivalLocation(data.arrivals);
+    data &&
+      data.orderImages.length > 1 &&
+      props.reduxImages([...data.orderImages[1].orderImageURL]);
+    navigation.navigate("NewOrderNavigation", { title: "수정하기" });
   };
 
   const handleChangeMessage = value => {
@@ -899,4 +932,27 @@ const OrderDetailScreen = ({ navigation }) => {
   );
 };
 
-export default OrderDetailScreen;
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    // Login
+    reduxDeleteImages: () => dispatch(photoRemover()),
+    reduxLogin: trueFalse => dispatch(login(trueFalse)),
+    reduxTitle: title => dispatch(titleSaver(title)),
+    reduxTime: time => dispatch(timeSaver(time)),
+    reduxPrice: price => dispatch(priceSaver(price)),
+    reduxIsPrice: isPrice => dispatch(isPriceSaver(isPrice)),
+    reduxChecked: () => dispatch(isPriceSaver()),
+    reduxDetails: message => dispatch(detailsSaver(message)),
+    reduxCategory: category => dispatch(categorySaver(category)),
+    reduxImages: images => dispatch(imagesSaver(images)),
+    reduxArrivalLocation: arrival => dispatch(arrivalLocationSave(arrival)),
+    reduxDepartureLocation: departureLocation =>
+      dispatch(departureLocationSave(departureLocation)),
+    reduxArrivalPosition: arrival => dispatch(arrivalPositionSave(arrival)),
+    reduxDeparturePosition: departurePosition =>
+      dispatch(departurePositionSave(departurePosition))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(OrderDetailScreen);
