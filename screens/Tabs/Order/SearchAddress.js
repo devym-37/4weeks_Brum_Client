@@ -13,7 +13,7 @@ import MapView from "../../../components/MapView";
 import { CurrentLocationButton } from "../../../components/Buttons/CurrentLocationBtn";
 import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
-import { DestinationInput } from "../../../components/Inputs/DestinationInput";
+import DestinationInput from "../../../components/Inputs/DestinationInput";
 import { DepartureInput } from "../../../components/Inputs/DepartureInput";
 import { connect } from "react-redux";
 import { Marker } from "react-native-maps";
@@ -86,31 +86,33 @@ const SearchAddress = ({ navigation, ...props }) => {
 
       let currentRegion = {
         latitude: currentLat,
-        longitude: currentLng
+        longitude: currentLng,
+        latitudeDelta: constants.LATITUDE_DELTA,
+        longitudeDelta: constants.LONGITUDE_DELTA
       };
       setCurrentLocation({ ...currentRegion });
     });
   };
 
-  const _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    console.log("location", location);
-    console.log("currentLocation", currentLocation);
-  };
+  // const _getLocationAsync = async () => {
+  //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  //   if (status !== "granted") {
+  //     console.log("Permission to access location was denied");
+  //   }
+  //   let location = await Location.getCurrentPositionAsync({});
+  //   console.log("location", location);
+  //   console.log("currentLocation", currentLocation);
+  // };
 
-  const _getReverseGeocode = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-    }
-    console.log("currentLocation", currentLocation);
-    let reverseCode = await Location.reverseGeocodeAsync({ currentLocation });
-    console.log("reverseCode", reverseCode);
-  };
+  // const _getReverseGeocode = async () => {
+  //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  //   if (status !== "granted") {
+  //     console.log("Permission to access location was denied");
+  //   }
+  //   console.log("currentLocation", currentLocation);
+  //   let reverseCode = await Location.reverseGeocodeAsync({ currentLocation });
+  //   console.log("reverseCode", reverseCode);
+  // };
 
   const userCurrentLocation = props => {
     const { latitude = LATITUDE, longitude = LONGITUDE } = currentLocation;
@@ -136,8 +138,10 @@ const SearchAddress = ({ navigation, ...props }) => {
   useEffect(() => {
     (async () => {
       await getLocation();
-      await _getReverseGeocode();
-      await _getLocationAsync();
+
+      // await recordEvent({ currentLocation });
+      // await _getReverseGeocode();
+      // await _getLocationAsync();
 
       await getDefaultCampusMap();
     })();
@@ -154,6 +158,7 @@ const SearchAddress = ({ navigation, ...props }) => {
           <DestinationInput
             onPress={handleClickArrival}
             destination={props.arrivalLocation}
+            currentPosition={currentLocation}
           />
           <MapView
             // latitude={region.latitude || currentLocation.latitude}

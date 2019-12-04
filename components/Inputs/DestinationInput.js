@@ -10,13 +10,38 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { ifIphoneX } from "react-native-iphone-x-helper";
 import constants from "../../constants";
+import * as Location from "expo-location";
+import { connect } from "react-redux";
+import { currentLocationSave } from "../../redux/actions/currentActions";
 
 const WIDTH = constants.width;
 const HEIGHT = constants.height;
 
-export const DestinationInput = function(props) {
+const DestinationInput = ({ ...props }) => {
+  const [address, setAddress] = useState({});
   const Bottom = props.bottom ? props.bottom : 190;
   const iosBottom = props.bottom ? props.bottom : 240;
+
+  const reverseGeocode = async location => {
+    const reverseGeo = await Location.reverseGeocodeAsync(location);
+    return reverseGeo;
+  };
+
+  const recordEvent = async () => {
+    console.log("regionChange", props.currentPosition);
+    const address = await reverseGeocode(props.currentPosition);
+    console.log("address", address[0]);
+    console.log("address", address);
+    setAddress(address[0]);
+    // const inputDefaultAddress = `${address[0].region} ${address[0].name}`;
+    // this.props.reduxCurrentLocation(address[0]);
+  };
+
+  useEffect(() => {
+    (async () => {
+      await recordEvent();
+    })();
+  }, [props.currentPosition]);
 
   return (
     <TouchableOpacity
@@ -40,7 +65,9 @@ export const DestinationInput = function(props) {
       </View>
       <View style={styles.centerCol}>
         <Text style={{ fontSize: 16, color: "#858e96" }}>
-          {props.destination ? props.destination : "도착지 입력"}
+          {props.destination
+            ? props.destination
+            : `${address.region} ${address.name}`}
         </Text>
       </View>
     </TouchableOpacity>
@@ -74,3 +101,13 @@ const styles = StyleSheet.create({
     paddingRight: 25
   }
 });
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxCurrentLocation: currentLocation =>
+      dispatch(currentLocationSave(currentLocation))
+  };
+};
+
+export default connect(mapDispatchToProps)(DestinationInput);
