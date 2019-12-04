@@ -40,7 +40,7 @@ const SelectCampus = ({ navigation, ...props }) => {
         barStyle="light-content"
         centerComponent={{
           text: "대학캠퍼스 선택",
-          style: { color: "#000", fontSize: 16 }
+          style: { color: "#000", fontSize: 17, fontWeight: "500" }
         }}
         containerStyle={{
           backgroundColor: "#FEFFFF",
@@ -52,7 +52,7 @@ const SelectCampus = ({ navigation, ...props }) => {
         {/* <Text>Select Campus</Text> */}
         <Picker
           selectedValue={campus}
-          style={{ height: 360, width: 200 }}
+          style={{ height: 360, width: constants.width - 50 }}
           onValueChange={(itemValue, itemIndex) => setCampus(itemValue)}
         >
           <Picker.Item label="한양대" value="한양대" />
@@ -61,7 +61,7 @@ const SelectCampus = ({ navigation, ...props }) => {
           <Picker.Item label="이화여대" value="이화여대" />
         </Picker>
 
-        <MainButton text={"다음"} width={200} onPress={handleNextButton} />
+        <MainButton text={"다음"} width={50} onPress={handleNextButton} />
       </View>
     </>
   );

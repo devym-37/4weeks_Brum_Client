@@ -1,5 +1,10 @@
 import React from "react";
-import { GiftedChat, Bubble, Time } from "react-native-gifted-chat"; // 0.3.0
+import {
+  GiftedChat,
+  Bubble,
+  Time,
+  MessageImage
+} from "react-native-gifted-chat"; // 0.3.0
 import {
   AsyncStorage,
   View,
@@ -8,7 +13,8 @@ import {
   Button,
   Image,
   Modal,
-  Platform
+  Platform,
+  TouchableOpacity
 } from "react-native";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
@@ -20,9 +26,11 @@ import constants from "../../constants";
 import Fire from "./Fire";
 import { serverApi } from "../../components/API";
 import { Ionicons } from "@expo/vector-icons";
-
+import * as MediaLibrary from "expo-media-library";
+import * as ImagePicker from "expo-image-picker";
+import firebase from "firebase";
 const CardContainer = styled.View`
-  width: ${constants.width - 30};
+  width: ${constants.width};
 
   padding: 0 12px;
   justify-content: flex-start;
@@ -41,7 +49,7 @@ const ChatColumn = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  aling-self: center;
+  /* aling-self: center; */
 `;
 const Title = styled.Text`
   font-size: 18;
@@ -119,7 +127,8 @@ class Chat extends React.Component {
       position: null,
       deliverId: null,
       hostinfo: null,
-      deliverinfo: null
+      deliverinfo: null,
+      image: null
     };
   }
   get user() {
@@ -166,16 +175,22 @@ class Chat extends React.Component {
           {this.state.orderStatus !== null && this.statusbar()}
           <GiftedChat
             inverted={true}
+            image={this.state.image}
             messages={this.state.messages}
-            onSend={Fire.shared.send}
+            onSend={(messages, image) => {
+              Fire.shared.send(messages, this.state.image);
+            }}
             user={this.user}
             renderBubble={this.renderBubble}
-            renderTime={this.renderTime}
+            /*      renderTime={this.renderTime}
+            renderMessageImage={this.renderMessageImage} */
             scrollToBottom={true}
             timeTextStyle={{
               left: { color: "red" },
               right: { color: "yellow" }
             }}
+            renderActions={this.renderActions}
+            renderAccessory={this.renderAccessory}
           />
           <KeyboardAvoidingView
             behavior={Platform.OS === "android" ? "padding" : null}
@@ -185,6 +200,92 @@ class Chat extends React.Component {
       )
     );
   }
+  /*  renderMessageImage = image => {
+    console.log("실행도안된다");
+    return <Image source={image} />;
+  }; */
+
+  renderAccessory =() =>{
+    return(
+      <View>
+        {this.state.image && (
+          <Image 
+          style={{
+            width: constants.width,
+            height: 200
+          }}
+          source={{ uri: this.state.image }}
+          />
+        )}
+      </View>
+    )
+  }
+
+  renderActions = () => {
+    const takePicture = async () => {
+      try {
+        console.log("didicomein?");
+        const { status } = await Permissions.askAsync(
+          Permissions.CAMERA_ROLL,
+          Permissions.CAMERA
+        );
+
+        // console.log(ImagePicker);
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1
+        });
+
+        if (!result.cancelled) {
+          const response = await fetch(result.uri);
+          const blob = await response.blob();
+
+          var storageRef = firebase.storage().ref("images");
+
+          let ref = storageRef.child(`${blob.data.name}`);
+
+          await ref.put(blob);
+          const url = await ref.getDownloadURL();
+
+          console.log("블롭파일입니다", url);
+
+          this.setState({
+            image: url
+          });
+          //setImageadded(result.uri);
+        }
+
+        //setLoading(true);
+        setCameraPermission(status === "granted");
+      } catch (e) {
+      } finally {
+        //setLoading(false);
+      }
+    };
+
+    /*   getPhotos = async () => {
+      try {
+        const { assets } = await MediaLibrary.getAssetsAsync();
+        const [firstPhoto] = assets;
+        this.setState({
+          image: firstPhoto
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }; */
+
+    return (
+      <TouchableOpacity onPress={takePicture}>
+        <Ionicons
+          name="md-add-circle-outline"
+          style={{ alignSelf: "center", fontSize: 30 }}
+        />
+      </TouchableOpacity>
+    );
+  };
 
   statusbar = () => {
     const handleBack = () => {
@@ -198,16 +299,6 @@ class Chat extends React.Component {
             ? this.deliverView()
             : this.hostView()}
         </View>
-        <Ionicons
-          onPress={handleBack}
-          name="md-arrow-round-back"
-          style={{
-            marginRight: 30,
-            marginTop: 32,
-            fontSize: 25,
-            alignSelf: "flex-top"
-          }}
-        />
       </ContentContainer>
     );
   };
@@ -494,7 +585,7 @@ class Chat extends React.Component {
     });
 
     this.notificationSubscription = Notifications.addListener(
-      this.handleNotification()
+      this.handleNotification
     );
     console.log(this.state.orderstatus);
     //this.handleStatus();

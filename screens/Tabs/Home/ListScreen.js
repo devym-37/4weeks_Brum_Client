@@ -13,7 +13,7 @@ import { Content } from "native-base";
 import styled from "styled-components";
 import AuthModal from "../../Auth/AuthModal";
 import { serverApi } from "../../../components/API";
-import ListCard from "../../../components/Cards/ListCard";
+import HomeListCard from "../../../components/Cards/HomeListCard";
 import OrderCard from "../../../components/Cards/OrderCard";
 import Loader from "../../../components/Loader";
 import { withNavigation } from "react-navigation";
@@ -104,16 +104,18 @@ const ListScreen = props => {
               />
             ))} */}
         {orders && orders.length > 0 ? (
-          orders.map(
-            (data, i) =>
+          orders.map((data, i) => {
+            // console.log(`오더 카드 데이타: `, data);
+            return (
               data.orderStatus <= 5 && (
-                <OrderCard
+                <HomeListCard
                   {...data}
                   key={i}
                   onPress={() => handleClick(data.orderId)}
                 />
               )
-          )
+            );
+          })
         ) : (
           <Container style={{ marginTop: -50 }}>
             <DefaultOrder />

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import styled from "styled-components";
 
 import styles from "../../styles";
 import constants from "../../constants";
-import MainButton from "../../components/Buttons/MainButton";
+import GhostButton from "../../components/Buttons/GhostButton";
 import FormInput from "../../components/Inputs/FormInput";
 import ReviewCard from "../../components/Cards/ReviewCard";
 import {
@@ -65,10 +65,11 @@ const Divider = styled.View`
   background-color: #e8ecef;
 `;
 
-const ReviewScreen = ({ navigation }) => {
+const ReviewDetailScreen = ({ navigation }) => {
   const [rating, setRating] = useState(5);
   const [loading, setLoading] = useState(false);
   const [textReview, setTextReview] = useState("");
+
   const ratingCompleted = rating => {
     setRating(rating);
     console.log(typeof rating);
@@ -98,22 +99,16 @@ const ReviewScreen = ({ navigation }) => {
     setTextReview(value);
   };
   const handleClick = async () => {
-    console.log(`rating: `, rating, "textReview: ", textReview);
     try {
       setLoading(true);
       const userToken = await AsyncStorage.getItem("userToken");
-      const request = await serverApi.postReview(
-        orderId,
-        userToken,
-        String(rating),
-        textReview
-      );
-      console.log(`request: `, request);
+      const request = await serverApi.deleteReview(orderId, userToken);
+      console.log(`delete request: `, request);
       if (request.data.isSuccess) {
-        Alert.alert("리뷰 작성이 완료되었습니다");
-        navigation.goBack(null);
+        Alert.alert("리뷰가 삭제되었습니다");
+        navigation.goBack(null, { delete: true });
       } else {
-        Alert.alert("이미 작성한 리뷰입니다");
+        Alert.alert("일시오류", "잠시후 다시 시도해주세요");
       }
     } catch (e) {
       Alert.alert("일시오류", "죄송합니다. 잠시후 다시 시도해주세요");
@@ -122,6 +117,34 @@ const ReviewScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
+
+  const preLoad = async () => {
+    try {
+      setLoading(true);
+      const userToken = await AsyncStorage.getItem("userToken");
+      const request = await serverApi.getReview(orderId, userToken);
+      console.log(`request.data.data: `, request.data.data.readReview);
+      if (request.data.isSuccess) {
+        setRating(request.data.data.readReview.score);
+        setTextReview(
+          request.data.data.readReview.userReview
+            ? request.data.data.readReview.userReview
+            : "-"
+        );
+      } else {
+        Alert.alert("일시 오류", "잠시후 다시 시도해주세요");
+      }
+    } catch (e) {
+      Alert.alert("일시 오류", "잠시후 다시 시도해주세요");
+      console.log(`Can't get data of review. Error; ${e}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    preLoad();
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -147,6 +170,7 @@ const ReviewScreen = ({ navigation }) => {
           </ProfileContainer>
           <RatingContainer>
             <AirbnbRating
+              isDisabled={true}
               count={5}
               reviews={[
                 "최악이에요",
@@ -160,22 +184,23 @@ const ReviewScreen = ({ navigation }) => {
               onFinishRating={ratingCompleted}
               style={{ marginTop: 24 }}
             />
-            {/* <Divider /> */}
           </RatingContainer>
           <InputContainer>
             <FormInput
               onChange={value => handleChange(value)}
               value={textReview}
               width={50}
+              editable={false}
               dividerWidth={50}
-              placeholder="한줄 리뷰를 남겨주세요(선택사항)"
+              placeholder=""
               maxLength={21}
             />
           </InputContainer>
           <ButtonContainer>
-            <MainButton
+            <GhostButton
               loading={loading}
-              text="제출하기"
+              color={"#E9EDEF"}
+              text="리뷰 취소하기"
               width={50}
               onPress={handleClick}
             />
@@ -186,4 +211,4 @@ const ReviewScreen = ({ navigation }) => {
   );
 };
 
-export default ReviewScreen;
+export default ReviewDetailScreen;

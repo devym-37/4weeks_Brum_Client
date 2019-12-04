@@ -12,6 +12,35 @@ export default {
       email
     );
   },
+  formatUniversity: email => {
+    if (
+      /^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?hanyang.ac.kr$/g.test(
+        email
+      )
+    ) {
+      return "한양대";
+    } else if (
+      /^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?snu.ac.kr$/g.test(
+        email
+      )
+    ) {
+      return "서울대";
+    } else if (
+      /^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?yonsei.ac.kr$/g.test(
+        email
+      )
+    ) {
+      return "연세대";
+    } else if (
+      /^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\.)?[a-zA-Z]+\.)?ehwa.ac.kr$/g.test(
+        email
+      )
+    ) {
+      return "이화여대";
+    } else {
+      return;
+    }
+  },
   validateEmailReg: email => {
     return /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/.test(email);
   },
@@ -56,6 +85,21 @@ export default {
     else if (gap(`hour`)) return `${gap(`hour`)}시간 전`;
     else if (gap(`min`)) return `${gap(`min`)}분 전`;
     else if (gap(`sec`)) return `방금 전`;
+  },
+  transferDesiredArrivalTime: date => {
+    if (typeof date === "string") {
+      var hours = date.substring(8, 10);
+      var minutes = date.substring(11, 13);
+    } else {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+    }
+
+    if (hours > 12) {
+      return `오후 ${hours - 12}시 ${minutes}분 도착희망`;
+    } else {
+      return `오전 ${hours}시 ${minutes}분 도착희망`;
+    }
   },
   transferChatTimeStamp: time => {
     var nowTime = new Date();
@@ -102,6 +146,13 @@ export default {
     const status = ["매칭대기", "매칭완료", "배송시작", "배송완료", "정산완료"];
     return status[num];
   },
+  transferOrderCardStatus: num => {
+    if (typeof num !== "number") return;
+    else if (num === 0) return;
+    else if (num >= 1 && num < 4) return "거래중";
+    else if (num <= 5) return "거래완료";
+    else return;
+  },
 
   shortenText: (text, num) => {
     return text && text.length > num
@@ -115,6 +166,7 @@ export default {
     if (!isNaN(num)) {
       if (num >= 3.5) return "#32B049";
       if (num >= 2.5) return "#4181D0";
+      if (num === 0) return "#F8D54D";
       else return "#757575";
     }
   },

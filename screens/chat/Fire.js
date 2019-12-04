@@ -6,7 +6,7 @@ import { serverApi } from "../../components/API";
 class Fire {
   constructor() {
     this.init();
-    //  this.observeAuth();
+    this.observeAuth();
   }
   orderId = null;
   init = () => {
@@ -16,7 +16,7 @@ class Fire {
         authDomain: "shoppossible-104cf.firebaseapp.com",
         databaseURL: "https://shoppossible-104cf.firebaseio.com",
         projectId: "shoppossible-104cf",
-        storageBucket: "",
+        storageBucket: "gs://shoppossible-104cf.appspot.com",
         messagingSenderId: "468776437417"
         /*  appId: "1:468776437417:web:d2f6566987375050cc8bb8",
         measurementId: "G-2YJ8J64DSL" */
@@ -35,12 +35,12 @@ class Fire {
 
   onAuthStateChanged = async user => {
     //
-    const email = await AsyncStorage.getItem("email");
-    const password = await AsyncStorage.getItem("password");
+   //const email = await AsyncStorage.getItem("email");
+    //const password = await AsyncStorage.getItem("password");
     // console.log("채팅 로그인이 안됨", email, password);
     if (!user) {
       try {
-        firebase.auth().signInWithEmailAndPassword(email, password);
+        firebase.auth().signInAnonymously();
       } catch ({ message }) {
         alert(message);
       }
@@ -56,14 +56,15 @@ class Fire {
   }
 
   parse = snapshot => {
-    const { timestamp: numberStamp, text, user } = snapshot.val();
+    const { createdAt, text, user, image } = snapshot.val();
     const { key: _id } = snapshot;
-    const timestamp = new Date(numberStamp);
+    //const timestamp = new Date(numberStamp);
     const message = {
       _id,
-      timestamp,
+      createdAt,
       text,
-      user
+      user,
+      image
     };
     return message;
   };
@@ -80,6 +81,18 @@ class Fire {
       .on("child_added", snapshot => callback(this.parse(snapshot)));
   };
 
+  getlastone =  (orderId)  => { 
+    console.log( "주문번호",orderId)
+    firebase
+      .database()
+      .ref(`threads/${orderId}/messages`)
+      .limitToLast(1)
+      .on("child_added", snapshot =>{ 
+        console.log("파싱",this.parse(snapshot))
+        return this.parse(snapshot)});
+  };
+
+
   getorderid = async () => {
     const orderid = await AsyncStorage.getItem("orderid");
     this.orderId = orderid;
@@ -90,7 +103,7 @@ class Fire {
     return firebase.database.ServerValue.TIMESTAMP;
   }
   // send the message to the Backend
-  send = async messages => {
+  send = async (messages, image) => {
     const pushToken = await AsyncStorage.getItem("pushToken");
     const userToken = await AsyncStorage.getItem("userToken");
     const userid = await AsyncStorage.getItem("userId");
@@ -124,15 +137,16 @@ class Fire {
 
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
-      const time = new Date(Date.UTC(2016, 5, 11, 17, 20, 0));
+      const time = new Date();
       const message = {
         text,
         user,
+        image,
         createdAt: this.timestamp
       };
       this.append(message);
 
-      console.log("my푸쉬토큰", pushToken);
+      console.log("my푸쉬토큰", image);
     }
 
     newarr.forEach(user => {
@@ -221,13 +235,13 @@ class Fire {
       .update(pushToken);
   };
 
-  signup = (id, pw) => {
-    firebase.auth().createUserWithEmailAndPassword(id, pw);
+  signup = () => {
+    firebase.auth().signInAnonymously();
   };
 
-  signin = (id, pw) => {
-    console.log("왜 문자열이 아닌가", id, typeof id);
-    firebase.auth().signInWithEmailAndPassword(id, pw);
+  signin = () => {
+    //console.log("왜 문자열이 아닌가", id, typeof id);
+    firebase.auth().signInAnonymously();
   };
 
   ///

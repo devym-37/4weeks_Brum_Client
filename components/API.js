@@ -135,12 +135,10 @@ export const serverApi = {
   },
   postOrder: async (userToken, obj, images, thumbnail) => {
     const formData = new FormData();
-
-    // const data = JSON.stringify(obj);
-    // formData.append(`data`, data);
     formData.append('formData["title"]', obj.title);
     formData.append('formData["category"]', obj.category);
-    formData.append('formData["desiredArrivalTime"]', obj.desiredArrivaltime);
+    // console.log(`typeof time: `, typeof obj.desiredArrivalTime);
+    formData.append('formData["desiredArrivalTime"]', obj.desiredArrivalTime);
     formData.append('formData["price"]', obj.price);
     formData.append('formData["isPrice"]', obj.isPrice);
     formData.append('formData["details"]', obj.details);
@@ -173,6 +171,22 @@ export const serverApi = {
       }
     });
   },
+  getReview: (orderId, userToken) =>
+    sApi.get(`user/review/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
+  getMyAllReviews: userToken =>
+    sApi.get(`user/review`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   postReview: (orderId, userToken, score, userReview) =>
     sApi.post(
       `user/review/${orderId}`,
@@ -256,8 +270,41 @@ export const serverApi = {
       }
     });
   },
+  verifyEmail: (email, userToken) =>
+    sApi.put(
+      `user/email`,
+      { email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": userToken
+        }
+      }
+    ),
+
+  confirmEmail: (authCode, university, userToken) =>
+    sApi.put(
+      `user/email/authentication`,
+      { authCode, university },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": userToken
+        }
+      }
+    ),
   orderdetail: (orderId, userToken) =>
     sApi.get(`order/${orderId}`, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
+  myOrderDetail: (orderId, userToken) =>
+    sApi.get(`user/order/${orderId}`, {
       headers: {
         "Content-Type": "multipart/form-data",
         "Access-Control-Allow-Headers": "x-access-token",
