@@ -174,7 +174,7 @@ const SearchAddress = ({ navigation, ...props }) => {
             callback={() => {
               userCurrentLocation();
             }}
-            bottom={236}
+            // bottom={140}
           />
         </Container>
       </SafeAreaView>
