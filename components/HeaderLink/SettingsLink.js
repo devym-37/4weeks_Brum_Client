@@ -1,8 +1,10 @@
 import React from "react";
-import { Alert } from "react-native";
+import { Alert,Platform,Linking } from "react-native";
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { AntDesign } from "@expo/vector-icons";
+import * as IntentLauncherAndroid  from 'expo-intent-launcher';
+
 // import { Share, Button } from "react-native";
 const Container = styled.TouchableOpacity``;
 
@@ -30,10 +32,28 @@ export default withNavigation(({ navigation }) => {
   //   } catch (error) {
   //     alert(error.message);
   //   }
+  /* if(Platform.OS=='ios'){
+    Linking.openURL('app-settings:')
+  }
+  else{
+    IntentLauncherAndroid.startActivityAsync(
+      IntentLauncherAndroid.ACTION_LOCATION_SOURCE_SETTINGS
+    );
+  } */
   // };
   return (
     <>
-      <Container onPress={() => Alert.alert("설정")}>
+      <Container onPress={ async() =>{
+       if(Platform.OS=='ios'){
+         Alert.alert("설정으로 이동합니다")
+        Linking.openURL('app-settings:')
+      }
+      else{
+        const intent = await IntentLauncher.startActivityAsync(
+          IntentLauncherAndroid.ACTION_LOCATION_SOURCE_SETTINGS
+        )
+      } 
+        }}>
         <AntDesign
           name="setting"
           size={24}

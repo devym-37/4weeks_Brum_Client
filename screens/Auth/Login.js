@@ -175,9 +175,11 @@ const LogIn = props => {
     if (status !== "granted") {
       return;
     }
+    console.log("푸쉬토큰");
+
     let token = await Notifications.getExpoPushTokenAsync();
     // Defined in following steps
-    console.log("pushtoken", token);
+    console.log("푸쉬토큰", token);
     setPushtoken(token);
     await AsyncStorage.setItem("pushToken", token);
   };

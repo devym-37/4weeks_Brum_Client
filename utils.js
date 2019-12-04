@@ -156,6 +156,21 @@ export default {
     else return;
   },
 
+
+   timeConverter:(UNIX_timestamp)=>{
+    var a = new Date(UNIX_timestamp * 1000).toISOString().slice(13, 19).replace('T', ' ');
+    /* var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds(); */
+   // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min  ;
+    return a;
+  },
+
+
   shortenText: (text, num) => {
     return text && text.length > num
       ? text.substr(0, num + 1) + `・・・`

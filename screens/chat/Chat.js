@@ -32,7 +32,7 @@ import firebase from "firebase";
 const CardContainer = styled.View`
   width: ${constants.width};
 
-  padding: 0 12px;
+  padding: 0 3px;
   justify-content: flex-start;
   align-items: flex-start;
   background-color: white;
@@ -136,7 +136,7 @@ class Chat extends React.Component {
 
     return {
       //  name: this.props.navigation.state.params.name,
-      _id: Fire.shared.uid,
+      _id: this.state.userId,
       name: this.state.username,
       avatar: this.state.avatar
     };
@@ -173,6 +173,18 @@ class Chat extends React.Component {
       this.state.userId !== null && (
         <View style={{ flex: 1 }}>
           {this.state.orderStatus !== null && this.statusbar()}
+          {this.state.image ? (
+            <Image 
+            style={{
+              width: 80,
+              height: 80
+            }}
+            source={{ uri: this.state.image }}
+            />
+          ):(
+            <>
+            </>
+          )}
           <GiftedChat
             inverted={true}
             image={this.state.image}
@@ -189,12 +201,13 @@ class Chat extends React.Component {
               left: { color: "red" },
               right: { color: "yellow" }
             }}
+            alwaysShowSend = {true}
             renderActions={this.renderActions}
             renderAccessory={this.renderAccessory}
           />
           <KeyboardAvoidingView
             behavior={Platform.OS === "android" ? "padding" : null}
-            keyboardVerticalOffset={8}
+            keyboardVerticalOffset={9}
           />
         </View>
       )
@@ -204,7 +217,7 @@ class Chat extends React.Component {
     console.log("실행도안된다");
     return <Image source={image} />;
   }; */
-
+/* 
   renderAccessory =() =>{
     return(
       <View>
@@ -212,14 +225,14 @@ class Chat extends React.Component {
           <Image 
           style={{
             width: constants.width,
-            height: 200
+            height: 600
           }}
           source={{ uri: this.state.image }}
           />
         )}
       </View>
     )
-  }
+  } */
 
   renderActions = () => {
     const takePicture = async () => {

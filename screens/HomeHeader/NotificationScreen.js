@@ -1,17 +1,32 @@
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, { Component } from 'react';
+import {  Text, View, StyleSheet, Linking } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Container, Header, Title, Content, Button, Left, Right, Body, Icon, FooterTab, Footer } from "native-base";
+import { Constants } from 'expo';
 
-export default function NotificationScreen() {
-  return (
-    <Container>
-      <View style={styles.Container}>
-        <Text>NotificationScreen</Text>
+// or any pure javascript modules available in npm
+import { Card } from 'react-native-elements';
+
+
+
+export default class NotificationScreen extends Component {
+  render() {
+    Linking.openURL('app-settings:');
+    return (
+      <View style={styles.container}>
+        <Text style={styles.paragraph}>
+          Change code in the editor and watch it change on your phone!
+          Save to get a shareable url.
+        </Text>
+        <Card title="Local Modules">
+          <AssetExample />
+        </Card>
       </View>
-    </Container>
-  );
+    );
+  }
 }
+
+
 
 const styles = StyleSheet.create({
   Container: {
@@ -27,3 +42,4 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
+
