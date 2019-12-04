@@ -19,8 +19,8 @@ const CardContainer = styled.View`
 
 const Thumbnail = styled.Image`
   /* flex: 1; */
-  width: ${constants.width - 260};
-  height: ${constants.width - 260};
+  width: 110;
+  height: 110;
   border-radius: 8px;
 `;
 
