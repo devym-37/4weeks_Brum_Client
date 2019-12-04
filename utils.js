@@ -86,6 +86,21 @@ export default {
     else if (gap(`min`)) return `${gap(`min`)}분 전`;
     else if (gap(`sec`)) return `방금 전`;
   },
+  transferDesiredArrivalTime: date => {
+    if (typeof date === "string") {
+      var hours = date.substring(11, 13);
+      var minutes = date.substring(14, 16);
+    } else {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+    }
+
+    if (hours > 12) {
+      return `오후 ${hours - 12}시 ${minutes}분 도착희망`;
+    } else {
+      return `오전 ${hours}시 ${minutes}분 도착희망`;
+    }
+  },
   transferChatTimeStamp: time => {
     var nowTime = new Date();
     var now = {
@@ -124,12 +139,21 @@ export default {
   },
 
   transferOrderStatus: num => {
+    if (num === 77) return "기간만료";
+
     if (num === 88) return "요청취소";
 
     if (num === 99) return "배송취소";
 
     const status = ["매칭대기", "매칭완료", "배송시작", "배송완료", "정산완료"];
     return status[num];
+  },
+  transferOrderCardStatus: num => {
+    if (typeof num !== "number") return;
+    else if (num === 0) return;
+    else if (num >= 1 && num < 4) return "거래중";
+    else if (num <= 5) return "거래완료";
+    else return;
   },
 
 
@@ -159,6 +183,7 @@ export default {
     if (!isNaN(num)) {
       if (num >= 3.5) return "#32B049";
       if (num >= 2.5) return "#4181D0";
+      if (num === 0) return "#F8D54D";
       else return "#757575";
     }
   },

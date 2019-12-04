@@ -27,7 +27,7 @@ import Polyline from "@mapbox/polyline";
 const styles = StyleSheet.create({
   mapStyle: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
+    height: Dimensions.get("window").height / 4
   },
   center: {
     alignContent: "center",
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   centeredText: { textAlign: "center" },
   bubbles: {
-    width: 180,
+    width: 140,
     // flexDirection: "row",
     alignSelf: "flex-start",
     paddingHorizontal: 20,
@@ -57,33 +57,18 @@ const MapScreen = ({ navigation, ...props }) => {
   const [regions, setRegions] = useState({});
   const [coords, setCoords] = useState([]);
 
+  // const initialRegion = {
+  //   latitude: props.currentRegion.latitude || latitude,
+  //   longitude: props.currentRegion.longitude || longitude,
+  //   latitudeDelta: constants.LATITUDE_DELTA,
+  //   longitudeDelta: constants.LONGITUDE_DELTA
+  // };
+
   const region = {
     latitude: latitude,
     longitude: longitude,
     latitudeDelta: constants.LATITUDE_DELTA,
     longitudeDelta: constants.LONGITUDE_DELTA
-  };
-
-  // const getCurrent = async () => {
-  //   console.log("region", region);
-  //   console.log("props.", props.currentRegion);
-  //   const _region = {
-  //     latitude: props.currentRegion.latitude,
-  //     longitude: props.currentRegion.longitude,
-  //     latitudeDelta: constants.LATITUDE_DELTA,
-  //     longitudeDelta: constants.LONGITUDE_DELTA
-  //   };
-
-  //   setRegions(_region);
-  // };
-
-  const _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
-      console.log("Permission to access location was denied");
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    console.log("location", location);
   };
 
   // const recordEvent = async regionChange => {
@@ -96,9 +81,9 @@ const MapScreen = ({ navigation, ...props }) => {
   // };
 
   const getDirections = async () => {
-    console.log("props.order", props.order);
-    // console.log("this.map", this.map);
-    // console.log("ㅁㅁㅁㅁㅁㅁㅁㅁ");
+    console.log("props.departurePosition.lat", props);
+    console.log("this.map", this.map);
+    console.log("ㅁㅁㅁㅁㅁㅁㅁㅁ");
     if (props.departurePosition !== null && props.arrivalPosition !== null) {
       // const DEPARTURE = `ChIJlaxrQKakfDURwM3kL1L3lBk`;
       // const ARRIVAL = `ChIJx54O7aOkfDURml1ULDrn5PY`;
@@ -139,23 +124,32 @@ const MapScreen = ({ navigation, ...props }) => {
   // };
 
   useEffect(() => {
-    // getCurrent();
     getDirections();
-    _getLocationAsync();
   }, [props.departurePosition, props.arrivalPosition, props.currentRegion]);
 
   return (
     <>
       <Container>
-        {props.currentRegion !== undefined && props.SearchScreen === true ? (
+        {props.currentRegion !== undefined ? (
           <MapView
             style={styles.mapStyle}
             provider="google"
             ref={map => {
               this.map = map;
             }}
-            region={region}
-            // onRegionChange={this.onRegionChange}
+            // initialRegion={{
+            //   latitude: props.currentRegion.latitude,
+            //   longitude: props.currentRegion.longitude,
+            //   latitudeDelta: constants.LATITUDE_DELTA,
+            //   longitudeDelta: constants.LONGITUDE_DELTA
+            // }}
+            region={{
+              latitude: props.currentRegion.latitude,
+              longitude: props.currentRegion.longitude,
+              latitudeDelta: constants.LATITUDE_DELTA,
+              longitudeDelta: constants.LONGITUDE_DELTA
+            }}
+            onRegionChange={this.onRegionChange}
             // onRegionChangeComplete={regionChange => recordEvent(regionChange)}
             showsCompass={true}
             showsUserLocation={props.showLocation === false ? false : true}
@@ -167,6 +161,7 @@ const MapScreen = ({ navigation, ...props }) => {
             rotateEnabled={false}
             loadingEnabled={true}
           >
+            <Text>테스트 화면</Text>
             {props.SearchScreen === true && props.departurePosition !== null ? (
               <Marker
                 coordinate={{
@@ -180,7 +175,7 @@ const MapScreen = ({ navigation, ...props }) => {
                 />
               </Marker>
             ) : (
-              <Text></Text>
+              <Text>region1234{JSON.stringify(region)}</Text>
             )}
             {props.SearchScreen === true && props.arrivalPosition !== null ? (
               <Marker
@@ -197,8 +192,8 @@ const MapScreen = ({ navigation, ...props }) => {
             ) : (
               <Marker
                 coordinate={{
-                  latitude: props.currentRegion.latitude || 0,
-                  longitude: props.currentRegion.longitude || 0
+                  latitude: props.currentRegion.latitude,
+                  longitude: props.currentRegion.longitude
                 }}
               >
                 <Image
@@ -240,7 +235,6 @@ const MapScreen = ({ navigation, ...props }) => {
             loadingEnabled={true}
           >
             {props.HomeScreen === true &&
-              props.orders &&
               props.orders.map(marker => (
                 <Marker
                   key={marker.orderId}
@@ -266,9 +260,7 @@ const MapScreen = ({ navigation, ...props }) => {
                   >
                     <CustomCallout
                       title={marker.title}
-                      arrivals={marker.arrivals}
-                      createdAt={marker.createdAt}
-                      // departures={marker.departures}
+                      departures={marker.departures}
                       price={marker.price}
                     ></CustomCallout>
                   </Callout>

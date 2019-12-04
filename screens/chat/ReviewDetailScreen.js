@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import styled from "styled-components";
 
@@ -69,6 +69,7 @@ const ReviewDetailScreen = ({ navigation }) => {
   const [rating, setRating] = useState(5);
   const [loading, setLoading] = useState(false);
   const [textReview, setTextReview] = useState("");
+
   const ratingCompleted = rating => {
     setRating(rating);
     console.log(typeof rating);
@@ -117,6 +118,34 @@ const ReviewDetailScreen = ({ navigation }) => {
     }
   };
 
+  const preLoad = async () => {
+    try {
+      setLoading(true);
+      const userToken = await AsyncStorage.getItem("userToken");
+      const request = await serverApi.getReview(orderId, userToken);
+      console.log(`request.data.data: `, request.data.data.readReview);
+      if (request.data.isSuccess) {
+        setRating(request.data.data.readReview.score);
+        setTextReview(
+          request.data.data.readReview.userReview
+            ? request.data.data.readReview.userReview
+            : "-"
+        );
+      } else {
+        Alert.alert("일시 오류", "잠시후 다시 시도해주세요");
+      }
+    } catch (e) {
+      Alert.alert("일시 오류", "잠시후 다시 시도해주세요");
+      console.log(`Can't get data of review. Error; ${e}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    preLoad();
+  }, []);
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -155,15 +184,15 @@ const ReviewDetailScreen = ({ navigation }) => {
               onFinishRating={ratingCompleted}
               style={{ marginTop: 24 }}
             />
-            {/* <Divider /> */}
           </RatingContainer>
           <InputContainer>
             <FormInput
               onChange={value => handleChange(value)}
               value={textReview}
               width={50}
+              editable={false}
               dividerWidth={50}
-              placeholder="한줄 리뷰를 남겨주세요(선택사항)"
+              placeholder=""
               maxLength={21}
             />
           </InputContainer>

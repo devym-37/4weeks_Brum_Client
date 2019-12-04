@@ -19,7 +19,7 @@ export const toastApi = {
   postSMS: (otp, phoneNumber) =>
     tApi.post(`sms/v2.3/appKeys/${APPKEY}/sender/auth/sms`, {
       body: `[${otp}] 쌉가능의 인증번호입니다.`,
-      sendNo: "01094402182",
+      sendNo: "01028696789",
       recipientList: [{ recipientNo: `${phoneNumber}` }]
     })
 };
@@ -135,12 +135,10 @@ export const serverApi = {
   },
   postOrder: async (userToken, obj, images, thumbnail) => {
     const formData = new FormData();
-
-    // const data = JSON.stringify(obj);
-    // formData.append(`data`, data);
     formData.append('formData["title"]', obj.title);
     formData.append('formData["category"]', obj.category);
-    formData.append('formData["desiredArrivalTime"]', obj.desiredArrivaltime);
+    // console.log(`typeof time: `, typeof obj.desiredArrivalTime);
+    formData.append('formData["desiredArrivalTime"]', obj.desiredArrivalTime);
     formData.append('formData["price"]', obj.price);
     formData.append('formData["isPrice"]', obj.isPrice);
     formData.append('formData["details"]', obj.details);
@@ -173,6 +171,22 @@ export const serverApi = {
       }
     });
   },
+  getReview: (orderId, userToken) =>
+    sApi.get(`user/review/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
+  getMyAllReviews: userToken =>
+    sApi.get(`user/review`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    }),
   postReview: (orderId, userToken, score, userReview) =>
     sApi.post(
       `user/review/${orderId}`,

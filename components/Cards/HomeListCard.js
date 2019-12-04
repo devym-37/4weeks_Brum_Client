@@ -18,9 +18,9 @@ const CardContainer = styled.View`
 `;
 
 const Thumbnail = styled.Image`
-  flex: 1;
-  width: ${constants.width / 4};
-  height: ${constants.width / 4};
+  /* flex: 1; */
+  width: 110;
+  height: 110;
   border-radius: 8px;
 `;
 
@@ -48,31 +48,42 @@ const Divider = styled.View`
 const Title = styled.Text`
   font-size: 16;
   font-weight: 400;
-  margin-bottom: 8px;
+  margin-bottom: 6;
 `;
 
 const Time = styled.Text`
   padding-top: 0px;
   margin-right: 4px;
-  font-size: 13;
+  font-size: 11;
   color: #737b84;
+`;
+
+const CategoryContainer = styled.View`
+  /* margin-left: 10px; */
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 8;
+  justify-content: flex-start;
 `;
 
 const SpotContainer = styled.View`
   /* margin-left: 10px; */
   flex-direction: row;
   align-items: center;
+  margin-bottom: 3;
   justify-content: flex-start;
 `;
 const Spot = styled.Text`
   padding-right: 6px;
-  color: #737b84;
-  font-size: 13;
+  /* color: #737b84; */
+  font-weight: 300;
+  line-height: 12;
+  font-size: 12;
 `;
 const Price = styled.Text`
   /* padding-top: 6px; */
   font-size: 16;
-  font-weight: 400;
+  font-weight: 600;
 `;
 
 const Container = styled.View`
@@ -84,17 +95,16 @@ const Container = styled.View`
 const StatusContainer = styled.View`
   background-color: #495057;
   border-radius: 4px;
-  width: 60;
+  width: 48;
   color: white;
   justify-content: center;
   align-items: center;
   margin-right: 6px;
-
-  padding: 6px 8px;
+  padding: 4px 0;
 `;
 const Status = styled.Text`
   color: white;
-  font-size: 12;
+  font-size: 11;
   line-height: 0;
   font-weight: 800;
 `;
@@ -102,7 +112,7 @@ const Status = styled.Text`
 const Count = styled.Text`
   color: #737b84;
   font-size: 14;
-  line-height: 0;
+  line-height: 14;
   margin-left: 2px;
 `;
 
@@ -111,11 +121,12 @@ const CountContainer = styled.View`
   position: relative;
   width: 100%;
   justify-content: flex-end;
-  align-items: flex-end;
-  margin-top: -2px;
+  align-items: center;
+  /* margin-top: -2px; */
 `;
 const OrderCard = ({
   title,
+  category,
   departures,
   arrivals,
   desiredArrivalTime,
@@ -124,16 +135,18 @@ const OrderCard = ({
   createdAt,
   views,
   applicants = [],
+  userLikeOrders = [],
   onPress,
   children
 }) => {
   const priceWithComma = price && utils.numberWithCommas(price);
   const timeStamp = utils.transferTime(createdAt);
-  const status = utils.transferOrderStatus(orderStatus);
+  const status = utils.transferOrderCardStatus(orderStatus);
   const shortTitle = utils.shortenText(title, 17);
-  const shortArrivals = utils.shortenText(arrivals, 5);
+  const shortArrivals = utils.shortenText(arrivals, 7);
   const shortDeparture =
-    departures !== "null" ? utils.shortenText(departures, 5) : "출발지 없음";
+    departures !== "null" ? utils.shortenText(departures, 7) : "출발지 없음";
+  //   const numOfLikes = userLikeOrders.length;
   return (
     <>
       <Touchable onPress={onPress}>
@@ -148,23 +161,30 @@ const OrderCard = ({
             <TextContainer>
               <Title>{shortTitle}</Title>
 
-              <SpotContainer>
-                <Time>{timeStamp}</Time>
+              <CategoryContainer>
+                <Time>{category}</Time>
                 <Time>・</Time>
+                <Time>{timeStamp}</Time>
+              </CategoryContainer>
+
+              <SpotContainer>
                 <Spot>{shortDeparture}</Spot>
                 <AntDesign
                   name="arrowright"
-                  size={13}
+                  size={11}
                   style={{ color: "#737b84", paddingRight: 6 }}
                 />
                 <Spot>{shortArrivals}</Spot>
               </SpotContainer>
+
               <Container>
-                <StatusContainer>
-                  {status && <Status>{status}</Status>}
-                </StatusContainer>
+                {status && (
+                  <StatusContainer>
+                    <Status>{status}</Status>
+                  </StatusContainer>
+                )}
                 <Price>
-                  {price !== "null" ? `${priceWithComma}원` : `협의가능`}
+                  {price !== "null" ? `${priceWithComma}원` : `비용협의`}
                 </Price>
               </Container>
               <CountContainer>
@@ -172,15 +192,23 @@ const OrderCard = ({
                   <Ionicons
                     name="md-paper-plane"
                     size={15}
-                    style={{ color: "#737b84", paddingTop: 1 }}
+                    style={{ color: "#737b84" }}
                   />
                   <Count>{applicants.length}</Count>
                 </Container>
                 <Container>
                   <AntDesign
+                    name="hearto"
+                    size={14}
+                    style={{ color: "#737b84", paddingLeft: 9 }}
+                  />
+                  <Count>{userLikeOrders.length}</Count>
+                </Container>
+                <Container>
+                  <AntDesign
                     name="eyeo"
                     size={15}
-                    style={{ color: "#737b84", marginLeft: 8, paddingTop: 1 }}
+                    style={{ color: "#737b84", marginLeft: 8 }}
                   />
                   <Count>{views}</Count>
                 </Container>
@@ -196,15 +224,3 @@ const OrderCard = ({
 };
 
 export default withNavigation(OrderCard);
-
-// "title": "한양대 공학관 -> 우리집으로 무거운 물건좀 옮겨주세요",
-//                 "departures": "한양대 공학관",
-//                 "arrivals": "우리집",
-//                 "desiredArrivalTime": null,
-//                 "details": "집으로 보내주세요!!",
-//                 "price": "5000원",
-//                 "isPrice": true,
-//                 "deliverId": 2,
-//                 "orderStatus": 0,
-//                 "actualArrivalTime": null,
-//                 "createdAt": "2019-12-07 00:00:00",

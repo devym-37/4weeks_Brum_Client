@@ -3,6 +3,10 @@
   "lanType": "ip",
   "dev": true,
   "minify": false,
+<<<<<<< HEAD
   "urlRandomness": "y7-96a",
+=======
+  "urlRandomness": "2k-sa7",
+>>>>>>> 4b48ece106462e123677e1a427e0939b158189b9
   "https": false
 }

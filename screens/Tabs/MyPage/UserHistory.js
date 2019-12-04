@@ -6,6 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 import constants from "../../../constants";
 import styles from "../../../styles";
 import OrderCard from "../../../components/Cards/OrderCard";
+import HomeListCard from "../../../components/Cards/HomeListCard";
 import { serverApi } from "../../../components/API";
 import Loader from "../../../components/Loader";
 import ReviewCard from "../../../components/Cards/ReviewCard";
@@ -206,16 +207,17 @@ const UserHistoryScreen = ({ navigation }) => {
                   createdAt={data.createdAt}
                   {...data}
                 />
-                {data.orderStatus > 0 && (
-                  <ReviewCard
-                    isReadable={data.reviews && data.reviews.length > 0}
-                    orderId={data.orderId}
-                    nickname={data.hostInfo.nickname}
-                    avatar={data.hostInfo.image}
-                    university={data.hostInfo.university}
-                    isDeliver={false}
-                  />
-                )}
+                {data.orderStatus === 4 ||
+                  (data.orderStatus === 5 && (
+                    <ReviewCard
+                      isReadable={data.reviews && data.reviews.length > 0}
+                      orderId={data.orderId}
+                      nickname={data.hostInfo.nickname}
+                      avatar={data.hostInfo.image}
+                      university={data.hostInfo.university}
+                      isDeliver={false}
+                    />
+                  ))}
               </View>
             )
           );
@@ -238,7 +240,7 @@ const UserHistoryScreen = ({ navigation }) => {
         likeHistory.map(
           (data, i) =>
             data.order && (
-              <OrderCard
+              <HomeListCard
                 onPress={() => handleClick(data.order)}
                 key={i}
                 createdAt={data.createdAt}
@@ -253,7 +255,7 @@ const UserHistoryScreen = ({ navigation }) => {
                     />
                   </IconContainer>
                 </Touchable>
-              </OrderCard>
+              </HomeListCard>
             )
         )
       ) : (

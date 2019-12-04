@@ -30,9 +30,30 @@ import FormInput from "../../../components/Inputs/FormInput";
 import constants from "../../../constants";
 import styles from "../../../styles";
 import utils from "../../../utils";
+import { connect } from "react-redux";
 import { serverApi } from "../../../components/API";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import VerifiedAccountBadge from "../../../components/VerifiedAccountBadge";
+import MapView from "../../../components/DetailMap";
+import {
+  arrivalPositionSave,
+  departurePositionSave
+} from "../../../redux/actions/orderPositionActions";
+import {
+  departureLocationSave,
+  arrivalLocationSave
+} from "../../../redux/actions/destinationAction";
+
+import {
+  categorySaver,
+  isPriceSaver,
+  priceSaver,
+  timeSaver,
+  titleSaver,
+  detailsSaver,
+  photoRemover,
+  imagesSaver
+} from "../../../redux/actions/orderActions";
 
 const Container = styled.View`
   flex: 1;
@@ -42,7 +63,11 @@ const Container = styled.View`
 const Image = styled.Image`
   width: ${constants.width};
 
-  height: ${constants.height / 3};
+  height: ${constants.height / 4};
+`;
+const MapContainer = styled.View`
+  width: ${constants.width};
+  height: ${constants.height / 4};
 `;
 
 const UserContainer = styled.View`
@@ -90,7 +115,8 @@ const University = styled.Text`
 const ScoreLabel = styled.Text`
   color: #737b84;
   padding-right: 10;
-  font-size: 15;
+  font-size: 13;
+  margin-top: 2;
   font-weight: 400;
 `;
 
@@ -101,7 +127,10 @@ const UserScore = styled.Text`
   font-size: 20;
 `;
 
-const TotalScore = styled.Text``;
+const TotalScore = styled.Text`
+  font-size: 13;
+  font-weight: 300;
+`;
 
 const ApplyButton = styled.View`
   background-color: ${styles.mainColor};
@@ -170,18 +199,27 @@ const OrderTitle = styled.Text`
 const TimeStamp = styled.Text`
   color: #737b84;
   font-size: 15;
-  margin-bottom: 24;
+  /* margin-right: 6; */
+  margin-bottom: 12;
+`;
+
+const CategoryStamp = styled.Text`
+  color: #737b84;
+  font-size: 15;
+  /* margin-right: 6; */
+  margin-bottom: 11;
 `;
 const DepartureContainer = styled.View`
   flex-direction: row;
   /* flex-wrap: wrap; */
   align-items: center;
 `;
+
 const ArrivalContainer = styled.View`
   flex-direction: row;
   /* flex-wrap: wrap; */
   align-items: center;
-  margin-bottom: 24;
+  margin-bottom: 16;
 `;
 
 const Address = styled.Text`
@@ -190,11 +228,18 @@ const Address = styled.Text`
   margin-left: 4;
   padding-left: 4;
 `;
+
 const Message = styled.Text`
   font-size: 16;
   color: #333;
-  margin-bottom: 24;
+  margin-bottom: 16;
   line-height: 24;
+`;
+
+const CategoryContainer = styled.View`
+  flex-direction: row;
+  margin-bottom: 24;
+  align-items: center;
 `;
 const CountContainer = styled.View`
   flex-direction: row;
@@ -232,7 +277,6 @@ const BottomContainer = styled.View`
 const ContentContainer = styled.View`
   flex-direction: row;
   padding: 0 20px;
-
   width: ${constants.width};
   align-items: center;
   justify-content: space-between;
@@ -266,6 +310,12 @@ const TextDivider = styled.Text`
   color: #818992;
 `;
 
+const CategoryDivider = styled.Text`
+  padding: 0 4px;
+  margin-bottom: 12;
+  color: #818992;
+`;
+
 const IconContainer = styled.Text`
   padding-left: 12px;
 `;
@@ -280,7 +330,7 @@ const DropContainer = styled.View`
   margin-bottom: ${props => (props.onFocused ? 300 : 30)};
   height: 200;
 `;
-const OrderDetailScreen = ({ navigation }) => {
+const OrderDetailScreen = ({ navigation, ...props }) => {
   const [fetchData, setFetchData] = useState(false);
   const [orderId, setorderId] = useState(navigation.getParam("orderId"));
   const [onFocus, setOnFocus] = useState(false);
@@ -301,6 +351,7 @@ const OrderDetailScreen = ({ navigation }) => {
     data &&
     (data.hostInfo.university ? data.hostInfo.university : "미인증 회원");
   const score = data && utils.avgOfScores(data.hostInfo.getScore);
+  const numOfScore = data && utils.numOfScores(data.hostInfo.getScore);
   const color = utils.scoreColorPicker(score);
   const price =
     data && data.price !== "null"
@@ -309,16 +360,35 @@ const OrderDetailScreen = ({ navigation }) => {
 
   const isPrice = data && data.isPrice;
   const mapScreen =
-    "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png";
+    data &&
+    (data.orderImages.length > 0
+      ? data.orderImages[0].orderImageURL
+      : "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png");
+  const image =
+    data &&
+    (data.orderImages.length > 1 ? data.orderImages[1].orderImageURL : null);
+  const depLat = data && (data.depLat !== "null" ? data.depLat : null);
+  const depLng = data && (data.depLng !== "null" ? data.depLng : null);
+
+  const arrLat = data && (data.arrLat !== "null" ? data.arrLat : null);
+  const arrLng = data && (data.arrLng !== "null" ? data.arrLng : null);
+
   const title = data && data.title;
+  const category = data && data.category;
   const timeStamp = data && utils.transferTime(data.createdAt);
-  const message = data && data.detais !== "null" ? data.details : "";
+  const message = data && data.details !== "null" ? data.details : "";
   const numOfApplicants = data && utils.numOfScores(data.applicants);
   const likes = data && data.userLikeOrders.length;
   const views = data && data.views;
   const departure =
     data && data.departures !== "null" ? data.departures : "없음";
   const arrival = data && (data.arrivals ? data.arrivals : "없음");
+  const desiredArrivalTime =
+    data &&
+    (data.desiredArrivalTime !== "null" &&
+    data.desiredArrivalTime.substr(0, 1) !== "0"
+      ? utils.transferDesiredArrivalTime(data.desiredArrivalTime)
+      : "시간 상관없음");
 
   const handleClickLikeButton = async () => {
     setIsLiked(!isLiked);
@@ -355,6 +425,7 @@ const OrderDetailScreen = ({ navigation }) => {
   };
 
   const handleApplyButton = async () => {
+    // console.log(`arrLat: `, arrLat);
     if (isPrice) {
       setVisible(true);
     } else {
@@ -374,7 +445,7 @@ const OrderDetailScreen = ({ navigation }) => {
         console.log(`Can't post data of applying on server. Error : `, e);
       } finally {
         setLoading(false);
-        setFetchData(true);
+        setFetchData(!fetchData);
       }
     }
   };
@@ -401,7 +472,7 @@ const OrderDetailScreen = ({ navigation }) => {
       console.log(`Can't post data of applying on server. Error : `, e);
     } finally {
       setLoading(false);
-      setFetchData(true);
+      setFetchData(!fetchData);
       // navigation.goBack(null);
     }
   };
@@ -412,7 +483,7 @@ const OrderDetailScreen = ({ navigation }) => {
       const request = await serverApi.cancelApply(orderId, userToken);
       // console.log(`요청 취소! request: `, request);
       if (request.data.isSuccess) {
-        Alert.alert("요청이 취소되었습니다");
+        Alert.alert("지원이 취소되었습니다");
       } else {
         Alert.alert("실패했습니다. 다시 시도해 주세요");
       }
@@ -420,7 +491,7 @@ const OrderDetailScreen = ({ navigation }) => {
       console.log(`Can't cancel apply. Error: ${e}`);
     } finally {
       setIsRunner(false);
-      setFetchData(true);
+      setFetchData(!fetchData);
     }
   };
   const handleDelete = async () => {
@@ -440,7 +511,19 @@ const OrderDetailScreen = ({ navigation }) => {
   };
 
   const handleEdit = () => {
-    Alert.alert("Edit!");
+    data && data.price !== "null" && props.reduxPrice(data.price);
+    props.reduxIsPrice(data.isPrice);
+    props.reduxCategory(data.category);
+    props.reduxDetails(data.details);
+    props.reduxTitle(data.title);
+    props.reduxTime(data.desiredArrivalTime);
+    data.departures && props.reduxDepartureLocation(data.departures);
+    console.log(`도착지!!:`, data.arrivals);
+    props.reduxArrivalLocation(data.arrivals);
+    data &&
+      data.orderImages.length > 1 &&
+      props.reduxImages([...data.orderImages[1].orderImageURL]);
+    navigation.navigate("NewOrderNavigation", { title: "수정하기" });
   };
 
   const handleChangeMessage = value => {
@@ -458,7 +541,7 @@ const OrderDetailScreen = ({ navigation }) => {
     setUserToken(userToken);
     const data = await serverApi.orderdetail(orderId, userToken);
     setData({ ...data.data.data.order });
-    // console.log(`data.data.data.order : `, data.data.data.order);
+    console.log(`data.data.data.order : `, data.data.data.order);
     // console.log(
     //   `data.data.data.order.userLikeOrders: `,
     //   data.data.data.order.userLikeOrders
@@ -510,7 +593,17 @@ const OrderDetailScreen = ({ navigation }) => {
           }
         >
           <Container>
-            <Image source={{ uri: mapScreen }} />
+            <MapContainer>
+              <MapView
+                latitude={Number(arrLat)}
+                longitude={Number(arrLng)}
+                arrLat={Number(arrLat)}
+                arrLng={Number(arrLng)}
+                depLat={Number(depLat)}
+                depLng={Number(depLng)}
+                orderDetail={true}
+              />
+            </MapContainer>
             <UserContainer>
               <ProfileContainer>
                 <Avatar source={{ uri: avatar }} />
@@ -533,18 +626,31 @@ const OrderDetailScreen = ({ navigation }) => {
               <ScoreContainer>
                 <ScoreLabel>매너 점수</ScoreLabel>
                 <AntDesign
-                  name={score > 3.4 ? "smileo" : score > 2.4 ? "meh" : "frowno"}
+                  name={
+                    score > 3.4
+                      ? "smileo"
+                      : score > 2.4
+                      ? "meh"
+                      : score === 0
+                      ? "smileo"
+                      : "frowno"
+                  }
                   size={32}
                   style={{ color, marginRight: 8, marginTop: -6 }}
                 />
-                <UserScore color={color}>{score}</UserScore>
-                <TotalScore>{` / 5.0`}</TotalScore>
+                <UserScore color={color}>{score === 0 ? "-" : score}</UserScore>
+                <TotalScore>{` / 5.0 (${numOfScore}개)`}</TotalScore>
               </ScoreContainer>
             </UserContainer>
             <Divider />
             <OrderContentContainer>
               <OrderTitle>{title}</OrderTitle>
-              <TimeStamp>{timeStamp}</TimeStamp>
+              <CategoryContainer>
+                <CategoryStamp>{category}</CategoryStamp>
+                <CategoryDivider>･</CategoryDivider>
+                <TimeStamp>{timeStamp}</TimeStamp>
+              </CategoryContainer>
+
               <DepartureContainer>
                 <FontAwesome
                   name="dot-circle-o"
@@ -569,6 +675,19 @@ const OrderDetailScreen = ({ navigation }) => {
                   style={{ color: "#D0D6DC" }}
                 />
                 <Address>{`도착지 : ${arrival}`}</Address>
+              </ArrivalContainer>
+              <ArrivalContainer>
+                <AntDesign
+                  name="clockcircleo"
+                  size={18}
+                  style={{
+                    color: "#D0D6DC",
+                    paddingTop: 1,
+                    paddingLeft: 3,
+                    paddingRight: 2
+                  }}
+                />
+                <Address>{`${desiredArrivalTime}`}</Address>
               </ArrivalContainer>
               <Message>{message}</Message>
               <CountContainer>
@@ -714,7 +833,6 @@ const OrderDetailScreen = ({ navigation }) => {
           visible={visible}
           handleOpen={handleOpen}
           handleClose={handleClose}
-          // onClose={Keyboard.dismiss}
           swipeConfig={{
             velocityThreshold: 0.3,
             directionalOffsetThreshold: 30
@@ -763,7 +881,6 @@ const OrderDetailScreen = ({ navigation }) => {
                 <Divider />
                 <FormInput
                   onFocus={handleOnFocus}
-                  // onSubmitEditing={Keyboard.dismiss}
                   placeholder={"메세지(선택사항)"}
                   dividerColor={"#e8ecef"}
                   width={50}
@@ -809,12 +926,33 @@ const OrderDetailScreen = ({ navigation }) => {
               </BottomContainer>
             </>
           </DropContainer>
-          {/* </KeyboardAvoidingView> */}
-          {/* </TouchableWithoutFeedback> */}
         </Backdrop>
       </SafeAreaView>
     </>
   );
 };
 
-export default OrderDetailScreen;
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    // Login
+    reduxDeleteImages: () => dispatch(photoRemover()),
+    reduxLogin: trueFalse => dispatch(login(trueFalse)),
+    reduxTitle: title => dispatch(titleSaver(title)),
+    reduxTime: time => dispatch(timeSaver(time)),
+    reduxPrice: price => dispatch(priceSaver(price)),
+    reduxIsPrice: isPrice => dispatch(isPriceSaver(isPrice)),
+    reduxChecked: () => dispatch(isPriceSaver()),
+    reduxDetails: message => dispatch(detailsSaver(message)),
+    reduxCategory: category => dispatch(categorySaver(category)),
+    reduxImages: images => dispatch(imagesSaver(images)),
+    reduxArrivalLocation: arrival => dispatch(arrivalLocationSave(arrival)),
+    reduxDepartureLocation: departureLocation =>
+      dispatch(departureLocationSave(departureLocation)),
+    reduxArrivalPosition: arrival => dispatch(arrivalPositionSave(arrival)),
+    reduxDeparturePosition: departurePosition =>
+      dispatch(departurePositionSave(departurePosition))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(OrderDetailScreen);

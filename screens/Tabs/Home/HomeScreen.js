@@ -101,29 +101,31 @@ const HomeScreen = ({ navigation, ...props }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isopenLoginModal, setIsopenLoginModal] = useState(false);
-  const [campus, setCampus] = useState();
+  const [campus, setCampus] = useState(props.campus);
 
-  const getDefaultCampusMap = () => {
-    const campusRegion = constants.campus[props.campus].position;
-    console.log("campusRegion :", campusRegion);
-    console.log("클릭 확인");
+  const getDefaultCampusMap = async () => {
+    console.log(`props.campus: `, props.campus);
+    const asyncCampus = await AsyncStorage.getItem("campus");
+    console.log(`asyncCampus: `, asyncCampus);
+    const campusRegion = props.campus
+      ? constants.campus[props.campus].position
+      : asyncCampus
+      ? constants.campus[asyncCampus].position
+      : constants.campus["hanyang"].position;
+    // console.log("campusRegion :", campusRegion);
+    // console.log("클릭 확인");
     const _region = {
       latitude: campusRegion.latitude,
       longitude: campusRegion.longitude,
       latitudeDelta: constants.LATITUDE_DELTA,
       longitudeDelta: constants.LONGITUDE_DELTA
     };
-    console.log("_region", _region);
+    // console.log("_region", _region);
     setRegion(_region);
   };
 
   const moveCampusMap = () => {
     this.map.animateToRegion(region);
-  };
-
-  const geoCode = async address => {
-    const geo = await Location.geocodeAsync(address);
-    return geo;
   };
 
   const getLocation = () => {
@@ -275,4 +277,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, null)(HomeScreen);

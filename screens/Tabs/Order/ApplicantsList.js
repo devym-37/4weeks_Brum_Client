@@ -70,7 +70,7 @@ const ApplicantsList = ({ navigation }) => {
       const userToken = await AsyncStorage.getItem("userToken");
 
       const userId = await AsyncStorage.getItem("userId");
-      console.log(`유저오더딜리버아이디`, userId, orderId, deliverId);
+      // console.log(`유저오더딜리버아이디`, userId, orderId, deliverId);
       Fire.shared.appendChatrooms(userId, orderId, deliverId);
 
       const request = await serverApi.choiceDeliver(

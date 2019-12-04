@@ -30,19 +30,23 @@ const Text = styled.Text`
 
 // const arrayOfCampus = constants.campus.map(obj => obj.kor);
 
-const HomTitleLink = withNavigation(({ navigation, ...props }) => {
-  let selectedCampus = props.campus ? props.campus : "hanyang";
-  let engCampus = selectedCampus && constants.campus[selectedCampus].kor;
+const HomTitleLink = ({ navigation, ...props }) => {
+  // const asyncCampus = AsyncStorage.getItem("campus");
 
-  const [campus, setCampus] = useState(engCampus);
+  const [campus, setCampus] = useState("한양대");
   const [refreshing, setRefreshing] = useState(false);
   const arrayOfCampus = map(constants.campus, obj => obj.kor);
 
-  // const getCampusName = () => {
-  //   // const selectedCampus = await AsyncStorage.getItem("campus");
-  //   const selectedCampus = props.campus;
-  //   setCampus(constants.campus[selectedCampus].kor);
-  // };
+  const getCampusName = async () => {
+    const asyncCampus = await AsyncStorage.getItem("campus");
+    let selectedCampus = props.campus
+      ? props.campus
+      : asyncCampus
+      ? asyncCampus
+      : "hanyang";
+    let engCampus = selectedCampus && constants.campus[selectedCampus].kor;
+    setCampus(engCampus);
+  };
 
   const handleSelect = e => {
     const reselectedCampus = arrayOfCampus[e];
@@ -56,9 +60,9 @@ const HomTitleLink = withNavigation(({ navigation, ...props }) => {
     navigation.push("Home", { campus: engCampus });
   };
 
-  // useEffect(() => {
-  //   getCampusName();
-  // }, []);
+  useEffect(() => {
+    getCampusName();
+  }, []);
 
   return (
     <Touchable>
@@ -103,7 +107,7 @@ const HomTitleLink = withNavigation(({ navigation, ...props }) => {
       </Container>
     </Touchable>
   );
-});
+};
 
 const mapStateToProps = state => {
   return {
@@ -117,4 +121,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomTitleLink);
+export default withNavigation(
+  connect(mapStateToProps, mapDispatchToProps)(HomTitleLink)
+);
