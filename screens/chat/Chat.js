@@ -66,7 +66,7 @@ const Nickname = styled.Text`
 `;
 
 const ContentContainer = styled.View`
-  padding: 16px 12px;
+  padding: 6px 2px;
   flex-direction: row;
   justify-content: center;
 `;
@@ -339,13 +339,13 @@ class Chat extends React.Component {
   };
 
   statusbar = () => {
-    const handleBack = () => {
+   /*  const handleBack = () => {
       this.props.navigation.navigate("BottomNavigation");
       //this.props.navigation.goBack();
-    };
+    }; */
     return (
       <ContentContainer>
-        <View style={{ alignSelf: "center", marginTop: 15 }}>
+        <View style={{ alignSelf: "flex-start" }}>
           {this.state.position === "deliver"
             ? this.deliverView()
             : this.hostView()}
@@ -540,7 +540,7 @@ class Chat extends React.Component {
                         changestatus(88);
                       }}
                     >
-                      요청 취소하기
+                      요청 취소
                     </HeaderButton>
                   </HeaderButtonContainer>
                 </TextContainer>
