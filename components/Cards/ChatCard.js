@@ -89,11 +89,11 @@ const UserBadge = styled.Text`
   font-weight: 800;
 `;
 const ChatCard = ({ onPress, ...props }) => {
-  const { chats, deliverInfo,orderId, title, createdAt, hostId, deliverId } = props;
+  const { chats, deliverInfo,orderId, title,userId, createdAt, hostId, deliverId } = props;
   const username = deliverInfo.nickname;
   const avatar = deliverInfo.image;
   const shortenTitle = utils.shortenText(title, 20);
-  const isHost = hostId !== deliverId;
+  const isHost = userId !== deliverId;
   console.log("주인인가",isHost)
 
   const orderTimeStamp = `[19.11.26]`;
@@ -107,6 +107,8 @@ const ChatCard = ({ onPress, ...props }) => {
   const chatPreview = latestChat
     ? latestChat.chatDetail
     : "러너와 대화를 시작하세요:)";
+  /////
+
   const [lastchat,setLastchat] = useState(null)
 
   
@@ -142,15 +144,35 @@ const ChatCard = ({ onPress, ...props }) => {
           <OrderTitle>{orderTimeStamp}</OrderTitle>
           <OrderTitle>{shortenTitle}</OrderTitle>
         </OrderContainer>
-        {lastchat && 
-        <ChatContainer>
+        {lastchat ? (
+          <ChatContainer>
+       
+       <ChatColumn>
+         <Image source={{ uri: avatar }} />
+         <ChatContent>
+           <ChatUsername>{username}</ChatUsername>
+           
+             <ChatPreview>{lastchat.text}</ChatPreview>
+          
+         </ChatContent>
+       </ChatColumn>
+    
+       <ChatColumn>
+         
+           
+         <TimeStamp>{utils.timeConverter(lastchat.createdAt)}</TimeStamp>
+       </ChatColumn>
+      
+     </ChatContainer>
+        ) :(
+          <ChatContainer>
        
           <ChatColumn>
             <Image source={{ uri: avatar }} />
             <ChatContent>
-              <ChatUsername>{username}</ChatUsername>
+        <ChatUsername>{username}</ChatUsername>
               
-                <ChatPreview>{lastchat.text}</ChatPreview>
+                <ChatPreview>러너와 대화를 시작하세요:)</ChatPreview>
              
             </ChatContent>
           </ChatColumn>
@@ -158,10 +180,12 @@ const ChatCard = ({ onPress, ...props }) => {
           <ChatColumn>
             
               
-            <TimeStamp>{utils.timeConverter(lastchat.createdAt)}</TimeStamp>
+            <TimeStamp>최근</TimeStamp>
           </ChatColumn>
          
         </ChatContainer>
+        )
+        
              }
         <Divider />
       </Container>
