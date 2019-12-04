@@ -8,6 +8,7 @@ import CategoryFilter from "../screens/Tabs/Order/CategoryFilter";
 import SearchAddress from "../screens/Tabs/Order/SearchAddress";
 import { stackStyles } from "./config";
 import CloseLink from "../components/HeaderLink/CloseLink";
+import CloseOrderLink from "../components/HeaderLink/CloseOrderLink";
 import BackLink from "../components/HeaderLink/BackLink";
 import CompleteFormLink from "../components/HeaderLink/CompleteFormLink";
 
@@ -97,13 +98,15 @@ const bottomTabFactory = (initialRoute, customConfig) =>
 export default createStackNavigator({
   NewOrder: {
     screen: bottomTabFactory(NewOrder),
-    navigationOptions: {
-      title: "새 요청 글쓰기",
-      headerLeft: <CloseLink />,
+    navigationOptions: ({ navigation }) => ({
+      title: navigation.getParam("title")
+        ? navigation.getParam("title")
+        : "새 요청 글쓰기",
+      headerLeft: <CloseOrderLink />,
       headerRight: <CompleteFormLink />,
       mode: "card",
       ...stackStyles
-    }
+    })
   },
   CategoryFilter: {
     screen: CategoryFilter,

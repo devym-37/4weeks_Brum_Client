@@ -88,8 +88,8 @@ export default {
   },
   transferDesiredArrivalTime: date => {
     if (typeof date === "string") {
-      var hours = date.substring(8, 10);
-      var minutes = date.substring(11, 13);
+      var hours = date.substring(11, 13);
+      var minutes = date.substring(14, 16);
     } else {
       var hours = date.getHours();
       var minutes = date.getMinutes();
