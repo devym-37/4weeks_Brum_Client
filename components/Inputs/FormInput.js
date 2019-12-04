@@ -24,6 +24,7 @@ const Divider = styled.View`
 const TextInput = styled.TextInput`
   width: ${props => constants.width - props.width};
   padding: 20px 0;
+  color: ${props => (props.color ? props.color : "#22252a")};
   background-color: white;
   font-size: 17;
 
@@ -38,6 +39,7 @@ const FormInput = ({
   placeholder,
   children,
   onChange,
+  color = "#22252a",
   isUnderline = true,
   dividerColor,
   ...rest
@@ -50,6 +52,7 @@ const FormInput = ({
           placeholderTextColor="#d5dae0"
           placeholder={placeholder}
           onChangeText={onChange}
+          color={color}
           {...rest}
         />
         {children}
