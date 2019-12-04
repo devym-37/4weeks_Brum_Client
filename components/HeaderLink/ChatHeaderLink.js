@@ -6,8 +6,10 @@ import utils from "../../utils";
 
 const Container = styled.TouchableOpacity``;
 
-export default () => {
+export default (props) => {
   const handlePhone = () => {
+
+    console.log("프롭스",props)
     let phoneNumber = "01094402182";
     utils.phoneCall(phoneNumber);
   };

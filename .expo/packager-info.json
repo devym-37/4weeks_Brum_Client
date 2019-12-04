@@ -1,18 +1,9 @@
 {
   "expoServerPort": 19000,
-<<<<<<< HEAD
   "expoServerNgrokUrl": "https://y7-96a.anonymous.brum-client.exp.direct",
   "packagerNgrokUrl": "https://packager.y7-96a.anonymous.brum-client.exp.direct",
-  "ngrokPid": 8172,
+  "ngrokPid": 14248,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 10148
-=======
-  "expoServerNgrokUrl": "https://2k-sa7.leeyoungmin.brum-client.exp.direct",
-  "packagerNgrokUrl": "https://packager.2k-sa7.leeyoungmin.brum-client.exp.direct",
-  "ngrokPid": 5396,
-  "devToolsPort": 19002,
-  "packagerPort": 19001,
-  "packagerPid": 15264
->>>>>>> 4b48ece106462e123677e1a427e0939b158189b9
+  "packagerPid": 15964
 }
