@@ -87,7 +87,7 @@ const MapScreen = ({ navigation, ...props }) => {
   // };
 
   const getDirections = async () => {
-    // console.log("props.departurePosition.lat", props);
+    console.log("props.order", props.order);
     // console.log("this.map", this.map);
     // console.log("ㅁㅁㅁㅁㅁㅁㅁㅁ");
     if (props.departurePosition !== null && props.arrivalPosition !== null) {
@@ -231,6 +231,7 @@ const MapScreen = ({ navigation, ...props }) => {
             loadingEnabled={true}
           >
             {props.HomeScreen === true &&
+              props.orders &&
               props.orders.map(marker => (
                 <Marker
                   key={marker.orderId}
@@ -256,7 +257,9 @@ const MapScreen = ({ navigation, ...props }) => {
                   >
                     <CustomCallout
                       title={marker.title}
-                      departures={marker.departures}
+                      arrivals={marker.arrivals}
+                      createdAt={marker.createdAt}
+                      // departures={marker.departures}
                       price={marker.price}
                     ></CustomCallout>
                   </Callout>
