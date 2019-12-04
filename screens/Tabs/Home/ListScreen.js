@@ -105,7 +105,7 @@ const ListScreen = props => {
             ))} */}
         {orders && orders.length > 0 ? (
           orders.map((data, i) => {
-            console.log(`오더 카드 데이타: `, data);
+            // console.log(`오더 카드 데이타: `, data);
             return (
               data.orderStatus <= 5 && (
                 <HomeListCard
