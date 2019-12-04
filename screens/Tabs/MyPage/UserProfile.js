@@ -9,12 +9,4 @@ const UserProfileScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  root: {
-    height: 40,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    justifyContent: "center"
-  }
-});
-
 export default UserProfileScreen;
