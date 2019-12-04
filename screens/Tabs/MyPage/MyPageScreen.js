@@ -25,7 +25,7 @@ import GhostButton from "../../../components/Buttons/GhostButton";
 import RoutePicker from "../../../components/Pickers/RoutePicker";
 import { serverApi } from "../../../components/API";
 import constants from "../../../constants";
-
+import { login } from "../../../redux/actions/authActions";
 import VerifiedAccountBadge from "../../../components/VerifiedAccountBadge";
 
 const Container = styled.View`
@@ -186,21 +186,30 @@ const MyPageScreen = ({ navigation, ...props }) => {
   };
 
   const handleLogout = async () => {
-    if (buttonName === "임시 로그아웃 버튼") {
-      const logout = await AsyncStorage.clear();
-      setButtonName("임시 로그인 버튼");
-      Alert.alert("로그아웃 되었습니다");
+    try {
+      if (buttonName === "임시 로그아웃 버튼") {
+        const logout = await AsyncStorage.clear();
+        props.reduxLogin(false);
+
+        setButtonName("임시 로그인 버튼");
+
+        Alert.alert("로그아웃 되었습니다");
+
+        // preLoad();
+      } else {
+        setButtonName("임시 로그아웃 버튼");
+        navigation.navigate("Login");
+      }
+    } catch (e) {
+      console.log(`Can't clear AsyncStorage. Error: ${e}`);
+    } finally {
       navigation.navigate("StartNavigation");
-      // preLoad();
-    } else {
-      setButtonName("임시 로그아웃 버튼");
-      navigation.navigate("Login");
     }
   };
 
   useEffect(() => {
     preLoad();
-  }, [props.avatar, loggedIn]);
+  }, [props.avatar, props.isLoggedin, buttonName]);
   return (
     <ScrollView>
       {loading ? (
@@ -329,8 +338,18 @@ const MyPageScreen = ({ navigation, ...props }) => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
+    isLoggedin: state.authReducer.loggedIn,
     avatar: state.avatarReducer.avatar
   };
 };
 
-export default withNavigation(connect(mapStateToProps, null)(MyPageScreen));
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxLogin: trueFalse => dispatch(login(trueFalse))
+  };
+};
+
+export default withNavigation(
+  connect(mapStateToProps, mapDispatchToProps)(MyPageScreen)
+);

@@ -27,7 +27,7 @@ const SelectCampus = ({ navigation, ...props }) => {
       const engCampus = findKey(constants.campus, obj => {
         return obj.kor === campus;
       });
-      // console.log(engCampus);
+      console.log(`engCampus: `, engCampus);
       props.reduxCampus(engCampus);
       await AsyncStorage.setItem("campus", engCampus);
     }

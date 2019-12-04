@@ -11,7 +11,8 @@ import {
   Image,
   CardItem,
   Left,
-  Body
+  Body,
+  ScrollView
 } from "react-native";
 import MapView from "react-native-maps";
 import { API } from "../../../APIS";
@@ -198,7 +199,7 @@ class OrderDepartureAddress extends Component {
           }}
           value={this.state.destination}
         />
-        {locationPredictions}
+        <ScrollView style={{ flex: 1 }}>{locationPredictions}</ScrollView>
       </Container>
     );
   }

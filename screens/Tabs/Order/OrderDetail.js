@@ -33,7 +33,7 @@ import utils from "../../../utils";
 import { serverApi } from "../../../components/API";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import VerifiedAccountBadge from "../../../components/VerifiedAccountBadge";
-import MapView from "../../../components/MapView";
+import MapView from "../../../components/DetailMap";
 
 const Container = styled.View`
   flex: 1;
@@ -43,6 +43,10 @@ const Container = styled.View`
 const Image = styled.Image`
   width: ${constants.width};
 
+  height: ${constants.height / 4};
+`;
+const MapContainer = styled.View`
+  width: ${constants.width};
   height: ${constants.height / 4};
 `;
 
@@ -359,10 +363,11 @@ const OrderDetailScreen = ({ navigation }) => {
   const departure =
     data && data.departures !== "null" ? data.departures : "없음";
   const arrival = data && (data.arrivals ? data.arrivals : "없음");
-  // const desiredArrivalTime =
-  //   data && data.desiredArrivalTime.substr(0, 1) !== "0"
-  //     ? utils.transferDesiredArrivalTime(data.desiredArrivalTime)
-  //     : "시간 상관없음";
+  const desiredArrivalTime =
+    data &&
+    (data.desiredArrivalTime.substr(0, 1) !== "0"
+      ? utils.transferDesiredArrivalTime(data.desiredArrivalTime)
+      : "시간 상관없음");
   const handleClickLikeButton = async () => {
     setIsLiked(!isLiked);
     // console.log(`userToken: `, userToken);
@@ -398,7 +403,7 @@ const OrderDetailScreen = ({ navigation }) => {
   };
 
   const handleApplyButton = async () => {
-    console.log(`arrLat: `, arrLat);
+    // console.log(`arrLat: `, arrLat);
     if (isPrice) {
       setVisible(true);
     } else {
@@ -554,16 +559,17 @@ const OrderDetailScreen = ({ navigation }) => {
           }
         >
           <Container>
-            <MapView
-              latitude={Number(arrLat)}
-              longitude={Number(arrLng)}
-              arrLat={Number(arrLat)}
-              arrLng={Number(arrLng)}
-              depLat={Number(depLat)}
-              depLng={Number(depLng)}
-              orderDetail={true}
-            />
-
+            <MapContainer>
+              <MapView
+                latitude={Number(arrLat)}
+                longitude={Number(arrLng)}
+                arrLat={Number(arrLat)}
+                arrLng={Number(arrLng)}
+                depLat={Number(depLat)}
+                depLng={Number(depLng)}
+                orderDetail={true}
+              />
+            </MapContainer>
             <UserContainer>
               <ProfileContainer>
                 <Avatar source={{ uri: avatar }} />
@@ -647,7 +653,7 @@ const OrderDetailScreen = ({ navigation }) => {
                     paddingRight: 2
                   }}
                 />
-                {/*<Address>{`${desiredArrivalTime}`}</Address>*/}
+                <Address>{`${desiredArrivalTime}`}</Address>
               </ArrivalContainer>
               <Message>{message}</Message>
               <CountContainer>
