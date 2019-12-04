@@ -24,9 +24,6 @@ import constants from "../constants";
 import MapViewDirections from "react-native-maps-directions";
 import Polyline from "@mapbox/polyline";
 
-const LATITUDE = 37.565687;
-const LONGITUDE = 126.978045;
-
 const styles = StyleSheet.create({
   mapStyle: {
     width: Dimensions.get("window").width,
@@ -53,13 +50,23 @@ const styles = StyleSheet.create({
 });
 
 const MapScreen = ({ navigation, ...props }) => {
-  const { latitude = LATITUDE, longitude = LONGITUDE } = props;
+  const {
+    latitude = constants.LATITUDE,
+    longitude = constants.LONGITUDE
+  } = props;
   const [regions, setRegions] = useState({});
   const [coords, setCoords] = useState([]);
 
+  // const initialRegion = {
+  //   latitude: props.currentRegion.latitude || latitude,
+  //   longitude: props.currentRegion.longitude || longitude,
+  //   latitudeDelta: constants.LATITUDE_DELTA,
+  //   longitudeDelta: constants.LONGITUDE_DELTA
+  // };
+
   const region = {
-    latitude,
-    longitude,
+    latitude: latitude,
+    longitude: longitude,
     latitudeDelta: constants.LATITUDE_DELTA,
     longitudeDelta: constants.LONGITUDE_DELTA
   };
@@ -75,6 +82,7 @@ const MapScreen = ({ navigation, ...props }) => {
 
   const getDirections = async () => {
     console.log("props.departurePosition.lat", props);
+    console.log("this.map", this.map);
     console.log("ㅁㅁㅁㅁㅁㅁㅁㅁ");
     if (props.departurePosition !== null && props.arrivalPosition !== null) {
       // const DEPARTURE = `ChIJlaxrQKakfDURwM3kL1L3lBk`;
@@ -117,104 +125,162 @@ const MapScreen = ({ navigation, ...props }) => {
 
   useEffect(() => {
     getDirections();
-  }, [props.departurePosition, props.arrivalPosition]);
+  }, [props.departurePosition, props.arrivalPosition, props.currentRegion]);
 
   return (
     <>
       <Container>
-        <MapView
-          style={styles.mapStyle}
-          provider="google"
-          ref={map => {
-            this.map = map;
-          }}
-          initialRegion={region}
-          onRegionChange={this.onRegionChange}
-          // onRegionChangeComplete={regionChange => recordEvent(regionChange)}
-          showsCompass={true}
-          showsUserLocation={props.showLocation === false ? false : true}
-          showsMyLocationButton={false}
-          followsUserLocation={true}
-          zoomEnabled={true}
-          scrollEnabled={true}
-          showsScale={true}
-          rotateEnabled={false}
-          loadingEnabled={true}
-        >
-          {props.HomeScreen === true &&
-            props.orders.map(marker => (
+        {props.currentRegion !== undefined ? (
+          <MapView
+            style={styles.mapStyle}
+            provider="google"
+            ref={map => {
+              this.map = map;
+            }}
+            // initialRegion={{
+            //   latitude: props.currentRegion.latitude,
+            //   longitude: props.currentRegion.longitude,
+            //   latitudeDelta: constants.LATITUDE_DELTA,
+            //   longitudeDelta: constants.LONGITUDE_DELTA
+            // }}
+            region={{
+              latitude: props.currentRegion.latitude,
+              longitude: props.currentRegion.longitude,
+              latitudeDelta: constants.LATITUDE_DELTA,
+              longitudeDelta: constants.LONGITUDE_DELTA
+            }}
+            onRegionChange={this.onRegionChange}
+            // onRegionChangeComplete={regionChange => recordEvent(regionChange)}
+            showsCompass={true}
+            showsUserLocation={props.showLocation === false ? false : true}
+            showsMyLocationButton={false}
+            followsUserLocation={true}
+            zoomEnabled={true}
+            scrollEnabled={true}
+            showsScale={true}
+            rotateEnabled={false}
+            loadingEnabled={true}
+          >
+            <Text>테스트 화면</Text>
+            {props.SearchScreen === true && props.departurePosition !== null ? (
               <Marker
-                key={marker.orderId}
-                ref={marker => {
-                  this.marker = marker;
-                }}
                 coordinate={{
-                  latitude: Number(marker.arrLat) || 0,
-                  longitude: Number(marker.arrLng) || 0
+                  latitude: props.departurePosition.lat || 0,
+                  longitude: props.departurePosition.lng || 0
                 }}
-                image={require("../assets/Delivery_arrival.png")}
-                calloutOffset={{ x: -8, y: 28 }}
-                calloutAnchor={{ x: 0.5, y: 0.3 }}
               >
-                <Callout
-                  alphaHitTest
-                  tooltip
-                  onPress={() =>
-                    navigation.navigate("OrderDetailScreen", {
-                      orderId: marker.orderId
-                    })
-                  }
-                >
-                  <CustomCallout
-                    title={marker.title}
-                    departures={marker.departures}
-                    price={marker.price}
-                  ></CustomCallout>
-                </Callout>
+                <Image
+                  source={require("../assets/Delivery_departure.png")}
+                  style={{ width: 45, height: 45 }}
+                />
               </Marker>
-            ))}
-          {props.SearchScreen === true && props.departurePosition !== null ? (
-            <Marker
-              coordinate={{
-                latitude: props.departurePosition.lat || 0,
-                longitude: props.departurePosition.lng || 0
-              }}
-            >
-              <Image
-                source={require("../assets/Delivery_departure.png")}
-                style={{ width: 45, height: 45 }}
-              />
-            </Marker>
-          ) : (
-            <Text></Text>
-          )}
-          {props.SearchScreen === true && props.arrivalPosition !== null ? (
-            <Marker
-              coordinate={{
-                latitude: props.arrivalPosition.lat || 0,
-                longitude: props.arrivalPosition.lng || 0
-              }}
-            >
-              <Image
-                source={require("../assets/Delivery_arrival.png")}
-                style={{ width: 45, height: 45 }}
-              />
-            </Marker>
-          ) : (
-            <Text></Text>
-          )}
-          {/*{props.SearchScreen === true &&
-          props.arrivalPosition !== null &&
-          props.departurePosition !== null ? (
-            <MapView.Polyline
-              coordinates={coords}
-              strokeWidth={3}
-              strokeColor="red"
-            />
-          ) : (
-            <Text>이건가</Text>
-          )}*/}
-        </MapView>
+            ) : (
+              <Text>region1234{JSON.stringify(region)}</Text>
+            )}
+            {props.SearchScreen === true && props.arrivalPosition !== null ? (
+              <Marker
+                coordinate={{
+                  latitude: props.arrivalPosition.lat || 0,
+                  longitude: props.arrivalPosition.lng || 0
+                }}
+              >
+                <Image
+                  source={require("../assets/Delivery_arrival.png")}
+                  style={{ width: 45, height: 45 }}
+                />
+              </Marker>
+            ) : (
+              <Marker
+                coordinate={{
+                  latitude: props.currentRegion.latitude,
+                  longitude: props.currentRegion.longitude
+                }}
+              >
+                <Image
+                  source={require("../assets/Delivery_arrival.png")}
+                  style={{ width: 45, height: 45 }}
+                />
+              </Marker>
+            )}
+            {/*{props.SearchScreen === true &&
+      props.arrivalPosition !== null &&
+      props.departurePosition !== null ? (
+        <MapView.Polyline
+          coordinates={coords}
+          strokeWidth={3}
+          strokeColor="red"
+        />
+      ) : (
+        <Text>이건가</Text>
+      )}*/}
+          </MapView>
+        ) : (
+          <MapView
+            style={styles.mapStyle}
+            provider="google"
+            ref={map => {
+              this.map = map;
+            }}
+            region={region}
+            // onRegionChange={this.onRegionChange}
+            // onRegionChangeComplete={regionChange => recordEvent(regionChange)}
+            showsCompass={true}
+            showsUserLocation={props.showLocation === false ? false : true}
+            showsMyLocationButton={false}
+            followsUserLocation={true}
+            zoomEnabled={true}
+            scrollEnabled={true}
+            showsScale={true}
+            rotateEnabled={false}
+            loadingEnabled={true}
+          >
+            {props.HomeScreen === true &&
+              props.orders.map(marker => (
+                <Marker
+                  key={marker.orderId}
+                  ref={marker => {
+                    this.marker = marker;
+                  }}
+                  coordinate={{
+                    latitude: Number(marker.arrLat) || 0,
+                    longitude: Number(marker.arrLng) || 0
+                  }}
+                  image={require("../assets/Delivery_arrival.png")}
+                  calloutOffset={{ x: -8, y: 28 }}
+                  calloutAnchor={{ x: 0.5, y: 0.3 }}
+                >
+                  <Callout
+                    alphaHitTest
+                    tooltip
+                    onPress={() =>
+                      navigation.navigate("OrderDetailScreen", {
+                        orderId: marker.orderId
+                      })
+                    }
+                  >
+                    <CustomCallout
+                      title={marker.title}
+                      departures={marker.departures}
+                      price={marker.price}
+                    ></CustomCallout>
+                  </Callout>
+                </Marker>
+              ))}
+
+            {/*{props.SearchScreen === true &&
+    props.arrivalPosition !== null &&
+    props.departurePosition !== null ? (
+      <MapView.Polyline
+        coordinates={coords}
+        strokeWidth={3}
+        strokeColor="red"
+      />
+    ) : (
+      <Text>이건가</Text>
+    )}*/}
+            <Text>여긴가요</Text>
+          </MapView>
+        )}
       </Container>
     </>
   );
