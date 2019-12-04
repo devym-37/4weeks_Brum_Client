@@ -135,12 +135,10 @@ export const serverApi = {
   },
   postOrder: async (userToken, obj, images, thumbnail) => {
     const formData = new FormData();
-
-    // const data = JSON.stringify(obj);
-    // formData.append(`data`, data);
     formData.append('formData["title"]', obj.title);
     formData.append('formData["category"]', obj.category);
-    formData.append('formData["desiredArrivalTime"]', obj.desiredArrivaltime);
+    // console.log(`typeof time: `, typeof obj.desiredArrivalTime);
+    formData.append('formData["desiredArrivalTime"]', obj.desiredArrivalTime);
     formData.append('formData["price"]', obj.price);
     formData.append('formData["isPrice"]', obj.isPrice);
     formData.append('formData["details"]', obj.details);

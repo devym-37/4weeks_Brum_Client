@@ -42,13 +42,13 @@ const CompleteLink = ({ navigation, ...props }) => {
           arrLat: props.arrivalPosition && props.arrivalPosition.lat,
           arrLng: props.arrivalPosition && props.arrivalPosition.lng
         };
-        console.log(`orderContents:`, orderContents);
+        // console.log(`orderContents:`, orderContents.desiredArrivalTime);
         const requestPost = await serverApi.postOrder(
           userToken,
           orderContents,
           "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png"
         );
-        console.log(`새요청 작성하기: `, requestPost);
+        // console.log(`새요청 작성하기: `, requestPost);
         navigation.navigate("BottomNavigation", { newOrder: true });
       }
     } catch (e) {

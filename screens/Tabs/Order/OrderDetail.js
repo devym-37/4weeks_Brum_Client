@@ -42,7 +42,7 @@ const Container = styled.View`
 const Image = styled.Image`
   width: ${constants.width};
 
-  height: ${constants.height / 3};
+  height: ${constants.height / 4};
 `;
 
 const UserContainer = styled.View`
@@ -90,7 +90,8 @@ const University = styled.Text`
 const ScoreLabel = styled.Text`
   color: #737b84;
   padding-right: 10;
-  font-size: 15;
+  font-size: 13;
+  margin-top: 2;
   font-weight: 400;
 `;
 
@@ -101,7 +102,10 @@ const UserScore = styled.Text`
   font-size: 20;
 `;
 
-const TotalScore = styled.Text``;
+const TotalScore = styled.Text`
+  font-size: 13;
+  font-weight: 300;
+`;
 
 const ApplyButton = styled.View`
   background-color: ${styles.mainColor};
@@ -170,7 +174,15 @@ const OrderTitle = styled.Text`
 const TimeStamp = styled.Text`
   color: #737b84;
   font-size: 15;
-  margin-bottom: 24;
+  /* margin-right: 6; */
+  margin-bottom: 12;
+`;
+
+const CategoryStamp = styled.Text`
+  color: #737b84;
+  font-size: 15;
+  /* margin-right: 6; */
+  margin-bottom: 11;
 `;
 const DepartureContainer = styled.View`
   flex-direction: row;
@@ -181,8 +193,15 @@ const ArrivalContainer = styled.View`
   flex-direction: row;
   /* flex-wrap: wrap; */
   align-items: center;
-  margin-bottom: 24;
+  margin-bottom: 16;
 `;
+
+// const DesiredArrivalTimeContainer = styled.View`
+//   flex-direction: row;
+//   /* flex-wrap: wrap; */
+//   align-items: center;
+//   margin-bottom: 24;
+// `;
 
 const Address = styled.Text`
   color: #737b84;
@@ -193,8 +212,14 @@ const Address = styled.Text`
 const Message = styled.Text`
   font-size: 16;
   color: #333;
-  margin-bottom: 24;
+  margin-bottom: 16;
   line-height: 24;
+`;
+
+const CategoryContainer = styled.View`
+  flex-direction: row;
+  margin-bottom: 24;
+  align-items: center;
 `;
 const CountContainer = styled.View`
   flex-direction: row;
@@ -266,6 +291,12 @@ const TextDivider = styled.Text`
   color: #818992;
 `;
 
+const CategoryDivider = styled.Text`
+  padding: 0 4px;
+  margin-bottom: 12;
+  color: #818992;
+`;
+
 const IconContainer = styled.Text`
   padding-left: 12px;
 `;
@@ -301,6 +332,7 @@ const OrderDetailScreen = ({ navigation }) => {
     data &&
     (data.hostInfo.university ? data.hostInfo.university : "미인증 회원");
   const score = data && utils.avgOfScores(data.hostInfo.getScore);
+  const numOfScore = data && utils.numOfScores(data.hostInfo.getScore);
   const color = utils.scoreColorPicker(score);
   const price =
     data && data.price !== "null"
@@ -309,8 +341,16 @@ const OrderDetailScreen = ({ navigation }) => {
 
   const isPrice = data && data.isPrice;
   const mapScreen =
-    "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png";
+    data &&
+    (data.orderImages.length > 0
+      ? data.orderImages[0].orderImageURL
+      : "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png");
+  const image =
+    data &&
+    (data.orderImages.length > 1 ? data.orderImages[1].orderImageURL : null);
+
   const title = data && data.title;
+  const category = data && data.category;
   const timeStamp = data && utils.transferTime(data.createdAt);
   const message = data && data.detais !== "null" ? data.details : "";
   const numOfApplicants = data && utils.numOfScores(data.applicants);
@@ -319,7 +359,10 @@ const OrderDetailScreen = ({ navigation }) => {
   const departure =
     data && data.departures !== "null" ? data.departures : "없음";
   const arrival = data && (data.arrivals ? data.arrivals : "없음");
-
+  const desiredArrivalTime =
+    data && data.desiredArrivalTime.substr(0, 1) !== "0"
+      ? utils.transferDesiredArrivalTime(data.desiredArrivalTime)
+      : "시간 상관없음";
   const handleClickLikeButton = async () => {
     setIsLiked(!isLiked);
     // console.log(`userToken: `, userToken);
@@ -533,18 +576,31 @@ const OrderDetailScreen = ({ navigation }) => {
               <ScoreContainer>
                 <ScoreLabel>매너 점수</ScoreLabel>
                 <AntDesign
-                  name={score > 3.4 ? "smileo" : score > 2.4 ? "meh" : "frowno"}
+                  name={
+                    score > 3.4
+                      ? "smileo"
+                      : score > 2.4
+                      ? "meh"
+                      : score === 0
+                      ? "smileo"
+                      : "frowno"
+                  }
                   size={32}
                   style={{ color, marginRight: 8, marginTop: -6 }}
                 />
-                <UserScore color={color}>{score}</UserScore>
-                <TotalScore>{` / 5.0`}</TotalScore>
+                <UserScore color={color}>{score === 0 ? "-" : score}</UserScore>
+                <TotalScore>{` / 5.0 (${numOfScore}개)`}</TotalScore>
               </ScoreContainer>
             </UserContainer>
             <Divider />
             <OrderContentContainer>
               <OrderTitle>{title}</OrderTitle>
-              <TimeStamp>{timeStamp}</TimeStamp>
+              <CategoryContainer>
+                <CategoryStamp>{category}</CategoryStamp>
+                <CategoryDivider>･</CategoryDivider>
+                <TimeStamp>{timeStamp}</TimeStamp>
+              </CategoryContainer>
+
               <DepartureContainer>
                 <FontAwesome
                   name="dot-circle-o"
@@ -569,6 +625,19 @@ const OrderDetailScreen = ({ navigation }) => {
                   style={{ color: "#D0D6DC" }}
                 />
                 <Address>{`도착지 : ${arrival}`}</Address>
+              </ArrivalContainer>
+              <ArrivalContainer>
+                <AntDesign
+                  name="clockcircleo"
+                  size={18}
+                  style={{
+                    color: "#D0D6DC",
+                    paddingTop: 1,
+                    paddingLeft: 3,
+                    paddingRight: 2
+                  }}
+                />
+                <Address>{`${desiredArrivalTime}`}</Address>
               </ArrivalContainer>
               <Message>{message}</Message>
               <CountContainer>
