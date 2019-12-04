@@ -169,11 +169,20 @@ const SearchAddress = ({ navigation, ...props }) => {
             SearchScreen={true}
             currentRegion={currentLocation}
           />
+          <DepartureInput
+            onPress={handleClickDeparture}
+            departure={props.departureLocation}
+          />
+          <DestinationInput
+            onPress={handleClickArrival}
+            destination={props.arrivalLocation}
+          />
+
           <CurrentLocationButton
             callback={() => {
               userCurrentLocation();
             }}
-            bottom={140}
+            bottom={236}
           />
         </Container>
       </SafeAreaView>

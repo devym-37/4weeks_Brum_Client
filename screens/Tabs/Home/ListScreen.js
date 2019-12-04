@@ -23,7 +23,8 @@ import { orderIdSaver } from "../../../redux/actions/orderActions";
 import DefaultOrder from "../../../components/DefaultOrder";
 
 const Container = styled.View`
-  flex: 1;
+  /* flex: 1; */
+
   justify-content: center;
   align-items: center;
 `;

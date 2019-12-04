@@ -23,6 +23,11 @@ export const priceSaver = price => ({
   price: price
 });
 
+export const isPriceSaver = isPrice => ({
+  type: "CREATE_ISPRICE",
+  isPrice: isPrice
+});
+
 export const detailsSaver = details => ({
   type: "CREATE_DETAILS",
   details: details
@@ -31,11 +36,6 @@ export const detailsSaver = details => ({
 export const titleSaver = title => ({
   type: "CREATE_TITLE",
   title: title
-});
-
-export const isPriceSaver = isPrice => ({
-  type: "CREATE_ISPRICE",
-  isPrice: isPrice
 });
 
 export const imagesSaver = images => ({

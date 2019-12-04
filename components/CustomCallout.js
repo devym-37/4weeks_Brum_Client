@@ -1,30 +1,60 @@
 import React from "react";
 
 import { StyleSheet, View, Text } from "react-native";
+import utils from "../utils";
+import { AntDesign } from "@expo/vector-icons";
 
-const CustomCallout = ({ title, departures, price }) => {
+const CustomCallout = ({ title, arrivals, price, createdAt }) => {
   return (
     <View style={styles.container}>
       <View style={styles.bubble}>
         <View style={styles.amount}>
           <Text
             style={{
-              fontSize: 18,
-              fontWeight: "500",
-              height: 18,
+              fontSize: 15,
+
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: 3
+              marginBottom: 3,
+              color: "#22252a"
             }}
           >
-            {title}
+            {utils.shortenText(title, 8)}
           </Text>
-          <Text note style={{ height: 12, marginBottom: 3 }}>
-            가격 : {price ? price : "가격협의"}
+          <Text
+            note
+            style={{ fontSize: 11, color: "#737b84", marginBottom: 8 }}
+          >
+            {utils.transferTime(createdAt)}
           </Text>
-          <Text note style={{ height: 12 }}>
-            도착지 : {departures}
+          <Text
+            note
+            style={{ fontSize: 13, color: "#22252a", marginBottom: 4 }}
+          >
+            {utils.shortenText(arrivals, 9)}
           </Text>
+          <View style={{ flexDirection: "row", alignContent: "center" }}>
+            <Text
+              note
+              style={{
+                marginBottom: 6,
+                color: "#22252a",
+                fontWeight: "600",
+                fontSize: 15,
+                lineHeight: 15,
+                marginRight: 48
+              }}
+            >
+              {price !== "null"
+                ? `${utils.numberWithCommas(price)}원`
+                : "비용협의"}
+            </Text>
+            <AntDesign
+              name="rightcircleo"
+              size={20}
+              style={{ color: "#737b84", marginTop: -5 }}
+            />
+          </View>
         </View>
       </View>
       <View style={styles.arrowBorder} />
@@ -39,7 +69,8 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start"
   },
   bubble: {
-    width: 140,
+    width: 160,
+    height: 100,
     flexDirection: "row",
     alignSelf: "flex-start",
     backgroundColor: "rgba(255,255,255,0.8)",
