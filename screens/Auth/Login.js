@@ -124,12 +124,12 @@ const LogIn = props => {
           Fire.shared.signin(`${value1}@shoppossible.com`, value2);
 
           ////redux/////
-          await AsyncStorage.setItem("email", `${value1}@shoppossible.com`);
+         /*  await AsyncStorage.setItem("email", `${value1}@shoppossible.com`);
           await AsyncStorage.setItem("password", value2);
           ////
 
-          const login = await AsyncStorage.getItem("email");
-          console.log("로그인했고 이메일 정보", login);
+          const login = await AsyncStorage.getItem("email"); */
+          //console.log("로그인했고 이메일 정보", login);
           /////-------redux?------//////
           const mypage = await serverApi.user(requestLogin.data.token);
           const { userId } = mypage.data.data;
