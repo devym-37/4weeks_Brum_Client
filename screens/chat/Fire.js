@@ -58,6 +58,7 @@ class Fire {
   parse = snapshot => {
     const { createdAt, text, user, image } = snapshot.val();
     const { key: _id } = snapshot;
+ 
     //const timestamp = new Date(numberStamp);
     const message = {
       _id,
@@ -137,6 +138,10 @@ class Fire {
 
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
+      console.log("텍스트는 무엇",text)
+      console.log("텍스트는 무엇",user)
+
+      text ? text:" "
       const time = new Date();
       const message = {
         text,
