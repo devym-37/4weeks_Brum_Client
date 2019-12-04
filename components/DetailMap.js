@@ -27,7 +27,7 @@ import Polyline from "@mapbox/polyline";
 const styles = StyleSheet.create({
   mapStyle: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
+    height: Dimensions.get("window").height / 4
   },
   center: {
     alignContent: "center",
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   centeredText: { textAlign: "center" },
   bubbles: {
-    width: 180,
+    width: 140,
     // flexDirection: "row",
     alignSelf: "flex-start",
     paddingHorizontal: 20,
@@ -81,9 +81,9 @@ const MapScreen = ({ navigation, ...props }) => {
   // };
 
   const getDirections = async () => {
-    // console.log("props.departurePosition.lat", props);
-    // console.log("this.map", this.map);
-    // console.log("ㅁㅁㅁㅁㅁㅁㅁㅁ");
+    console.log("props.departurePosition.lat", props);
+    console.log("this.map", this.map);
+    console.log("ㅁㅁㅁㅁㅁㅁㅁㅁ");
     if (props.departurePosition !== null && props.arrivalPosition !== null) {
       // const DEPARTURE = `ChIJlaxrQKakfDURwM3kL1L3lBk`;
       // const ARRIVAL = `ChIJx54O7aOkfDURml1ULDrn5PY`;
