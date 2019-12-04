@@ -203,7 +203,7 @@ const MyPageScreen = ({ navigation, ...props }) => {
     } catch (e) {
       console.log(`Can't clear AsyncStorage. Error: ${e}`);
     } finally {
-      navigation.navigate("StartNavigation");
+      navigation.navigate("LoggedOutHome");
     }
   };
 

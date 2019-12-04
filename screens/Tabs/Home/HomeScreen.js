@@ -109,7 +109,9 @@ const HomeScreen = ({ navigation, ...props }) => {
     console.log(`asyncCampus: `, asyncCampus);
     const campusRegion = props.campus
       ? constants.campus[props.campus].position
-      : constants.campus[asyncCampus].position;
+      : asyncCampus
+      ? constants.campus[asyncCampus].position
+      : constants.campus["hanyang"].position;
     // console.log("campusRegion :", campusRegion);
     // console.log("클릭 확인");
     const _region = {

@@ -45,7 +45,7 @@ const stackFactory = (initialRoute, customConfig) =>
 
 const BottomNavigation = createBottomTabNavigator(
   {
-    Home: {
+    LoggedOutHome: {
       screen: stackFactory(HomeScreen, {
         headerRight: <NotificationLink />,
         headerLeft: <HomeTitleLink />
