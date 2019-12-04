@@ -54,13 +54,13 @@ const styles = StyleSheet.create({
 });
 
 const MapScreen = ({ navigation, ...props }) => {
-  const { latitude = LATITUDE, longitude = LONGITUDE } = props;
+  const { latitude, longitude } = props;
   const [regions, setRegions] = useState({});
   const [coords, setCoords] = useState([]);
 
   const region = {
-    latitude,
-    longitude,
+    latitude: latitude ? latitude : 0,
+    longitude: longitude ? longitude : 0,
     latitudeDelta: constants.LATITUDE_DELTA,
     longitudeDelta: constants.LONGITUDE_DELTA
   };

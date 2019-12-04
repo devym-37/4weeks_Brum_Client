@@ -33,6 +33,7 @@ import utils from "../../../utils";
 import { serverApi } from "../../../components/API";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import VerifiedAccountBadge from "../../../components/VerifiedAccountBadge";
+import MapView from "../../../components/MapView";
 
 const Container = styled.View`
   flex: 1;
@@ -342,6 +343,11 @@ const OrderDetailScreen = ({ navigation }) => {
   const image =
     data &&
     (data.orderImages.length > 1 ? data.orderImages[1].orderImageURL : null);
+  const depLat = data && (data.depLat !== "null" ? data.depLat : null);
+  const depLng = data && (data.depLng !== "null" ? data.depLng : null);
+
+  const arrLat = data && (data.arrLat !== "null" ? data.arrLat : null);
+  const arrLng = data && (data.arrLng !== "null" ? data.arrLng : null);
 
   const title = data && data.title;
   const category = data && data.category;
@@ -392,6 +398,7 @@ const OrderDetailScreen = ({ navigation }) => {
   };
 
   const handleApplyButton = async () => {
+    console.log(`arrLat: `, arrLat);
     if (isPrice) {
       setVisible(true);
     } else {
@@ -547,7 +554,15 @@ const OrderDetailScreen = ({ navigation }) => {
           }
         >
           <Container>
-            <Image source={{ uri: mapScreen }} />
+            <MapView
+              latitude={Number(arrLat)}
+              longitude={Number(arrLng)}
+              arrLat={Number(arrLat)}
+              arrLng={Number(arrLng)}
+              depLat={Number(depLat)}
+              depLng={Number(depLng)}
+            />
+
             <UserContainer>
               <ProfileContainer>
                 <Avatar source={{ uri: avatar }} />
