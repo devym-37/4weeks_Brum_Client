@@ -20,6 +20,7 @@ import { otpSaver, otpMaker } from "../../../redux/actions/otpActions";
 import { phoneSaver } from "../../../redux/actions/otpActions";
 
 import utils from "../../../utils";
+import { refreshMaker } from "../../../redux/actions/refreshActions";
 
 const View = styled.View`
   justify-content: center;
@@ -61,7 +62,7 @@ const ConfirmEmail = ({ navigation, ...props }) => {
       console.log(`requestConfirm: `, requestConfirm);
       if (requestConfirm.data.isSuccess) {
         Alert.alert("인증완료", "학교인증이 완료되었습니다");
-
+        props.reduxRefresh();
         navigation.navigate("Mypage", { university: university });
       } else {
         Alert.alert(
@@ -126,6 +127,7 @@ const mapDispatchToProps = dispatch => {
   // Action
   return {
     // Create 4-digits OTP
+    reduxRefresh: () => dispatch(refreshMaker()),
     reduxNewOTP: () => dispatch(otpMaker()),
     reduxOTP: otp => dispatch(otpSaver(otp))
   };

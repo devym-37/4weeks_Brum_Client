@@ -81,7 +81,8 @@ DefaultOrderScreen = ({ navigation }) => {
               {...order}
               onPress={() => {
                 navigation.navigate("ApplicantsList", {
-                  orderId: order.orderId
+                  orderId: order.orderId,
+                  orderStatus: order.orderStatus
                 });
               }}
             />

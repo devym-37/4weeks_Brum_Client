@@ -14,6 +14,7 @@ import avatarReducer from "./avatarReducer";
 import refreshReducer from "./refreshReducer";
 import currentReducer from "./currentReducer";
 import mypageReducer from "./mypageReducer";
+import contactReducer from "./contactReducer"
 // Redux: Root Reducer
 const rootReducer = combineReducers({
   passwordErrorCountReducer,
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
   refreshReducer,
   mypageReducer,
   avatarReducer,
-  currentReducer
+  currentReducer,
+  contactReducer
 });
 
 // Exports

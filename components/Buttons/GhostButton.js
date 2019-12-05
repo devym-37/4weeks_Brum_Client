@@ -12,9 +12,11 @@ const Container = styled.View`
         : props.disabled
         ? styles.inActiveColor
         : styles.mainColor};
-  padding: 12px 10px;
   width: ${props => constants.width - props.width};
-  /* margin: 0px 50px; */
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: ${props => `${props.paddingVertical}px`};
+  padding-bottom: ${props => `${props.paddingVertical}px`};
   margin-top: ${props => `${props.marginTop}px`};
   margin-bottom: ${props => `${props.marginBottom}px`};
   margin-left: ${props => `${props.marginLeft}px`};
@@ -38,6 +40,7 @@ const GhostButton = ({
   marginRight = 0,
   marginTop = 0,
   marginBottom = 0,
+  paddingVertical = 12,
   text,
   width = 50,
   color,
@@ -47,6 +50,7 @@ const GhostButton = ({
 }) => (
   <Touchable disabled={disabled || loading} onPress={onPress}>
     <Container
+      paddingVertical={paddingVertical}
       marginLeft={marginLeft}
       marginRight={marginRight}
       marginTop={marginTop}
