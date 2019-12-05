@@ -184,7 +184,9 @@ const OrderCard = ({
                   </StatusContainer>
                 )}
                 <Price>
-                  {price !== "null" ? `${priceWithComma}원` : `비용협의`}
+                  {price && price !== "null"
+                    ? `${priceWithComma}원`
+                    : `비용협의`}
                 </Price>
               </Container>
               <CountContainer>
