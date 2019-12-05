@@ -10,7 +10,7 @@ const Touchable = styled.TouchableOpacity``;
 const CardContainer = styled.View`
   width: ${constants.width};
 
-  padding: 0 12px;
+  /* padding: 0 12px; */
   justify-content: flex-start;
   align-items: flex-start;
   background-color: white;
@@ -18,24 +18,28 @@ const CardContainer = styled.View`
 `;
 
 const Thumbnail = styled.Image`
-  flex: 1;
-  width: 108px;
-  height: 108px;
-  border-radius: 8px;
+  /* flex: 1; */
+  margin-left: 4;
+  width: 90;
+  height: 90;
+  border-radius: 42;
+  /* margin-left: -2; */
 `;
 
 const ContentContainer = styled.View`
   padding: 16px 12px;
+  /* padding-bottom: 20; */
+  /* padding-right: 20; */
   flex-direction: row;
   /* justify-content: center; */
 `;
 
 const TextContainer = styled.View`
-  flex: 2.6;
+  /* flex: 2.3; */
   /* padding: 4px 0; */
   padding-left: 14px;
-
-  justify-content: center;
+  margin-top: 4;
+  justify-content: flex-start;
   align-items: flex-start;
 `;
 const Divider = styled.View`
