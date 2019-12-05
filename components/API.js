@@ -88,6 +88,22 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
+  editProfile: (userToken, profileContents) =>
+    sApi.put(
+      "user/mypage",
+      {
+        nickname: profileContents.nickname,
+        major: profileContents.major,
+        introduction: profileContents.introduction
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": userToken
+        }
+      }
+    ),
   getLikeHistory: userToken =>
     sApi.get("user/like/order", {
       headers: {
@@ -383,8 +399,8 @@ export const serverApi = {
         }
       }
     ),
-  geturl:async(orderId,userToken,imgfile) =>
-   { const formData = new FormData();
+  geturl: async (orderId, userToken, imgfile) => {
+    const formData = new FormData();
     formData.append("file", {
       name: `${imgfile}`,
       uri: imgfile,
@@ -400,7 +416,7 @@ export const serverApi = {
         "x-access-token": userToken
       }
     });
-}
+  }
 };
 /* {
   "bidPrice" : "2000",

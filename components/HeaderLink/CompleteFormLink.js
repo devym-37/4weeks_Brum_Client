@@ -27,7 +27,6 @@ const CompleteLink = ({ navigation, ...props }) => {
       } else if (!props.arrivalLocation) {
         Alert.alert("도착지를 입력해주세요");
       } else {
-        props.reduxRefresh();
         const orderContents = {
           title: props.title,
           category: props.category,
@@ -49,6 +48,7 @@ const CompleteLink = ({ navigation, ...props }) => {
           "https://miro.medium.com/max/2688/1*RKpCRwFy6hyVCqHcFwbCWQ.png"
         );
         // console.log(`새요청 작성하기: `, requestPost);
+        props.reduxRefresh();
         navigation.navigate("BottomNavigation", { newOrder: true });
       }
     } catch (e) {

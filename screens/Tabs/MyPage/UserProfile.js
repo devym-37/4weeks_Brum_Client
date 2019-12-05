@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { AsyncStorage, Alert, ScrollView, Image } from "react-native";
+import {
+  AsyncStorage,
+  Alert,
+  ScrollView,
+  Image,
+  KeyboardAvoidingView
+} from "react-native";
 import styled from "styled-components";
+import { connect } from "react-redux";
 import { serverApi } from "../../../components/API";
+
 import FormInput from "../../../components/Inputs/FormInput";
 import RoutePicker from "../../../components/Pickers/RoutePicker";
 import Loader from "../../../components/Loader";
+
 import { AntDesign } from "@expo/vector-icons";
 import { utils } from "react-native-gifted-chat";
+import {
+  nicknameSaver,
+  majorSaver,
+  introductionSaver
+} from "../../../redux/actions/mypageActions";
 
 const Container = styled.View`
   align-items: center;
@@ -40,7 +54,7 @@ const TotalScore = styled.Text`
   font-weight: 300;
 `;
 
-const UserProfileScreen = ({ navigation }) => {
+const UserProfileScreen = ({ navigation, ...props }) => {
   const [loading, setLoading] = useState(false);
   const [nickname, setNickname] = useState();
   const [introduction, setIntroduction] = useState(null);
@@ -58,13 +72,16 @@ const UserProfileScreen = ({ navigation }) => {
         setData({ ...request.data.data });
         let { nickname, major, introduction, getScore } = request.data.data;
         setNumOfReviews(getScore.length);
-        setNickname(nickname);
+        // setNickname(nickname);
+        props.reduxNickname(nickname);
         let score = getScore.length > 0 ? utils.avgOfScores(getScore) : 0;
         setScore(score);
         // let color =  colors&& utils.scoreColorPicker(score);
         // setColor(color);
-        setMajor(major);
-        setIntroduction(introduction);
+        // setMajor(major);
+        props.reduxMajor(major);
+        // setIntroduction(introduction);
+        props.reduxIntroduction(introduction);
       } else {
         Alert.alert("일시 오류", "잠시후 다시 시도해주세요");
       }
@@ -80,87 +97,119 @@ const UserProfileScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <Container>
-        {loading && <Loader />}
-        <Image
-          source={{ uri: data && data.image }}
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 50,
-            marginBottom: 20
-          }}
-        />
-        <ScoreLabel>매너 점수</ScoreLabel>
-        <ScoreContainer>
-          <AntDesign
-            name={
-              score > 3.4
-                ? "smileo"
-                : score > 2.4
-                ? "meh"
-                : score === 0
-                ? "smileo"
-                : "frowno"
-            }
-            size={32}
-            style={{ color, marginRight: 8, marginTop: -6 }}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      enabled
+      behavior="padding"
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView style={{ flex: 1 }}>
+        <Container>
+          {loading && <Loader />}
+          <Image
+            source={{ uri: data && data.image }}
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              marginBottom: 20
+            }}
           />
-          <UserScore color={color}>{score === 0 ? "-" : score}</UserScore>
-          <TotalScore>{` / 5.0 (${numOfReviews}개)`}</TotalScore>
-        </ScoreContainer>
-        <FormInput
-          // width={50}
-          // dividerWidth={50}
-          value={nickname}
-          onChange={value => setNickname(value)}
-        />
-        <FormInput
-          // width={50}
-          // dividerWidth={50}
-          value={data && data.phone}
-          editable={false}
-          color={"#BCBCBC"}
-        />
-        <RoutePicker
-          text="비밀번호 재설정하기"
-          color="#22252A"
-          onPress={() =>
-            navigation.navigate("VerifyPhone", { reset: true, myProfile: true })
-          }
-        />
-        {data &&
-          (data.university ? (
-            <>
-              <FormInput
-                value={data.university}
-                editable={false}
-                color={"#BCBCBC"}
-              />
-              <FormInput
-                placeholder="학과"
-                value={major}
-                onChange={value => setMajor(major)}
-              />
-            </>
-          ) : (
-            <>
-              <RoutePicker
-                text="학교 인증하기"
-                color="#22252a"
-                onPress={() => navigation.navigate("VerifyCampusNavigation")}
-              />
-              <FormInput
-                placeholder="나의 한마디"
-                value={introduction}
-                onChange={value => setIntroduction(value)}
-              />
-            </>
-          ))}
-      </Container>
-    </ScrollView>
+          <ScoreLabel>매너 점수</ScoreLabel>
+          <ScoreContainer>
+            <AntDesign
+              name={
+                score > 3.4
+                  ? "smileo"
+                  : score > 2.4
+                  ? "meh"
+                  : score === 0
+                  ? "smileo"
+                  : "frowno"
+              }
+              size={32}
+              style={{ color, marginRight: 8, marginTop: -6 }}
+            />
+            <UserScore color={color}>{score === 0 ? "-" : score}</UserScore>
+            <TotalScore>{` / 5.0 (${numOfReviews}개)`}</TotalScore>
+          </ScoreContainer>
+
+          <FormInput
+            // width={50}
+            // dividerWidth={50}
+            value={props.nickname}
+            maxLength={7}
+            onChange={value => props.reduxNickname(value)}
+          />
+          <FormInput
+            // width={50}
+            // dividerWidth={50}
+            value={data && data.phone}
+            editable={false}
+            color={"#BCBCBC"}
+          />
+          <RoutePicker
+            text="비밀번호 재설정하기"
+            color="#22252A"
+            onPress={() =>
+              navigation.navigate("VerifyPhone", {
+                reset: true,
+                myProfile: true
+              })
+            }
+          />
+
+          {data &&
+            (data.university ? (
+              <>
+                <FormInput
+                  value={data.university}
+                  editable={false}
+                  color={"#BCBCBC"}
+                />
+                <FormInput
+                  placeholder="학과"
+                  value={props.major}
+                  // onChange={value => setMajor(major)}
+                  onChange={value => props.reduxMajor(value)}
+                />
+              </>
+            ) : (
+              <>
+                <RoutePicker
+                  text="학교 인증하기"
+                  color="#22252a"
+                  onPress={() => navigation.navigate("VerifyCampusNavigation")}
+                />
+                <FormInput
+                  placeholder="나의 한마디"
+                  value={props.introduction}
+                  // onChange={value => setIntroduction(value)}
+                  onChange={value => props.reduxIntroduction(value)}
+                />
+              </>
+            ))}
+        </Container>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
-export default UserProfileScreen;
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    major: state.mypageReducer.major,
+    nickname: state.mypageReducer.nickname,
+    introduction: state.mypageReducer.introduction
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxNickname: nickname => dispatch(nicknameSaver(nickname)),
+    reduxMajor: major => dispatch(majorSaver(major)),
+    reduxIntroduction: introduction => dispatch(introductionSaver(introduction))
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfileScreen);
