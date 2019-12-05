@@ -172,7 +172,7 @@ const ChatCard = ({ onPress, ...props }) => {
             <ChatContent>
         <ChatUsername>{username}</ChatUsername>
               
-                <ChatPreview>러너와 대화를 시작하세요:)</ChatPreview>
+                <ChatPreview>{isHost ? "러너" : "요청자"}와 대화를 시작하세요 :)</ChatPreview>
              
             </ChatContent>
           </ChatColumn>

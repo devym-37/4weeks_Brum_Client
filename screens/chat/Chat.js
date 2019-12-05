@@ -292,16 +292,15 @@ class Chat extends React.Component {
           const text = await serverApi.geturl(this.state.orderId,this.state.usertoken,result.uri).then(
             res=>{
 
-              const result = res.json()
-              console.log(result)
+             return res.json()
             }
             
            
           )
-          console.log("업로드한사진",text)
+          console.log("업로드한사진",text.data.url)
 
           this.setState({
-            image: url,
+            image: text.data.url,
             accessoryOpen: true
           });
           //setImageadded(result.uri);
@@ -680,6 +679,11 @@ class Chat extends React.Component {
   async getUserId() {
     ////////<-----------------------------------
     // const userid = await AsyncStorage.getItem("userId");//
+
+    //const orderid = navigation.state.params.orderId 
+
+
+
     const orderid = await AsyncStorage.getItem("orderid"); ///필요한가ㅇㅇ
     const usertoken = await AsyncStorage.getItem("userToken");
 
@@ -696,18 +700,24 @@ class Chat extends React.Component {
 
     const { hostInfo, deliverInfo } = getstatus.data.data.chatDetail;
 
-    const avatar = hostInfo.image;
-    const name = hostInfo.nickname;
+
 
     console.log("유저아이디", userId, orderStatus, hostId, deliverId);
 
     let whoami = "";
-
+    let avatar 
+    let name
     if (hostId === userId) {
       whoami = "host";
+      avatar = hostInfo.image;
+      name = hostInfo.nickname;
     } else {
       whoami = "deliver";
+      avatar = deliverInfo.image;
+      name = deliverInfo.nickname;
     }
+
+      
 
     this.setState({
       avatar: avatar,

@@ -21,7 +21,6 @@ import { Card } from "react-native-elements";
 
 export default class NotificationScreen extends Component {
   render() {
-    // Linking.openURL('app-settings:');
     return (
       <View style={styles.container}>
         <Text style={styles.paragraph}>알림</Text>
