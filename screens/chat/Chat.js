@@ -195,7 +195,7 @@ class Chat extends React.Component {
               right: { color: "yellow" }
             }}
             alwaysShowSend = {true}
-            renderActions={this.renderActions}
+            renderActions={this.renderActions.bind(this)}
             //renderInputToolbar ={this.renderInputToolbar}
            // minInputToolbarHeight={this.state.accessoryOpen ?400 : 50}
           />
@@ -276,17 +276,29 @@ class Chat extends React.Component {
         
 
         if (!result.cancelled) {
-          const response = await fetch(result.uri);
-          const blob = await response.blob();
+          //const response = await fetch(result.uri);
+          //const blob = await response.blob();
 
-          var storageRef = firebase.storage().ref("images");
+          //var storageRef = firebase.storage().ref("images");
 
-          let ref = storageRef.child(`${blob.data.name}`);
+          //let ref = storageRef.child(`${blob.data.name}`);
 
-          await ref.put(blob);
-          const url = await ref.getDownloadURL();
+          //await ref.put(blob);
+          //const url = await ref.getDownloadURL();
 
-          console.log("블롭파일입니다", url);
+         // console.log("블롭파일입니다", url);
+
+         // console.log("없나",this.state.orderId,this.state.usertoken)
+          const text = await serverApi.geturl(this.state.orderId,this.state.usertoken,result.uri).then(
+            res=>{
+
+              const result = res.json()
+              console.log(result)
+            }
+            
+           
+          )
+          console.log("업로드한사진",text)
 
           this.setState({
             image: url,
@@ -399,6 +411,7 @@ class Chat extends React.Component {
                       <HeaderButton
                         onPress={() => {
                           changestatus(99);
+                          this.props.navigation.navigate("BottomNavigation");
                         }}
                         style={{ fontSize: 15 }}
                       >
@@ -538,6 +551,7 @@ class Chat extends React.Component {
                     <HeaderButton
                       onPress={() => {
                         changestatus(88);
+                        this.props.navigation.navigate("BottemNavigation")
                       }}
                     >
                       요청 취소
@@ -583,7 +597,8 @@ class Chat extends React.Component {
                   <HeaderButtonContainer>
                     <HeaderButton
                       onPress={() => {
-                        changestatus(88);
+                       // changestatus(88);
+                        this.props.navigation.navigate("ReviewCard");
                       }}
                     >
                       결제하기
