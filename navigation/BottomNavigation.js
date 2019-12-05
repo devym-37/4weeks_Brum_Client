@@ -26,6 +26,8 @@ import NewOrderLink from "../components/HeaderLink/NewOrderLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
 import NotificationScreen from "../screens/HomeHeader/NotificationScreen"
+import ReviewCard from "../components/Cards/ReviewCard"
+
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
@@ -57,6 +59,13 @@ const stackFactory = (initialRoute, customConfig) =>
       screen: NotificationScreen,
       navigationOptions: {
         title: "설정",
+       // headerLeft: <BackLink />
+      }
+    },
+    goRiview: {
+      screen: ReviewCard,
+      navigationOptions: {
+        title: "리뷰",
        // headerLeft: <BackLink />
       }
     }
