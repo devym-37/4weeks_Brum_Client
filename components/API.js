@@ -88,6 +88,22 @@ export const serverApi = {
         "x-access-token": userToken
       }
     }),
+  editProfile: (userToken, profileContents) =>
+    sApi.put(
+      "user/mypage",
+      {
+        nickname: profileContents.nickname,
+        major: profileContents.major,
+        introduction: profileContents.introduction
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "x-access-token",
+          "x-access-token": userToken
+        }
+      }
+    ),
   getLikeHistory: userToken =>
     sApi.get("user/like/order", {
       headers: {
@@ -382,9 +398,31 @@ export const serverApi = {
           "x-access-token": userToken
         }
       }
-    )
+    ),
+  geturl: async (orderId, userToken, imgfile) => {
+    const formData = new FormData();
+    formData.append("file", {
+      name: `${imgfile}`,
+      uri: imgfile,
+      type: "image/jpg"
+    });
+
+    return await fetch(`http://13.209.17.154:3000/user/chat/${orderId}`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+        "Access-Control-Allow-Headers": "x-access-token",
+        "x-access-token": userToken
+      }
+    });
+  }
 };
 /* {
   "bidPrice" : "2000",
   "applyComment" : "10분안에 배달 쌉가능"
-} */
+} 
+
+
+
+*/

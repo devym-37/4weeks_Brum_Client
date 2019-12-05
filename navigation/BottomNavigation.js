@@ -25,7 +25,9 @@ import CancelOrderLink from "../components/HeaderLink/CancelOrderlLink";
 import NewOrderLink from "../components/HeaderLink/NewOrderLink";
 import { stackStyles } from "./config";
 import { AsyncStorage } from "react-native";
-import NotificationScreen from "../screens/HomeHeader/NotificationScreen"
+import NotificationScreen from "../screens/HomeHeader/NotificationScreen";
+import ReviewCard from "../components/Cards/ReviewCard";
+import CompleteEditProfileLink from "../components/HeaderLink/CompleteEditProfileLink";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
@@ -50,17 +52,24 @@ const stackFactory = (initialRoute, customConfig) =>
       screen: UserProfileScreen,
       navigationOptions: {
         title: "프로필",
-        headerLeft: <BackLink />
+        headerLeft: <BackLink />,
+        headerRight: <CompleteEditProfileLink />
       }
     },
     GoSettings: {
       screen: NotificationScreen,
       navigationOptions: {
-        title: "설정",
-       // headerLeft: <BackLink />
+        title: "설정"
+        // headerLeft: <BackLink />
+      }
+    },
+    goRiview: {
+      screen: ReviewCard,
+      navigationOptions: {
+        title: "리뷰"
+        // headerLeft: <BackLink />
       }
     }
-
   });
 
 const BottomNavigation = createBottomTabNavigator(

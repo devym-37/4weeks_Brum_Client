@@ -1,8 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
 import constants from "../../constants";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, TouchableOpacity } from "react-native";
+
+const Container = styled.View`
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`;
 
 const View = styled.View`
   justify-content: center;
@@ -27,13 +33,14 @@ export default ({ navigation }) => {
   };
 
   return (
-    <View>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("SelectCampus")}
+      style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+    >
       <Image resizeMode={"contain"} source={require("../../assets/logo.png")} />
       <ButtonContainer onPress={() => navigation.navigate("SelectCampus")}>
-        <Button onPress={handleSelectSignUp}>
-          <ButtonText>내 학교 설정하고 시작하기</ButtonText>
-        </Button>
+        <ButtonText>내 학교 설정하고 시작하기</ButtonText>
       </ButtonContainer>
-    </View>
+    </TouchableOpacity>
   );
 };
