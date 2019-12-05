@@ -463,14 +463,18 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
         orderId
       );
       if (request.data.isSuccess) {
-        Alert.alert("지원이 완료 되었습니다. 요청자의 선택을 기다려주세요");
+        setTimeout(
+          () =>
+            Alert.alert("지원이 완료 되었습니다. 요청자의 선택을 기다려주세요"),
+          200
+        );
         setVisible(false);
       } else {
-        Alert.alert("이미 지원한 요청입니다");
+        setTimeout(() => Alert.alert("이미 지원한 요청입니다"), 200);
       }
       // console.log("가격협의 지원했습니다", request);
     } catch (e) {
-      Alert.alert("현재 지원이 불가능한 요청입니다");
+      setTimeout(() => Alert.alert("현재 지원이 불가능한 요청입니다"), 200);
       console.log(`Can't post data of applying on server. Error : `, e);
     } finally {
       setLoading(false);
@@ -519,7 +523,9 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
     props.reduxDetails(data.details);
     props.reduxTitle(data.title);
     props.reduxTime(data.desiredArrivalTime);
-    data.departures && props.reduxDepartureLocation(data.departures);
+    data.departures &&
+      data.departures !== "null" &&
+      props.reduxDepartureLocation(data.departures);
     console.log(`도착지!!:`, data.arrivals);
     props.reduxArrivalLocation(data.arrivals);
     data &&
@@ -839,6 +845,8 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                   dividerColor={"#e8ecef"}
                   value={bidPrice}
                   isUnderline={true}
+                  returnKeyType={"next"}
+                  onSubmitEditing={Keyboard.dismiss}
                   onChange={e => handleChangePrice(e)}
                   keyboardType="numeric"
                   maxLength={7}
@@ -867,6 +875,8 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                   width={50}
                   dividerWidth={40}
                   value={runnerMessage}
+                  onSubmitEditing={Keyboard.dismiss}
+                  returnKeyType={"done"}
                   onChange={e => handleChangeMessage(e)}
                   isUnderline={true}
                 />
@@ -899,6 +909,7 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                     </PriceContainer>
                     <MainButton
                       text="러너 지원하기"
+                      loading={loading}
                       onPress={handleApplyButtonWithPrice}
                       width={250}
                       disabled={data && !isHost && data.deliverId !== null}

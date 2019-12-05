@@ -130,7 +130,7 @@ const NewOrderScreen = props => {
   };
 
   const handleIsPrice = () => {
-    setIsPrice(!isPrice);
+    // setIsPrice(!isPrice);
     props.reduxChecked(!props.isPrice);
   };
   return (
@@ -211,9 +211,7 @@ const NewOrderScreen = props => {
                   label="가격제안 받기"
                   checkboxStyle={{ height: 22, width: 22 }}
                   labelStyle={{ color: "#1D2025", marginLeft: -4 }}
-                  checked={
-                    props.navigation.getParam("title") ? props.isPrice : isPrice
-                  }
+                  checked={props.isPrice}
                   containerStyle={{
                     width: 110,
                     marginLeft: -4
@@ -300,7 +298,7 @@ const mapDispatchToProps = dispatch => {
     reduxTitle: title => dispatch(titleSaver(title)),
     reduxTime: time => dispatch(timeSaver(time)),
     reduxPrice: price => dispatch(priceSaver(price)),
-    reduxChecked: () => dispatch(isPriceSaver()),
+    reduxChecked: trueFalse => dispatch(isPriceSaver(trueFalse)),
     reduxDetails: message => dispatch(detailsSaver(message))
   };
 };
