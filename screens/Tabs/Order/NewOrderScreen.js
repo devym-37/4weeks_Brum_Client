@@ -66,6 +66,7 @@ const NewOrderScreen = props => {
   const [arrival, setArrival] = useState("도착지");
   const [title, setTitle] = useState();
   const [price, setPrice] = useState(props.price);
+  const [isPrice, setIsPrice] = useState(false);
   // const [checked, setChecked] = useState(false);
 
   const [timeText, setTimeText] = useState(
@@ -128,6 +129,10 @@ const NewOrderScreen = props => {
     props.navigation.navigate("SearchAddress");
   };
 
+  const handleIsPrice = () => {
+    setIsPrice(!isPrice);
+    props.reduxChecked(!props.isPrice);
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -206,16 +211,16 @@ const NewOrderScreen = props => {
                   label="가격제안 받기"
                   checkboxStyle={{ height: 22, width: 22 }}
                   labelStyle={{ color: "#1D2025", marginLeft: -4 }}
-                  checked={props.isPrice}
+                  checked={
+                    props.navigation.getParam("title") ? props.isPrice : isPrice
+                  }
                   containerStyle={{
                     width: 110,
                     marginLeft: -4
                   }}
                   checkedImage={checkedBox}
                   uncheckedImage={uncheckedBox}
-                  onChange={() => {
-                    props.reduxChecked(!props.isPrice);
-                  }}
+                  onChange={handleIsPrice}
                 />
               </FormInput>
 
