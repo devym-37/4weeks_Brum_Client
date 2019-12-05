@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import styled from "styled-components";
-
+import { connect } from "react-redux";
 import styles from "../../styles";
 import constants from "../../constants";
 import MainButton from "../../components/Buttons/MainButton";
@@ -17,6 +17,7 @@ import {
   Alert
 } from "react-native";
 import { serverApi } from "../../components/API";
+import { refreshMaker } from "../../redux/actions/refreshActions";
 
 const ProfileContainer = styled.View`
   justify-content: center;
@@ -65,7 +66,7 @@ const Divider = styled.View`
   background-color: #e8ecef;
 `;
 
-const ReviewScreen = ({ navigation }) => {
+const ReviewScreen = ({ navigation, ...props }) => {
   const [rating, setRating] = useState(5);
   const [loading, setLoading] = useState(false);
   const [textReview, setTextReview] = useState("");
@@ -110,7 +111,9 @@ const ReviewScreen = ({ navigation }) => {
       );
       console.log(`request: `, request);
       if (request.data.isSuccess) {
+        props.reduxRefresh();
         Alert.alert("리뷰 작성이 완료되었습니다");
+
         navigation.goBack(null);
       } else {
         Alert.alert("이미 작성한 리뷰입니다");
@@ -186,4 +189,10 @@ const ReviewScreen = ({ navigation }) => {
   );
 };
 
-export default ReviewScreen;
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxRefresh: () => dispatch(refreshMaker())
+  };
+};
+export default connect(null, mapDispatchToProps)(ReviewScreen);

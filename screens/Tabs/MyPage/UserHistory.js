@@ -10,6 +10,8 @@ import HomeListCard from "../../../components/Cards/HomeListCard";
 import { serverApi } from "../../../components/API";
 import Loader from "../../../components/Loader";
 import ReviewCard from "../../../components/Cards/ReviewCard";
+import { connect } from "react-redux";
+
 const Text = styled.Text`
   color: ${props => props.theme.greyColor};
   font-size: 17;
@@ -57,7 +59,7 @@ const Divider = styled.View`
   background-color: ${props => props.theme.lightGreyColor};
 `;
 
-const UserHistoryScreen = ({ navigation }) => {
+const UserHistoryScreen = ({ navigation, ...props }) => {
   //   const getUserToken = await AsyncStorage.getItem("userToken");
   const obj = { 요청내역: 0, 러너내역: 1, 관심목록: 2 };
 
@@ -142,7 +144,7 @@ const UserHistoryScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
-  }, [isLiked]);
+  }, [isLiked, props.refresh]);
 
   const _renderTabBar = props => (
     <TabBar
@@ -291,4 +293,11 @@ const UserHistoryScreen = ({ navigation }) => {
   );
 };
 
-export default UserHistoryScreen;
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    refresh: state.refreshReducer.refresh
+  };
+};
+
+export default connect(mapStateToProps, null)(UserHistoryScreen);
