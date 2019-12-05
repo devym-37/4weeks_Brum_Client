@@ -26,13 +26,14 @@ const Text = styled.Text`
 const MainButton = ({
   className = "",
   color = "main",
+  disabled = false,
   text,
   width = 50,
   onPress,
   loading = false
 }) => (
-  <Touchable disabled={loading} onPress={onPress}>
-    <Container color={color} width={width}>
+  <Touchable disabled={loading || disabled} onPress={onPress}>
+    <Container disabled={disabled} color={color} width={width}>
       {loading ? <ActivityIndicator color={"white"} /> : <Text>{text}</Text>}
     </Container>
   </Touchable>

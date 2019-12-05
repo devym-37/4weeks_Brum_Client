@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import styled from "styled-components";
-
+import { connect } from "react-redux";
 import styles from "../../styles";
 import constants from "../../constants";
 import GhostButton from "../../components/Buttons/GhostButton";
 import FormInput from "../../components/Inputs/FormInput";
+
 import ReviewCard from "../../components/Cards/ReviewCard";
 import {
   Image,
@@ -17,6 +18,7 @@ import {
   Alert
 } from "react-native";
 import { serverApi } from "../../components/API";
+import { refreshMaker } from "../../redux/actions/refreshActions";
 
 const ProfileContainer = styled.View`
   justify-content: center;
@@ -65,7 +67,7 @@ const Divider = styled.View`
   background-color: #e8ecef;
 `;
 
-const ReviewDetailScreen = ({ navigation }) => {
+const ReviewDetailScreen = ({ navigation, ...props }) => {
   const [rating, setRating] = useState(5);
   const [loading, setLoading] = useState(false);
   const [textReview, setTextReview] = useState("");
@@ -106,6 +108,7 @@ const ReviewDetailScreen = ({ navigation }) => {
       console.log(`delete request: `, request);
       if (request.data.isSuccess) {
         Alert.alert("리뷰가 삭제되었습니다");
+        props.reduxRefresh();
         navigation.goBack(null, { delete: true });
       } else {
         Alert.alert("일시오류", "잠시후 다시 시도해주세요");
@@ -211,4 +214,11 @@ const ReviewDetailScreen = ({ navigation }) => {
   );
 };
 
-export default ReviewDetailScreen;
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxRefresh: () => dispatch(refreshMaker())
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ReviewDetailScreen);
