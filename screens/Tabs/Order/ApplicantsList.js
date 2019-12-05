@@ -78,9 +78,9 @@ const ApplicantsList = ({ navigation, ...props }) => {
   ]);
   const [orderId, setOrderId] = useState(navigation.getParam("orderId"));
   const handleConfirm = async deliverId => {
-    console.log(`deliverId: `, deliverId);
+    // console.log(`deliverId: `, deliverId);
     // console.log(`deliverId: `, typeof deliverId)
-    console.log(`orderId: `, orderId);
+    // console.log(`orderId: `, orderId);
     try {
       setLoading(true);
       const userToken = await AsyncStorage.getItem("userToken");
@@ -94,14 +94,18 @@ const ApplicantsList = ({ navigation, ...props }) => {
         deliverId,
         userToken
       );
-
+      if (request.data.isSuccess) {
+        props.reduxRefresh();
+        navigation.navigate("Chats", { orderId });
+      } else {
+        Alert.alert("일시 오류", "잠시 후 다시 시도해주세요");
+      }
       // console.log(`배달자 등록: `, request);
-      props.reduxRefresh();
     } catch (e) {
+      Alert.alert("일시 오류", "잠시 후 다시 시도해주세요");
       console.log(`Can't put selected deliverId on Server. Error: ${e}`);
     } finally {
       setLoading(false);
-      navigation.navigate("Chats");
     }
   };
   const handleChoice = async deliverId => {
