@@ -51,7 +51,7 @@ const stackFactory = (initialRoute, customConfig) =>
     UserProfileScreen: {
       screen: UserProfileScreen,
       navigationOptions: {
-        title: "프로필",
+        title: "프로필 수정",
         headerLeft: <BackLink />,
         headerRight: <CompleteEditProfileLink />
       }

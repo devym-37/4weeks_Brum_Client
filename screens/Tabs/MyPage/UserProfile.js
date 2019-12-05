@@ -181,14 +181,14 @@ const UserProfileScreen = ({ navigation, ...props }) => {
                   color="#22252a"
                   onPress={() => navigation.navigate("VerifyCampusNavigation")}
                 />
-                <FormInput
-                  placeholder="나의 한마디"
-                  value={props.introduction}
-                  // onChange={value => setIntroduction(value)}
-                  onChange={value => props.reduxIntroduction(value)}
-                />
               </>
             ))}
+          <FormInput
+            placeholder="나의 한마디"
+            value={props.introduction}
+            // onChange={value => setIntroduction(value)}
+            onChange={value => props.reduxIntroduction(value)}
+          />
         </Container>
       </ScrollView>
     </KeyboardAvoidingView>
