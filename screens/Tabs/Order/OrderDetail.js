@@ -897,11 +897,6 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                         {isPrice ? "가격제안 가능" : "가격제안 불가"}
                       </PriceOption>
                     </PriceContainer>
-                    {/* <Touchable onPress={handleApplyButtonWithPrice}>
-                      <ApplyButton width={250}>
-                        <ButtonText>러너 지원하기</ButtonText>
-                      </ApplyButton>
-                    </Touchable> */}
                     <MainButton
                       text="러너 지원하기"
                       onPress={handleApplyButtonWithPrice}
