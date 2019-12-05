@@ -54,6 +54,8 @@ import {
   photoRemover,
   imagesSaver
 } from "../../../redux/actions/orderActions";
+import MainButton from "../../../components/Buttons/MainButton";
+import GhostButton from "../../../components/Buttons/GhostButton";
 
 const Container = styled.View`
   flex: 1;
@@ -703,64 +705,39 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
         <BottomContainer>
           <ContentContainer>
             {isHost ? (
-              data.deliverId ? (
-                <>
-                  <IconContainer>
-                    <AntDesign
-                      name="hearto"
-                      size={26}
-                      style={{ color: styles.inActiveColor }}
-                    />
-                  </IconContainer>
+              <>
+                <IconContainer>
+                  <AntDesign
+                    name="hearto"
+                    size={26}
+                    style={{ color: "#E8E2E4" }}
+                  />
+                </IconContainer>
 
-                  <VerticalDivider />
-                  <PriceContainer>
-                    <Price>{price ? price : 비용협의}</Price>
-                    <PriceOption>
-                      {isPrice ? "가격제안 가능" : "가격제안 불가"}
-                    </PriceOption>
-                  </PriceContainer>
-                  <EditButtonContainer>
-                    <DeleteButton width={300} disabled={true}>
-                      <DeleteButtonText disabled={true}>삭제</DeleteButtonText>
-                    </DeleteButton>
-
-                    <EditButton disabled={true} width={300}>
-                      <ButtonText disabled={true}>수정</ButtonText>
-                    </EditButton>
-                  </EditButtonContainer>
-                </>
-              ) : (
-                <>
-                  <IconContainer>
-                    <AntDesign
-                      name="hearto"
-                      size={26}
-                      style={{ color: "#E8E2E4" }}
-                    />
-                  </IconContainer>
-
-                  <VerticalDivider />
-                  <PriceContainer>
-                    <Price>{price ? price : 비용협의}</Price>
-                    <PriceOption>
-                      {isPrice ? "가격제안 가능" : "가격제안 불가"}
-                    </PriceOption>
-                  </PriceContainer>
-                  <EditButtonContainer>
-                    <Touchable onPress={handleDelete}>
-                      <DeleteButton width={300}>
-                        <DeleteButtonText>삭제</DeleteButtonText>
-                      </DeleteButton>
-                    </Touchable>
-                    <Touchable onPress={handleEdit}>
-                      <EditButton width={300}>
-                        <ButtonText>수정</ButtonText>
-                      </EditButton>
-                    </Touchable>
-                  </EditButtonContainer>
-                </>
-              )
+                <VerticalDivider />
+                <PriceContainer>
+                  <Price>{price ? price : 비용협의}</Price>
+                  <PriceOption>
+                    {isPrice ? "가격제안 가능" : "가격제안 불가"}
+                  </PriceOption>
+                </PriceContainer>
+                <EditButtonContainer>
+                  <GhostButton
+                    text="삭제"
+                    marginLeft={8}
+                    width={300}
+                    disabled={isHost && data.deliverId !== null}
+                    onPress={handleDelete}
+                  />
+                  <MainButton
+                    text="수정"
+                    marginLeft={8}
+                    width={300}
+                    disabled={isHost && data.deliverId !== null}
+                    onPress={handleEdit}
+                  />
+                </EditButtonContainer>
+              </>
             ) : isRunner ? (
               <>
                 <Touchable onPress={handleClickLikeButton}>
@@ -787,11 +764,14 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                     {isPrice ? "가격제안 가능" : "가격제안 불가"}
                   </PriceOption>
                 </PriceContainer>
-                <Touchable onPress={handleCancelApplyButton}>
-                  <DeleteButton width={250}>
-                    <DeleteButtonText>러너 지원취소</DeleteButtonText>
-                  </DeleteButton>
-                </Touchable>
+
+                <GhostButton
+                  text="러너 지원취소"
+                  width={250}
+                  marginLeft={8}
+                  onPress={handleCancelApplyButton}
+                  disabled={data && data.orderStatus > 1}
+                />
               </>
             ) : (
               <>
@@ -819,11 +799,12 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                     {isPrice ? "가격제안 가능" : "가격제안 불가"}
                   </PriceOption>
                 </PriceContainer>
-                <Touchable onPress={handleApplyButton}>
-                  <ApplyButton width={250}>
-                    <ButtonText>러너 지원하기</ButtonText>
-                  </ApplyButton>
-                </Touchable>
+                <MainButton
+                  text="러너 지원하기"
+                  onPress={handleApplyButton}
+                  width={250}
+                  disabled={data && !isHost && data.deliverId !== null}
+                />
               </>
             )}
           </ContentContainer>
@@ -916,11 +897,17 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
                         {isPrice ? "가격제안 가능" : "가격제안 불가"}
                       </PriceOption>
                     </PriceContainer>
-                    <Touchable onPress={handleApplyButtonWithPrice}>
+                    {/* <Touchable onPress={handleApplyButtonWithPrice}>
                       <ApplyButton width={250}>
                         <ButtonText>러너 지원하기</ButtonText>
                       </ApplyButton>
-                    </Touchable>
+                    </Touchable> */}
+                    <MainButton
+                      text="러너 지원하기"
+                      onPress={handleApplyButtonWithPrice}
+                      width={250}
+                      disabled={data && !isHost && data.deliverId !== null}
+                    />
                   </>
                 </MarginContentContainer>
               </BottomContainer>
