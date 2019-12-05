@@ -158,7 +158,7 @@ export default {
 
 
    timeConverter:(UNIX_timestamp)=>{
-    var a = new Date(UNIX_timestamp * 1000).toISOString().slice(13, 19).replace('T', ' ');
+    var a = new Date(UNIX_timestamp).toLocaleTimeString("en-korea") ;
     /* var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var year = a.getFullYear();
     var month = months[a.getMonth()];
@@ -166,8 +166,12 @@ export default {
     var hour = a.getHours();
     var min = a.getMinutes();
     var sec = a.getSeconds(); */
+   // var hours = a.getHours().toString();
+    //var minutes = a.getMinutes().toString();
+   // var formattedTime = hours + ':' + minutes.substr(-2);
+
    // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min  ;
-    return a;
+    return a.slice(0,4);
   },
 
 

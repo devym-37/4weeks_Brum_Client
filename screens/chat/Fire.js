@@ -58,7 +58,7 @@ class Fire {
   parse = snapshot => {
     const { createdAt, text, user, image } = snapshot.val();
     const { key: _id } = snapshot;
- 
+    console.log("여기서 뭐로 들엉로까",_id)
     //const timestamp = new Date(numberStamp);
     const message = {
       _id,

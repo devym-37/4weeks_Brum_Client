@@ -90,7 +90,7 @@ const ChatListScreen = ({ navigation }) => {
       setChats([...requestChats.data.data]);
 
       fetchUserId();
-      Fire.shared.observeAuth();
+      //Fire.shared.observeAuth();
       setUserId(requestChats.data.userId);
     } catch (e) {
       console.log(`Can't fetch data from server. error message: ${e}`);
@@ -101,9 +101,9 @@ const ChatListScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
-    return () => {
-      Fire.shared.off();
-    };
+   // return () => {
+   //   Fire.shared.off();
+   // };
   }, []);
 
   return (
