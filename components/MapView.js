@@ -151,8 +151,8 @@ const MapScreen = ({ navigation, ...props }) => {
           <MapView
             style={styles.mapStyle}
             provider="google"
-            ref={map => {
-              this.map = map;
+            ref={searchMap => {
+              this.map = searchMap;
             }}
             region={region}
             // onRegionChange={this.onRegionChange}
@@ -258,11 +258,11 @@ const MapScreen = ({ navigation, ...props }) => {
                   <Callout
                     alphaHitTest
                     tooltip
-                    onPress={() =>
+                    onPress={() => {
                       navigation.navigate("OrderDetailScreen", {
                         orderId: marker.orderId
-                      })
-                    }
+                      });
+                    }}
                   >
                     <CustomCallout
                       title={marker.title}
