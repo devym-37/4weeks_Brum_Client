@@ -292,16 +292,15 @@ class Chat extends React.Component {
           const text = await serverApi.geturl(this.state.orderId,this.state.usertoken,result.uri).then(
             res=>{
 
-              const result = res.json()
-              console.log(result)
+             return res.json()
             }
             
            
           )
-          console.log("업로드한사진",text)
+          console.log("업로드한사진",text.data.url)
 
           this.setState({
-            image: url,
+            image: text.data.url,
             accessoryOpen: true
           });
           //setImageadded(result.uri);
