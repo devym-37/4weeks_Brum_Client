@@ -173,7 +173,7 @@ export default {
    // var formattedTime = hours + ':' + minutes.substr(-2);
 
    // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min  ;
-    return a.slice(0,4);
+    return a.slice(0,5);
   },
 
 
