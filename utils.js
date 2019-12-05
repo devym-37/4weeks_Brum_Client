@@ -102,6 +102,8 @@ export default {
     }
   },
   transferChatTimeStamp: time => {
+    var a = new Date(time).toLocaleTimeString("en-korea")
+
     var nowTime = new Date();
     var now = {
       year: nowTime.getFullYear(),
@@ -112,23 +114,23 @@ export default {
       sec: nowTime.getSeconds()
     };
     var createdAt = {
-      year: Number(time.substring(0, 4)),
-      month: Number(time.substring(5, 7)),
-      date: Number(time.substring(8, 10)),
-      hour: Number(time.substring(11, 13)),
-      min: Number(time.substring(14, 16)),
-      sec: Number(time.substring(17, 19))
+      year: Number(a.substring(0, 4)),
+      month: Number(a.substring(5, 7)),
+      date: Number(a.substring(8, 10)),
+      hour: Number(a.substring(11, 13)),
+      min: Number(a.substring(14, 16)),
+      sec: Number(a.substring(17, 19))
     };
     var gap = x => {
       return now[x] - createdAt[x];
     };
     var createdAt = {
-      year: Number(time.substring(0, 4)),
-      month: Number(time.substring(5, 7)),
-      date: Number(time.substring(8, 10)),
-      hour: Number(time.substring(11, 13)),
-      min: Number(time.substring(14, 16)),
-      sec: Number(time.substring(17, 19))
+      year: Number(a.substring(0, 4)),
+      month: Number(a.substring(5, 7)),
+      date: Number(a.substring(8, 10)),
+      hour: Number(a.substring(11, 13)),
+      min: Number(a.substring(14, 16)),
+      sec: Number(a.substring(17, 19))
     };
 
     if (gap("year"))
