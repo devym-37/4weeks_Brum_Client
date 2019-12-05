@@ -59,7 +59,8 @@ const ButtonContainer = styled.View`
   /* height: 3px; */
   position: absolute;
   right: 15px;
-  bottom: 15px;
+  bottom: 18px;
+  /* padding-top: 20; */
 
   justify-content: center;
   align-items: center;
