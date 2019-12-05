@@ -209,7 +209,7 @@ const MyPageScreen = ({ navigation, ...props }) => {
 
   useEffect(() => {
     preLoad();
-  }, [props.avatar, props.isLoggedin, buttonName]);
+  }, [props.avatar, props.isLoggedin, buttonName, props.refresh]);
   return (
     <ScrollView>
       {loading ? (
@@ -349,6 +349,7 @@ const MyPageScreen = ({ navigation, ...props }) => {
 const mapStateToProps = state => {
   // Redux Store --> Component
   return {
+    refresh: state.refreshReducer.refresh,
     isLoggedin: state.authReducer.loggedIn,
     avatar: state.avatarReducer.avatar
   };

@@ -13,6 +13,7 @@ import passwordErrorCountReducer from "./passwordErrorCountReducer";
 import avatarReducer from "./avatarReducer";
 import refreshReducer from "./refreshReducer";
 import currentReducer from "./currentReducer";
+import mypageReducer from "./mypageReducer";
 // Redux: Root Reducer
 const rootReducer = combineReducers({
   passwordErrorCountReducer,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   orderPositionReducer,
   destinationReducer,
   refreshReducer,
+  mypageReducer,
   avatarReducer,
   currentReducer
 });
