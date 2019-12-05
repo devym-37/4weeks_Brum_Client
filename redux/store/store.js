@@ -28,7 +28,8 @@ const persistConfig = {
     "destinationReducer",
     "refreshReducer",
     "currentReducer",
-    "mypageReducer"
+    "mypageReducer",
+    "contactReducer"
   ]
 };
 

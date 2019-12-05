@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+
 import {
   GiftedChat,
   Bubble,
@@ -29,6 +31,8 @@ import { Ionicons } from "@expo/vector-icons";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "firebase";
+import { contactSaver } from "../../redux/actions/contactActions";
+
 const CardContainer = styled.View`
   width: ${constants.width};
 
@@ -711,12 +715,16 @@ class Chat extends React.Component {
       whoami = "host";
       avatar = hostInfo.image;
       name = hostInfo.nickname;
+      this.props.reduxContact(hostInfo.phone)
     } else {
       whoami = "deliver";
       avatar = deliverInfo.image;
       name = deliverInfo.nickname;
+      this.props.reduxContact(deliverInfo.phone)
     }
 
+
+     
       
 
     this.setState({
@@ -734,4 +742,19 @@ class Chat extends React.Component {
   }
 }
 
-export default Chat;
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    phone: state.contactReducer.phone
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxContact: phone => dispatch(contactSaver(phone))
+  };
+};
+
+// Exports
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
