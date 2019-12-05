@@ -10,6 +10,9 @@ import MyOrderDetail from "../../../screens/Tabs/Order/MyOrderDetail";
 import styles from "../../../styles";
 import constants from "../../../constants";
 import Fire from "../../chat/Fire";
+import GhostButton from "../../../components/Buttons/GhostButton";
+import { connect } from "react-redux";
+import { refreshMaker } from "../../../redux/actions/refreshActions";
 
 const Container = styled.View`
   flex: 1;
@@ -51,7 +54,20 @@ const Button = styled.TouchableOpacity`
   border-color: ${styles.mainColor};
 `;
 
-const ApplicantsList = ({ navigation }) => {
+const ButtonContainer = styled.View`
+  width: 100px;
+  /* height: 3px; */
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+
+  justify-content: center;
+  align-items: center;
+`;
+
+const ApplicantsList = ({ navigation, ...props }) => {
+  const orderStatus = navigation.getParam("orderStatus");
+
   const [loading, setLoading] = useState(false);
   const [applicantList, setApplicantList] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -63,7 +79,7 @@ const ApplicantsList = ({ navigation }) => {
   const [orderId, setOrderId] = useState(navigation.getParam("orderId"));
   const handleConfirm = async deliverId => {
     console.log(`deliverId: `, deliverId);
-    // console.log(`deliverId: `, typeof deliverId);
+    // console.log(`deliverId: `, typeof deliverId)
     console.log(`orderId: `, orderId);
     try {
       setLoading(true);
@@ -79,7 +95,8 @@ const ApplicantsList = ({ navigation }) => {
         userToken
       );
 
-      console.log(`배달자 등록: `, request);
+      // console.log(`배달자 등록: `, request);
+      props.reduxRefresh();
     } catch (e) {
       console.log(`Can't put selected deliverId on Server. Error: ${e}`);
     } finally {
@@ -134,34 +151,34 @@ const ApplicantsList = ({ navigation }) => {
     }
   };
 
-  const refresh = async () => {
-    try {
-      setLoading(true);
-      const userToken = await AsyncStorage.getItem("userToken");
-      const orderId = navigation.getParam("orderId");
-      const getApplicantList = await serverApi.getApplicantList(
-        orderId,
-        userToken
-      );
-      const arrayOfApplicants = getApplicantList.data.data.applicants;
-      const filteredApplicants = arrayOfApplicants.filter(applicant =>
-        ["applied", "chosen"].includes(applicant.applyStatus)
-      );
-      setApplicantList([...filteredApplicants]);
-      console.log(`getApplicantList: `, getApplicantList.data.data);
-    } catch (e) {
-      console.log(`Can't fetch list of applicants. Error: ${e}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const refresh = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const userToken = await AsyncStorage.getItem("userToken");
+  //     const orderId = navigation.getParam("orderId");
+  //     const getApplicantList = await serverApi.getApplicantList(
+  //       orderId,
+  //       userToken
+  //     );
+  //     const arrayOfApplicants = getApplicantList.data.data.applicants;
+  //     const filteredApplicants = arrayOfApplicants.filter(applicant =>
+  //       ["applied", "chosen"].includes(applicant.applyStatus)
+  //     );
+  //     setApplicantList([...filteredApplicants]);
+  //     console.log(`getApplicantList: `, getApplicantList.data.data);
+  //   } catch (e) {
+  //     console.log(`Can't fetch list of applicants. Error: ${e}`);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     preLoad();
     return () => {
       Fire.shared.off();
     };
-  }, []);
+  }, [props.refresh]);
 
   const _renderTabBar = props => (
     <TabBar
@@ -179,7 +196,7 @@ const ApplicantsList = ({ navigation }) => {
       <ScrollView
         style={{ backgroundColor: "#f1f3f5" }}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={preLoad} />
         }
       >
         {loading ? (
@@ -192,11 +209,26 @@ const ApplicantsList = ({ navigation }) => {
           applicantList &&
           applicantList.map(applicant => (
             <ApplicantCard key={applicant.applicantId} {...applicant}>
-              <Button
+              {/* <Button
                 onPress={() => handleChoice(applicant.applicantInfo.userId)}
               >
                 <ButtonText>러너 선택</ButtonText>
-              </Button>
+              </Button> */}
+              <ButtonContainer>
+                <GhostButton
+                  text={
+                    applicant.applyStatus === "chosen"
+                      ? "선택 완료"
+                      : orderStatus === 0
+                      ? "러너 선택"
+                      : "선택 불가"
+                  }
+                  width={280}
+                  paddingVertical={8}
+                  onPress={() => handleChoice(applicant.applicantInfo.userId)}
+                  disabled={orderStatus !== 0}
+                />
+              </ButtonContainer>
             </ApplicantCard>
           ))
         )}
@@ -207,7 +239,7 @@ const ApplicantsList = ({ navigation }) => {
     <ScrollView
       style={{ backgroundColor: "#f1f3f5" }}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        <RefreshControl refreshing={refreshing} onRefresh={preLoad} />
       }
     >
       <Container>
@@ -231,70 +263,16 @@ const ApplicantsList = ({ navigation }) => {
     </>
   );
 };
-
-export default ApplicantsList;
-
-// Array [
-//   Object {
-//     "applicantId": 4,
-//     "applicantInfo": Object {
-//       "age": "1989",
-//       "getScore": Array [
-//         Object {
-//           "score": 5,
-//         },
-//         Object {
-//           "score": 4,
-//         },
-//         Object {
-//           "score": 1,
-//         },
-//       ],
-//       "image": "https://vroom-database.s3.ap-northeast-2.amazonaws.com/userImage/default",
-//       "introduction": "안녕하세요",
-//       "major": "vroom backend",
-//       "nickname": "김해준",
-//       "phone": "01042926693",
-//       "sex": "Male",
-//       "userId": 3,
-//     },
-//     "applyComment": null,
-//     "applyStatus": "applied",
-//     "bidPrice": null,
-//     "createdAt": "2019-11-23 00:00:00",
-//     "orderId": 1,
-//     "updatedAt": "2019-11-23 00:00:00",
-//     "userId": 3,
-//   },
-//   Object {
-//     "applicantId": 8,
-//     "applicantInfo": Object {
-//       "age": "1991",
-//       "getScore": Array [
-//         Object {
-//           "score": 5,
-//         },
-//         Object {
-//           "score": 4,
-//         },
-//         Object {
-//           "score": 2,
-//         },
-//       ],
-//       "image": "https://vroom-database.s3.ap-northeast-2.amazonaws.com/userImage/default",
-//       "introduction": "안녕하세요",
-//       "major": "vroom front",
-//       "nickname": "김조은",
-//       "phone": "01094402182",
-//       "sex": "Female",
-//       "userId": 2,
-//     },
-//     "applyComment": null,
-//     "applyStatus": "applied",
-//     "bidPrice": null,
-//     "createdAt": "2019-11-25 17:51:06",
-//     "orderId": 1,
-//     "updatedAt": "2019-11-25 17:51:06",
-//     "userId": 2,
-//   },
-// ]
+const mapStateToProps = state => {
+  // Redux Store --> Component
+  return {
+    refresh: state.refreshReducer.refresh
+  };
+};
+const mapDispatchToProps = dispatch => {
+  // Action
+  return {
+    reduxRefresh: () => dispatch(refreshMaker())
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ApplicantsList);
