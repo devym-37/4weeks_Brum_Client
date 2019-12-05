@@ -519,7 +519,9 @@ const OrderDetailScreen = ({ navigation, ...props }) => {
     props.reduxDetails(data.details);
     props.reduxTitle(data.title);
     props.reduxTime(data.desiredArrivalTime);
-    data.departures && props.reduxDepartureLocation(data.departures);
+    data.departures &&
+      data.departures !== "null" &&
+      props.reduxDepartureLocation(data.departures);
     console.log(`도착지!!:`, data.arrivals);
     props.reduxArrivalLocation(data.arrivals);
     data &&
