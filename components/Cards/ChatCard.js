@@ -104,7 +104,7 @@ const ChatCard = ({ onPress, ...props }) => {
   console.log("주인인가", isHost);
 
   const username = isHost ? deliverInfo.nickname : hostInfo.nickname;
-  const avatar = deliverInfo.image;
+  const avatar = isHost ? deliverInfo.image : hostInfo.image;
   const shortenTitle = utils.shortenText(title, 20);
 
   const orderTimeStamp = createdAt.slice(0, 11);
