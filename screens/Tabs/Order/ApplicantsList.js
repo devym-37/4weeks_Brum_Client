@@ -97,7 +97,8 @@ const ApplicantsList = ({ navigation, ...props }) => {
       );
       if (request.data.isSuccess) {
         props.reduxRefresh();
-        navigation.navigate("Chat", { orderId });
+        // navigation.navigate("Chat", { orderId });
+        navigation.navigate("Chats");
       } else {
         Alert.alert("일시 오류", "잠시 후 다시 시도해주세요");
       }

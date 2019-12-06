@@ -341,7 +341,14 @@ class Chat extends React.Component {
         <ChatColumn>
           <Ionicons
             name="md-add-circle-outline"
-            style={{ alignSelf: "center", fontSize: 30, marginRight: 5 }}
+            style={{
+              alignSelf: "center",
+              color: styles.greyColor,
+              fontSize: 30,
+              marginLeft: 15,
+              marginRight: 5,
+              marginBottom: 1
+            }}
           />
 
           {this.state.image && (
@@ -425,7 +432,7 @@ class Chat extends React.Component {
                   }}
                   width={200}
                   style={{ fontSize: 15 }}
-                  text="러너 취소하기"
+                  text="배송취소"
                 />
               </OrderContainer>
             </CardContainer>
