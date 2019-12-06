@@ -213,7 +213,7 @@ const HomeScreen = ({ navigation, ...props }) => {
                     callback={() => {
                       userCurrentLocation();
                     }}
-                    bottom={190}
+                    // bottom={190}
                   />
                   <MapScreen
                     latitude={region.latitude}
