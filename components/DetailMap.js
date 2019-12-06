@@ -152,7 +152,7 @@ const MapScreen = ({ navigation, ...props }) => {
             onRegionChange={this.onRegionChange}
             // onRegionChangeComplete={regionChange => recordEvent(regionChange)}
             showsCompass={true}
-            showsUserLocation={props.showLocation === false ? false : true}
+            showsUserLocation={false}
             showsMyLocationButton={false}
             followsUserLocation={true}
             zoomEnabled={true}
@@ -161,7 +161,6 @@ const MapScreen = ({ navigation, ...props }) => {
             rotateEnabled={false}
             loadingEnabled={true}
           >
-            <Text>테스트 화면</Text>
             {props.SearchScreen === true && props.departurePosition !== null ? (
               <Marker
                 coordinate={{
@@ -175,7 +174,7 @@ const MapScreen = ({ navigation, ...props }) => {
                 />
               </Marker>
             ) : (
-              <Text>region1234{JSON.stringify(region)}</Text>
+              <Text></Text>
             )}
             {props.SearchScreen === true && props.arrivalPosition !== null ? (
               <Marker
@@ -225,7 +224,7 @@ const MapScreen = ({ navigation, ...props }) => {
             // onRegionChange={this.onRegionChange}
             // onRegionChangeComplete={regionChange => recordEvent(regionChange)}
             showsCompass={true}
-            showsUserLocation={props.showLocation === false ? false : true}
+            showsUserLocation={false}
             showsMyLocationButton={false}
             followsUserLocation={true}
             zoomEnabled={true}
