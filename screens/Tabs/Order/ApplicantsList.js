@@ -97,7 +97,7 @@ const ApplicantsList = ({ navigation, ...props }) => {
       );
       if (request.data.isSuccess) {
         props.reduxRefresh();
-        navigation.navigate("Chats", { orderId });
+        navigation.navigate("Chat", { orderId });
       } else {
         Alert.alert("일시 오류", "잠시 후 다시 시도해주세요");
       }
@@ -231,7 +231,9 @@ const ApplicantsList = ({ navigation, ...props }) => {
                   width={280}
                   paddingVertical={8}
                   onPress={() => handleChoice(applicant.applicantInfo.userId)}
-                  disabled={orderStatus !== 0}
+                  disabled={
+                    orderStatus !== 0 || applicant.applyStatus === "chosen"
+                  }
                 />
               </ButtonContainer>
             </ApplicantCard>

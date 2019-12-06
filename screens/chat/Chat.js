@@ -23,6 +23,7 @@ import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
 import styled from "styled-components";
 import GhostButton from "../../components/Buttons/GhostButton";
+import MainButton from "../../components/Buttons/MainButton";
 import styles from "../../styles";
 import utils from "../../utils";
 import constants from "../../constants";
@@ -40,8 +41,8 @@ const CardContainer = styled.View`
   padding: 0 3px;
   justify-content: flex-start;
   align-items: flex-start;
-  background-color: white;
-  /* border-bottom-color: "#47315a"*/
+  background-color: #f1f3f5;
+  /* border-bottom-color: "#47315a"; */
 `;
 
 const Thumbnail = styled.Image`
@@ -204,8 +205,8 @@ class Chat extends React.Component {
 
             scrollToBottom={true}
             timeTextStyle={{
-              left: { color: "red" },
-              right: { color: "yellow" }
+              left: { color: "grey" },
+              right: { color: "white" }
             }}
             alwaysShowSend={true}
             renderActions={this.renderActions.bind(this)}
@@ -300,14 +301,12 @@ class Chat extends React.Component {
           // console.log("블롭파일입니다", url);
 
           // console.log("없나",this.state.orderId,this.state.usertoken)
-          console.log("업로드한사진안들어와!", result);
-
           const text = await serverApi
             .geturl(this.state.orderId, this.state.usertoken, result.uri)
             .then(res => {
               return res.json();
             });
-          console.log("업로드한사진", text);
+          console.log("업로드한사진", text.data.url);
 
           this.setState({
             image: text.data.url,
