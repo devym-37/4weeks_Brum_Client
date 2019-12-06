@@ -529,7 +529,19 @@ class Chat extends React.Component {
               <OrderContainer>
                 <GhostButton
                   onPress={() => {
-                    this.props.navigation.navigate("ReviewScreen");
+                    this.state.position === "host"
+                      ? this.props.navigation.navigate("ReviewScreen", {
+                          avatar: this.state.deliverinfo.image,
+                          nickname: this.state.deliverinfo.nickname,
+                          isDeliver: false,
+                          orderId: this.state.orderId
+                        })
+                      : this.props.navigation.navigate("ReviewScreen", {
+                          avatar: this.state.hostinfo.image,
+                          nickname: this.state.hostinfo.nickname,
+                          isDeliver: true,
+                          orderId: this.state.orderId
+                        });
                   }}
                   style={{ fontSize: 15 }}
                   text="리뷰하기"
