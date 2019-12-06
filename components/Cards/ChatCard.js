@@ -1,4 +1,4 @@
-import React,{ useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
@@ -6,8 +6,8 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 import utils from "../../utils";
 import constants from "../../constants";
 import styles from "../../styles";
-import Fire from "../../screens/chat/Fire"
-import firebase from "firebase"
+import Fire from "../../screens/chat/Fire";
+import firebase from "firebase";
 
 const Touchable = styled.TouchableOpacity``;
 
@@ -89,14 +89,23 @@ const UserBadge = styled.Text`
   font-weight: 800;
 `;
 const ChatCard = ({ onPress, ...props }) => {
-  const { chats, deliverInfo,orderId, title,userId, createdAt, hostId, deliverId } = props;
+  const {
+    chats,
+    deliverInfo,
+    orderId,
+    title,
+    userId,
+    createdAt,
+    hostId,
+    deliverId
+  } = props;
   const username = deliverInfo.nickname;
   const avatar = deliverInfo.image;
   const shortenTitle = utils.shortenText(title, 20);
   const isHost = userId !== deliverId;
-  console.log("주인인가",isHost)
+  console.log("주인인가", isHost);
 
-  const orderTimeStamp = `[19.11.26]`;
+  const orderTimeStamp = createdAt.slice(0, 11);
   // const orderTimeStamp = orderTim
   const latestChat = chats && chats.length > 0 ? chats[0] : null;
   const timeStamp =
@@ -109,30 +118,26 @@ const ChatCard = ({ onPress, ...props }) => {
     : "러너와 대화를 시작하세요:)";
   /////
 
-  const [lastchat,setLastchat] = useState(null)
+  const [lastchat, setLastchat] = useState(null);
 
-  
-  const getlastchat = () =>{
-       
-  }
-  
-  useEffect(()=>{
+  const getlastchat = () => {};
+
+  useEffect(() => {
     let isCancelled = false;
 
     firebase
-    .database()
-    .ref(`threads/${orderId}/messages`)
-    .limitToLast(1)
-    .on("child_added", snapshot =>{ 
-      console.log("파싱",Fire.shared.parse(snapshot))
-      setLastchat(Fire.shared.parse(snapshot))
-    });
+      .database()
+      .ref(`threads/${orderId}/messages`)
+      .limitToLast(1)
+      .on("child_added", snapshot => {
+        console.log("파싱", Fire.shared.parse(snapshot));
+        setLastchat(Fire.shared.parse(snapshot));
+      });
 
     return () => {
       isCancelled = true;
     };
-
-  },[])
+  }, []);
 
   return (
     <Touchable onPress={onPress}>
@@ -146,47 +151,37 @@ const ChatCard = ({ onPress, ...props }) => {
         </OrderContainer>
         {lastchat ? (
           <ChatContainer>
-       
-       <ChatColumn>
-         <Image source={{ uri: avatar }} />
-         <ChatContent>
-           <ChatUsername>{username}</ChatUsername>
-           
-             <ChatPreview>{lastchat.text}</ChatPreview>
-          
-         </ChatContent>
-       </ChatColumn>
-    
-       <ChatColumn>
-         
-           
-         <TimeStamp>{utils.timeConverter(lastchat.createdAt)}</TimeStamp>
-       </ChatColumn>
-      
-     </ChatContainer>
-        ) :(
+            <ChatColumn>
+              <Image source={{ uri: avatar }} />
+              <ChatContent>
+                <ChatUsername>{username}</ChatUsername>
+
+                <ChatPreview>{lastchat.text}</ChatPreview>
+              </ChatContent>
+            </ChatColumn>
+
+            <ChatColumn>
+              <TimeStamp>{utils.timeConverter(lastchat.createdAt)}</TimeStamp>
+            </ChatColumn>
+          </ChatContainer>
+        ) : (
           <ChatContainer>
-       
-          <ChatColumn>
-            <Image source={{ uri: avatar }} />
-            <ChatContent>
-        <ChatUsername>{username}</ChatUsername>
-              
-                <ChatPreview>{isHost ? "러너" : "요청자"}와 대화를 시작하세요 :)</ChatPreview>
-             
-            </ChatContent>
-          </ChatColumn>
-       
-          <ChatColumn>
-            
-              
-            <TimeStamp>최근</TimeStamp>
-          </ChatColumn>
-         
-        </ChatContainer>
-        )
-        
-             }
+            <ChatColumn>
+              <Image source={{ uri: avatar }} />
+              <ChatContent>
+                <ChatUsername>{username}</ChatUsername>
+
+                <ChatPreview>
+                  {isHost ? "러너" : "요청자"}와 대화를 시작하세요 :)
+                </ChatPreview>
+              </ChatContent>
+            </ChatColumn>
+
+            <ChatColumn>
+              <TimeStamp>최근</TimeStamp>
+            </ChatColumn>
+          </ChatContainer>
+        )}
         <Divider />
       </Container>
     </Touchable>

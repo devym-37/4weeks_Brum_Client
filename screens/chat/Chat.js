@@ -18,6 +18,7 @@ import {
   Platform,
   TouchableOpacity
 } from "react-native";
+import { withNavigation } from "react-navigation";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
 import styled from "styled-components";
@@ -300,9 +301,12 @@ class Chat extends React.Component {
             });
           console.log("업로드한사진", text.data.url);
 
+          const newarr = this.state.messages;
+          newarr[newarr.length - 1].text = "";
           this.setState({
             image: text.data.url,
-            accessoryOpen: true
+            accessoryOpen: true,
+            messages: newarr
           });
           //setImageadded(result.uri);
         }
@@ -507,8 +511,13 @@ class Chat extends React.Component {
                 <TextContainer>
                   <Title> 거래가 완료되었습니다! </Title>
                   <HeaderButtonContainer>
-                    <HeaderButton style={{ fontSize: 15 }}>
-                      문의하기
+                    <HeaderButton
+                      onPress={() => {
+                        this.props.navigation.navigate("ReviewScreen");
+                      }}
+                      style={{ fontSize: 15 }}
+                    >
+                      리뷰하기
                     </HeaderButton>
                   </HeaderButtonContainer>
                 </TextContainer>
@@ -551,7 +560,7 @@ class Chat extends React.Component {
                     <HeaderButton
                       onPress={() => {
                         changestatus(88);
-                        this.props.navigation.navigate("BottemNavigation");
+                        this.props.navigation.navigate("BottomNavigation");
                       }}
                     >
                       요청 취소
@@ -597,8 +606,10 @@ class Chat extends React.Component {
                   <HeaderButtonContainer>
                     <HeaderButton
                       onPress={() => {
-                        // changestatus(88);
-                        this.props.navigation.navigate("ReviewCard");
+                        changestatus(88);
+                        this.props.navigation.navigate("ReviewScreen", {
+                          Chat: true
+                        });
                       }}
                     >
                       결제하기
@@ -708,12 +719,12 @@ class Chat extends React.Component {
       whoami = "host";
       avatar = hostInfo.image;
       name = hostInfo.nickname;
-      this.props.reduxContact(hostInfo.phone);
+      this.props.reduxContact(deliverInfo.phone);
     } else {
       whoami = "deliver";
       avatar = deliverInfo.image;
       name = deliverInfo.nickname;
-      this.props.reduxContact(deliverInfo.phone);
+      this.props.reduxContact(hostInfo.phone);
     }
 
     this.setState({
@@ -746,4 +757,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 // Exports
-export default connect(mapStateToProps, mapDispatchToProps)(Chat);
+export default withNavigation(
+  connect(mapStateToProps, mapDispatchToProps)(Chat)
+);

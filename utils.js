@@ -102,7 +102,7 @@ export default {
     }
   },
   transferChatTimeStamp: time => {
-    var a = new Date(time).toLocaleTimeString("en-korea")
+    var a = new Date(time).toLocaleTimeString("en-korea");
 
     var nowTime = new Date();
     var now = {
@@ -158,24 +158,11 @@ export default {
     else return;
   },
 
+  timeConverter: UNIX_timestamp => {
+    var a = new Date(UNIX_timestamp).toLocaleTimeString("en-korea");
 
-   timeConverter:(UNIX_timestamp)=>{
-    var a = new Date(UNIX_timestamp).toLocaleTimeString("en-korea") ;
-    /* var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds(); */
-   // var hours = a.getHours().toString();
-    //var minutes = a.getMinutes().toString();
-   // var formattedTime = hours + ':' + minutes.substr(-2);
-
-   // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min  ;
-    return a.slice(0,5);
+    return a.slice(0, 4);
   },
-
 
   shortenText: (text, num) => {
     return text && text.length > num
