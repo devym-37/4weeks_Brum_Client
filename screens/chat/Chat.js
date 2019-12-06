@@ -41,8 +41,8 @@ const CardContainer = styled.View`
   padding: 0 3px;
   justify-content: flex-start;
   align-items: flex-start;
-  background-color: white;
-  /* border-bottom-color: "#47315a"*/
+  background-color: #f1f3f5;
+  /* border-bottom-color: "#47315a"; */
 `;
 
 const Thumbnail = styled.Image`
