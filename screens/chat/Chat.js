@@ -46,14 +46,15 @@ const CardContainer = styled.View`
 `;
 
 const Thumbnail = styled.Image`
-  width: 67;
-  height: 67;
-  border-radius: 16;
+  width: 56;
+  height: 56;
+  border-radius: 20;
   margin-right: 6;
+  flex-direction: row;
 `;
 const ChatColumn = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  /*justify-content: space-between;*/
   align-items: center;
   /* aling-self: center; */
 `;
@@ -82,9 +83,11 @@ const HeaderButton = styled.Text`
   font-size: 18;
   line-height: 0;
   font-weight: 500;
+  align-self: center;
 `;
 const HeaderButtonContainer = styled.View`
   background-color: ${styles.mainColor};
+  flex-direction: row;
   width: 100;
   border-radius: 4px;
   color: white;
@@ -106,11 +109,15 @@ const TextContainer = styled.View`
   justify-content: center;
   align-items: flex-start;
 `;
-const Divider = styled.View`
-  width: ${constants.width};
-  /* margin-left: -20px; */
-  height: 1px;
-  background-color: ${props => props.theme.lightGreyColor};
+const OrderContainer = styled.View`
+  padding: 0 5px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  align-self: center;
+  background-color: white;
+  padding-top: 10;
+  padding-bottom: 1;
 `;
 
 class Chat extends React.Component {
@@ -301,8 +308,6 @@ class Chat extends React.Component {
             });
           console.log("업로드한사진", text.data.url);
 
-          const newarr = this.state.messages;
-          newarr[newarr.length - 1].text = "";
           this.setState({
             image: text.data.url,
             accessoryOpen: true,
@@ -392,39 +397,37 @@ class Chat extends React.Component {
         return (
           <>
             <CardContainer>
-              <ContentContainer>
+              <OrderContainer>
                 <Thumbnail
                   source={{
-                    uri: this.state.deliverinfo.image
+                    uri: this.state.hostinfo.image
                   }}
                 />
+
                 <TextContainer>
                   <Title>심부름을 시작해주세요! </Title>
-                  <ChatColumn>
-                    <HeaderButtonContainer>
-                      <HeaderButton
-                        onPress={() => {
-                          changestatus(2);
-                        }}
-                        style={{ fontSize: 15 }}
-                      >
-                        심부름시작
-                      </HeaderButton>
-                    </HeaderButtonContainer>
-                    <HeaderButtonContainer>
-                      <HeaderButton
-                        onPress={() => {
-                          changestatus(99);
-                          this.props.navigation.navigate("BottomNavigation");
-                        }}
-                        style={{ fontSize: 15 }}
-                      >
-                        러너 취소하기
-                      </HeaderButton>
-                    </HeaderButtonContainer>
-                  </ChatColumn>
                 </TextContainer>
-              </ContentContainer>
+              </OrderContainer>
+              <OrderContainer>
+                <GhostButton
+                  onPress={() => {
+                    changestatus(2);
+                  }}
+                  width={200}
+                  style={{ fontSize: 15 }}
+                  marginRight={5}
+                  text="심부름시작"
+                />
+                <GhostButton
+                  onPress={() => {
+                    changestatus(99);
+                    this.props.navigation.navigate("BottomNavigation");
+                  }}
+                  width={200}
+                  style={{ fontSize: 15 }}
+                  text="러너 취소하기"
+                />
+              </OrderContainer>
             </CardContainer>
           </>
         );
@@ -433,38 +436,37 @@ class Chat extends React.Component {
         return (
           <>
             <CardContainer>
-              <ContentContainer>
+              <OrderContainer>
                 <Thumbnail
                   source={{
-                    uri: this.state.deliverinfo.image
+                    uri: this.state.hostinfo.image
                   }}
                 />
+
                 <TextContainer>
                   <Title>심부름 중입니다! </Title>
-                  <ChatColumn>
-                    <HeaderButtonContainer>
-                      <HeaderButton
-                        onPress={() => {
-                          changestatus(1);
-                        }}
-                        style={{ fontSize: 15 }}
-                      >
-                        심부름 대기
-                      </HeaderButton>
-                    </HeaderButtonContainer>
-                    <HeaderButtonContainer>
-                      <HeaderButton
-                        onPress={() => {
-                          changestatus(3);
-                        }}
-                        style={{ fontSize: 15 }}
-                      >
-                        심부름완료
-                      </HeaderButton>
-                    </HeaderButtonContainer>
-                  </ChatColumn>
                 </TextContainer>
-              </ContentContainer>
+              </OrderContainer>
+              <OrderContainer>
+                <GhostButton
+                  onPress={() => {
+                    changestatus(1);
+                  }}
+                  style={{ fontSize: 15 }}
+                  marginRight={5}
+                  text="심부름대기"
+                  width={200}
+                />
+
+                <GhostButton
+                  onPress={() => {
+                    changestatus(3);
+                  }}
+                  style={{ fontSize: 15 }}
+                  text="심부름완료"
+                  width={200}
+                />
+              </OrderContainer>
             </CardContainer>
           </>
         );
@@ -473,26 +475,27 @@ class Chat extends React.Component {
         return (
           <>
             <CardContainer>
-              <ContentContainer>
+              <OrderContainer>
                 <Thumbnail
                   source={{
-                    uri: this.state.deliverinfo.image
+                    uri: this.state.hostinfo.image
                   }}
                 />
+
                 <TextContainer>
                   <Title>결제를 기다리는 중입니다! </Title>
-                  <HeaderButtonContainer>
-                    <HeaderButton
-                      onPress={() => {
-                        changestatus(2);
-                      }}
-                      style={{ fontSize: 15 }}
-                    >
-                      배송완료취소
-                    </HeaderButton>
-                  </HeaderButtonContainer>
                 </TextContainer>
-              </ContentContainer>
+              </OrderContainer>
+
+              <OrderContainer>
+                <GhostButton
+                  onPress={() => {
+                    changestatus(2);
+                  }}
+                  style={{ fontSize: 15 }}
+                  text="배송완료취소"
+                />
+              </OrderContainer>
             </CardContainer>
           </>
         );
@@ -502,26 +505,26 @@ class Chat extends React.Component {
           <>
             {/*  {this.setModalVisible(true)} */}
             <CardContainer>
-              <ContentContainer>
+              <OrderContainer>
                 <Thumbnail
                   source={{
-                    uri: this.state.deliverinfo.image
+                    uri: this.state.hostinfo.image
                   }}
                 />
+
                 <TextContainer>
-                  <Title> 거래가 완료되었습니다! </Title>
-                  <HeaderButtonContainer>
-                    <HeaderButton
-                      onPress={() => {
-                        this.props.navigation.navigate("ReviewScreen");
-                      }}
-                      style={{ fontSize: 15 }}
-                    >
-                      리뷰하기
-                    </HeaderButton>
-                  </HeaderButtonContainer>
+                  <Title>거래가 완료되었습니다! </Title>
                 </TextContainer>
-              </ContentContainer>
+              </OrderContainer>
+              <OrderContainer>
+                <GhostButton
+                  onPress={() => {
+                    this.props.navigation.navigate("ReviewScreen");
+                  }}
+                  style={{ fontSize: 15 }}
+                  text="리뷰하기"
+                />
+              </OrderContainer>
             </CardContainer>
           </>
         );
@@ -548,26 +551,26 @@ class Chat extends React.Component {
         return (
           <>
             <CardContainer>
-              <ContentContainer>
+              <OrderContainer>
                 <Thumbnail
                   source={{
                     uri: this.state.deliverinfo.image
                   }}
                 />
+
                 <TextContainer>
                   <Title>러너가 심부름을 준비 중입니다! </Title>
-                  <HeaderButtonContainer>
-                    <HeaderButton
-                      onPress={() => {
-                        changestatus(88);
-                        this.props.navigation.navigate("BottomNavigation");
-                      }}
-                    >
-                      요청 취소
-                    </HeaderButton>
-                  </HeaderButtonContainer>
                 </TextContainer>
-              </ContentContainer>
+              </OrderContainer>
+              <OrderContainer>
+                <GhostButton
+                  onPress={() => {
+                    changestatus(88);
+                    this.props.navigation.navigate("BottomNavigation");
+                  }}
+                  text="요청취소"
+                />
+              </OrderContainer>
             </CardContainer>
           </>
         );
@@ -576,16 +579,17 @@ class Chat extends React.Component {
         return (
           <>
             <CardContainer>
-              <ContentContainer>
+              <OrderContainer>
                 <Thumbnail
                   source={{
                     uri: this.state.deliverinfo.image
                   }}
                 />
+
                 <TextContainer>
                   <Title>러너가 심부름 중입니다! </Title>
                 </TextContainer>
-              </ContentContainer>
+              </OrderContainer>
             </CardContainer>
           </>
         );
@@ -595,28 +599,28 @@ class Chat extends React.Component {
         return (
           <>
             <CardContainer>
-              <ContentContainer>
+              <OrderContainer>
                 <Thumbnail
                   source={{
                     uri: this.state.deliverinfo.image
                   }}
                 />
+
                 <TextContainer>
-                  <Title>러너가 심부름을 완료했습니다! </Title>
-                  <HeaderButtonContainer>
-                    <HeaderButton
-                      onPress={() => {
-                        changestatus(88);
-                        this.props.navigation.navigate("ReviewScreen", {
-                          Chat: true
-                        });
-                      }}
-                    >
-                      결제하기
-                    </HeaderButton>
-                  </HeaderButtonContainer>
+                  <Title>러너가 심부름을 준비 중입니다! </Title>
                 </TextContainer>
-              </ContentContainer>
+              </OrderContainer>
+              <OrderContainer>
+                <GhostButton
+                  onPress={() => {
+                    changestatus(88);
+                    this.props.navigation.navigate("ReviewScreen", {
+                      Chat: true
+                    });
+                  }}
+                  text="결제하기"
+                />
+              </OrderContainer>
             </CardContainer>
           </>
         );
