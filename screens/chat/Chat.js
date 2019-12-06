@@ -635,7 +635,7 @@ class Chat extends React.Component {
               <OrderContainer>
                 <GhostButton
                   onPress={() => {
-                    changestatus(88);
+                    changestatus(4);
                     this.props.navigation.navigate("ReviewScreen", {
                       Chat: true
                     });
