@@ -86,14 +86,19 @@ const MapScreen = ({ navigation, ...props }) => {
     console.log("location", location);
   };
 
-  // const recordEvent = async regionChange => {
-  //   // const address = await reverseGeocode(regionChange);
-  //   const geolatlng = await geoCode(props.marker);
-  //   // console.log("address", address[0]);
-  //   // console.log("geolatlng[123]", JSON.stringify(geolatlng));
-  //   setRegions(geolatlng);
-  //   // this.props.reduxDepartureAddress(address[0]);
-  // };
+  const reverseGeocode = async location => {
+    const reverseGeo = await Location.reverseGeocodeAsync(location);
+    return reverseGeo;
+  };
+
+  const recordEvent = async regionChange => {
+    const address = await reverseGeocode(regionChange);
+    // const geolatlng = await geoCode(props.marker);
+    console.log("address1234", address[0]);
+    // console.log("geolatlng[123]", JSON.stringify(geolatlng));
+    // setRegions(geolatlng);
+    // this.props.reduxDepartureAddress(address[0]);
+  };
 
   const getDirections = async () => {
     console.log("props.order", props.order);
@@ -155,8 +160,8 @@ const MapScreen = ({ navigation, ...props }) => {
               this.map = searchMap;
             }}
             region={region}
-            // onRegionChange={this.onRegionChange}
-            // onRegionChangeComplete={regionChange => recordEvent(regionChange)}
+            onRegionChange={this.onRegionChange}
+            onRegionChangeComplete={regionChange => recordEvent(regionChange)}
             showsCompass={true}
             showsUserLocation={props.showLocation === false ? false : true}
             showsMyLocationButton={false}

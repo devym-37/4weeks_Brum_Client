@@ -47,7 +47,6 @@ const DestinationInput = ({ ...props }) => {
     <TouchableOpacity
       onPress={() => {
         props.onPress();
-        this.props.reduxCurrentLocation(address);
       }}
       style={[
         styles.container,
