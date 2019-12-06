@@ -301,6 +301,10 @@ class Chat extends React.Component {
           // console.log("블롭파일입니다", url);
 
           // console.log("없나",this.state.orderId,this.state.usertoken)
+          // console.log("업로드한사진안들어와!", result);
+          this.setState({
+            Loading: true
+          });
           const text = await serverApi
             .geturl(this.state.orderId, this.state.usertoken, result.uri)
             .then(res => {
@@ -311,7 +315,7 @@ class Chat extends React.Component {
           this.setState({
             image: text.data.url,
             accessoryOpen: true,
-            messages: newarr
+            Loading: false
           });
           //setImageadded(result.uri);
         }
@@ -358,6 +362,12 @@ class Chat extends React.Component {
                 this.setState({ image: null });
               }}
               name="md-image"
+              style={{ alignSelf: "center", fontSize: 30 }}
+            />
+          )}
+          {this.state.Loading && (
+            <Ionicons
+              name="md-hourglass"
               style={{ alignSelf: "center", fontSize: 30 }}
             />
           )}
@@ -702,10 +712,15 @@ class Chat extends React.Component {
   async getUserId() {
     ////////<-----------------------------------
     // const userid = await AsyncStorage.getItem("userId");//
+    console.log("comin", this.props.navigation.getParam("orderId"));
+    let orderid;
+    if (this.props.navigation.getParam("orderId")) {
+      orderid = this.props.navigation.getParam("orderId");
+    } else {
+      console.log("여기?");
+      orderid = await AsyncStorage.getItem("orderid");
+    }
 
-    //const orderid = navigation.state.params.orderId
-
-    const orderid = await AsyncStorage.getItem("orderid"); ///필요한가ㅇㅇ
     const usertoken = await AsyncStorage.getItem("userToken");
 
     const getstatus = await serverApi.getChat(orderid, usertoken);
