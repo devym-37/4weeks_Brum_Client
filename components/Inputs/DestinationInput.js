@@ -45,7 +45,9 @@ const DestinationInput = ({ ...props }) => {
 
   return (
     <TouchableOpacity
-      onPress={() => props.onPress()}
+      onPress={() => {
+        props.onPress();
+      }}
       style={[
         styles.container,
         {
