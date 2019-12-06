@@ -209,8 +209,8 @@ const UserHistoryScreen = ({ navigation, ...props }) => {
                   createdAt={data.createdAt}
                   {...data}
                 />
-                {data.orderStatus === 4 ||
-                  (data.orderStatus === 5 && (
+                {data.orderStatus >= 3 &&
+                  data.orderStatus <= 5 && (
                     <ReviewCard
                       isReadable={data.reviews && data.reviews.length > 0}
                       orderId={data.orderId}
@@ -219,7 +219,7 @@ const UserHistoryScreen = ({ navigation, ...props }) => {
                       university={data.hostInfo.university}
                       isDeliver={false}
                     />
-                  ))}
+                  )}
               </View>
             )
           );

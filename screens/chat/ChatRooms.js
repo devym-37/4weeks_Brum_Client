@@ -73,7 +73,7 @@ class ChatRooms extends React.Component {
                     userId={this.state.userId}
                     onPress={() => {
                       this.saveClicked(data);
-                      this.props.navigation.navigate("Chat");
+                      // this.props.navigation.navigate("Chat",{username:});
                     }}
                   >
                     <CardItem>

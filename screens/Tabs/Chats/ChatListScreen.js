@@ -101,9 +101,9 @@ const ChatListScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
-   // return () => {
-   //   Fire.shared.off();
-   // };
+    // return () => {
+    //   Fire.shared.off();
+    // };
   }, []);
 
   return (
@@ -116,15 +116,32 @@ const ChatListScreen = ({ navigation }) => {
       {loading ? (
         <Loader />
       ) : chats && chats.length > 0 ? (
-        chats.map((chat, i) => (
-          <ChatCard
-            key={i}
-            onPress={() => handleClick(chat.deliverInfo.nickname, chat.orderId)}
-            userId={userId}
-            {...chat}
-            orderId={chat.orderId}
-          ></ChatCard>
-        ))
+        chats.map((chat, i) => {
+          console.log(`chat!`, chat);
+          console.log(`chat.userId`, userId);
+          console.log(`chat.deliverId`, chat.deliverId);
+          let isHost = userId !== chat.deliverId;
+
+          return isHost ? (
+            <ChatCard
+              key={i}
+              onPress={() =>
+                handleClick(chat.deliverInfo.nickname, chat.orderId)
+              }
+              userId={userId}
+              {...chat}
+              orderId={chat.orderId}
+            ></ChatCard>
+          ) : (
+            <ChatCard
+              key={i}
+              onPress={() => handleClick(chat.hostInfo.nickname, chat.orderId)}
+              userId={userId}
+              {...chat}
+              orderId={chat.orderId}
+            ></ChatCard>
+          );
+        })
       ) : (
         <DefaultOrder />
       )}
