@@ -128,8 +128,7 @@ const ApplicantCard = ({
   children,
   ...rest
 }) => {
-  const bidPriceWithComma =
-    bidPrice && utils.numberWithCommas(Number(bidPrice));
+  const bidPriceWithComma = bidPrice && utils.numberWithCommas(bidPrice);
   const timeStamp = utils.transferTime(createdAt);
   const avgOfScores = utils.avgOfScores(applicantInfo.getScore);
   const numOfScores = utils.numOfScores(applicantInfo.getScore);

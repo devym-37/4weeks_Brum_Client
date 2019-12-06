@@ -22,6 +22,7 @@ import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
 import styled from "styled-components";
 import GhostButton from "../../components/Buttons/GhostButton";
+import MainButton from "../../components/Buttons/MainButton";
 import styles from "../../styles";
 import utils from "../../utils";
 import constants from "../../constants";
@@ -133,7 +134,7 @@ class Chat extends React.Component {
       hostinfo: null,
       deliverinfo: null,
       image: null,
-      accessoryOpen:false
+      accessoryOpen: false
     };
   }
   get user() {
@@ -178,7 +179,7 @@ class Chat extends React.Component {
       this.state.userId !== null && (
         <View style={{ flex: 1 }}>
           {this.state.orderStatus !== null && this.statusbar()}
-         
+
           <GiftedChat
             inverted={true}
             image={this.state.image}
@@ -186,24 +187,25 @@ class Chat extends React.Component {
             onSend={(messages, image) => {
               Fire.shared.send(messages, this.state.image);
               this.setState({
-                image:null
-              })
+                image: null
+              });
             }}
             user={this.user}
             renderBubble={this.renderBubble}
             /*      renderTime={this.renderTime}
-            renderMessageImage={this.renderMessageImage}*/ 
+            renderMessageImage={this.renderMessageImage}*/
+
             scrollToBottom={true}
             timeTextStyle={{
-              left: { color: "red" },
-              right: { color: "yellow" }
+              left: { color: "grey" },
+              right: { color: "white" }
             }}
-            alwaysShowSend = {true}
+            alwaysShowSend={true}
             renderActions={this.renderActions.bind(this)}
             //renderInputToolbar ={this.renderInputToolbar}
-           // minInputToolbarHeight={this.state.accessoryOpen ?400 : 50}
+            // minInputToolbarHeight={this.state.accessoryOpen ?400 : 50}
           />
-         {/*   {this.state.image ? (
+          {/*   {this.state.image ? (
             <Image 
             style={{
               width: 80,
@@ -223,51 +225,50 @@ class Chat extends React.Component {
       )
     );
   }
-    renderMessageImage = image => {
+  renderMessageImage = image => {
     console.log("실행도안된다");
-    return (this.state.image && (
-      <Image 
-      style={{
-        width: 80,
-        height: 80
-      }}
-      source={{ uri: this.state.image }}
-      />)
-      
+    return (
+      this.state.image && (
+        <Image
+          style={{
+            width: 80,
+            height: 80
+          }}
+          source={{ uri: this.state.image }}
+        />
       )
-  }; 
+    );
+  };
 
-  renderInputToolbar =() =>{
-    return(
+  renderInputToolbar = () => {
+    return (
       <View>
         {this.state.image && (
-          <Image 
+          <Image
+            style={{
+              width: constants.width,
+              height: 600
+            }}
+            source={{ uri: this.state.image }}
+          />
+        )}
+        <View
           style={{
             width: constants.width,
             height: 600
           }}
-          source={{ uri: this.state.image }}
-          />
-        )}
-        <View
-        style={{
-            width: constants.width,
-            height: 600
-          }}>
-
-        </View>
+        ></View>
       </View>
-    )
-  } 
+    );
+  };
 
   renderActions = () => {
     const takePicture = async () => {
       try {
-       // console.log("didicomein?");
+        // console.log("didicomein?");
         const { status } = await Permissions.askAsync(
           Permissions.CAMERA_ROLL,
           Permissions.CAMERA
-          
         );
 
         // console.log(ImagePicker);
@@ -277,7 +278,6 @@ class Chat extends React.Component {
           aspect: [4, 3],
           quality: 1
         });
-        
 
         if (!result.cancelled) {
           //const response = await fetch(result.uri);
@@ -290,18 +290,15 @@ class Chat extends React.Component {
           //await ref.put(blob);
           //const url = await ref.getDownloadURL();
 
-         // console.log("블롭파일입니다", url);
+          // console.log("블롭파일입니다", url);
 
-         // console.log("없나",this.state.orderId,this.state.usertoken)
-          const text = await serverApi.geturl(this.state.orderId,this.state.usertoken,result.uri).then(
-            res=>{
-
-             return res.json()
-            }
-            
-           
-          )
-          console.log("업로드한사진",text.data.url)
+          // console.log("없나",this.state.orderId,this.state.usertoken)
+          const text = await serverApi
+            .geturl(this.state.orderId, this.state.usertoken, result.uri)
+            .then(res => {
+              return res.json();
+            });
+          console.log("업로드한사진", text.data.url);
 
           this.setState({
             image: text.data.url,
@@ -333,28 +330,28 @@ class Chat extends React.Component {
     return (
       <TouchableOpacity onPress={takePicture}>
         <ChatColumn>
+          <Ionicons
+            name="md-add-circle-outline"
+            style={{ alignSelf: "center", fontSize: 30, marginRight: 5 }}
+          />
 
-        <Ionicons
-          name="md-add-circle-outline"
-          style={{ alignSelf: "center", fontSize: 30,marginRight:5 }}
-        />
-        
-                {this.state.image &&(
-         <Ionicons
-         delayLongPress={10} onLongPress={()=>{this.setState({image: null})}} 
-         name="md-image"
-         style={{ alignSelf: "center", fontSize: 30 }}
-       />
-        )}
+          {this.state.image && (
+            <Ionicons
+              delayLongPress={10}
+              onLongPress={() => {
+                this.setState({ image: null });
+              }}
+              name="md-image"
+              style={{ alignSelf: "center", fontSize: 30 }}
+            />
+          )}
         </ChatColumn>
-        
-       
       </TouchableOpacity>
     );
   };
 
   statusbar = () => {
-   /*  const handleBack = () => {
+    /*  const handleBack = () => {
       this.props.navigation.navigate("BottomNavigation");
       //this.props.navigation.goBack();
     }; */
@@ -554,7 +551,7 @@ class Chat extends React.Component {
                     <HeaderButton
                       onPress={() => {
                         changestatus(88);
-                        this.props.navigation.navigate("BottemNavigation")
+                        this.props.navigation.navigate("BottemNavigation");
                       }}
                     >
                       요청 취소
@@ -600,7 +597,7 @@ class Chat extends React.Component {
                   <HeaderButtonContainer>
                     <HeaderButton
                       onPress={() => {
-                       // changestatus(88);
+                        // changestatus(88);
                         this.props.navigation.navigate("ReviewCard");
                       }}
                     >
@@ -684,9 +681,7 @@ class Chat extends React.Component {
     ////////<-----------------------------------
     // const userid = await AsyncStorage.getItem("userId");//
 
-    //const orderid = navigation.state.params.orderId 
-
-
+    //const orderid = navigation.state.params.orderId
 
     const orderid = await AsyncStorage.getItem("orderid"); ///필요한가ㅇㅇ
     const usertoken = await AsyncStorage.getItem("userToken");
@@ -704,28 +699,22 @@ class Chat extends React.Component {
 
     const { hostInfo, deliverInfo } = getstatus.data.data.chatDetail;
 
-
-
     console.log("유저아이디", userId, orderStatus, hostId, deliverId);
 
     let whoami = "";
-    let avatar 
-    let name
+    let avatar;
+    let name;
     if (hostId === userId) {
       whoami = "host";
       avatar = hostInfo.image;
       name = hostInfo.nickname;
-      this.props.reduxContact(hostInfo.phone)
+      this.props.reduxContact(hostInfo.phone);
     } else {
       whoami = "deliver";
       avatar = deliverInfo.image;
       name = deliverInfo.nickname;
-      this.props.reduxContact(deliverInfo.phone)
+      this.props.reduxContact(deliverInfo.phone);
     }
-
-
-     
-      
 
     this.setState({
       avatar: avatar,
