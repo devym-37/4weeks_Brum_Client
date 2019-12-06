@@ -123,7 +123,7 @@ const Signup = props => {
         props.reduxLogin(true);
 
         //firebase///
-        Fire.shared.signin();
+        // Fire.shared.signin();
         //await AsyncStorage.setItem("email", `${values.phone}@shoppossible.com`);
         //await AsyncStorage.setItem("password", values.password);
         /* firebase

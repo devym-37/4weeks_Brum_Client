@@ -121,10 +121,10 @@ const LogIn = props => {
             .auth()
             .signInWithEmailAndPassword(`${value1}@shoppossible.com`, value2);
  */
-          Fire.shared.signin(`${value1}@shoppossible.com`, value2);
+          // Fire.shared.signin(`${value1}@shoppossible.com`, value2);
 
           ////redux/////
-         /*  await AsyncStorage.setItem("email", `${value1}@shoppossible.com`);
+          /*  await AsyncStorage.setItem("email", `${value1}@shoppossible.com`);
           await AsyncStorage.setItem("password", value2);
           ////
 

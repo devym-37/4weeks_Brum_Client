@@ -6,7 +6,7 @@ import { serverApi } from "../../components/API";
 class Fire {
   constructor() {
     this.init();
-    this.observeAuth();
+    //this.observeAuth();
   }
   orderId = null;
   init = () => {
@@ -35,7 +35,7 @@ class Fire {
 
   onAuthStateChanged = async user => {
     //
-   //const email = await AsyncStorage.getItem("email");
+    //const email = await AsyncStorage.getItem("email");
     //const password = await AsyncStorage.getItem("password");
     // console.log("채팅 로그인이 안됨", email, password);
     if (!user) {
@@ -58,7 +58,7 @@ class Fire {
   parse = snapshot => {
     const { createdAt, text, user, image } = snapshot.val();
     const { key: _id } = snapshot;
-    console.log("여기서 뭐로 들엉로까",_id)
+    console.log("여기서 뭐로 들엉로까", _id);
     //const timestamp = new Date(numberStamp);
     const message = {
       _id,
@@ -82,17 +82,17 @@ class Fire {
       .on("child_added", snapshot => callback(this.parse(snapshot)));
   };
 
-  getlastone =  (orderId)  => { 
-    console.log( "주문번호",orderId)
+  getlastone = orderId => {
+    console.log("주문번호", orderId);
     firebase
       .database()
       .ref(`threads/${orderId}/messages`)
       .limitToLast(1)
-      .on("child_added", snapshot =>{ 
-        console.log("파싱",this.parse(snapshot))
-        return this.parse(snapshot)});
+      .on("child_added", snapshot => {
+        console.log("파싱", this.parse(snapshot));
+        return this.parse(snapshot);
+      });
   };
-
 
   getorderid = async () => {
     const orderid = await AsyncStorage.getItem("orderid");
@@ -138,10 +138,10 @@ class Fire {
 
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
-      console.log("텍스트는 무엇",text)
-      console.log("텍스트는 무엇",user)
+      console.log("텍스트는 무엇", text);
+      console.log("텍스트는 무엇", user);
 
-      text ? text:" "
+      text ? text : " ";
       const time = new Date();
       const message = {
         text,

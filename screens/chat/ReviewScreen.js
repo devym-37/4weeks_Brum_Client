@@ -114,6 +114,9 @@ const ReviewScreen = ({ navigation, ...props }) => {
         props.reduxRefresh();
         Alert.alert("리뷰 작성이 완료되었습니다");
 
+        if (navigation.getParam("Chat")) {
+          navigation.navigate.goBack("BottomNavigation");
+        }
         navigation.goBack(null);
       } else {
         Alert.alert("이미 작성한 리뷰입니다");
