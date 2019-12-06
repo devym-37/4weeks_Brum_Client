@@ -101,9 +101,9 @@ const ChatListScreen = ({ navigation }) => {
 
   useEffect(() => {
     preLoad();
-   // return () => {
-   //   Fire.shared.off();
-   // };
+    // return () => {
+    //   Fire.shared.off();
+    // };
   }, []);
 
   return (
@@ -119,7 +119,14 @@ const ChatListScreen = ({ navigation }) => {
         chats.map((chat, i) => (
           <ChatCard
             key={i}
-            onPress={() => handleClick(chat.deliverInfo.nickname, chat.orderId)}
+            onPress={() =>
+              handleClick(
+                chat.userId === chat.deliverId
+                  ? chat.deliverInfo.nickname
+                  : chat.hostInfo.nickname,
+                chat.orderId
+              )
+            }
             userId={userId}
             {...chat}
             orderId={chat.orderId}
